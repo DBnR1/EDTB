@@ -21,11 +21,8 @@ Key features
 Requirements
 ------------
 
-<<<<<<< HEAD
 - [Visual C++ Redistributable for Visual Studio 2015] - **32 bit version**
-=======
-- [Visual C++ Redistributable for Visual Studio 2015] (32 bit version)
->>>>>>> 4a0591d178b16a37fe2aa5cf50460b0cafa074fd
+
 - The automated data update script requires PowerShell 2.0 or higher, included by default since Windows 7, otherwise download from microsoft.com
 - Latest version of Google Chrome browser recommended for optimal experience. Latest versions of Mozilla Firefox and Internet Explorer also work but to a limited degree.
 - VerboseLogging needs to be on. To do this, locate your AppConfig.xml file.
@@ -34,10 +31,8 @@ Requirements
   * On E:D 1.5 it's located in:
   * **C:\Users\%USERNAME%\AppData\Local\Frontier_Developments\Products\FORC-FDEV-D-XX**
   * Open the file in a text editor and scroll to the bottom. Replace this part:
-<<<<<<< HEAD
-  *
-=======
->>>>>>> 4a0591d178b16a37fe2aa5cf50460b0cafa074fd
+   
+  
     ```
     	<Network
     	  Port="0"
