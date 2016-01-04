@@ -24,35 +24,10 @@
 $pagetitle = "Nearest Systems&nbsp;&nbsp;&&nbsp;&nbsp;Stations";
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 
-$only = isset($_GET["allegiance"]) ? $_GET["allegiance"] : "";
-$system_allegiance = isset($_GET["system_allegiance"]) ? $_GET["system_allegiance"] : "";
-$group_id = isset($_GET["group_id"]) ? $_GET["group_id"] : "";
-$power = isset($_GET["power"]) ? $_GET["power"] : "";
+$addtolink = "";
+$addtolink2 = "";
 $system = isset($_GET["system"]) ? $_GET["system"] : "";
-$ship_name = isset($_GET["ship_name"]) ? $_GET["ship_name"] : "";
-$facility = isset($_GET["facility"]) ? $_GET["facility"] : "";
-$stations = true;
-
-$add = "";
-if ($only != "")
-{
-    $add = " AND edtb_stations.allegiance = '" . $only . "'";
-	$stations = true;
-}
-
-$add2 = "";
-if ($system_allegiance != "")
-{
-    $add2 = " AND edtb_systems.allegiance = '" . $system_allegiance . "'";
-	$stations = false;
-}
-
-$add3 = "";
-if ($power != "")
-{
-    $add3 = " AND edtb_systems.power = '" . $power . "'";
-	$stations = false;
-}
+$text = "Nearest";
 
 //  determine what coordinates to use
 if ($system != "")
@@ -70,7 +45,9 @@ if ($system != "")
 	$usey = $sys_arr["y"];
 	$usez = $sys_arr["z"];
 
-	$addtext = "to <a href='system.php?system_id=" . $sys_id . "'>" . $sys_name . "</a> ";
+	$text .= " (to <a href='system.php?system_id=" . $sys_id . "'>" . $sys_name . "</a>) ";
+	$addtolink .= "&system=" . $system . "";
+	$addtolink2 .= "&system=" . $system . "";
 }
 else if (is_numeric($coordx) && $system == "")
 {
@@ -92,11 +69,71 @@ else
 	$is_unknown = " *";
 }
 
-// nearest stations
-if ($stations !== false)
+$ship_name = isset($_GET["ship_name"]) ? $_GET["ship_name"] : "";
+$facility = isset($_GET["facility"]) ? $_GET["facility"] : "";
+$only = isset($_GET["allegiance"]) ? $_GET["allegiance"] : "";
+$system_allegiance = isset($_GET["system_allegiance"]) ? $_GET["system_allegiance"] : "";
+$group_id = isset($_GET["group_id"]) ? $_GET["group_id"] : "";
+$power = isset($_GET["power"]) ? $_GET["power"] : "";
+$pad = isset($_GET["pad"]) ? $_GET["pad"] : "";
+$stations = true;
+$hidden_inputs = "";
+
+$add3 = "";
+if ($power != "")
+{
+    $add3 = " AND edtb_systems.power = '" . $power . "'";
+	$stations = false;
+	$text .= " " . $power . " systems";
+	$hidden_inputs .= '<input type="hidden" name="power" value="' . $power . '" />';
+	$addtolink .= "&power=" . urlencode($power) . "";
+	$addtolink2 .= "&power=" . urlencode($power) . "";
+}
+
+$add = "";
+if ($only != "")
+{
+	if ($only != "all")
+	{
+		$add = " AND edtb_stations.allegiance = '" . $only . "'";
+	}
+	else
+	{
+		$add = " AND edtb_stations.allegiance = 'None'";
+	}
+	$stations = true;
+	if ($only != "all" && $only != "Independent")
+	{
+		$text .= " systems with " . $only . " controlled stations";
+	}
+	else if ($only == "Independent")
+	{
+		$text .= " systems with Independent stations";
+	}
+	else
+	{
+		$text .= " systems with non-allied stations";
+	}
+	$hidden_inputs .= '<input type="hidden" name="allegiance" value="' . $only . '" />';
+	$addtolink .= "&allegiance=" . $only . "";
+}
+
+$add2 = "";
+if ($system_allegiance != "")
+{
+    $add2 = " AND edtb_systems.allegiance = '" . $system_allegiance . "'";
+	$stations = false;
+	$text .= " " . str_replace('None', 'Non-allied', $system_allegiance) . " systems";
+	$hidden_inputs .= '<input type="hidden" name="system_allegiance" value="' . $system_allegiance . '" />';
+	$addtolink .= "&system_allegiance=" . $system_allegiance . "";
+}
+
+// if we're searching facilities
+if ($facility != "" && $facility != "0")
 {
 	$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT edtb_stations.system_id AS system_id, edtb_stations.name AS station_name,
 														edtb_stations.ls_from_star, edtb_stations.max_landing_pad_size,
+														edtb_stations.is_planetary, edtb_stations.type,
 														edtb_systems.allegiance AS allegiance,
 														edtb_systems.name AS system,
 														edtb_systems.x AS coordx,
@@ -108,7 +145,62 @@ if ($stations !== false)
 														edtb_systems.economy
 														FROM edtb_stations
 														LEFT JOIN edtb_systems on edtb_stations.system_id = edtb_systems.id
-														WHERE edtb_systems.x != ''" . $add . "" . $add2 . "" . $add3 . "
+														WHERE edtb_systems.x != ''
+														AND edtb_stations." . $facility . " = '1'" . $add . "" . $add2 . "" . $add3 . "" . $add4 . "
+														ORDER BY sqrt(pow((coordx-(" . $usex . ")),2)+pow((coordy-(" . $usey . ")),2)+pow((coordz-(" . $usez . ")),2))
+														LIMIT 10");
+	$stations = true;
+	$f_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT name
+														FROM edtb_facilities
+														WHERE code = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $facility) . "'
+														LIMIT 1");
+	$f_arr = mysqli_fetch_assoc($f_res);
+	$f_name = $f_arr["name"];
+
+	if (preg_match('/([aeiouAEIOU])/', $f_name{0}))
+	{
+		$article = "an";
+	}
+	else
+	{
+		$article = "a";
+	}
+	$text .= " stations with " . $article . " " . $f_name . " facility";
+	$hidden_inputs .= '<input type="hidden" name="facility" value="' . $facility . '" />';
+	$addtolink .= "&facility=" . $facility . "";
+	$addtolink2 .= "&facility=" . $facility . "";
+}
+
+$add4 = "";
+if ($pad != "")
+{
+    $add4 = " AND edtb_stations.max_landing_pad_size = '" . $pad . "'";
+	$stations = true;
+	$padsize = $pad == "L" ? "Large" : "Medium";
+	$text .= "  stationswith " . $padsize . " sized landing pads";
+	$hidden_inputs .= '<input type="hidden" name="pad" value="' . $pad . '" />';
+	$addtolink .= "&pad=" . $pad . "";
+	$addtolink2 .= "&pad=" . $pad . "";
+}
+
+// nearest stations
+if ($stations !== false)
+{
+	$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT edtb_stations.system_id AS system_id, edtb_stations.name AS station_name,
+														edtb_stations.ls_from_star, edtb_stations.max_landing_pad_size,
+														edtb_stations.is_planetary, edtb_stations.type,
+														edtb_systems.allegiance AS allegiance,
+														edtb_systems.name AS system,
+														edtb_systems.x AS coordx,
+														edtb_systems.y AS coordy,
+														edtb_systems.z AS coordz,
+														edtb_systems.population,
+														edtb_systems.government,
+														edtb_systems.security,
+														edtb_systems.economy
+														FROM edtb_stations
+														LEFT JOIN edtb_systems on edtb_stations.system_id = edtb_systems.id
+														WHERE edtb_systems.x != ''" . $add . "" . $add2 . "" . $add3 . "" . $add4 . "
 														ORDER BY sqrt(pow((coordx-(" . $usex . ")),2)+pow((coordy-(" . $usey . ")),2)+pow((coordz-(" . $usez . ")),2)),
 														edtb_stations.ls_from_star
 														LIMIT 10");
@@ -148,6 +240,27 @@ if ($group_id != "" && $group_id != "0")
 		$rating_add = " AND rating = '" . $_GET["rating"] . "'";
 	}
 
+	$gnres = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT group_name FROM edtb_modules WHERE group_id = '" . $group_id . "' LIMIT 1");
+	$gnarr = mysqli_fetch_assoc($gnres);
+
+	$group_name = $gnarr["group_name"];
+	$group_name = substr($group_name, -1) == "s" ? $group_name : "" . $group_name . "s";
+
+	if ($rating != "" && $rating != "0")
+	{
+		$ratings = " " . $_GET["rating"] . " rated ";
+		$hidden_inputs .= '<input type="hidden" name="rating" value="' . $rating . '" />';
+	}
+	if ($class != "" && $class != "0")
+	{
+		$classes = " class " . $_GET["class"] . " ";
+		$hidden_inputs .= '<input type="hidden" name="class" value="' . $class . '" />';
+	}
+	$text .= " stations selling " . $ratings . "" . $classes . "" . $group_name . "";
+	$hidden_inputs .= '<input type="hidden" name="group_id" value="' . $group_id . '" />';
+	$addtolink .= "&group_id=" . $group_id . "";
+	$addtolink2 .= "&group_id=" . $group_id . "";
+
 	$module_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id
 																FROM edtb_modules
 																WHERE group_id = '" . $group_id . "'" . $class_add . "" . $rating_add . "
@@ -161,6 +274,7 @@ if ($group_id != "" && $group_id != "0")
 
 		$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT edtb_stations.system_id AS system_id, edtb_stations.name AS station_name,
 															edtb_stations.ls_from_star, edtb_stations.max_landing_pad_size,
+															edtb_stations.is_planetary, edtb_stations.type,
 															edtb_systems.allegiance AS allegiance,
 															edtb_systems.name AS system,
 															edtb_systems.x AS coordx,
@@ -173,7 +287,7 @@ if ($group_id != "" && $group_id != "0")
 															FROM edtb_stations
 															LEFT JOIN edtb_systems on edtb_stations.system_id = edtb_systems.id
 															WHERE edtb_systems.x != ''
-															AND edtb_stations.selling_modules LIKE '-%" . $modules_id . "%-'" . $add . "" . $add2 . "" . $add3 . "
+															AND edtb_stations.selling_modules LIKE '-%" . $modules_id . "%-'" . $add . "" . $add2 . "" . $add3 . "" . $add4 . "
 															ORDER BY sqrt(pow((coordx-(" . $usex . ")),2)+pow((coordy-(" . $usey . ")),2)+pow((coordz-(" . $usez . ")),2))
 															LIMIT 10");
 		$stations = true;
@@ -189,6 +303,7 @@ if ($ship_name != "" && $ship_name != "0")
 {
 	$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT edtb_stations.system_id AS system_id, edtb_stations.name AS station_name,
 														edtb_stations.ls_from_star, edtb_stations.max_landing_pad_size,
+														edtb_stations.is_planetary, edtb_stations.type,
 														edtb_systems.allegiance AS allegiance,
 														edtb_systems.name AS system,
 														edtb_systems.x AS coordx,
@@ -201,96 +316,49 @@ if ($ship_name != "" && $ship_name != "0")
 														FROM edtb_stations
 														LEFT JOIN edtb_systems on edtb_stations.system_id = edtb_systems.id
 														WHERE edtb_systems.x != ''
-														AND edtb_stations.selling_ships LIKE '%\'" . $ship_name . "\'%'" . $add . "" . $add2 . "" . $add3 . "
+														AND edtb_stations.selling_ships LIKE '%\'" . $ship_name . "\'%'" . $add . "" . $add2 . "" . $add3 . "" . $add4 . "
 														ORDER BY sqrt(pow((coordx-(" . $usex . ")),2)+pow((coordy-(" . $usey . ")),2)+pow((coordz-(" . $usez . ")),2))
 														LIMIT 10");
 	$stations = true;
-}
-
-
-// if we're searching facilities
-if ($facility != "" && $facility != "0")
-{
-	$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT edtb_stations.system_id AS system_id, edtb_stations.name AS station_name,
-														edtb_stations.ls_from_star, edtb_stations.max_landing_pad_size,
-														edtb_systems.allegiance AS allegiance,
-														edtb_systems.name AS system,
-														edtb_systems.x AS coordx,
-														edtb_systems.y AS coordy,
-														edtb_systems.z AS coordz,
-														edtb_systems.population,
-														edtb_systems.government,
-														edtb_systems.security,
-														edtb_systems.economy
-														FROM edtb_stations
-														LEFT JOIN edtb_systems on edtb_stations.system_id = edtb_systems.id
-														WHERE edtb_systems.x != ''
-														AND edtb_stations." . $facility . " = '1'" . $add . "" . $add2 . "" . $add3 . "
-														ORDER BY sqrt(pow((coordx-(" . $usex . ")),2)+pow((coordy-(" . $usey . ")),2)+pow((coordz-(" . $usez . ")),2))
-														LIMIT 10");
-	$stations = true;
-}
-
-$count = mysqli_num_rows($res);
-
-$text = "Nearest";
-
-if (isset($_GET["allegiance"]))
-	$text .= "  systems " . $addtext. "with " . $_GET['allegiance'] . " controlled stations";
-
-if (isset($_GET["system_allegiance"]))
-	$text .= " " . str_replace('None', 'Non-allied', $_GET['system_allegiance']) . " systems " . $addtext. "";
-
-if (isset($_GET["power"]))
-	$text .= " " . $_GET['power'] . " systems " . $addtext. "";
-
-if (isset($_GET["group_id"]) && $_GET["group_id"] != "0")
-{
-	$gnres = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT group_name FROM edtb_modules WHERE group_id = '" . $_GET["group_id"] . "' LIMIT 1");
-	$gnarr = mysqli_fetch_assoc($gnres);
-
-	$group_name = $gnarr["group_name"];
-	$group_name = substr($group_name, -1) == "s" ? $group_name : "" . $group_name . "s";
-
-	//$ratings = $_GET["rating"];
-	if ($rating != "" && $rating != "0")
-	{
-		$ratings = " " . $_GET["rating"] . " rated ";
-	}
-	if ($class != "" && $class != "0")
-	{
-		$classes = " class " . $_GET["class"] . " ";
-	}
-	//$classes = isset($_GET["class"]) ? " class " . $_GET["class"] . " " : "";
-	$text .= " stations " . $addtext. " selling " . $ratings . "" . $classes . "" . $group_name . "";
-}
-
-if (isset($_GET["ship_name"]) && $_GET["ship_name"] != "0")
-{
-	$text .= " stations " . $addtext. " selling the " . $_GET['ship_name'] . "";
-}
-
-if (isset($_GET["facility"]) && $_GET["facility"] != "0")
-{
-	$f_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT name
-														FROM edtb_facilities
-														WHERE code = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $_GET["facility"]) . "'
-														LIMIT 1");
-	$f_arr = mysqli_fetch_assoc($f_res);
-	$f_name = $f_arr["name"];
-
-	$text .= " stations " . $addtext. " with a " . $f_name . " facility";
+	$text .= " stations selling the " . $ship_name . "";
+	$hidden_inputs .= '<input type="hidden" name="ship_name" value="' . $ship_name . '" />';
+	$addtolink .= "&ship_name=" . $ship_name . "";
+	$addtolink2 .= "&ship_name=" . $ship_name . "";
 }
 
 if ($text == "Nearest")
-	$text = "Nearest stations " . $addtext. "";
+	$text = "Nearest stations";
 
-if ($system != "")
+/*
+*	replace all but the first occurance of "key" with "value"
+*/
+
+$replaces = array(	"stations" => "",
+					"selling" => "and",
+					"with" => "and"
+					);
+
+foreach ($replaces as $replace => $with)
 {
-	$addtolink = "&system=" . $system . "";
+	$pos = strpos($text, $replace);
+	if ($pos !== false)
+	{
+		$text = substr($text, 0, $pos + 1) . str_replace($replace, $with, substr($text, $pos + 1));
+	}
 }
 
-$text = str_replace("stations stations", "stations", $text);
+/*
+*	replace all but the last occurance of "systems"
+*/
+
+$pos = substr_count($text, 'systems');
+if ($pos > 1)
+{
+	$text = preg_replace('/\.(\s|$)/', 'systems$1', $text);
+	$text = substr_replace($text, '', strpos($text,'systems'), 7);
+}
+
+$count = mysqli_num_rows($res);
 ?>
 <script>
 YUI().use('pjax', function (Y) {
@@ -316,10 +384,10 @@ YUI().use('pjax', function (Y) {
 			<tr>
 				<!-- station allegiances -->
 				<td class="station_info_price_info_t" style="vertical-align:top;width:25%;white-space:nowrap;">
-					<a class="nslink" href="/nearest_systems.php?allegiance=Empire<?php echo $addtolink;?>" title="Empire"><img src="style/img/empire.png" alt="All" style="vertical-align:middle;" /></a>&nbsp;
-					<a class="nslink" href="/nearest_systems.php?allegiance=Alliance<?php echo $addtolink;?>" title="Alliance"><img src="style/img/alliance.png" alt="All" style="vertical-align:middle;" /></a>&nbsp;
-					<a class="nslink" href="/nearest_systems.php?allegiance=Federation<?php echo $addtolink;?>" title="Federation"><img src="style/img/federation.png" alt="All" style="vertical-align:middle;" /></a>&nbsp;
-					<a class="nslink" href="/nearest_systems.php<?php echo $addtolink;?>" title="All"><img src="style/img/system.png" alt="All" style="vertical-align:middle;" /></a>
+					<a class="nslink" href="/nearest_systems.php?allegiance=Empire<?php echo $addtolink2;?>" title="Empire"><img src="style/img/empire.png" alt="All" style="vertical-align:middle;" /></a>&nbsp;
+					<a class="nslink" href="/nearest_systems.php?allegiance=Alliance<?php echo $addtolink2;?>" title="Alliance"><img src="style/img/alliance.png" alt="All" style="vertical-align:middle;" /></a>&nbsp;
+					<a class="nslink" href="/nearest_systems.php?allegiance=Federation<?php echo $addtolink2;?>" title="Federation"><img src="style/img/federation.png" alt="All" style="vertical-align:middle;" /></a>&nbsp;
+					<a class="nslink" href="/nearest_systems.php?allegiance=Independent<?php echo $addtolink2;?>" title="Independent"><img src="style/img/system.png" alt="All" style="vertical-align:middle;" /></a>
 					<!-- search systems and stations-->
 					<div style="text-align:left;">
 						<div style="width:180px;margin-top:35px;">
@@ -332,66 +400,69 @@ YUI().use('pjax', function (Y) {
 				</td>
 				<!-- allegiances -->
 				<td class="station_info_price_info_t" style="vertical-align:top;width:25%;white-space:nowrap;">
-					<a class="nslink" href="/nearest_systems.php?system_allegiance=Empire<?php echo $addtolink;?>" title="Empire"><img src="style/img/empire.png" alt="All" style="vertical-align:middle;" /></a>&nbsp;
-					<a class="nslink" href="/nearest_systems.php?system_allegiance=Alliance<?php echo $addtolink;?>" title="Alliance"><img src="style/img/alliance.png" alt="All" style="vertical-align:middle;" /></a>&nbsp;
-					<a class="nslink" href="/nearest_systems.php?system_allegiance=Federation<?php echo $addtolink;?>" title="Federation"><img src="style/img/federation.png" alt="All" style="vertical-align:middle;" /></a>&nbsp;
-					<a class="nslink" href="/nearest_systems.php?system_allegiance=None<?php echo $addtolink;?>" title="None allied"><img src="style/img/system.png" alt="None allied" style="vertical-align:middle;" /></a>
+					<a class="nslink" href="/nearest_systems.php?system_allegiance=Empire<?php echo $addtolink2;?>" title="Empire"><img src="style/img/empire.png" alt="All" style="vertical-align:middle;" /></a>&nbsp;
+					<a class="nslink" href="/nearest_systems.php?system_allegiance=Alliance<?php echo $addtolink2;?>" title="Alliance"><img src="style/img/alliance.png" alt="All" style="vertical-align:middle;" /></a>&nbsp;
+					<a class="nslink" href="/nearest_systems.php?system_allegiance=Federation<?php echo $addtolink2;?>" title="Federation"><img src="style/img/federation.png" alt="All" style="vertical-align:middle;" /></a>&nbsp;
+					<a class="nslink" href="/nearest_systems.php?system_allegiance=None<?php echo $addtolink2;?>" title="None allied"><img src="style/img/system.png" alt="None allied" style="vertical-align:middle;" /></a>
 					<br /><br />
 				</td>
 				<!-- powers -->
 				<td class="station_info_price_info_t" style="vertical-align:top;width:25%;white-space:nowrap;">
-					<a class="nslink" href="/nearest_systems.php?power=Zachary%20Hudson<?php echo $addtolink;?>" title="Zachary Hudson">Zachary Hudson</a><br />
-					<a class="nslink" href="/nearest_systems.php?power=Edmund%20Mahon<?php echo $addtolink;?>" title="Edmund Mahon">Edmund Mahon</a><br />
-					<a class="nslink" href="/nearest_systems.php?power=Arissa%20Lavigny-Duval<?php echo $addtolink;?>" title="Arissa Lavigny-Duval">Arissa Lavigny-Duval</a><br />
-					<a class="nslink" href="/nearest_systems.php?power=Felicia%20Winters<?php echo $addtolink;?>" title="Felicia Winters">Felicia Winters</a><br />
-					<a class="nslink" href="/nearest_systems.php?power=Li%20Yong-Rui<?php echo $addtolink;?>" title="Li Yong-Rui">Li Yong-Rui</a><br />
-					<a class="nslink" href="/nearest_systems.php?power=Aisling%20Duval<?php echo $addtolink;?>" title="Aisling Duval">Aisling Duval</a><br />
-					<a class="nslink" href="/nearest_systems.php?power=Zemina%20Torval<?php echo $addtolink;?>" title="Zemina Torval">Zemina Torval</a><br />
-					<a class="nslink" href="/nearest_systems.php?power=Denton%20Patreus<?php echo $addtolink;?>" title="Denton Patreus">Denton Patreus</a><br />
-					<a class="nslink" href="/nearest_systems.php?power=Archon%20Delaine<?php echo $addtolink;?>" title="Archon Delaine">Archon Delaine</a><br />
-					<a class="nslink" href="/nearest_systems.php?power=Pranav%20Antal<?php echo $addtolink;?>" title="Pranav Antal">Pranav Antal</a>
-					<br />
+					<?php
+					$p_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT name FROM edtb_powers ORDER BY name");
+
+					while ($p_arr = mysqli_fetch_assoc($p_res))
+					{
+						$power_name = $p_arr["name"];
+
+						if (isset($power))
+						{
+							$addtolink = str_replace("&power=", "", $addtolink);
+							$addtolink = str_replace("?power=", "", $addtolink);
+							$addtolink = str_replace(urlencode($power), "", $addtolink);
+						}
+						echo '<a class="nslink" href="/nearest_systems.php?power=' . urlencode($power_name). '' . $addtolink . '" title="' . $power_name . '">' . $power_name . '</a><br />';
+					}
+					?>
 				</td>
 				<!-- modules -->
 				<td class="station_info_price_info_t" style="vertical-align:top;width:25%;white-space:nowrap;">
-					<form method="get" action="nearest_systems.php" name="go">
+					<form method="get" action="<?php echo $_SERVER['PHP_SELF'];?>" name="go">
 						<?php
-						if ($system != "")
+						echo $hidden_inputs;
+						if (isset($group_id) && $group_id != "0")
 						{
-							echo '<input name="system" value="' . $system . '" type="hidden" />';
-						}
-						if ($power != "")
-						{
-							echo '<input name="power" value="' . $power . '" type="hidden" />';
-						}
-						if ($system_allegiance != "")
-						{
-							echo '<input name="system_allegiance" value="' . $system_allegiance . '" type="hidden" />';
-						}
-						if ($only != "")
-						{
-							echo '<input name="allegiance" value="' . $only . '" type="hidden" />';
+							$modi = " AND group_id = '" . $group_id . "'";
 						}
 						?>
-						<select class="selectbox" name="group_id" style="width:222px;">
-								<option value="0">Module</option>
+						<select class="selectbox" name="group_id" style="width:222px;" onchange="getCR($('select[name=group_id]').val());">
+								<optgroup label="Module"><option value="0">Module</option>
 								<?php
-								$mod_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT DISTINCT group_id, group_name
+								$mod_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT DISTINCT group_id, group_name, category_name
 																						FROM edtb_modules
-																						ORDER BY group_name");
+																						ORDER BY category_name, group_name");
 
+								$cur_cat = "";
 								while ($mod_arr = mysqli_fetch_assoc($mod_res))
 								{
+									$cat_name = $mod_arr["category_name"];
+
+									if ($cur_cat != $cat_name)
+									{
+										echo '</optgroup><optgroup label="' . $cat_name . '">';
+									}
 									$selected = $_GET["group_id"] == $mod_arr["group_id"] ? " selected='selected'" : "";
 									echo '<option value="' . $mod_arr["group_id"] . '"' . $selected . '>' . $mod_arr["group_name"] . '</option>';
+
+									$cur_cat = $cat_name;
 								}
 								?>
 						</select><br />
-						<select class="selectbox" name="class" style="width:222px;">
+						<select class="selectbox" name="class" style="width:222px;" id="class">
 								<option value="0">Class</option>
 								<?php
 								$mod_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT DISTINCT class
-																						FROM edtb_modules WHERE class != ''
+																						FROM edtb_modules WHERE class != ''" . $modi . "
 																						ORDER BY class");
 
 								while ($mod_arr = mysqli_fetch_assoc($mod_res))
@@ -401,12 +472,12 @@ YUI().use('pjax', function (Y) {
 								}
 								?>
 						</select><br />
-						<select class="selectbox" name="rating" style="width:222px;">
+						<select class="selectbox" name="rating" style="width:222px;" id="rating">
 								<option value="0">Rating</option>
 								<?php
 								$mod_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT DISTINCT rating
 																						FROM edtb_modules
-																						WHERE rating != ''
+																						WHERE rating != ''" . $modi . "
 																						ORDER BY rating");
 
 								while ($mod_arr = mysqli_fetch_assoc($mod_res))
@@ -422,28 +493,14 @@ YUI().use('pjax', function (Y) {
 				<!-- ships & facilities -->
 				<td class="station_info_price_info_t" style="vertical-align:top;width:25%;white-space:nowrap;">
 					<!-- ships -->
-					<form method="get" action="nearest_systems.php" name="go" id="ships">
+					<form method="get" action="<?php echo $_SERVER['PHP_SELF'];?>" name="go" id="ships">
 						<?php
-						if ($system != "")
-						{
-							echo '<input name="system" value="' . $system . '" type="hidden" />';
-						}
-						if ($power != "")
-						{
-							echo '<input name="power" value="' . $power . '" type="hidden" />';
-						}
-						if ($system_allegiance != "")
-						{
-							echo '<input name="system_allegiance" value="' . $system_allegiance . '" type="hidden" />';
-						}
-						if ($only != "")
-						{
-							echo '<input name="allegiance" value="' . $only . '" type="hidden" />';
-						}
+						echo $hidden_inputs;
 						?>
 						<select class="selectbox" name="ship_name" style="width:180px;" onchange="this.form.submit();">
-								<option value="0">Ship</option>
+								<option value="0">Sells Ships</option>
 								<?php
+
 								$ship_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT name
 																						FROM edtb_ships
 																						ORDER BY name");
@@ -458,27 +515,12 @@ YUI().use('pjax', function (Y) {
 						<!--<input id="ship_submit" class="button" type="submit" value="Search" style="width:180px;" />-->
 					</form>
 					<!-- facilities -->
-					<form method="get" action="nearest_systems.php" name="go" id="ships">
+					<form method="get" action="<?php echo $_SERVER['PHP_SELF'];?>" name="go" id="ships">
 						<?php
-						if ($system != "")
-						{
-							echo '<input name="system" value="' . $system . '" type="hidden" />';
-						}
-						if ($power != "")
-						{
-							echo '<input name="power" value="' . $power . '" type="hidden" />';
-						}
-						if ($system_allegiance != "")
-						{
-							echo '<input name="system_allegiance" value="' . $system_allegiance . '" type="hidden" />';
-						}
-						if ($only != "")
-						{
-							echo '<input name="allegiance" value="' . $only . '" type="hidden" />';
-						}
+						echo $hidden_inputs;
 						?>
 						<select class="selectbox" name="facility" style="width:180px;" onchange="this.form.submit();">
-								<option value="0">Facilities</option>
+								<option value="0">Has Facilities</option>
 								<?php
 								$facility_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT name, code
 																							FROM edtb_facilities
@@ -492,6 +534,21 @@ YUI().use('pjax', function (Y) {
 								?>
 						</select><br />
 						<!--<input id="ship_submit" class="button" type="submit" value="Search" style="width:180px;" />-->
+					</form>
+					<form method="get" action="<?php echo $_SERVER['PHP_SELF'];?>" name="go" id="ships">
+						<?php
+						echo $hidden_inputs;
+						?>
+						<select class="selectbox" name="pad" style="width:180px;" onchange="this.form.submit();">
+							<?php
+							$selectedL = $_GET["pad"] == "L" ? " selected='selected'" : "";
+							$selectedM = $_GET["pad"] == "M" ? " selected='selected'" : "";
+							?>
+							<option value="">Landing Pad Size</option>
+							<option value="L"<?php echo $selectedL;?>>Large</option>
+							<option value="M"<?php echo $selectedM;?>>Medium</option>
+							<option value="">All</option>
+						</select><br />
 					</form>
 				</td>
 			</tr>
@@ -586,8 +643,14 @@ YUI().use('pjax', function (Y) {
 								{
 									$station_ls_from_star = $arr["ls_from_star"] == 0 ? "n/a" : number_format($arr["ls_from_star"]);
 									$station_max_landing_pad_size = $arr["max_landing_pad_size"];
+									$station_is_planetary = $arr["is_planetary"];
+									$station_type = $arr["type"];
 
-									echo '<td class="station_info_price_info_t">' . $station_name . '</td>';
+									/*$planetary = $station_is_planetary == "1" ? '<img src="/style/img/planetary.png" alt="planetary" style="margin-right:6px;vertical-align:middle;" />' : '<img src="/style/img/spaceport.png" alt="" style="margin-right:6px;vertical-align:middle;" />';*/
+
+									$icon = get_station_icon($station_type, $station_is_planetary);
+
+									echo '<td class="station_info_price_info_t">' . $icon . '' . $station_name . '</td>';
 									echo '<td class="station_info_price_info_t">' . $station_ls_from_star . '</td>';
 									echo '<td class="station_info_price_info_t">' . $station_max_landing_pad_size . '</td>';
 								}
