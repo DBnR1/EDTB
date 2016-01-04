@@ -1,4 +1,3 @@
-
 var Galaxy = {
 
 
@@ -184,5 +183,4 @@ var Galaxy = {
 
     this.obj.add(pointsBig);
   }
-
 }

@@ -1,6 +1,4 @@
-
 var Route = {
-
 
   /**
    * Create a Line route
@@ -45,6 +43,4 @@ var Route = {
     //HUD.setRoute(idRoute, nameR);
 
   }
-
-
 }

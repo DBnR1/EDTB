@@ -14,7 +14,6 @@ var container;
 var routes = [];
 var lensFlareSel;
 
-
 var Ed3d = {
 
   'container'   : 'edmap',
@@ -73,8 +72,6 @@ var Ed3d = {
     'glow_1' : null,
     'custom' : []
 
-
-
   },
   'colors'  : [],
   'textures' : {
@@ -99,7 +96,6 @@ var Ed3d = {
 
   //-- Graphical Options
   'optDistObj' : 1500,
-
 
   /**
    * Init Ed3d map
@@ -137,13 +133,11 @@ var Ed3d = {
     //-- Init 3D map container
     $('#'+Ed3d.container).append('<div id="ed3dmap"></div>');
 
-
     //-- Load dependencies
 
     if(typeof isMinified !== 'undefined') return Ed3d.launchMap();
 
     $.when(
-
         $.getScript(Ed3d.basePath + "vendor/three-js/OrbitControls.js"),
         $.getScript(Ed3d.basePath + "vendor/three-js/CSS3DRenderer.js"),
         $.getScript(Ed3d.basePath + "vendor/three-js/Projector.js"),
@@ -186,7 +180,6 @@ var Ed3d = {
     else if(this.jsonContainer != null) Ed3d.loadDatasFromContainer();
 
     Action.moveInitalPosition();
-
   },
 
   /**
@@ -205,7 +198,6 @@ var Ed3d = {
       Ed3d.grid1K  = $.extend({}, Grid.init(1000, 0x22323A, 1000), {});
       Ed3d.grid1XL = $.extend({}, Grid.init(10000, 0x22323A, 10000), {});
 
-
       // Add some scene enhancement
       Ed3d.skyboxStars();
 
@@ -221,7 +213,6 @@ var Ed3d = {
 
       // Animate
       animate();
-
   },
 
   /**
@@ -252,7 +243,6 @@ var Ed3d = {
       depthWrite: false,
       opacity: 0.9
     });
-
   },
 
   'addCustomMaterial' : function (id, color) {
@@ -261,7 +251,6 @@ var Ed3d = {
     this.colors[id] = color;
 
   },
-
 
   /**
    * Init Three.js scene
@@ -279,7 +268,7 @@ var Ed3d = {
     //camera
     camera = new THREE.PerspectiveCamera(45, container.offsetWidth / container.offsetHeight, 1, 200000);
 
-    camera.position.set(0, 500, 500);
+    camera.position.set(0, 600, 600);
 
     //HemisphereLight
     light = new THREE.HemisphereLight(0xffffff, 0xcccccc);
@@ -300,12 +289,10 @@ var Ed3d = {
     controls.rotateSpeed = 1.0;
     controls.zoomSpeed = 3.5;
     controls.panSpeed = 0.8;
-    controls.maxDistance = 40000;
+    controls.maxDistance = 100000;
     controls.noZoom=!1;controls.noPan=!1;controls.staticMoving=!0;controls.dynamicDampingFactor=.3;
 
-
     // Add Fog
-
     scene.fog = new THREE.FogExp2(0x0D0D10, 0.000128);
     renderer.setClearColor(scene.fog.color, 1);
     Ed3d.fogDensity = scene.fog.density;
@@ -353,7 +340,6 @@ var Ed3d = {
     if(json != null) Ed3d.loadDatas(json);
 
     Ed3d.loadDatasComplete();
-
   },
 
   'loadDatas' : function(data) {
@@ -385,7 +371,6 @@ var Ed3d = {
           Route.createRoute(key1, route.list, route.cat);
         });
       }
-
   },
 
   'loadDatasComplete' : function() {
@@ -393,7 +378,6 @@ var Ed3d = {
       System.endParticleSystem();
       HUD.init();
       Action.init();
-
   },
 
   /**
@@ -405,7 +389,6 @@ var Ed3d = {
     $.each(catList, function(keyArr, idCat) {
       Ed3d.catObjs[idCat].push(index);
     });
-
   },
 
   /**
@@ -432,10 +415,8 @@ var Ed3d = {
     });
     this.starfield = new THREE.Points(particles, particleMaterial);
 
-
     scene.add(this.starfield);
   },
-
 
   /**
    * Calc distance from Sol
@@ -448,12 +429,27 @@ var Ed3d = {
     var dz = target.z;
 
     return Math.round(Math.sqrt(dx*dx+dy*dy+dz*dz));
+  },
+
+  /**
+   * Calc distance from current
+   */
+
+  'calcDistCur' : function(target, fromx, fromy, fromz) {
+
+    var x2 = target.x;
+    var y2 = target.y;
+    var z2 = target.z;
+
+	var x1 = fromx;
+	var y1 = fromy;
+	var z1 = -fromz;
+
+	var distance = Math.round(Math.sqrt(Math.pow((x1-(x2)),2)+Math.pow((y1-(y2)),2)+Math.pow((z1-(z2)),2)));
+
+	return distance;
   }
-
-
 }
-
-
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
@@ -470,10 +466,15 @@ function animate(time) {
 
   renderer.render(scene, camera);
 
+  fromx = $('#curx').html();
+  fromy = $('#cury').html();
+  fromz = $('#curz').html();
+
   $('#cx').html(Math.round(controls.center.x));
   $('#cy').html(Math.round(controls.center.y));
   $('#cz').html(Math.round(-controls.center.z)); // Reverse z coord
 
+  $('#distcur').html(Ed3d.calcDistCur(controls.target, fromx, fromy, fromz));
   $('#distsol').html(Ed3d.calcDistSol(controls.target));
 
   //-- Move starfield with cam
@@ -494,7 +495,6 @@ function animate(time) {
     Action.cursorSel.rotation.y =  camera.rotation.y ;
   }
 
-
   //-- Zoom on on galaxy effect
   Action.sizeOnScroll(scale);
 
@@ -509,8 +509,6 @@ function animate(time) {
   }
 
   requestAnimationFrame( animate );
-
-
 }
 
 var isFarView = false;
@@ -540,16 +538,12 @@ function enableFarView (scale, withAnim) {
     Galaxy.milkyway[1].material.size = scaleTo*4;
   }
 
-
   //Galaxy.obj.scale.set(20,20,20);
   if(Action.cursorSel != null)  Action.cursorSel.scale.set(60,60,60);
   Ed3d.grid1H.obj.visible = false;
   Ed3d.grid1K.obj.visible = false;
   Ed3d.starfield.visible = false;
   scene.fog.density = 0.000009;
-
-
-
 }
 
 function disableFarView(scale, withAnim) {
@@ -580,7 +574,6 @@ function disableFarView(scale, withAnim) {
     Galaxy.milkyway[1].material.size = scaleTo;
   }
 
-
   //-- Show element
   Galaxy.milkyway[0].material.size = 16;
 //
@@ -592,11 +585,9 @@ function disableFarView(scale, withAnim) {
   scene.fog.density = Ed3d.fogDensity;
 }
 
-
 function render() {
   renderer.render(scene, camera);
 }
-
 
 window.addEventListener('resize', function () {
   if(renderer != undefined) {
@@ -610,20 +601,8 @@ window.addEventListener('resize', function () {
   }
 });
 
-
-
-
-
-
-
-
-
-
-
-
 //--------------------------------------------------------------------------
 // Test perf
-
 
 function distance (v1, v2) {
     var dx = v1.position.x - v2.position.x;
@@ -668,5 +647,4 @@ function refreshWithCamPos() {
   camSave.x = Math.round(camera.position.x/p)*p;
   camSave.y = Math.round(camera.position.y/p)*p;
   camSave.z = Math.round(camera.position.z/p)*p;
-
 }

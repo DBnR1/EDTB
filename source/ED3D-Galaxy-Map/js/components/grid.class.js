@@ -1,4 +1,3 @@
-
 var Grid = {
 
   'obj' : null,
@@ -85,9 +84,5 @@ var Grid = {
       scene.add(this.coordGrid);
 
     }
-
   }
-
-
 }
-

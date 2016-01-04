@@ -1,4 +1,3 @@
-
 var System = {
 
   'particle' : null,

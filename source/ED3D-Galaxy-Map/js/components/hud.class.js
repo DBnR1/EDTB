@@ -1,4 +1,3 @@
-
 var HUD = {
 
   'container' : null,
@@ -16,7 +15,8 @@ var HUD = {
     $('#hud').append(
       '<div>'+
       '    <h2>Infos</h2>'+
-      '     Dist. Sol <span id="distsol"></span>'+
+      '     Distance to Sol:  <span id="distsol"></span> ly<br />'+
+	  '	    Distance to current:  <span id="distcur"></span> ly'+
       '    <div id="coords" class="coords">'+
       '      <span id="cx"></span><span id="cy"></span><span id="cz"></span></div>'+
       '      <p id="infos"></p>'+
@@ -27,14 +27,11 @@ var HUD = {
       '  </div>'+*/
       '  <div id="filters">'+
       '  </div>'+
-
-
       '</div>'
     );
     $('#'+this.container).append('<div id="systemDetails" style="display:none;"></div>');
-
+	$('#'+this.container).append('<div id="navDetails" style="display:none;"></div>');
   },
-
 
   /**
    *
@@ -68,6 +65,7 @@ var HUD = {
       }
     );
     $( "#systemDetails" ).hide();
+	$( "#navDetails" ).hide();
 
     //-- Add Count filters
     $('.map_filter').each(function(e) {
@@ -114,8 +112,8 @@ var HUD = {
       $(this).toggleClass('disabled');
 
       //-- If current selection is no more visible, disable active selection
-      if(Action.oldSel != null && !Action.oldSel.visible) Action.disableSelection();
-      Action.moveInitalPosition();
+      //if(Action.oldSel != null && !Action.oldSel.visible) Action.disableSelection();
+      //Action.moveInitalPosition();
     });
 
 
@@ -159,7 +157,6 @@ var HUD = {
 
   },
 
-
   /**
    * Remove filters list
    */
@@ -169,7 +166,6 @@ var HUD = {
     $('#hud #filters').html('');
 
   },
-
 
   /**
    *
@@ -202,6 +198,13 @@ var HUD = {
         controls.enabled = true;
       }
     );
+    $('#navDetails').show().hover(
+      function() {
+        controls.enabled = false;
+      }, function() {
+        controls.enabled = true;
+      }
+    );
   },
   /**
    *
@@ -209,6 +212,7 @@ var HUD = {
   'closeHudDetails' : function() {
     $('#hud').show();
     $('#systemDetails').hide();
+    $('#navDetails').hide();
   },
 
   /**
@@ -218,8 +222,6 @@ var HUD = {
     $('#routes').append('<a class="map_link" data-route="' + idRoute + '"><span class="check"> </span>' + nameR + '</a>');
   },
 
-
-
   /**
    *
    */
@@ -227,12 +229,15 @@ var HUD = {
   'setInfoPanel' : function(index, point) {
 
     $('#systemDetails').html(
-      '<h2>'+point.name+'</h2>'+
+      '<h2><a class="hud" href="'+encodeURI('/system.php?system_name='+replaceAll(point.name, " ", "+")+'')+'">'+point.name+'</a></h2>'+
       '<div class="coords">'+
       '  <span>'+point.x+'</span><span>'+point.y+'</span><span>'+(-point.z)+'</span></div>'+
       '  <p id="infos"></p>'+
       '</div>'+
-      (point.infos != undefined ? '<div>'+point.infos+'</div>' : '')+
+      (point.infos != undefined ? '<div>'+point.infos+'</div>' : '')
+    );
+
+    $('#navDetails').html(
       '<div id="nav">'+
       '</div>'
     );
@@ -252,7 +257,6 @@ var HUD = {
     .appendTo("#nav");
 
   },
-
 
   /**
    * Add Shape text
@@ -280,8 +284,6 @@ var HUD = {
       var textMesh = Ed3d.textSel[id];
     }
 
-
-
     textMesh.geometry = textGeo;
     textMesh.geometry.needsUpdate = true;
 
@@ -290,7 +292,5 @@ var HUD = {
     Ed3d.textSel[id] = textMesh;
     addToObj.add(textMesh);
 
-
   }
-
 }

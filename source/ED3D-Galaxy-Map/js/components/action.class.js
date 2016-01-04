@@ -1,4 +1,3 @@
-
 var Action = {
 
   'cursorSel' : null,
@@ -413,7 +412,4 @@ var Action = {
     Ed3d.grid1XL.obj.position.set(posX, posY, posZ);
 
   }
-
-
-
 }

@@ -29,7 +29,11 @@ require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 <script src="/source/three.min.js"></script>
 <!-- ED3D-Galaxy-Map stuff -->
 <link href="/source/ED3D-Galaxy-Map/css/styles.css" rel="stylesheet" type="text/css" />
-<script src="/source/ED3D-Galaxy-Map/js/ed3dmap.min.js?v=5"></script>
+<script src="/source/ED3D-Galaxy-Map/js/ed3dmap.js"></script>
+
+<div style="display:none;" id="curx"><?php echo $coordx?></div>
+<div style="display:none;" id="cury"><?php echo $coordy?></div>
+<div style="display:none;" id="curz"><?php echo $coordz?></div>
 
 <div class="entries" style="position:absolute;bottom:0px;top:0px;height:auto;">
 	<table style="margin-left:370px;">
@@ -44,59 +48,6 @@ require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 			</tr>
 		</tbody>
 	</table>
-		<div id="map_legend" onclick='$("#map_legend2").toggle();'>Legend</div>
-		<div id="map_legend2">
-			<table style="padding:5px;">
-				<tr>
-					<td><div style="background-color:#e7d884;width:7px;height:7px;border-radius:50%;vertical-align:middle;"></div></td>
-					<td>Empire</td>
-				</tr>
-				<tr>
-					<td><div style="background-color:#09b4f4;width:7px;height:7px;border-radius:50%;vertical-align:middle;"></div></td>
-					<td>Alliance</td>
-				</tr>
-				<tr>
-					<td><div style="background-color:#8c8c8c;width:7px;height:7px;border-radius:50%;vertical-align:middle;"></div></td>
-					<td>Federation</td>
-				</tr>
-				<tr>
-					<td><div style="background-color:#D9DADB;width:7px;height:7px;border-radius:50%;vertical-align:middle;"></div></td>
-					<td>Other</td>
-				</tr>
-				<!--<tr>
-					<td><div style="background-color:#FF0000;width:7px;height:7px;border-radius:50%;vertical-align:middle;"></div></td>
-					<td>Sol</td>
-				</tr>-->
-				<tr>
-					<td><div style="background-color:#FF0000;width:8px;height:8px;border-radius:50%;vertical-align:middle;"></div></td>
-					<td>Current Location</td>
-				</tr>
-				<!--<tr>
-					<td style="text-align:center;vertical-align:middle;">
-						<div style="background-color:#2e92e7;width:8px;height:8px;border-radius:50%;">
-							<div style="position:relative;left:2px;top:2px;background-color:#ccc;width:4px;height:4px;border-radius:50%;"></div>
-						</div>
-					</td>
-					<td>System With a Log Entry</td>
-				</tr>-->
-				<tr>
-					<td><div style="background-color:#00FF1E;width:8px;height:8px;border-radius:50%;vertical-align:middle;"></div></td>
-					<td>Visited Point of Interest</td>
-				</tr>
-				<tr>
-					<td><div style="background-color:#E87C09;width:8px;height:8px;border-radius:50%;vertical-align:middle;"></div></td>
-					<td>Unvisited Point of Interest</td>
-				</tr>
-				<tr>
-					<td><div style="background-color:#00FFBF;width:8px;height:8px;border-radius:50%;vertical-align:middle;"></div></td>
-					<td>Rare Commodity</td>
-				</tr>
-				<tr>
-					<td><div style="background-color:#F7E707;width:8px;height:8px;border-radius:50%;vertical-align:middle;"></div></td>
-					<td>Bookmarked System</td>
-				</tr>
-			</table>
-		</div>
 	<div id="edmap" style="position:absolute;left:353px;right:0px;top:0px;bottom:0px;width:auto;height:auto;z-index:5;"></div>
 
 	<!-- Launch ED3Dmap -->
@@ -104,8 +55,9 @@ require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 	Ed3d.init({
 		basePath: '../source/ED3D-Galaxy-Map/',
 		container: 'edmap',
-		jsonPath: 'get/getMapPoints.json.php',
-		withHudPanel: false,
+		//jsonPath: 'get/getMapPoints.json.php',
+		jsonPath: '/map_points.json',
+		withHudPanel: true,
 		startAnim: false,
 		effectScaleSystem: [15,50]
 	});
