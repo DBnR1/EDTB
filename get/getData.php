@@ -4,7 +4,7 @@
 *    (C) 1984 - 2015 Frontier Developments Plc.
 *    ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
 *
-*    Copyright (C) 2015 Mauri Kujala (contact@edtb.xyz)
+*    Copyright (C) 2016 Mauri Kujala (contact@edtb.xyz)
 *
 *    This program is free software; you can redistribute it and/or
 *    modify it under the terms of the GNU General Public License
@@ -72,6 +72,14 @@ if (isset($settings["nowplaying_file"]) && $settings["nowplaying_file"] != "")
 
 if ($newSystem !== FALSE || $request == 0)
 {
+	/*
+	*	update galmap json if system is new or file doesn't exist
+	*/
+	$data['update_map'] = "false";
+	if ($newSystem !== FALSE || !file_exists("" . $_SERVER["DOCUMENT_ROOT"] . "/map_points.json"))
+	{
+		$data['update_map'] = "true";
+	}
 	$data['current_system_name'] = $current_system;
 	$data['current_coordinates'] = $current_coordinates;
 
@@ -79,7 +87,8 @@ if ($newSystem !== FALSE || $request == 0)
 	* 	Check if the system is in our database
 	*/
 
-	$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT population, allegiance, economy, government, ruling_faction, state, security, power, power_state, simbad_ref
+	$res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT SQL_CACHE
+														population, allegiance, economy, government, ruling_faction, state, security, power, power_state, simbad_ref
 														FROM edtb_systems
 														WHERE id = '" . $current_id . "'
 														LIMIT 1");
@@ -208,14 +217,14 @@ if ($newSystem !== FALSE || $request == 0)
 		{
 			$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id
 																FROM edtb_systems
-																WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $_GET["system_name"]) . "'
+																WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], urldecode($_GET["system_name"])) . "'
 																LIMIT 1");
 			$arr = mysqli_fetch_assoc($res);
 
 			$system_id = $arr["id"];
 		}
 
-		$si_system_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT
+		$si_system_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT SQL_CACHE
 																	id,
 																	name,
 																	population,
@@ -314,60 +323,38 @@ if ($newSystem !== FALSE || $request == 0)
 	if (is_numeric($coordx))
 	{
 		$add3 = "";
-
-		// get distances to user defined systems
-		$user_dists = "<span style=\"float:right;font-size:11px;\">" . $si_dist_add . "";
-		if (isset($settings["dist_systems"]))
-		{
-			$num_dists = count($settings["dist_systems"]);
-			$i = 1;
-			foreach ($settings["dist_systems"] as $dist_sys => $dist_sys_coords)
-			{
-				$dist_sys_coords_e = explode(",", $dist_sys_coords);
-
-				$dist_sys_coordx = $dist_sys_coords_e[0];
-				$dist_sys_coordy = $dist_sys_coords_e[1];
-				$dist_sys_coordz = $dist_sys_coords_e[2];
-
-				$user_dist_q = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id
-																			FROM edtb_systems
-																			WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $dist_sys) . "'
-																			LIMIT 1");
-				$user_dist_a = mysqli_fetch_assoc($user_dist_q);
-				$dist_sys_id = $user_dist_a["id"];
-
-				$user_dist = sqrt(pow(($coordx-($dist_sys_coordx)), 2)+pow(($coordy-($dist_sys_coordy)), 2)+pow(($coordz-($dist_sys_coordz)), 2));
-				$user_dists .= "<a href='system.php?system_id=" . $dist_sys_id . "'>" . $dist_sys . "</a>: " . number_format($user_dist, 1) . " ly" . $add3 . "";
-
-				if ($i != $num_dists)
-					$user_dists .= " - ";
-
-				$i++;
-			}
-		}
-		$user_dists .= "</span>";
+		$ud_coordx = $coordx;
+		$ud_coordy = $coordy;
+		$ud_coordz = $coordz;
 
 		// get rares closeby
-		$rare_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT
-																sqrt(pow((edtb_systems.x-(" . $coordx . ")),2)+pow((edtb_systems.y-(" . $coordy . ")),2)+pow((edtb_systems.z-(" . $coordz . ")),2)) AS distance,
-																edtb_rares.item, edtb_rares.system, edtb_rares.station, edtb_rares.price, edtb_rares.suppressed, edtb_rares.sc_est_mins, edtb_rares.distance_to_star,
-																edtb_rares.needs_permit, edtb_rares.max_landing_pad_size,
-																edtb_systems.x, edtb_systems.y, edtb_systems.z
-																FROM edtb_rares
-																LEFT JOIN edtb_systems ON edtb_rares.system = edtb_systems.name
-																WHERE
-																edtb_systems.x BETWEEN " . $coordx . "-" . $settings["rare_range"] . "
-																AND " . $coordx . "+" . $settings["rare_range"] . " &&
-																edtb_systems.y BETWEEN " . $coordy . "-" . $settings["rare_range"] . "
-																AND " . $coordy . "+" . $settings["rare_range"] . " &&
-																edtb_systems.z BETWEEN " . $coordz . "-" . $settings["rare_range"] . "
-																AND " . $coordz . "+" . $settings["rare_range"] . "
-																ORDER BY
-																edtb_rares.system = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $si_system_name) . "' DESC,
-																distance ASC
-																LIMIT 10");
+		if (isset($settings["rare_range"]) && $settings["rare_range"] == "-1")
+		{
+			$rares_closeby = 0;
+		}
+		else
+		{
+			$rare_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT SQL_CACHE
+																	sqrt(pow((edtb_systems.x-(" . $coordx . ")),2)+pow((edtb_systems.y-(" . $coordy . ")),2)+pow((edtb_systems.z-(" . $coordz . ")),2)) AS distance,
+																	edtb_rares.item, edtb_rares.system, edtb_rares.station, edtb_rares.price, edtb_rares.suppressed, edtb_rares.sc_est_mins, edtb_rares.distance_to_star,
+																	edtb_rares.needs_permit, edtb_rares.max_landing_pad_size,
+																	edtb_systems.x, edtb_systems.y, edtb_systems.z
+																	FROM edtb_rares
+																	LEFT JOIN edtb_systems ON edtb_rares.system = edtb_systems.name
+																	WHERE
+																	edtb_systems.x BETWEEN " . $coordx . "-" . $settings["rare_range"] . "
+																	AND " . $coordx . "+" . $settings["rare_range"] . " &&
+																	edtb_systems.y BETWEEN " . $coordy . "-" . $settings["rare_range"] . "
+																	AND " . $coordy . "+" . $settings["rare_range"] . " &&
+																	edtb_systems.z BETWEEN " . $coordz . "-" . $settings["rare_range"] . "
+																	AND " . $coordz . "+" . $settings["rare_range"] . "
+																	ORDER BY
+																	edtb_rares.system = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $si_system_name) . "' DESC,
+																	distance ASC
+																	LIMIT 10");
 
-		$rares_closeby = mysqli_num_rows($rare_res);
+			$rares_closeby = mysqli_num_rows($rare_res);
+		}
 	}
 	else
 	{
@@ -377,42 +364,48 @@ if ($newSystem !== FALSE || $request == 0)
 		$last_coordx = $last_coords["x"];
 		$last_coordy = $last_coords["y"];
 		$last_coordz = $last_coords["z"];
+
+		$ud_coordx = $last_coordx;
+		$ud_coordy = $last_coordy;
+		$ud_coordz = $last_coordz;
+
 		$add3 = " *";
-
-		// get distances to user defined systems
-		$user_dists = "<span style=\"float:right;font-size:11px;\">" . $si_dist_add . "";
-		if (isset($settings["dist_systems"]))
-		{
-			$num_dists = count($settings["dist_systems"]);
-			$i = 1;
-			foreach ($settings["dist_systems"] as $dist_sys => $dist_sys_coords)
-			{
-				$dist_sys_coords_e = explode(",", $dist_sys_coords);
-
-				$dist_sys_coordx = $dist_sys_coords_e[0];
-				$dist_sys_coordy = $dist_sys_coords_e[1];
-				$dist_sys_coordz = $dist_sys_coords_e[2];
-
-				$user_dist_q = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id
-																			FROM edtb_systems
-																			WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $dist_sys) . "'
-																			LIMIT 1");
-				$user_dist_a = mysqli_fetch_assoc($user_dist_q);
-				$dist_sys_id = $user_dist_a["id"];
-
-				$user_dist = sqrt(pow(($last_coordx-($dist_sys_coordx)), 2)+pow(($last_coordy-($dist_sys_coordy)), 2)+pow(($last_coordz-($dist_sys_coordz)), 2));
-				$user_dists .= "<a href='system.php?system_id=" . $dist_sys_id . "'>" . $dist_sys . "</a>: " . number_format($user_dist, 1) . " ly" . $add3 . "";
-
-				if ($i != $num_dists)
-					$user_dists .= " - ";
-
-				$i++;
-			}
-		}
-		$user_dists .= "</span>";
 
 		$rares_closeby = 0;
 	}
+
+	// get distances to user defined systems
+	$user_dists = "<span style=\"float:right;font-size:11px;\">" . $si_dist_add . "";
+	if (isset($settings["dist_systems"]))
+	{
+		$num_dists = count($settings["dist_systems"]);
+		$i = 1;
+		foreach ($settings["dist_systems"] as $dist_sys => $dist_sys_display_name)
+		{
+			$user_dist_q = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id, x, y, z
+																		FROM edtb_systems
+																		WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $dist_sys) . "'
+																		LIMIT 1");
+
+			$user_dist_a = mysqli_fetch_assoc($user_dist_q);
+			$dist_sys_id = $user_dist_a["id"];
+
+			$dist_sys_coordx = $user_dist_a["x"];
+			$dist_sys_coordy = $user_dist_a["y"];
+			$dist_sys_coordz = $user_dist_a["z"];
+
+			$user_dist = sqrt(pow(($ud_coordx-($dist_sys_coordx)), 2)+pow(($ud_coordy-($dist_sys_coordy)), 2)+pow(($ud_coordz-($dist_sys_coordz)), 2));
+			$user_dists .= "<a href='system.php?system_id=" . $dist_sys_id . "'>" . $dist_sys_display_name . "</a>: " . number_format($user_dist, 1) . " ly" . $add3 . "";
+
+			if ($i != $num_dists)
+			{
+				$user_dists .= " - ";
+			}
+
+			$i++;
+		}
+	}
+	$user_dists .= "</span>";
 
 	$data['si_name'] = '<div class="stationinfo" id="rares" style="display:none;position:absolute;margin-top:20px;margin-left:200px;z-index:1000;max-height:630px;overflow:auto;white-space:nowrap;">';
 
@@ -462,7 +455,7 @@ if ($newSystem !== FALSE || $request == 0)
 
 	if ($actual_num_res > 0 && is_numeric($coordx))
 	{
-		$rare_text = "&nbsp;&nbsp;<span onclick='$(\"#rares\").toggle();'><a href='javascript:void(0);' title'Click for more info'>[ Rares within " . $settings["rare_range"] . " ly: " . $actual_num_res . " ]</a></span>";
+		$rare_text = "&nbsp;&nbsp;<span onclick='$(\"#rares\").fadeToggle();'><a href='javascript:void(0);' title'Click for more info'>[ Rares within " . $settings["rare_range"] . " ly: " . $actual_num_res . " ]</a></span>";
 	}
 
 	$data['si_name'] .= "" . $si_system_display_name . " <span style='font-size:11px;text-transform:uppercase;vertical-align:middle;'>[ State: " . $si_system_state . " - Security: " . $si_system_security . " - Visits: " . $num_visits . " ]" . $rare_text . "" . $user_dists . "</span>";
@@ -471,7 +464,7 @@ if ($newSystem !== FALSE || $request == 0)
 	*    station info for system.php
 	*/
 
-	$si_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT *
+	$si_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT SQL_CACHE *
 														FROM edtb_stations
 														WHERE system_id = '" . $si_system_id . "'
 														ORDER BY ls_from_star, name");
@@ -492,7 +485,7 @@ if ($newSystem !== FALSE || $request == 0)
 			$rest = str_replace($first, "", $s_name);
 			$station_id = $sarr2["id"];
 
-			$s_name = "<span style='border-bottom:1px dotted #ccc;' onclick='get_wikipedia(\"" . $first . "\", \"" . $station_id . "\");'>" . $first . "</span> " . $rest . "";
+			$s_name = "<span class='wp' onclick='get_wikipedia(\"" . urlencode($first) . "\", \"" . $station_id . "\");'><a href='javascript:void(0);' title='Ask Wikipedia about " . $first . "' style='font-weight:inherit;'>" . $first . "</a></span> " . $rest . "";
 
 			$ls_from_star = $sarr2["ls_from_star"];
 			$max_landing_pad_size = $sarr2["max_landing_pad_size"];
@@ -528,7 +521,7 @@ if ($newSystem !== FALSE || $request == 0)
 
 				foreach ($modules_s as $module)
 				{
-					$m_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT class, rating, price, group_name
+					$m_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT SQL_CACHE class, rating, price, group_name
 																		FROM edtb_modules
 																		WHERE id = '" . $module . "'
 																		LIMIT 1");
@@ -556,7 +549,7 @@ if ($newSystem !== FALSE || $request == 0)
 					}
 				}
 				$selling_modules = "<br /><br />
-									<div onclick=\"$('#modules_" . $station_id . "').toggle();\"><a href='javascript:void(0);'><img src=\"/style/img/plus.png\" alt=\"plus\" \>&nbsp;Selling modules</a></div>
+									<div onclick=\"$('#modules_" . $station_id . "').fadeToggle(200);\"><a href='javascript:void(0);'><img src=\"/style/img/plus.png\" alt=\"plus\" \>&nbsp;Selling modules</a></div>
 									<div id='modules_" . $station_id . "' style='display:none;'>" . $modules_t . "</div>";
 			}
 
@@ -569,19 +562,19 @@ if ($newSystem !== FALSE || $request == 0)
 			$rearm = $sarr2["rearm"];
 			$is_planetary = $sarr2["is_planetary"];
 
-			$planetary = $is_planetary == "1" ? '<img src="/style/img/planetary.png" alt="planetary" style="margin-right:6px;vertical-align:middle;" />' : "";
+			$icon = get_station_icon($type, $is_planetary);
 
 			$facilities = array("shipyard" => $shipyard,
 								"outfitting" => $outfitting,
-								"commodities market" => $commodities_market,
-								"black market" => $black_market,
+								"market" => $commodities_market,
+								"black_market" => $black_market,
 								"refuel" => $refuel,
 								"repair" => $repair,
 								"rearm" => $rearm);
 
 			$i = 0;
 			$services = "";
-			foreach ($facilities as $name => $included)
+			/*foreach ($facilities as $name => $included)
 			{
 				if ($included == 1)
 				{
@@ -595,7 +588,21 @@ if ($newSystem !== FALSE || $request == 0)
 					}
 
 					$services .= $name;
-				$i++;
+					$i++;
+				}
+			}*/
+			foreach ($facilities as $name => $included)
+			{
+				$dname = str_replace("_", " ", $name);
+				if ($included == 1)
+				{
+					$services .= '<img src="/style/img/facilities/' . $name . '.png" alt="' . $name . '" style="margin-right:10px;" onmouseover="$(\'#' . $name . '_' . $station_id . '\').fadeToggle();" onmouseout="$(\'#' . $name . '_' . $station_id . '\').toggle(0);" />';
+					$services .= '<div class="facilityinfo" style="display:none;" id="' . $name . '_' . $station_id . '">Station has ' . $dname . '</div>';
+				}
+				else
+				{
+					$services .= '<img src="/style/img/facilities/' . $name . '_not.png" alt="' . $name . ' not included" style="margin-right:10px;" onmouseover="$(\'#' . $name . '_not_' . $station_id . '\').fadeToggle();" onmouseout="$(\'#' . $name . '_not_' . $station_id . '\').toggle();" />';
+					$services .= '<div class="facilityinfo" style="display:none;" id="' . $name . '_not_' . $station_id . '">Station doesn\'t have ' . $dname . '</div>';
 				}
 			}
 
@@ -611,16 +618,20 @@ if ($newSystem !== FALSE || $request == 0)
 			$data['si_stations'] .= '<div class="systeminfo_station">';
 				//$data['si_stations'] .= '<div class="systeminfo_station_name" onclick="$(\'#info_'.$station_id.'\').toggle();$(\'#prices_'.$station_id.'\').toggle();">';
 				$data['si_stations'] .= '<div class="systeminfo_station_name">';
-					$data['si_stations'] .= '' . $planetary . '' . $s_name . '	<span style="font-weight:normal;font-size:10px;">
+					$data['si_stations'] .= '' . $icon . '' . $s_name . '	<span style="font-weight:normal;font-size:10px;">
 																	[ ' . $type . ' - ' . $s_allegiance . ' - ' . $s_government . ' - ' . $economies . ' ]
 																</span>';
 					$data['si_stations'] .= '<span style="float:right"><a href="http://eddb.io/station/' . $station_id . '" title="View station on eddb.io" target="_BLANK"><img src="/style/img/eddb.png" alt="EDDB" /></a></span>';
 				$data['si_stations'] .= '</div><div class="wpsearch" id="wpsearch_' . $station_id . '" style="display:none;"></div>';
 
 				$data['si_stations'] .= '<div id="info_'. $station_id .'" class="systeminfo_station_info">';
+					//$data['si_stations'] .= $services;
+					//$data['si_stations'] .= "<br /><br />";
 					$data['si_stations'] .= $info;
 					if ($info != "")
+					{
 						$data['si_stations'] .= "<br />";
+					}
 
 					$data['si_stations'] .= $services;
 					$data['si_stations'] .= $selling_ships;
@@ -719,7 +730,8 @@ if ($newSystem !== FALSE || $request == 0)
 	{
 		if ($settings["log_range"] == 0 || $coordx == "" || $current_id != "-1")
 		{
-			$log_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT user_log.id, user_log.system_name AS log_system_name, user_log.station_id,
+			$log_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT SQL_CACHE
+																	user_log.id, user_log.system_name AS log_system_name, user_log.station_id,
 																	user_log.log_entry, user_log.stardate,
 																	edtb_systems.name AS system_name,
 																	edtb_stations.name AS station_name
@@ -731,7 +743,8 @@ if ($newSystem !== FALSE || $request == 0)
 		}
 		else
 		{
-			$log_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT user_log.id, user_log.system_id, user_log.system_name AS log_system_name,
+			$log_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT SQL_CACHE
+																	user_log.id, user_log.system_id, user_log.system_name AS log_system_name,
 																	user_log.station_id, user_log.log_entry, user_log.stardate,
 																	sqrt(pow((edtb_systems.x-(" . $coordx . ")),2)
 																	+pow((edtb_systems.y-(" . $coordy . ")),2)
@@ -823,7 +836,8 @@ if ($newSystem !== FALSE || $request == 0)
 	*    General log
 	*/
 
-	$glog_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id, log_entry, stardate
+	$glog_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT SQL_CACHE
+															id, log_entry, stardate
 															FROM user_log WHERE system_id = '' AND system_name = ''
 															ORDER BY stardate DESC
 															LIMIT 5");
@@ -856,15 +870,16 @@ if ($newSystem !== FALSE || $request == 0)
 	*    Stations for the left column
 	*/
 
-	$station_data = '';
-	$ress = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id, name, ls_from_star, faction, government, allegiance,
+	//$station_data = '<div class="leftpanel-stations-out">';
+	$ress = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT SQL_CACHE
+														id, name, ls_from_star, max_landing_pad_size, faction, government, allegiance,
 														state, type, import_commodities, export_commodities,
 														prohibited_commodities, economies, selling_ships, shipyard,
-														outfitting, commodities_market, black_market, refuel, repair, rearm
+														outfitting, commodities_market, black_market, refuel, repair, rearm, is_planetary
 														FROM edtb_stations
 														WHERE system_id = '" . $current_id . "'
 														ORDER BY ls_from_star ASC, name
-														LIMIT 6");
+														LIMIT 5");
 	$count = mysqli_num_rows($ress);
 
 	if ($count > 0)
@@ -881,6 +896,7 @@ if ($newSystem !== FALSE || $request == 0)
 			}
 
 			$ls_from_star = $arra["ls_from_star"];
+			$max_landing_pad_size = $arra["max_landing_pad_size"] == "" ? "" : "<b>Lading pad:</b> " . $arra["max_landing_pad_size"] . "<br />";
 			$station_id = $arra["id"];
 
 			$faction = $arra["faction"] == "" ? "" : "<b>Faction:</b> " . $arra["faction"] . "<br />";
@@ -904,6 +920,10 @@ if ($newSystem !== FALSE || $request == 0)
 			$refuel = $arra["refuel"];
 			$repair = $arra["repair"];
 			$rearm = $arra["rearm"];
+			$is_planetary = $arra["is_planetary"];
+
+			/*$planetary = $is_planetary == "1" ? '<img src="/style/img/planetary.png" alt="planetary" style="margin:3px;margin-left:0px;margin-right:6px;vertical-align:middle;" />' : '<img src="/style/img/spaceport.png" alt="" style="margin:3px;margin-left:0px;margin-right:6px;vertical-align:middle;" />';*/
+			$icon = get_station_icon($type, $is_planetary, "margin:3px;margin-left:0px;margin-right:6px;vertical-align:middle;");
 
 			$includes = array(  "shipyard" => $shipyard,
 								"outfitting" => $outfitting,
@@ -934,7 +954,7 @@ if ($newSystem !== FALSE || $request == 0)
 			}
 			$services .= "<br />";
 
-			$info = $faction.$government.$allegiance.$state.$type.$economies.$services.$import_commodities.$export_commodities.$prohibited_commodities.$selling_ships;
+			$info = $type.$max_landing_pad_size.$faction.$government.$allegiance.$state.$economies.$services.$import_commodities.$export_commodities.$prohibited_commodities.$selling_ships;
 
 			$info = str_replace("['", "", $info);
 			$info = str_replace("']", "", $info);
@@ -943,7 +963,7 @@ if ($newSystem !== FALSE || $request == 0)
 			$info = $info == "" ? "Click to edit station information" : $info;
 
 			// $station_data .= '<div><a href="javascript:void(0);" onclick="update_values(\'/get/getStationEditData.php?station_id=' . $station_id . '\',\'' . $station_id . '\');tofront(\'addstation\');" style="color:inherit;" onmouseover="$(\'#statinfo_' . $station_id . '\').toggle();" onmouseout="$(\'#statinfo_' . $station_id . '\').toggle();">' . $station_name;
-			$station_data .= '<div><a href="javascript:void(0);" style="color:inherit;" onmouseover="$(\'#statinfo_' . $station_id . '\').toggle();" onmouseout="$(\'#statinfo_' . $station_id . '\').toggle();">' . $station_name;
+			$station_data .= '<div>' . $icon  . '<a href="javascript:void(0);" style="color:inherit;" onmouseover="$(\'#statinfo_' . $station_id . '\').fadeToggle();" onmouseout="$(\'#statinfo_' . $station_id . '\').toggle();">' . $station_name;
 
 			if ($ls_from_star != 0)
 			{
@@ -968,6 +988,7 @@ if ($newSystem !== FALSE || $request == 0)
 		}
 		$station_data .= 'No station data available';
 	}
+	//$station_data .= '</div>';
 
 	$data['station_data'] = $station_data;
 
