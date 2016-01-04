@@ -1,0 +1,93 @@
+.mte_content
+{
+	font-size: 10pt;
+	margin:0;
+}
+
+.mte_head_1
+{
+	font-size: 11pt;
+	font-weight: bold;
+	color: #797979;
+	margin: 10px 0 20px 0;
+}
+
+.mte_head
+{
+	font-weight:bold;
+	color: #fff;
+}
+
+a.mte_head
+{
+	color: #fff;
+}
+
+.mte_mess
+{
+	font-size: 10pt;
+	padding: 10px;
+	color:#fff;
+	font-weight: bold
+}
+
+td img:hover
+{
+	opacity:0.7;
+}
+
+.mte_content table
+{
+	border:none;
+}
+
+.mte_content td
+{
+	vertical-align: top;
+	font-size: 10pt;
+}
+
+.mte_content input
+{
+	border: 1px solid #000;
+}
+
+.mte_content textarea
+{
+	border: 1px solid #000;
+}
+
+.mte_req
+{
+	background: #FFF897;
+}
+
+.mte_content td.mte_nav
+{
+	width:22px;
+	height:20px;
+	vertical-align: middle;
+	text-align:center;
+	border:1px solid #3C3C40;
+	font-size:8pt;
+}
+
+.mte_nav a
+{
+	color: #fffffa;
+	font-size:8pt;
+	padding:5px;
+}
+
+.mte_nav a:hover
+{
+	color: #ccc;
+	font-size:8pt;
+	text-shadow:1px 1px 1px #000000;
+	padding:5px;
+}
+
+.mte_nav_prev_next
+{
+	color: #FFF;
+}

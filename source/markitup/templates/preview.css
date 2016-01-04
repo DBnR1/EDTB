@@ -1,0 +1,15 @@
+/* preview style examples */
+body
+{
+	background-color:#111017;
+	font:100% Verdana, Arial, Helvetica, sans-serif;
+}
+.entriespre
+{
+    font-family:Sintony;
+    color:#fffffa;
+    font-size:13px;
+    letter-spacing:normal;
+    white-space:pre-wrap;
+	text-indent:none;
+}
