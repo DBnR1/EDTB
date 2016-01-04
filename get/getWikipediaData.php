@@ -4,7 +4,7 @@
 *    (C) 1984 - 2015 Frontier Developments Plc.
 *    ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
 *
-*    Copyright (C) 2015 Mauri Kujala (contact@edtb.xyz)
+*    Copyright (C) 2016 Mauri Kujala (contact@edtb.xyz)
 *
 *    This program is free software; you can redistribute it and/or
 *    modify it under the terms of the GNU General Public License
@@ -27,22 +27,79 @@ if (isset($_GET["search"]) && $_GET["search"] != "")
 {
 	$search = addslashes($_GET["search"]);
 
-	echo '<div class="searchtitle">' . $_GET["search"] . ' may refer to:</div><ul>';
-
 	/*
 	*	first try the dismbiguation
 	*/
+
 	$url = "https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&redirects=&exsectionformat=plain&titles=" . strtolower($search) . "_(disambiguation)";
 
 	$result = file_get_contents($url);
 	$json_data = json_decode($result, true);
 	$titles = $json_data["query"]["pages"];
 
+	$count == 0;
 	foreach ($titles as $title)
 	{
 		$title_extract = $title["extract"];
 
-		preg_match_all("/\<li>.*?\<\/li>/", $title_extract, $matches);
+		preg_match_all("/\<p>.*?\<\/p>/", $title_extract, $matches);
+
+		foreach ($matches as $match)
+		{
+			foreach ($match as $title_m)
+			{
+				$title_m_o = $title_m;
+				$title_m = str_replace("<p>", "", $title_m);
+				$title_m = str_replace("</p>", "", $title_m);
+
+				if (strpos($title_m, ' was ') === false)
+				{
+					$title_link = explode(',', $title_m);
+				}
+				else
+				{
+					$title_link = explode(' was ', $title_m);
+				}
+
+				if (strpos($title_m, ' is ') !== false)
+				{
+					$title_link = explode(' is ', $title_m);
+				}
+
+				$title_link = explode('(', $title_link[0]);
+				$title_first = str_replace(" ", "_", strip_tags(trim($title_link[0])));
+
+				if (strpos($title_m, 'refer') === false)
+				{
+					$title_rest = str_replace($title_m, '<ul><li><a href="https://en.wikipedia.org/wiki/' . $title_first . '" target="_BLANK">' . $title_m . '<img src="/style/img/external_link.png" alt="ext" style="vertical-align:middle;margin-left:6px;" /></a></li></ul>', $title_m);
+				}
+				else
+				{
+					$title_rest = str_replace($title_m, '<ul><li>' . $title_m . '</li></ul>', $title_m);
+				}
+
+				echo $title_rest;
+
+				$also = " also";
+
+				break;
+			}
+		}
+
+		if ($count == 0 && strpos($title_rest, 'refer') === false)
+		{
+			$text = '<div class="searchtitle">' . $_GET["search"] . ' may' . $also . ' refer to:</div>';
+		}
+
+		if ($count == 0 && strpos($title_rest, 'include') !== false)
+		{
+			$text = '';
+		}
+
+		echo $text;
+		echo '<ul>';
+
+		preg_match_all("/\<li>.*?\\n/", $title_extract, $matches);
 
 		foreach ($matches as $match)
 		{
@@ -52,10 +109,11 @@ if (isset($_GET["search"]) && $_GET["search"] != "")
 				$title_m = str_replace("<li>", "", $title_m);
 				$title_m = str_replace("</li>", "", $title_m);
 				$title_link = explode(',', $title_m);
-				$title_link = explode('(', $title_link[0]);
+				//$title_link = explode('(', $title_link[0]);
+				$title_link = preg_split('/\(\d/', $title_link[0]);
 				$title_first = str_replace(" ", "_", strip_tags(trim($title_link[0])));
 
-				$title_rest = str_replace($title_m, '<li><a href="https://en.wikipedia.org/wiki/' . $title_first . '" target="_BLANK">' . $title_m . '</a>&nbsp;<img src="/style/img/external_link.png" alt="ext" style="vertical-align:middle;" /></li>', $title_m);
+				$title_rest = str_replace($title_m, '<li><a href="https://en.wikipedia.org/wiki/' . $title_first . '" target="_BLANK">' . $title_m . '<img src="/style/img/external_link.png" alt="ext" style="vertical-align:middle;margin-left:6px;" /></a></li>', $title_m);
 
 				echo $title_rest;
 
@@ -65,15 +123,16 @@ if (isset($_GET["search"]) && $_GET["search"] != "")
 				$i++;
 			}
 		}
+		$count++;
 	}
 
 	/*
-	*	if that yealds no results, try the direct approach
+	*	if that yields no results, try the direct approach
 	*/
 
 	if ($i == 0)
 	{
-		$url = "https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&redirects=&exsectionformat=plain&titles=" . strtolower($search) . "";
+		$url = "https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exsectionformat=plain&titles=" . strtolower($search) . "";
 
 		$result = file_get_contents($url);
 		$json_data = json_decode($result, true);
@@ -92,7 +151,8 @@ if (isset($_GET["search"]) && $_GET["search"] != "")
 					$title_m = str_replace("<li>", "", $title_m);
 					$title_m = str_replace("</li>", "", $title_m);
 					$title_link = explode(',', $title_m);
-					$title_link = explode('(', $title_link[0]);
+					//$title_link = explode('(', $title_link[0]);
+					$title_link = preg_split('/\(\d/', $title_link[0]);
 					$title_first = str_replace(" ", "_", strip_tags(trim($title_link[0])));
 
 					$title_rest = str_replace($title_m, '<li><a href="https://en.wikipedia.org/wiki/' . $title_first . '" target="_BLANK">' . $title_m . '</a>&nbsp;<img src="/style/img/external_link.png" alt="ext" style="vertical-align:middle;" /></li>', $title_m);
