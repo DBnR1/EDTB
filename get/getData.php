@@ -75,6 +75,7 @@ if ($newSystem !== FALSE || $request == 0)
 	/*
 	*	update galmap json if system is new or file doesn't exist
 	*/
+
 	$data['update_map'] = "false";
 	if ($newSystem !== FALSE || !file_exists("" . $_SERVER["DOCUMENT_ROOT"] . "/map_points.json"))
 	{
@@ -896,7 +897,7 @@ if ($newSystem !== FALSE || $request == 0)
 			}
 
 			$ls_from_star = $arra["ls_from_star"];
-			$max_landing_pad_size = $arra["max_landing_pad_size"] == "" ? "" : "<b>Lading pad:</b> " . $arra["max_landing_pad_size"] . "<br />";
+			$max_landing_pad_size = $arra["max_landing_pad_size"] == "" ? "" : "<b>Landing pad:</b> " . $arra["max_landing_pad_size"] . "<br />";
 			$station_id = $arra["id"];
 
 			$faction = $arra["faction"] == "" ? "" : "<b>Faction:</b> " . $arra["faction"] . "<br />";
@@ -904,6 +905,7 @@ if ($newSystem !== FALSE || $request == 0)
 			$allegiance = $arra["allegiance"] == "" ? "" : "<b>Allegiance:</b> " . $arra["allegiance"] . "<br />";
 
 			$state = $arra["state"] == "" ? "" : "<b>State:</b> " . $arra["state"] . "<br />";
+			$s_type = $arra["type"];
 			$type = $arra["type"] == "" ? "" : "<b>Type:</b> " . $arra["type"] . "<br />";
 			$economies = $arra["economies"] == "" ? "" : "<b>Economies:</b> " . $arra["economies"] . "<br />";
 
@@ -922,8 +924,7 @@ if ($newSystem !== FALSE || $request == 0)
 			$rearm = $arra["rearm"];
 			$is_planetary = $arra["is_planetary"];
 
-			/*$planetary = $is_planetary == "1" ? '<img src="/style/img/planetary.png" alt="planetary" style="margin:3px;margin-left:0px;margin-right:6px;vertical-align:middle;" />' : '<img src="/style/img/spaceport.png" alt="" style="margin:3px;margin-left:0px;margin-right:6px;vertical-align:middle;" />';*/
-			$icon = get_station_icon($type, $is_planetary, "margin:3px;margin-left:0px;margin-right:6px;vertical-align:middle;");
+			$icon = get_station_icon($s_type, $is_planetary, "margin:3px;margin-left:0px;margin-right:6px;vertical-align:middle;");
 
 			$includes = array(  "shipyard" => $shipyard,
 								"outfitting" => $outfitting,
