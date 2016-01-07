@@ -94,18 +94,47 @@ if (isset($_GET["do"]))
 <script type="text/javascript" src="/source/markitup/jquery.markitup.js"></script>
 
 <div class="input" id="addlog">
-	<div class="input-inner">Add/edit log entry<br />
-		<form method="post" id="log_form" action="log.php">
-			<input type="hidden" name="edit_id" id="edit_id" />
-			<!--<input type="hidden" name="system_id" id="system_id" />
-			<input type="hidden" name="station_id" id="station_id" />-->
-			<input class="textbox" type="text" name="system_name" placeholder="System name (leave empty for general log entry)" id="system_1" style="width:48%;margin-left:0px;" oninput="showResult(this.value, '1')" />
-			<div class="suggestions" id="suggestions_1" style="margin-left:4px;"></div>
-			<input class="textbox" type="text" name="station_name" placeholder="Station name (optional)" id="statname" style="width:48%;" oninput="showResult(this.value, '41', 'no', 'yes', 'no', document.getElementById('system_1').value)" /><br />
-			<div class="suggestions" id="suggestions_41" style="margin-left:383px;"></div>
-			<textarea id="html" name="log_entry" placeholder="Log entry" rows="10" cols="40" autofocus="autofocus"></textarea>
-		</form>
-		<button onclick="update_data('log_form', '/add/log.php?do', true);tofront('null', true);$('#log_form').trigger('reset');">Submit log entry</button>
-		<span id="delete"></span>
-	</div>
+	<form method="post" id="log_form" action="log.php">
+		<div class="input-inner">
+			<div class="suggestions" id="suggestions_41" style="margin-left:400px;margin-top:73px;;"></div>
+			<div class="suggestions" id="suggestions_1" style="margin-left:10px;margin-top:73px;"></div>
+			<table>
+				<tr>
+					<td class="systeminfo_station_name" colspan="2">Add/Edit Log Entry</td>
+				</tr>
+				<tr>
+					<td class="station_info_price_info2">
+						<input type="hidden" name="edit_id" id="edit_id" />
+						<!--<input type="hidden" name="system_id" id="system_id" />
+						<input type="hidden" name="station_id" id="station_id" />-->
+						<input class="textbox" type="text" name="system_name" placeholder="System name (leave empty for general log entry)" id="system_1" style="width:96%;margin-left:0px;" oninput="showResult(this.value, '1')" />
+					</td>
+					<td class="station_info_price_info2">
+						<input class="textbox" type="text" name="station_name" placeholder="Station name (optional)" id="statname" style="width:96%;" oninput="showResult(this.value, '41', 'no', 'yes', 'no', document.getElementById('system_1').value)" /><br />
+					</td>
+				</tr>
+				<tr>
+					<td class="station_info_price_info2" colspan="2">
+						<textarea id="html" name="log_entry" placeholder="Log entry" rows="10" cols="40"></textarea>
+					</td>
+
+				</tr>
+				<tr>
+					<td class="station_info_price_info2" colspan="2">
+						<button id="submits">Submit log entry</button>
+						<span id="delete"></span>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</form>
 </div>
+<script>
+$("#submits").click(function(event)
+{
+	event.preventDefault();
+	update_data('log_form', '/add/log.php?do', true);
+	tofront('null', true);
+	$('#log_form').trigger('reset');
+});
+</script>

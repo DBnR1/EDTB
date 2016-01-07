@@ -4,7 +4,7 @@
 *    (C) 1984 - 2015 Frontier Developments Plc.
 *    ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
 *
-*    Copyright (C) 2015 Mauri Kujala (contact@edtb.xyz)
+*    Copyright (C) 2016 Mauri Kujala (contact@edtb.xyz)
 *
 *    This program is free software; you can redistribute it and/or
 *    modify it under the terms of the GNU General Public License
@@ -74,32 +74,64 @@ if ($_SERVER['PHP_SELF'] == "/poi.php")
 {
 ?>
     <div class="input" id="addpoi" style="text-align:center;">
-        <div class="input-inner" style="margin-left:150px;">Add/edit POI<br />
-            <form method="post" id="poi_form">
-                <input type="hidden" name="poi_edit_id" id="poi_edit_id">
-                <input class="textbox" type="text" name="poi_system_name" placeholder="System name" id="system_33" style="width:45%;" onkeyup="showResult(this.value, '33')" autofocus="autofocus" />
-                <div class="suggestions" id="suggestions_33" style="margin-left:46px;"></div>
-                <input class="textbox" type="text" name="poi_coordx" placeholder="x.x" id="coordsx_33" style="width:10%;" />
-				<input class="textbox" type="text" name="poi_coordy" placeholder="y.y" id="coordsy_33" style="width:10%;" />
-				<input class="textbox" type="text" name="poi_coordz" placeholder="z.z" id="coordsz_33" style="width:10%;" /><br />
-                <input class="textbox" type="text" name="poi_name" id="poi_name" placeholder="POI name (optional)" style="width:45%;" />
-				<select class="selectbox" name="category_id" id="category_id" style="width:auto;">
-					<option value="0">Category (optional)</option>
-					<?php
-					$pcat_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id, name FROM user_poi_categories");
+		<form method="post" id="poi_form" action="poi.php">
+			<div class="input-inner">
+			<div class="suggestions" id="suggestions_33" style="margin-top:110px;margin-left:10px;"></div>
+				<table>
+					<tr>
+						<td class="systeminfo_station_name" colspan="2">Add/edit Point of Interest</td>
+					</tr>
+					<tr>
+						<td class="station_info_price_info2" style="width:90%;">
+							<input type="hidden" name="poi_edit_id" id="poi_edit_id">
+							<input class="textbox" type="text" name="poi_system_name" placeholder="System name" id="system_33" style="width:95%;" onkeyup="showResult(this.value, '33')" />
+						</td>
+						<td class="station_info_price_info2">
+							<input class="textbox" type="text" name="poi_coordx" placeholder="x.x" id="coordsx_33" style="" />
+							<input class="textbox" type="text" name="poi_coordy" placeholder="y.y" id="coordsy_33" style="" />
+							<input class="textbox" type="text" name="poi_coordz" placeholder="z.z" id="coordsz_33" style="" />
+						</td>
+					</tr>
+					<tr>
+						<td class="station_info_price_info2">
+							<input class="textbox" type="text" name="poi_name" id="poi_name" placeholder="POI name (optional)" style="width:95%;" />
+						</td>
+						<td class="station_info_price_info2">
+							<select class="selectbox" name="category_id" id="category_id" style="width:auto;">
+								<option value="0">Category (optional)</option>
+								<?php
+								$pcat_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id, name FROM user_poi_categories");
 
-					while ($pcat_arr = mysqli_fetch_assoc($pcat_res))
-					{
-						echo '<option value="' . $pcat_arr["id"] . '">' . $pcat_arr["name"] . '</option>';
-					}
-					?>
-				</select>
-				<br />
-                <input class="textbox" type="text" name="poi_text" id="poi_text" placeholder="Text (optional)" style="width:67%;" />
-            </form>
-            <button onclick="update_data('poi_form', '/add/poi.php?do', true);tofront('null', true);">Submit Point of Interest</button>
-            <span id="delete_poi"></span>
-        </div>
+								while ($pcat_arr = mysqli_fetch_assoc($pcat_res))
+								{
+									echo '<option value="' . $pcat_arr["id"] . '">' . $pcat_arr["name"] . '</option>';
+								}
+								?>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td class="station_info_price_info2" colspan="2">
+							<input class="textbox" type="text" name="poi_text" id="poi_text" placeholder="Text (optional)" style="width:95%;" />
+						</td>
+					</tr>
+					<tr>
+						<td class="station_info_price_info2" colspan="2">
+							<button id="submitpoi">Submit Point of Interest</button>
+							<span id="delete_poi"></span>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</form>
     </div>
+	<script>
+	$("#submitpoi").click(function(event)
+	{
+		event.preventDefault();
+		update_data('poi_form', '/add/poi.php?do', true);
+		tofront('null', true);
+	});
+	</script>
 <?php
 }

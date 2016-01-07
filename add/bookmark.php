@@ -62,28 +62,54 @@ if (isset($_GET["do"]))
 }
 ?>
 <div class="input" id="addbm" style="text-align:center;">
-	<div style="position:absolute;width:510px;margin-top:20px;margin-left:400px;">Add/edit bookmark<br />
-		<form method="post" id="bm_form">
-			<input type="hidden" name="bm_edit_id" id="bm_edit_id">
-			<input type="hidden" name="bm_system_id" id="bm_system_id">
-			<div>
-				<input class="textbox" type="text" name="bm_system_name" placeholder="System name" id="bm_system_name" style="width:469px;" onkeyup="showResult(this.value, '3', 'no', 'no', 'no', 'yes')" autofocus="autofocus" />
-				<div class="suggestions" id="suggestions_3" style="margin-left:15px;"></div>
-			</div>
-			<input class="textbox" type="text" name="bm_text" id="bm_text" placeholder="Comment (optional)" style="width:326px;" />
-			<select class="selectbox" name="bm_catid" id="bm_catid" style="width:140px;">
-				<option value="0">Category (optional)</option>
-				<?php
-				$cat_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id, name FROM user_bm_categories");
+	<form method="post" id="bm_form" action="bookmark.php">
+		<div class="input-inner">
+			<table>
+				<tr>
+					<td class="systeminfo_station_name" colspan="2">Add/edit bookmark</td>
+				</tr>
+				<tr>
+					<td colspan="2" class="station_info_price_info2">
+					<input type="hidden" name="bm_edit_id" id="bm_edit_id">
+					<input type="hidden" name="bm_system_id" id="bm_system_id">
+					<div>
+						<input class="textbox" type="text" name="bm_system_name" placeholder="System name" id="bm_system_name" style="width:469px;" onkeyup="showResult(this.value, '3', 'no', 'no', 'no', 'yes')" />
+						<div class="suggestions" id="suggestions_3" style="margin-left:15px;"></div>
+					</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="station_info_price_info2">
+						<input class="textbox" type="text" name="bm_text" id="bm_text" placeholder="Comment (optional)" style="width:326px;" />
+					</td>
+					<td class="station_info_price_info2">
+					<select class="selectbox" name="bm_catid" id="bm_catid" style="width:140px;">
+						<option value="0">Category (optional)</option>
+						<?php
+						$cat_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id, name FROM user_bm_categories");
 
-				while ($cat_arr = mysqli_fetch_assoc($cat_res))
-				{
-					echo '<option value="' . $cat_arr["id"] . '">' . $cat_arr["name"] . '</option>';
-				}
-				?>
-			</select>
-		</form>
-		<button onclick="update_data('bm_form', '/add/bookmark.php?do', true);tofront('null', true);">Add Bookmark</button>
-		<span id="delete_bm"></span>
-	</div>
+						while ($cat_arr = mysqli_fetch_assoc($cat_res))
+						{
+							echo '<option value="' . $cat_arr["id"] . '">' . $cat_arr["name"] . '</option>';
+						}
+						?>
+					</select>
+					</td>
+				<tr>
+					<td colspan="2" class="station_info_price_info2">
+						<button id="submitbm">Add Bookmark</button>
+						<span id="delete_bm"></span>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</form>
 </div>
+<script>
+$("#submitbm").click(function(event)
+{
+	event.preventDefault();
+	update_data('bm_form', '/add/bookmark.php?do', true);
+	tofront('null', true);
+});
+</script>
