@@ -422,14 +422,14 @@ if (isset($_GET["cs"]))
 
 if (isset($_GET["rm"]))
 {
-	$res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id, text FROM edtb_musings ORDER BY rand() LIMIT 1");
+	$res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id, text FROM edtb_musings WHERE used = '0' ORDER BY rand() LIMIT 1");
 	$arr = mysqli_fetch_assoc($res);
 
 	$rm_id = $arr["id"];
 	$rm_text = $arr["text"];
 	echo $rm_text;
 
-	mysqli_query($GLOBALS["___mysqli_ston"], "DELETE FROM edtb_musings WHERE id = '" . $rm_id . "' LIMIT 1");
+	mysqli_query($GLOBALS["___mysqli_ston"], "UPDATE edtb_musings SET used = '1' WHERE id = '" . $rm_id . "' LIMIT 1");
 
 	((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
 	exit();
