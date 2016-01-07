@@ -3,7 +3,7 @@
 *    (C) 1984 - 2015 Frontier Developments Plc.
 *    ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
 *
-*    Copyright (C) 2015 Mauri Kujala (contact@edtb.xyz)
+*    Copyright (C) 2016 Mauri Kujala (contact@edtb.xyz)
 *
 *    This program is free software; you can redistribute it and/or
 *    modify it under the terms of the GNU General Public License
@@ -259,7 +259,7 @@ function update_values(editurl, deleteid)
         document.getElementById('delete').innerHTML = '';
         if (deleteid !== false)
         {
-            document.getElementById('delete').innerHTML = '<a href="javascript:void(0);" onclick="confirmation('+deleteid+',\'log\')"><input class="button" type="button" value="Delete log entry" style="width:125px;margin-left:120px;"></a>';
+            document.getElementById('delete').innerHTML = '<a href="javascript:void(0);" onclick="confirmation('+deleteid+',\'log\')"><input class="delete_button" type="button" value="Delete log entry" style="width:125px;margin-left:10px;"></a>';
         }
     }
 
@@ -268,7 +268,7 @@ function update_values(editurl, deleteid)
         document.getElementById('delete_poi').innerHTML = '';
         if (deleteid !== false)
         {
-            document.getElementById('delete_poi').innerHTML = '<a href="javascript:void(0);" onclick="confirmation('+deleteid+',\'poi\')"><input class="button" type="button" value="Delete POI entry" style="width:125px;margin-left:120px;"></a>';
+            document.getElementById('delete_poi').innerHTML = '<a href="javascript:void(0);" onclick="confirmation('+deleteid+',\'poi\')"><input class="delete_button" type="button" value="Delete POI entry" style="width:125px;margin-left:10px;"></a>';
         }
     }
 
@@ -277,7 +277,7 @@ function update_values(editurl, deleteid)
         document.getElementById('delete_bm').innerHTML = '';
         if (deleteid !== false)
         {
-            document.getElementById('delete_bm').innerHTML = '<a href="javascript:void(0);" onclick="confirmation('+deleteid+',\'bm\')"><input class="button" type="button" value="Delete Bookmark" style="width:125px;margin-left:120px;"></a>';
+            document.getElementById('delete_bm').innerHTML = '<a href="javascript:void(0);" onclick="confirmation('+deleteid+',\'bm\')"><input class="delete_button" type="button" value="Delete Bookmark" style="width:125px;margin-left:10px;"></a>';
         }
     }
 
@@ -778,11 +778,13 @@ function tofront(divid, toback)
         if (document.getElementById(divid).style.display == "block")
         {
             document.getElementById(divid).style.display = "none";
-            document.getElementsByClassName('entries')[0].style.display = "block";
+            //document.getElementsByClassName('entries')[0].style.display = "block";
+			$(".entries").fadeIn("fast");
         }
         else
         {
-            document.getElementById(divid).style.display = "block";
+            //document.getElementById(divid).style.display = "block";
+			$("#"+divid).fadeIn("fast");
             document.getElementById(divid).style.zindex = setindex;
             document.getElementsByClassName('entries')[0].style.display = "none";
         }
@@ -790,7 +792,8 @@ function tofront(divid, toback)
     else
     {
         get_data(true);
-        document.getElementsByClassName('entries')[0].style.display = "block";
+        //document.getElementsByClassName('entries')[0].style.display = "block";
+		$(".entries").fadeIn("fast");
     }
     var index;
     for (index = 0; index < divs.length; ++index)

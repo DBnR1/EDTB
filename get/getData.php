@@ -206,6 +206,21 @@ if ($newSystem !== FALSE || $request == 0)
 	}
 
 	/*
+	*	if system coords are user calculated, show calc button
+	*/
+
+	$system_user_calculated = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id
+																							FROM user_systems_own
+																							WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $current_system) . "'
+																							LIMIT 1"));
+	if ($system_user_calculated > 0)
+	{
+		$data['system_info'] .= '<span style="float:right;margin-right:10px;margin-top:12px;"><a href="javascript:void(0);" onclick="tofront(\'calculate\');get_cs(\'target_system\');" title="Review calculations">';
+		$data['system_info'] .= '<img src="/style/img/calculator.png" style="vertical-align:middle;" />';
+		$data['system_info'] .= '</a></span>';
+	}
+
+	/*
 	*	Stuff specifically for system.php
 	*/
 
@@ -456,7 +471,7 @@ if ($newSystem !== FALSE || $request == 0)
 
 	if ($actual_num_res > 0 && is_numeric($coordx))
 	{
-		$rare_text = "&nbsp;&nbsp;<span onclick='$(\"#rares\").fadeToggle();'><a href='javascript:void(0);' title'Click for more info'>[ Rares within " . $settings["rare_range"] . " ly: " . $actual_num_res . " ]</a></span>";
+		$rare_text = "&nbsp;&nbsp;<span onclick='$(\"#rares\").fadeToggle(\"fast\");'><a href='javascript:void(0);' title'Click for more info'>[ Rares within " . $settings["rare_range"] . " ly: " . $actual_num_res . " ]</a></span>";
 	}
 
 	$data['si_name'] .= "" . $si_system_display_name . " <span style='font-size:11px;text-transform:uppercase;vertical-align:middle;'>[ State: " . $si_system_state . " - Security: " . $si_system_security . " - Visits: " . $num_visits . " ]" . $rare_text . "" . $user_dists . "</span>";
@@ -468,7 +483,7 @@ if ($newSystem !== FALSE || $request == 0)
 	$si_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT SQL_CACHE *
 														FROM edtb_stations
 														WHERE system_id = '" . $si_system_id . "'
-														ORDER BY ls_from_star, name");
+														ORDER BY -ls_from_star DESC, name");
 	$station_exists = mysqli_num_rows($si_res);
 
 	if ($station_exists == 0)
@@ -482,11 +497,12 @@ if ($newSystem !== FALSE || $request == 0)
 			$s_name = $sarr2["name"];
 			$s_explode = explode(" ", $s_name);
 
-			$first = $s_explode[0];
-			$rest = str_replace($first, "", $s_name);
+			$firsts = explode("'s", $s_explode[0]);
+			$first = $firsts[0];
+			$rest = str_replace($s_explode[0], "", $s_name);
 			$station_id = $sarr2["id"];
 
-			$s_name = "<span class='wp' onclick='get_wikipedia(\"" . urlencode($first) . "\", \"" . $station_id . "\");'><a href='javascript:void(0);' title='Ask Wikipedia about " . $first . "' style='font-weight:inherit;'>" . $first . "</a></span> " . $rest . "";
+			$s_name = "<span class='wp' onclick='get_wikipedia(\"" . urlencode($first) . "\", \"" . $station_id . "\");'><a href='javascript:void(0);' title='Ask Wikipedia about " . $first . "' style='font-weight:inherit;'>" . $s_explode[0] . "</a></span> " . $rest . "";
 
 			$ls_from_star = $sarr2["ls_from_star"];
 			$max_landing_pad_size = $sarr2["max_landing_pad_size"];
@@ -550,7 +566,7 @@ if ($newSystem !== FALSE || $request == 0)
 					}
 				}
 				$selling_modules = "<br /><br />
-									<div onclick=\"$('#modules_" . $station_id . "').fadeToggle(200);\"><a href='javascript:void(0);'><img src=\"/style/img/plus.png\" alt=\"plus\" \>&nbsp;Selling modules</a></div>
+									<div onclick=\"$('#modules_" . $station_id . "').fadeToggle('fast');\"><a href='javascript:void(0);'><img src=\"/style/img/plus.png\" alt=\"plus\" \>&nbsp;Selling modules</a></div>
 									<div id='modules_" . $station_id . "' style='display:none;'>" . $modules_t . "</div>";
 			}
 
@@ -571,7 +587,7 @@ if ($newSystem !== FALSE || $request == 0)
 								"black_market" => $black_market,
 								"refuel" => $refuel,
 								"repair" => $repair,
-								"rearm" => $rearm);
+								"restock" => $rearm);
 
 			$i = 0;
 			$services = "";
@@ -597,12 +613,12 @@ if ($newSystem !== FALSE || $request == 0)
 				$dname = str_replace("_", " ", $name);
 				if ($included == 1)
 				{
-					$services .= '<img src="/style/img/facilities/' . $name . '.png" alt="' . $name . '" style="margin-right:10px;" onmouseover="$(\'#' . $name . '_' . $station_id . '\').fadeToggle();" onmouseout="$(\'#' . $name . '_' . $station_id . '\').toggle(0);" />';
+					$services .= '<img src="/style/img/facilities/' . $name . '.png" alt="' . $name . '" style="margin-right:10px;" onmouseover="$(\'#' . $name . '_' . $station_id . '\').fadeToggle(\'fast\');" onmouseout="$(\'#' . $name . '_' . $station_id . '\').toggle();" />';
 					$services .= '<div class="facilityinfo" style="display:none;" id="' . $name . '_' . $station_id . '">Station has ' . $dname . '</div>';
 				}
 				else
 				{
-					$services .= '<img src="/style/img/facilities/' . $name . '_not.png" alt="' . $name . ' not included" style="margin-right:10px;" onmouseover="$(\'#' . $name . '_not_' . $station_id . '\').fadeToggle();" onmouseout="$(\'#' . $name . '_not_' . $station_id . '\').toggle();" />';
+					$services .= '<img src="/style/img/facilities/' . $name . '_not.png" alt="' . $name . ' not included" style="margin-right:10px;" onmouseover="$(\'#' . $name . '_not_' . $station_id . '\').fadeToggle(\'fast\');" onmouseout="$(\'#' . $name . '_not_' . $station_id . '\').toggle();" />';
 					$services .= '<div class="facilityinfo" style="display:none;" id="' . $name . '_not_' . $station_id . '">Station doesn\'t have ' . $dname . '</div>';
 				}
 			}
@@ -871,7 +887,6 @@ if ($newSystem !== FALSE || $request == 0)
 	*    Stations for the left column
 	*/
 
-	//$station_data = '<div class="leftpanel-stations-out">';
 	$ress = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT SQL_CACHE
 														id, name, ls_from_star, max_landing_pad_size, faction, government, allegiance,
 														state, type, import_commodities, export_commodities,
@@ -879,7 +894,7 @@ if ($newSystem !== FALSE || $request == 0)
 														outfitting, commodities_market, black_market, refuel, repair, rearm, is_planetary
 														FROM edtb_stations
 														WHERE system_id = '" . $current_id . "'
-														ORDER BY ls_from_star ASC, name
+														ORDER BY -ls_from_star DESC, name
 														LIMIT 5");
 	$count = mysqli_num_rows($ress);
 
@@ -932,7 +947,7 @@ if ($newSystem !== FALSE || $request == 0)
 								"black market" => $black_market,
 								"refuel" => $refuel,
 								"repair" => $repair,
-								"rearm" => $rearm);
+								"restock" => $rearm);
 
 			$i = 0;
 			$services = "";
@@ -964,7 +979,7 @@ if ($newSystem !== FALSE || $request == 0)
 			$info = $info == "" ? "Click to edit station information" : $info;
 
 			// $station_data .= '<div><a href="javascript:void(0);" onclick="update_values(\'/get/getStationEditData.php?station_id=' . $station_id . '\',\'' . $station_id . '\');tofront(\'addstation\');" style="color:inherit;" onmouseover="$(\'#statinfo_' . $station_id . '\').toggle();" onmouseout="$(\'#statinfo_' . $station_id . '\').toggle();">' . $station_name;
-			$station_data .= '<div>' . $icon  . '<a href="javascript:void(0);" style="color:inherit;" onmouseover="$(\'#statinfo_' . $station_id . '\').fadeToggle();" onmouseout="$(\'#statinfo_' . $station_id . '\').toggle();">' . $station_name;
+			$station_data .= '<div>' . $icon  . '<a href="javascript:void(0);" style="color:inherit;" onmouseover="$(\'#statinfo_' . $station_id . '\').fadeToggle(\'fast\');" onmouseout="$(\'#statinfo_' . $station_id . '\').toggle();">' . $station_name;
 
 			if ($ls_from_star != 0)
 			{
@@ -989,7 +1004,6 @@ if ($newSystem !== FALSE || $request == 0)
 		}
 		$station_data .= 'No station data available';
 	}
-	//$station_data .= '</div>';
 
 	$data['station_data'] = $station_data;
 

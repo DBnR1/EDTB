@@ -23,7 +23,7 @@
 
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
 require_once("" . $settings["install_path"] . "/data/server_config.inc.php");
-
+date_default_timezone_set('UTC');
 /*
 *    connect to database
 */
@@ -154,6 +154,13 @@ if (is_dir($settings["log_dir"]))
 															WHERE id = '1'
 															LIMIT 1");
 
+				// export to edsm
+				if ($settings["edsm_api_key"] != "" && $settings["edsm_export"] == "true" && $settings["edsm_cmdr_name"] != "")
+				{
+					$visited_on_utc = date("Y-m-d H:i:s");
+					file_get_contents("http://www.edsm.net/api-logs-v1/set-log?commanderName=" . urlencode($settings["edsm_cmdr_name"]) . "&apiKey=" . $settings["edsm_api_key"] . "&systemName=" . urlencode($current_system) . "&dateVisited=" . urlencode($visited_on_utc) . "");
+				}
+
                 $newSystem = TRUE;
             }
             else
@@ -184,7 +191,7 @@ if (isset($settings["old_screendir"]) && is_dir($settings["old_screendir"]) && $
 			{
 				if (!mkdir($newscreendir, 0775, true))
 				{
-					write_log("Could not create new screendir");
+					die("Could not create new screendir");
 					break;
 				}
 			}
@@ -208,7 +215,7 @@ if (isset($settings["old_screendir"]) && is_dir($settings["old_screendir"]) && $
 				{
 					if (!mkdir("" . $settings["old_screendir"] . "/originals", 0775, true))
 					{
-						write_log("Could not create directory for original screens");
+						die("Could not create directory for original screens");
 						break;
 					}
 				}
@@ -217,6 +224,15 @@ if (isset($settings["old_screendir"]) && is_dir($settings["old_screendir"]) && $
 			// move to new screenshot folder
 			rename("" . $new_file_jpg . "", "" . $new_screenshot . "");
 			$added++;
+
+			/*
+			*	add no more than 10 at a time
+			*/
+
+			if ($added > 10)
+			{
+				break;
+			}
 		}
 	}
 	// make thumbnails for the gallery
@@ -703,7 +719,7 @@ function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table)
 	if ($dist !== false)
 	{
 		// figure out what coords to calculate from
-		if ($coordx != "")
+		if ($coordx != "" && $coordy != "" && $coordz != "")
 		{
 			$usex = $coordx;
 			$usey = $coordy;
@@ -872,4 +888,18 @@ function get_station_icon($type, $planetary = "0", $style = "margin-right:6px;ve
 	}
 
 	return $icon;
+}
+
+// simple log
+function write_log($msg)
+{
+	$logfile = "" . $_SERVER["DOCUMENT_ROOT"] . "/log.txt";
+	// open file
+	$fd = fopen($logfile, "a");
+	// append date/time to message
+	$str = "[" . date("d.m.Y h:i:s", mktime()) . "] " . $msg;
+	// write string
+	fwrite($fd, $str . "\n");
+	// close file
+	fclose($fd);
 }

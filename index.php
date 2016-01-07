@@ -31,81 +31,69 @@ if (file_exists("" . $_SERVER["DOCUMENT_ROOT"] . "/install.php"))
 	require_once("" . $inst_path . "/data/server_config.inc.php");
 
 	/*
-	*	if $pwd is set, user is not new
+	*
 	*/
 
-	if (!isset($pwd) || isset($_GET["doned"]) || isset($_GET["done"]) || !isset($_GET["dones"]))
+	require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/installer_style.php");
+	require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
+
+	/*
+	*	if mysql insertion was succesfull, remove install files
+	*/
+
+	if (isset($_GET["doned"]))
 	{
-		require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/installer_style.php");
-		require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
+		//$script_path = "" . $settings["install_path"] . "\\EDTB\\install.sql";
+		$installer_path = "" . $settings["install_path"] . "\\EDTB\\install.php";
 
-		/*
-		*	if mysql insertion was succesfull, remove install files
-		*/
-
-		if (isset($_GET["doned"]))
+		// if (file_exists($script_path))
+		// {
+			// unlink($script_path);
+		// }
+		if (file_exists($installer_path))
 		{
-			$script_path = "" . $settings["install_path"] . "\\EDTB\\install.sql";
-			$installer_path = "" . $settings["install_path"] . "\\EDTB\\install.php";
-
-			if (file_exists($script_path))
-			{
-				unlink($script_path);
-			}
-			if (file_exists($installer_path))
-			{
-				unlink($installer_path);
-			}
-
-			header('Location: /index.php?dones');
-			exit();
+			unlink($installer_path);
 		}
 
-		echo installer_header();
+		header('Location: /index.php?dones');
+		exit();
+	}
 
-		/*
-		*	if mysql insertion was succesfull, ask to finish setup
-		*/
+	echo installer_header();
 
-		if (isset($_GET["done"]))
-		{
-			echo notice("<strong>Nice!</strong><br />Now all you need to do is right click the ED ToolBox icon on your system tray and select \"Update system and station data\" to fetch the latest system and station data.<br />The update takes anything from a few seconds to a few minutes depending on your system.<br /><br />After you've done that, <a href='/index.php?doned'>click here to remove the installation files and finish the setup</a>.", "Install ED ToolBox 2/2");
-			echo installer_footer();
-			exit();
-		}
+	/*
+	*	if mysql insertion was succesfull, ask to finish setup
+	*/
 
-		/*
-		*	if install is done but install.php still exists, something's gone wrong
-		*/
-
-		if (isset($_GET["dones"]))
-		{
-			echo notice("Removal of installation files was unsuccesfull.<br />Please delete install.php and install.sql from the EDTB folder.", "Install ED ToolBox");
-			echo installer_footer();
-			exit();
-		}
-
-		echo notice("Looks like this is your first time running ED Toolbox.<br />Congratulations on your excellent choice!<br /><br />To get you set up, you need to run a script that creates the necessary database tables. The script may take a while to run.<br /><br /><div id='text' style='text-align:center;'><a href='install.php' onclick='document.getElementById(\"loadin\").style.display=\"block\";document.getElementById(\"text\").style.display=\"none\";'>Click here when you're ready to go.</a></div><div id='loadin' style='text-align:center;display:none;'><img src='/style/img/loading.gif' alt='Loading' \></div>", "Install ED ToolBox 1/2");
-
+	if (isset($_GET["done"]))
+	{
+		echo notice("<strong>Nice!</strong><br />Now all you need to do is right click the ED ToolBox icon on your system tray and select \"Update system and station data\" to fetch the latest system and station data.<br />The update takes anything from a few seconds to a few minutes depending on your system.<br /><br />After you've done that, <a href='/index.php?doned'>click here to remove the installation files and finish the setup</a>.", "Install ED ToolBox 2/2");
 		echo installer_footer();
 		exit();
 	}
 
 	/*
-	*	if user has upgraded, just remove the install files and move on
+	*	if install is done but install.php still exists, something's gone wrong
 	*/
 
-	$script_path = "" . $inst_path . "\\EDTB\\install.sql";
-	$installer_path = "" . $inst_path . "\\EDTB\\install.php";
+	if (isset($_GET["dones"]))
+	{
+		echo notice("Removal of installation files was unsuccesfull.<br />Please delete install.php and install.sql from the EDTB folder.", "Install ED ToolBox");
+		echo installer_footer();
+		exit();
+	}
 
-	if (file_exists($script_path))
+	if (!isset($pwd))
 	{
-		unlink($script_path);
+		echo notice("Looks like this is your first time running ED Toolbox.<br />Congratulations on your excellent choice!<br /><br />To get you set up, you need to run a script that creates the necessary database tables. The script may take a while to run.<br /><br /><div id='text' style='text-align:center;'><a href='install.php?install' onclick='document.getElementById(\"loadin\").style.display=\"block\";document.getElementById(\"text\").style.display=\"none\";'>Click here when you're ready to go.</a></div><div id='loadin' style='text-align:center;display:none;'><img src='/style/img/loading.gif' alt='Loading' \></div>", "Install ED ToolBox 1/2");
 	}
-	if (file_exists($installer_path))
+	else
 	{
-		unlink($installer_path);
+		echo notice("Looks like you've recently updated ED ToolBox to a newer version.<br /><br />To get everything set up, you need to run a script that makes any necessary changes to the database. The script may take a while to run.<br /><br /><div id='text' style='text-align:center;'><a href='install.php?upgrade' onclick='document.getElementById(\"loadin\").style.display=\"block\";document.getElementById(\"text\").style.display=\"none\";'>Click here when you're ready to go.</a></div><div id='loadin' style='text-align:center;display:none;'><img src='/style/img/loading.gif' alt='Loading' \></div>", "Install ED ToolBox 1/2");
 	}
+
+	echo installer_footer();
+	exit();
 }
 
 $pagetitle = "ED ToolBox";
