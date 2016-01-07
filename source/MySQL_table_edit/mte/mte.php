@@ -269,11 +269,39 @@ class MySQLtabledit
 																				FROM edtb_systems
 																				WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $rij["system_name"]) . "'
 																				LIMIT 1");
-						$sys_arr = mysqli_fetch_assoc($sys_res);
 
-						$d_x = $sys_arr["x"];
-						$d_y = $sys_arr["y"];
-						$d_z = $sys_arr["z"];
+						$found = mysqli_num_rows($sys_res);
+
+						if ($found > 0)
+						{
+							$sys_arr = mysqli_fetch_assoc($sys_res);
+
+							$d_x = $sys_arr["x"];
+							$d_y = $sys_arr["y"];
+							$d_z = $sys_arr["z"];
+						}
+						else
+						{
+							$sys_own_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT x, y, z
+																						FROM user_systems_own
+																						WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $rij["system_name"]) . "'
+																						LIMIT 1");
+							$own_found = mysqli_num_rows($sys_own_res);
+							if ($own_found > 0)
+							{
+								$sys_own_arr = mysqli_fetch_assoc($sys_own_res);
+
+								$d_x = $sys_own_arr["x"];
+								$d_y = $sys_own_arr["y"];
+								$d_z = $sys_own_arr["z"];
+							}
+							else
+							{
+								$d_x = "";
+								$d_y = "";
+								$d_z = "";
+							}
+						}
 					}
 					else
 					{
@@ -907,7 +935,7 @@ class MySQLtabledit
 		</script>
 
 		<div class='mte_content'>
-		<script language='javascript'>
+		<script>
 			$this->javascript
 		</script>
 

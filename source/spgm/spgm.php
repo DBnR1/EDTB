@@ -1279,7 +1279,7 @@ function spgm_DisplayGalleryHierarchy($strGalleryId, $iGalleryDepth, $strFilterF
 
       // display the gallery icon
       $iRowSpan = ($spgm_cfg['conf']['galleryCaptionPos'] == BOTTOM) ? 1 : 2;
-      print '        <td rowspan="'.$iRowSpan.'" valign="top" class="'.CLASS_TD_GALITEM_ICON.'">'."\n";
+      print '        <td rowspan="'.$iRowSpan.'" style="vertical-align:top;" class="'.CLASS_TD_GALITEM_ICON.'">'."\n";
       if ($strHtmlOffset != '') print '    '.$strHtmlOffset."\n";
 
       // look for the icon...
@@ -1470,7 +1470,7 @@ function spgm_DisplayPicture($strGalleryId, $iPictureId, $strFilterFlags) {
     // display the previous/next arrow section if we are not in slideshow mode
     if ( ! $bSlideshowMode ) {
       print ' <tr>'."\n";
-      print '   <td class="'.CLASS_TD_PICTURE_NAVI.'"><a name="'.ANCHOR_PICTURE.'" id="'.ID_PICTURE_NAVI.'"></a>'."\n";
+      print '   <td class="'.CLASS_TD_PICTURE_NAVI.'"><a id="'.ID_PICTURE_NAVI.'"></a>'."\n";
 
       if ($iPreviousPictureId >= 0) {
         print spgm_BuildLink($spgm_cfg['theme']['previousPictureIcon'], CLASS_TD_GALITEM_TITLE, ANCHOR_PICTURE, $strGalleryId, -1, $iPreviousPictureId, str_replace(PARAM_VALUE_FILTER_SLIDESHOW, '', $strFilterFlags));
@@ -1725,7 +1725,7 @@ function spgm_DisplayThumbnails($strGalleryId, $arrPictureFilenames, $iPictureId
 
     // TD opening for XHTML compliance when MODE_TRACE is on
     // TODO: valign=top does not work when new pictures reside amongst old ones
-    print '  <td valign="top" class="'.$strClassThumbnailThumb.'">'."\n";
+    print '  <td style="vertical-align:top;" class="'.$strClassThumbnailThumb.'">'."\n";
     // ...
 
     if ( spgm_IsNew($strPictureURL) && ! strstr($strFilterFlags, PARAM_VALUE_FILTER_NEW) ) {
@@ -1899,7 +1899,7 @@ if ($spgm_cfg['conf']['filters'] != '') {
 
 
 print "\n\n".'<!-- begin table wrapper -->'."\n";
-print '<a name="'.ANCHOR_SPGM.'"></a>'."\n";
+print '<a></a>'."\n";
 print '<table class="'.CLASS_TABLE_WRAPPER.'">'."\n".' <tr>'."\n";
 
 if ($strParamGalleryId == '') {
