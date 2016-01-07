@@ -71,6 +71,7 @@ if ($settings["galmap_show_visited_systems"] == "true")
 
 	while ($row = mysqli_fetch_array($result))
 	{
+		$info = "";
 		// coordinates for distance calculations
 		$vs_coordx = $row["x"];
 		$vs_coordy = $row["y"];
@@ -97,9 +98,8 @@ if ($settings["galmap_show_visited_systems"] == "true")
 			$vs_coordz = $cb_arr["z"] == "" ? "" : $cb_arr["z"];
 		}
 
-		if ($vs_coordx != "")
+		if ($vs_coordx != "" && $vs_coordy != "" && $vs_coordz != "")
 		{
-			$info = "";
 			$allegiance = $row["allegiance"];
 			$visit = $row["visit"];
 			$visit_og = $row["visit"];
@@ -134,15 +134,6 @@ if ($settings["galmap_show_visited_systems"] == "true")
 				$cat = ',"cat": [5]';
 			}
 
-			if ($coordx != "")
-			{
-				$distance_from_current = sqrt(pow(($vs_coordx-($coordx)), 2)+pow(($vs_coordy-($coordy)), 2)+pow(($vs_coordz-($coordz)), 2));
-			}
-			else
-			{
-				$distance_from_current = 0;
-			}
-
 			$logged = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id
 																				FROM user_log
 																				WHERE system_id = '" . $sysid . "'
@@ -153,7 +144,16 @@ if ($settings["galmap_show_visited_systems"] == "true")
 				$cat = ',"cat": [11]';
 			}
 
-			$info .= '<b>Distance</b><br />' . number_format($distance_from_current, 2) . ' ly<br /><br />';
+			/*if ($coordx != "")
+			{
+				$distance_from_current = sqrt(pow(($vs_coordx-($coordx)), 2)+pow(($vs_coordy-($coordy)), 2)+pow(($vs_coordz-($coordz)), 2));
+			}
+			else
+			{
+				$distance_from_current = 0;
+			}*/
+
+			$info .= '<div class="map_info"><span class="map_info_title">Visited system</span><br />';
 
 			if (isset($visit))
 			{
@@ -168,7 +168,9 @@ if ($settings["galmap_show_visited_systems"] == "true")
 				$info .= '<b>First visit</b><br />' . $visit . ' (' . $visit_ago . ')<br />';
 			}
 
-			if (isset($name) && isset($vs_coordx))
+			$info .= '</div>';
+
+			if (isset($name) && isset($vs_coordx) && isset($vs_coordy) && isset($vs_coordz))
 			{
 				$data = '{"name": "' . $name  . '"' . $cat . ',"coords": {"x": ' . $vs_coordx . ',"y": ' . $vs_coordy . ',"z": ' . $vs_coordz . '},"infos":' . json_encode($info) . '}' . $last_row . '';
 			}
@@ -206,14 +208,14 @@ if ($settings["galmap_show_pois"] == "true")
 		$poi_coordy = $row["y"];
 		$poi_coordz = $row["z"];
 
-		if ($coordx != "")
+		/*if ($coordx != "")
 		{
 			$distance_from_current = sqrt(pow(($poi_coordx-($coordx)), 2)+pow(($poi_coordy-($coordy)), 2)+pow(($poi_coordz-($coordz)), 2));
 		}
 		else
 		{
 			$distance_from_current = 0;
-		}
+		}*/
 
 		$visitres = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id, visit
 																FROM user_visited_systems
@@ -231,7 +233,12 @@ if ($settings["galmap_show_pois"] == "true")
 			$cat = ',"cat": [7]';
 		}
 
-		$info .= '<b>Distance</b><br />' . number_format($distance_from_current, 2) . ' ly<br /><br />';
+		if ($name == $current_system)
+		{
+			$cat = ',"cat": [5]';
+		}
+
+		$info .= '<div class="map_info"><span class="map_info_title">Point of Interest</span><br />';
 		$info .= $category_name == "" ? "" : '<b>Category</b><br />' . $category_name . '<br /><br />';
 		$info .= $poi_name == "" ? "" : '<b>Name</b><br />' . $poi_name . '<br /><br />';
 		$info .= $text == "" ? "" : '<b>Comment</b><br />' . $text . '<br /><br />';
@@ -256,6 +263,8 @@ if ($settings["galmap_show_pois"] == "true")
 				$info .= '<b>First visit</b><br />' . $visit . ' (' . $visit_ago . ')<br /><br />';
 			}
 		}
+
+		$info .= '</div>';
 
 		$data = '{"name": "' . $disp_name  . '"' . $cat . ',"coords": {"x": ' . $poi_coordx . ',"y": ' . $poi_coordy . ',"z": ' . $poi_coordz . '},"infos":' . json_encode($info) . '}' . $last_row . '';
 
@@ -288,16 +297,25 @@ if ($settings["galmap_show_bookmarks"] == "true")
 		$bm_coordy = $bm_row["y"];
 		$bm_coordz = $bm_row["z"];
 
-		if ($coordx != "")
+		if ($bm_system_name == $current_system)
+		{
+			$cat = ',"cat": [5]';
+		}
+		else
+		{
+			$cat = ',"cat": [6]';
+		}
+
+		/*if ($coordx != "")
 		{
 			$distance_from_current = sqrt(pow(($bm_coordx-($coordx)), 2)+pow(($bm_coordy-($coordy)), 2)+pow(($bm_coordz-($coordz)), 2));
 		}
 		else
 		{
 			$distance_from_current = 0;
-		}
+		}*/
 
-		$info .= '<b>Distance</b><br />' . number_format($distance_from_current, 2) . ' ly<br /><br />';
+		$info .= '<div class="map_info"><span class="map_info_title">Bookmarked System</span><br />';
 
 		if (isset($bm_added_on))
 		{
@@ -315,7 +333,9 @@ if ($settings["galmap_show_bookmarks"] == "true")
 		$info .= $bm_category_name == "" ? "" : '<b>Category</b><br />' . $bm_category_name . '<br /><br />';
 		$info .= $bm_comment == "" ? "" : '<b>Comment</b><br />' . $bm_comment . '<br /><br />';
 
-		$data = '{"name": "' . $bm_system_name  . '","cat": [6],"coords": {"x": ' . $bm_coordx . ',"y": ' . $bm_coordy . ',"z": ' . $bm_coordz . '},"infos":' . json_encode($info) . '}' . $last_row . '';
+		$info .= '</div>';
+
+		$data = '{"name": "' . $bm_system_name  . '"' . $cat . ',"coords": {"x": ' . $bm_coordx . ',"y": ' . $bm_coordy . ',"z": ' . $bm_coordz . '},"infos":' . json_encode($info) . '}' . $last_row . '';
 		$last_row = "," . $data . "";
 	}
 }
@@ -337,8 +357,6 @@ if ($settings["galmap_show_rares"] == "true")
 		$rare_station = $rare_row["station"];
 		$rare_system = $rare_row["system_name"];
 		$rare_dist_to_star = number_format($rare_row["ls_to_star"]);
-
-		//$rare_disp_name = "" . $rare_item . " - " . $rare_system . "";
 		$rare_disp_name = $rare_system;
 
 		// coordinates for distance calculations
@@ -346,21 +364,32 @@ if ($settings["galmap_show_rares"] == "true")
 		$rare_coordy = $rare_row["y"];
 		$rare_coordz = $rare_row["z"];
 
-		if ($coordx != "")
+		if ($rare_system == $current_system)
+		{
+			$cat = ',"cat": [5]';
+		}
+		else
+		{
+			$cat = ',"cat": [10]';
+		}
+
+		/*if ($coordx != "")
 		{
 			$rare_distance_from_current = sqrt(pow(($rare_coordx-($coordx)), 2)+pow(($rare_coordy-($coordy)), 2)+pow(($rare_coordz-($coordz)), 2));
 		}
 		else
 		{
 			$rare_distance_from_current = 0;
-		}
+		}*/
 
-		$info .= '<b>Distance</b><br />' . number_format($rare_distance_from_current, 2) . ' ly<br /><br />';
+		$info .= '<div class="map_info"><span class="map_info_title">Rare Commodity</span><br />';
 		$info .= '<b>Rare commodity</b><br />' . $rare_item . '<br /><br />';
 		$info .= '<b>Station</b><br />' . $rare_station . '<br /><br />';
 		$info .= '<b>Distance from star</b><br />' . number_format($rare_dist_to_star) . ' ls';
 
-		$data = '{"name": "' . $rare_disp_name  . '","cat": [10],"coords": {"x": ' . $rare_coordx . ',"y": ' . $rare_coordy . ',"z": ' . $rare_coordz . '},"infos":"' . $info . '"}' . $last_row . '';
+		$info .= '</div>';
+
+		$data = '{"name": "' . $rare_disp_name  . '"' . $cat . ',"coords": {"x": ' . $rare_coordx . ',"y": ' . $rare_coordy . ',"z": ' . $rare_coordz . '},"infos":' . json_encode($info) . '}' . $last_row . '';
 
 		$last_row = "," . $data . "";
 	}

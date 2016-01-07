@@ -14,6 +14,7 @@ var container;
 var routes = [];
 var lensFlareSel;
 
+
 var Ed3d = {
 
   'container'   : 'edmap',
@@ -97,6 +98,12 @@ var Ed3d = {
   //-- Graphical Options
   'optDistObj' : 1500,
 
+  //-- Player position
+  'playerPos' : null,
+
+  //-- Active 2D top view
+  'isTopView' : false,
+
   /**
    * Init Ed3d map
    *
@@ -115,7 +122,8 @@ var Ed3d = {
         withHudPanel: Ed3d.withHudPanel,
         hudMultipleSelect: Ed3d.hudMultipleSelect,
         effectScaleSystem: Ed3d.effectScaleSystem,
-        startAnim: Ed3d.startAnim
+        startAnim: Ed3d.startAnim,
+		playerPos: Ed3d.playerPos
     }, options);
 
     $('#loader').show();
@@ -129,6 +137,7 @@ var Ed3d = {
     this.hudMultipleSelect = options.hudMultipleSelect;
     this.startAnim         = options.startAnim;
     this.effectScaleSystem = options.effectScaleSystem;
+	this.playerPos         = options.playerPos;
 
     //-- Init 3D map container
     $('#'+Ed3d.container).append('<div id="ed3dmap"></div>');
@@ -241,7 +250,7 @@ var Ed3d = {
       vertexColors: THREE.VertexColors,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
-      opacity: 0.9
+      opacity: 0.8
     });
   },
 
@@ -443,7 +452,7 @@ var Ed3d = {
 
 	var x1 = fromx;
 	var y1 = fromy;
-	var z1 = -fromz;
+	var z1 = fromz;
 
 	var distance = Math.round(Math.sqrt(Math.pow((x1-(x2)),2)+Math.pow((y1-(y2)),2)+Math.pow((z1-(z2)),2)));
 
@@ -464,6 +473,12 @@ function animate(time) {
 
   TWEEN.update(time);
 
+  //-- If 2D top view, lock camera pos
+  if(Ed3d.isTopView) {
+    camera.rotation.set(-Math.PI/2,0,0);
+    camera.position.x = controls.center.x;
+    camera.position.z = controls.center.z;
+  }
   renderer.render(scene, camera);
 
   fromx = $('#curx').html();
@@ -495,6 +510,13 @@ function animate(time) {
     Action.cursorSel.rotation.y =  camera.rotation.y ;
   }
 
+
+  if(Ed3d.textSel['system'] != undefined)
+  if(Ed3d.isTopView) {
+    Ed3d.textSel['system'].rotation.set(-Math.PI/2,0,0);
+  } else {
+    Ed3d.textSel['system'].rotation.set(0,0,0);
+  }
   //-- Zoom on on galaxy effect
   Action.sizeOnScroll(scale);
 

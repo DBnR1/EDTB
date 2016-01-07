@@ -1,3 +1,4 @@
+
 var HUD = {
 
   'container' : null,
@@ -31,7 +32,15 @@ var HUD = {
     );
     $('#'+this.container).append('<div id="systemDetails" style="display:none;"></div>');
 	$('#'+this.container).append('<div id="navDetails" style="display:none;"></div>');
+    $('#'+this.container).append(
+      '  <div id="controls">'+
+      '    <a href="#" data-view="3d" class="selected">3D</a>'+
+      '    <a href="#" data-view="top">2D</a>'+
+      '  </div>'
+    );
+
   },
+
 
   /**
    *
@@ -39,6 +48,60 @@ var HUD = {
   'init' : function() {
 
     this.initHudAction();
+    this.initControls();
+
+  },
+
+  /**
+   * Controls init for camera views
+   */
+  'initControls' : function() {
+
+    $('#controls a').click(function(e) {
+
+      $('#controls a').removeClass('selected')
+      $(this).addClass('selected');
+
+      var view = $(this).data('view');
+
+      var moveFrom = {
+        x: camera.position.x, y: camera.position.y , z: camera.position.z
+      };
+
+      switch(view) {
+
+        case 'top':
+          var moveCoords = {x: controls.center.x, y: controls.center.y+500, z: controls.center.z};
+          break;
+
+        case '3d':
+        default:
+          Ed3d.isTopView = false;
+          var moveCoords = {x: controls.center.x-100, y: controls.center.y+500, z: controls.center.z+500};
+          break;
+
+      }
+
+      Ed3d.tween = new TWEEN.Tween(moveFrom, {override:true}).to(moveCoords, 800)
+        .start()
+        .onUpdate(function () {
+          camera.position.set(moveFrom.x, moveFrom.y, moveFrom.z);
+        })
+        .onComplete(function () {
+          controls.update();
+          switch(view) {
+
+            case 'top':
+              Ed3d.isTopView = true;
+              break;
+
+          }
+        });
+
+
+
+
+    });
 
   },
 
@@ -157,6 +220,7 @@ var HUD = {
 
   },
 
+
   /**
    * Remove filters list
    */
@@ -166,6 +230,7 @@ var HUD = {
     $('#hud #filters').html('');
 
   },
+
 
   /**
    *
@@ -212,7 +277,7 @@ var HUD = {
   'closeHudDetails' : function() {
     $('#hud').show();
     $('#systemDetails').hide();
-    $('#navDetails').hide();
+	$('#navDetails').hide();
   },
 
   /**
@@ -222,16 +287,24 @@ var HUD = {
     $('#routes').append('<a class="map_link" data-route="' + idRoute + '"><span class="check"> </span>' + nameR + '</a>');
   },
 
+
+
   /**
    *
    */
 
   'setInfoPanel' : function(index, point) {
 
+	fromx = $('#curx').html();
+	fromy = $('#cury').html();
+	fromz = $('#curz').html();
+
+	var distance = Math.round(Math.sqrt(Math.pow((point.x-(fromx)),2)+Math.pow((point.y-(fromy)),2)+Math.pow((point.z-(fromz)), 1)));
+
     $('#systemDetails').html(
       '<h2><a class="hud" href="'+encodeURI('/system.php?system_name='+replaceAll(point.name, " ", "+")+'')+'">'+point.name+'</a></h2>'+
-      '<div class="coords">'+
-      '  <span>'+point.x+'</span><span>'+point.y+'</span><span>'+(-point.z)+'</span></div>'+
+      '<div class="map_info">'+
+      '  <span>Distance: '+distance+' ly</span></div>'+
       '  <p id="infos"></p>'+
       '</div>'+
       (point.infos != undefined ? '<div>'+point.infos+'</div>' : '')
@@ -257,6 +330,7 @@ var HUD = {
     .appendTo("#nav");
 
   },
+
 
   /**
    * Add Shape text
@@ -292,5 +366,7 @@ var HUD = {
     Ed3d.textSel[id] = textMesh;
     addToObj.add(textMesh);
 
+
   }
+
 }

@@ -4,7 +4,7 @@
 *    (C) 1984 - 2015 Frontier Developments Plc.
 *    ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
 *
-*    Copyright (C) 2015 Mauri Kujala (contact@edtb.xyz)
+*    Copyright (C) 2016 Mauri Kujala (contact@edtb.xyz)
 *
 *    This program is free software; you can redistribute it and/or
 *    modify it under the terms of the GNU General Public License
@@ -24,6 +24,24 @@
 //http://ed-board.net/3Dgalnet/
 $pagetitle = "Galaxy Map&nbsp;&nbsp;&&nbsp;&nbsp;Neighborhood Map";
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
+
+if (is_numeric($coordx))
+{
+	$ucoordx = $coordx;
+	$ucoordy = $coordy;
+	$ucoordz = -$coordz;
+}
+else
+{
+	// get last known coordinates
+	$last_coords = last_known_system();
+
+	$ucoordx = $last_coords["x"];
+	$ucoordy = $last_coords["y"];
+	$ucoordz = -$last_coords["z"];
+
+	$is_unknown = " *";
+}
 ?>
 <!-- Three.js -->
 <script src="/source/three.min.js"></script>
@@ -31,9 +49,12 @@ require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 <link href="/source/ED3D-Galaxy-Map/css/styles.css" rel="stylesheet" type="text/css" />
 <script src="/source/ED3D-Galaxy-Map/js/ed3dmap.js"></script>
 
-<div style="display:none;" id="curx"><?php echo $coordx?></div>
-<div style="display:none;" id="cury"><?php echo $coordy?></div>
-<div style="display:none;" id="curz"><?php echo $coordz?></div>
+<div style="display:none;" id="curx"><?php echo $ucoordx?></div>
+<div style="display:none;" id="cury"><?php echo $ucoordy?></div>
+<div style="display:none;" id="curz"><?php echo $ucoordz?></div>
+<div style="display:none;" id="rcurx"><?php echo round($ucoordx)?></div>
+<div style="display:none;" id="rcury"><?php echo round($ucoordy)?></div>
+<div style="display:none;" id="rcurz"><?php echo round($ucoordz)?></div>
 
 <div class="entries" style="position:absolute;bottom:0px;top:0px;height:auto;">
 	<table style="margin-left:370px;">
@@ -55,11 +76,11 @@ require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 	Ed3d.init({
 		basePath: '../source/ED3D-Galaxy-Map/',
 		container: 'edmap',
-		//jsonPath: 'get/getMapPoints.json.php',
 		jsonPath: '/map_points.json',
 		withHudPanel: true,
 		startAnim: false,
-		effectScaleSystem: [15,50]
+		effectScaleSystem: [15,50],
+		playerPos: [<?php echo $ucoordx;?>,<?php echo $ucoordy;?>,<?php echo $ucoordz;?>]
 	});
 	</script>
 

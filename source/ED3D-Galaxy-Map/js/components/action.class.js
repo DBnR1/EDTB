@@ -1,3 +1,4 @@
+
 var Action = {
 
   'cursorSel' : null,
@@ -239,6 +240,23 @@ var Action = {
   },
 
   /**
+   * Move to inital position without animation
+   */
+  'moveInitalPositionNoAnim' : function (timer) {
+
+    if(Ed3d.playerPos == null) return;
+
+
+    var moveTo = {
+      x:  Ed3d.playerPos[0], y:  Ed3d.playerPos[1]+500, z: Ed3d.playerPos[1]+500,
+      mx: Ed3d.playerPos[0], my: Ed3d.playerPos[1],    mz: Ed3d.playerPos[2]
+    };
+    camera.position.set(moveTo.x, moveTo.y, moveTo.z);
+    controls.center.set(moveTo.mx, moveTo.my, moveTo.mz);
+
+  },
+
+  /**
    * Move to inital position
    */
   'moveInitalPosition' : function (timer) {
@@ -253,10 +271,24 @@ var Action = {
       x: camera.position.x, y: camera.position.y , z: camera.position.z,
       mx: controls.center.x, my: controls.center.y , mz: controls.center.z
     };
-    var moveCoords = {
-      x: 0, y: 500, z: 500,
-      mx: 0, my: 0 , mz: 0
-    };
+
+    //-- Move to player position if defined, else move to Sol
+
+    if(Ed3d.playerPos != null) {
+
+      var moveCoords = {
+        x:  Ed3d.playerPos[0], y:  Ed3d.playerPos[1]+500, z: Ed3d.playerPos[1]+500,
+        mx: Ed3d.playerPos[0], my: Ed3d.playerPos[1] ,   mz: Ed3d.playerPos[2]
+      };
+
+    } else {
+
+      var moveCoords = {
+        x: 0, y: 500, z: 500,
+        mx: 0, my: 0 , mz: 0
+      };
+
+    }
 
     controls.enabled = false;
 
@@ -412,4 +444,7 @@ var Action = {
     Ed3d.grid1XL.obj.position.set(posX, posY, posZ);
 
   }
+
+
+
 }
