@@ -290,7 +290,7 @@ require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/add/poi.php");
 						}
 						else
 						{
-							echo '<tr><td class="station_info_price_info" style="min-width:420px;max-width:500;"><strong>No points of interest.<br />Click the Elite emblem to add one.</strong></td></tr>';
+							echo '<tr><td class="station_info_price_info" style="min-width:420px;max-width:500;"><strong>No points of interest.<br />Click the "Points of Interest" text to add one.</strong></td></tr>';
 						}
 						?>
 					</table>
