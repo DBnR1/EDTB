@@ -47,9 +47,9 @@ if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"]))
 	</table>
 	<div class="entries_inner" style="overflow:hidden !important;">
 		<div id="container"></div>
-		<div id="report" onclick='$("#report").toggle();'></div>
-		<div id="disclaimer" onclick='$("#disclaimer").toggle();'></div>
-		<div id="map_legend" onclick='$("#map_legend2").toggle();'>Legend</div>
+		<div id="report" onclick='$("#report").fadeToggle();'></div>
+		<div id="disclaimer" onclick='$("#disclaimer").fadeToggle("fast");'></div>
+		<div id="map_legend" onclick='$("#map_legend2").fadeToggle("fast");'>Legend</div>
 		<div id="map_legend2">
 			<table style="padding:5px;">
 				<tr>
