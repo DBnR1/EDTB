@@ -78,7 +78,7 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 					<!-- current system name will be rendered here -->
 					<div class="leftpanel-title" id="t1"></div>
 					<!-- date and clock will be rendered here -->
-					<div id="datetime" onclick="$('#ext_links').toggle();">
+					<div id="datetime" onclick="$('#ext_links').fadeToggle('fast');">
 						<div class="leftpanel-clock" id="hrs"></div><br />
 						<div class="leftpanel-date" id="date"></div>
 					</div>
@@ -88,7 +88,7 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 						// links
 						foreach ($settings["ext_links"] as $name => $link_href)
 						{
-							echo '<a href="' .  $link_href . '" target="_BLANK" onclick="$(\'#ext_links\').fadeToggle();"><div class="leftpanel-ext_links_link">' . $name . '</div></a>';
+							echo '<a href="' .  $link_href . '" target="_BLANK" onclick="$(\'#ext_links\').fadeToggle(\'fast\');"><div class="leftpanel-ext_links_link">' . $name . '</div></a>';
 						}
 						?>
 					</div>
@@ -184,16 +184,16 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 						if ($now > $last_update)
 						{
 							?>
-							<a href="javascript:void(0);" title="Notice" onclick="$('#notice').fadeToggle()"><img src="/style/img/notice.png" style="vertical-align:middle;height:26px;width:26px;" alt="Notice" /></a>
+							<a href="javascript:void(0);" title="Notice" onclick="$('#notice').fadeToggle('fast')"><img src="/style/img/notice.png" style="vertical-align:middle;height:26px;width:26px;" alt="Notice" /></a>
 							<?php
 						}
 						?>
-						<a href="javascript:void(0);" title="About ED ToolBox" onclick="$('#about').fadeToggle()"><img src="/style/img/about.png" style="vertical-align:middle;height:26px;width:26px;" alt="About" /></a>
-						<a href="javascript:void(0);" title="Settings Panel" onclick="$('#settings').fadeToggle()"><img src="/style/img/settings.png" style="vertical-align:middle;height:26px;width:26px;" alt="Settings" /></a>
+						<a href="javascript:void(0);" title="About ED ToolBox" onclick="$('#about').fadeToggle('fast')"><img src="/style/img/about.png" style="vertical-align:middle;height:26px;width:26px;" alt="About" /></a>
+						<a href="javascript:void(0);" title="Settings Panel" onclick="$('#settings').fadeToggle('fast')"><img src="/style/img/settings.png" style="vertical-align:middle;height:26px;width:26px;" alt="Settings" /></a>
 					</span>
 
 					<div class="settings_panel" id="notice">
-						It has been a while since you last update system and station data.<br />As a result, any data you see here may be outdated.<br />
+						It has been a while since you last update system and station data.<br />As a result, any data you see here may be outdated.<br /><br />
 						Right-click the EDTB manager icon on your system tray and select<br />"Update system and station data".
 					</div>
 

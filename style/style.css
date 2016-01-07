@@ -3,7 +3,7 @@
 *    (C) 1984 - 2015 Frontier Developments Plc.
 *    ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
 *
-*    Copyright (C) 2015 Mauri Kujala (contact@edtb.xyz)
+*    Copyright (C) 2016 Mauri Kujala (contact@edtb.xyz)
 *
 *    This program is free software; you can redistribute it and/or
 *    modify it under the terms of the GNU General Public License
@@ -459,6 +459,22 @@ a.poid:hover
 	z-index:11696;
 }
 
+/* when hovering over station name on nearest_systems.php */
+.stationinfo_ns
+{
+	display:none;
+	position:absolute;
+	margin-left:22px;
+	line-height:2;
+	padding:8px;
+	max-width:500px;
+	background-color:#2A3C45;
+	border:1px solid #000;
+	color:#FFFFFA;
+	text-shadow:1px 1px 1px #000000;
+	z-index:11696;
+}
+
 /* when hovering over facility icon on system.php */
 .facilityinfo
 {
@@ -556,7 +572,7 @@ a.poid:hover
 	position:absolute;
 	height:auto;
 	bottom:0px;
-	top:538px;
+	top:545px;
 	vertical-align:top;
 	font-family:Sintony;
 	color:#FFF;
@@ -701,9 +717,9 @@ a.poid:hover
 .input-inner
 {
 	position:fixed;
-	left:433px;
-	top:110px;
-	/*width:616px;*/
+	left:420px;
+	top:100px;
+	width:500px;
 	text-align:center;
 }
 
@@ -971,15 +987,15 @@ button, .button
 {
 	-webkit-border-radius:4px;
 	-moz-border-radius:4px;
+	border-radius:4px;
 	font-family:Sintony;
 	color:#fffffa;
 	font-size:12px;
+	background-color:#302F30;
+	border:1px solid #131722;
 	resize:none;
 	font-weight:700;
 	letter-spacing:normal;
-	background-color:#302F30;
-	border-radius:4px;
-	border:1px solid #131722;
 	width:265px;
 	padding:5px;
 	margin-top:5px;
@@ -1004,6 +1020,47 @@ button:hover, .button:hover
 	margin-top:5px;
 	outline:0;
 	cursor:url(/style/img/cursor.png), auto;
+}
+
+
+.delete_button
+{
+	-webkit-border-radius:4px;
+	-moz-border-radius:4px;
+	border-radius:4px;
+	font-family:Sintony;
+	color:#fffffa;
+	font-size:12px;
+	background-color:#964D4D;
+	border:1px solid #131722;
+	resize:none;
+	font-weight:700;
+	letter-spacing:normal;
+	padding:5px;
+	margin-top:5px;
+	outline:0;
+	cursor:url(/style/img/cursor.png), auto;
+	text-transform:uppercase;
+}
+
+.delete_button:hover
+{
+	-webkit-border-radius:4px;
+	-moz-border-radius:4px;
+	border-radius:4px;
+	font-family:Sintony;
+	color:#fffffa;
+	font-size:12px;
+	background-color:red;
+	border:1px solid #131722;
+	resize:none;
+	font-weight:700;
+	letter-spacing:normal;
+	padding:5px;
+	margin-top:5px;
+	outline:0;
+	cursor:url(/style/img/cursor.png), auto;
+	text-transform:uppercase;
 }
 
 /* the additional info for systems on map.php */
@@ -1041,7 +1098,7 @@ button:hover, .button:hover
 	padding:5px 10px;
 	text-align:left;
 	/*margin-left:18px;*/
-	z-index:5000;
+	z-index:500000;
 }
 
 .suggestions a
@@ -1092,6 +1149,9 @@ button:hover, .button:hover
 
 .station_info_price_category
 {
+	font-family:Sintony;
+	color:#fffffa;
+	font-size:12px;
 	font-weight:bold;
 	background-color:#37474F;
 	padding:4px;
@@ -1101,15 +1161,20 @@ button:hover, .button:hover
 
 .station_info_price_info_t
 {
+	font-family:Sintony;
+	color:#fffffa;
+	font-size:12px;
 	padding:5px;
 	vertical-align:middle;
 	background-color:transparent;
 	line-height:1.5;
 }
 
-
 .station_info_price_info
 {
+	font-family:Sintony;
+	color:#fffffa;
+	font-size:12px;
 	padding:6px;
 	vertical-align:middle;
 	background-color:#38484F;
@@ -1119,6 +1184,9 @@ button:hover, .button:hover
 
 .station_info_price_info2
 {
+	font-family:Sintony;
+	color:#fffffa;
+	font-size:12px;
 	padding:6px;
 	vertical-align:middle;
 	background-color:#273238;
@@ -1505,4 +1573,26 @@ div.tooltip
 .wp:hover
 {
 	color:#cccccc;
+}
+
+.map_info
+{
+	padding:5px;
+	line-height:1.5;
+	font-family:Sintony;
+	color:#fffffa;
+	font-size:12px;
+	background-color:#0e0e11;
+	border:1px solid #141414;
+	margin-bottom:10px;
+}
+
+.map_info_title
+{
+	font-family:Sintony;
+	color:#fffffa;
+	font-size:13px;
+	float:right;
+	margin-right:5px;
+	font-weight:bold;
 }
