@@ -4,7 +4,7 @@
 *    (C) 1984 - 2015 Frontier Developments Plc.
 *    ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
 *
-*    Copyright (C) 2015 Mauri Kujala (contact@edtb.xyz)
+*    Copyright (C) 2016 Mauri Kujala (contact@edtb.xyz)
 *
 *    This program is free software; you can redistribute it and/or
 *    modify it under the terms of the GNU General Public License
@@ -134,6 +134,13 @@ if ($facility != "" && $facility != "0")
 	$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT edtb_stations.system_id AS system_id, edtb_stations.name AS station_name,
 														edtb_stations.ls_from_star, edtb_stations.max_landing_pad_size,
 														edtb_stations.is_planetary, edtb_stations.type,
+														edtb_stations.id AS station_id, edtb_stations.faction AS station_faction,
+														edtb_stations.government AS station_government, edtb_stations.allegiance AS station_allegiance,
+														edtb_stations.state AS station_state, edtb_stations.black_market, edtb_stations.commodities_market,
+														edtb_stations.refuel, edtb_stations.repair,  edtb_stations.rearm,
+														edtb_stations.outfitting, edtb_stations.shipyard,
+														edtb_stations.import_commodities, edtb_stations.export_commodities,
+														edtb_stations.prohibited_commodities, edtb_stations.economies, edtb_stations.selling_ships,
 														edtb_systems.allegiance AS allegiance,
 														edtb_systems.name AS system,
 														edtb_systems.x AS coordx,
@@ -177,7 +184,7 @@ if ($pad != "")
     $add4 = " AND edtb_stations.max_landing_pad_size = '" . $pad . "'";
 	$stations = true;
 	$padsize = $pad == "L" ? "Large" : "Medium";
-	$text .= "  stationswith " . $padsize . " sized landing pads";
+	$text .= "  stations with " . $padsize . " sized landing pads";
 	$hidden_inputs .= '<input type="hidden" name="pad" value="' . $pad . '" />';
 	$addtolink .= "&pad=" . $pad . "";
 	$addtolink2 .= "&pad=" . $pad . "";
@@ -189,6 +196,13 @@ if ($stations !== false)
 	$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT edtb_stations.system_id AS system_id, edtb_stations.name AS station_name,
 														edtb_stations.ls_from_star, edtb_stations.max_landing_pad_size,
 														edtb_stations.is_planetary, edtb_stations.type,
+														edtb_stations.id AS station_id, edtb_stations.faction AS station_faction,
+														edtb_stations.government AS station_government, edtb_stations.allegiance AS station_allegiance,
+														edtb_stations.state AS station_state, edtb_stations.black_market, edtb_stations.commodities_market,
+														edtb_stations.refuel, edtb_stations.repair,  edtb_stations.rearm,
+														edtb_stations.outfitting, edtb_stations.shipyard,
+														edtb_stations.import_commodities, edtb_stations.export_commodities,
+														edtb_stations.prohibited_commodities, edtb_stations.economies, edtb_stations.selling_ships,
 														edtb_systems.allegiance AS allegiance,
 														edtb_systems.name AS system,
 														edtb_systems.x AS coordx,
@@ -202,7 +216,7 @@ if ($stations !== false)
 														LEFT JOIN edtb_systems on edtb_stations.system_id = edtb_systems.id
 														WHERE edtb_systems.x != ''" . $add . "" . $add2 . "" . $add3 . "" . $add4 . "
 														ORDER BY sqrt(pow((coordx-(" . $usex . ")),2)+pow((coordy-(" . $usey . ")),2)+pow((coordz-(" . $usez . ")),2)),
-														edtb_stations.ls_from_star
+														-edtb_stations.ls_from_star DESC
 														LIMIT 10");
 }
 else
@@ -256,7 +270,14 @@ if ($group_id != "" && $group_id != "0")
 		$classes = " class " . $_GET["class"] . " ";
 		$hidden_inputs .= '<input type="hidden" name="class" value="' . $class . '" />';
 	}
-	$text .= " stations selling " . $ratings . "" . $classes . "" . $group_name . "";
+	if ($class != "" && $class != "0" && $rating != "" && $rating != "0")
+	{
+		$pres = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT price FROM edtb_modules WHERE group_id = '" . $group_id . "' AND rating = '" . $rating . "' AND class = '" . $class . "' LIMIT 1");
+		$parr = mysqli_fetch_assoc($pres);
+		$modules_price = number_format($parr["price"]);
+		$price = " (normal price " . $modules_price . " CR) ";
+	}
+	$text .= " stations selling " . $ratings . "" . $classes . "" . $group_name . "" . $price . "";
 	$hidden_inputs .= '<input type="hidden" name="group_id" value="' . $group_id . '" />';
 	$addtolink .= "&group_id=" . $group_id . "";
 	$addtolink2 .= "&group_id=" . $group_id . "";
@@ -275,6 +296,13 @@ if ($group_id != "" && $group_id != "0")
 		$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT edtb_stations.system_id AS system_id, edtb_stations.name AS station_name,
 															edtb_stations.ls_from_star, edtb_stations.max_landing_pad_size,
 															edtb_stations.is_planetary, edtb_stations.type,
+															edtb_stations.id AS station_id, edtb_stations.faction AS station_faction,
+															edtb_stations.government AS station_government, edtb_stations.allegiance AS station_allegiance,
+															edtb_stations.state AS station_state, edtb_stations.black_market, edtb_stations.commodities_market,
+															edtb_stations.refuel, edtb_stations.repair,  edtb_stations.rearm,
+															edtb_stations.outfitting, edtb_stations.shipyard,
+															edtb_stations.import_commodities, edtb_stations.export_commodities,
+															edtb_stations.prohibited_commodities, edtb_stations.economies, edtb_stations.selling_ships,
 															edtb_systems.allegiance AS allegiance,
 															edtb_systems.name AS system,
 															edtb_systems.x AS coordx,
@@ -304,6 +332,13 @@ if ($ship_name != "" && $ship_name != "0")
 	$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT edtb_stations.system_id AS system_id, edtb_stations.name AS station_name,
 														edtb_stations.ls_from_star, edtb_stations.max_landing_pad_size,
 														edtb_stations.is_planetary, edtb_stations.type,
+														edtb_stations.id AS station_id, edtb_stations.faction AS station_faction,
+														edtb_stations.government AS station_government, edtb_stations.allegiance AS station_allegiance,
+														edtb_stations.state AS station_state, edtb_stations.black_market, edtb_stations.commodities_market,
+														edtb_stations.refuel, edtb_stations.repair,  edtb_stations.rearm,
+														edtb_stations.outfitting, edtb_stations.shipyard,
+														edtb_stations.import_commodities, edtb_stations.export_commodities,
+														edtb_stations.prohibited_commodities, edtb_stations.economies, edtb_stations.selling_ships,
 														edtb_systems.allegiance AS allegiance,
 														edtb_systems.name AS system,
 														edtb_systems.x AS coordx,
@@ -319,8 +354,17 @@ if ($ship_name != "" && $ship_name != "0")
 														AND edtb_stations.selling_ships LIKE '%\'" . $ship_name . "\'%'" . $add . "" . $add2 . "" . $add3 . "" . $add4 . "
 														ORDER BY sqrt(pow((coordx-(" . $usex . ")),2)+pow((coordy-(" . $usey . ")),2)+pow((coordz-(" . $usez . ")),2))
 														LIMIT 10");
+
+	$p_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT price FROM edtb_ships WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $ship_name) . "'");
+	$p_arr = mysqli_fetch_assoc($p_res);
+	$ship_price = number_format($p_arr["price"]);
+
+	if (isset($p_arr["price"]))
+	{
+		$s_price = " (normal price " . $ship_price . " CR)";
+	}
 	$stations = true;
-	$text .= " stations selling the " . $ship_name . "";
+	$text .= " stations selling the " . $ship_name . "" . $s_price . "";
 	$hidden_inputs .= '<input type="hidden" name="ship_name" value="' . $ship_name . '" />';
 	$addtolink .= "&ship_name=" . $ship_name . "";
 	$addtolink2 .= "&ship_name=" . $ship_name . "";
@@ -384,14 +428,14 @@ YUI().use('pjax', function (Y) {
 			<tr>
 				<!-- station allegiances -->
 				<td class="station_info_price_info_t" style="vertical-align:top;width:25%;white-space:nowrap;">
-					<a class="nslink" href="/nearest_systems.php?allegiance=Empire<?php echo $addtolink2;?>" title="Empire"><img src="style/img/empire.png" alt="All" style="vertical-align:middle;" /></a>&nbsp;
-					<a class="nslink" href="/nearest_systems.php?allegiance=Alliance<?php echo $addtolink2;?>" title="Alliance"><img src="style/img/alliance.png" alt="All" style="vertical-align:middle;" /></a>&nbsp;
-					<a class="nslink" href="/nearest_systems.php?allegiance=Federation<?php echo $addtolink2;?>" title="Federation"><img src="style/img/federation.png" alt="All" style="vertical-align:middle;" /></a>&nbsp;
-					<a class="nslink" href="/nearest_systems.php?allegiance=Independent<?php echo $addtolink2;?>" title="Independent"><img src="style/img/system.png" alt="All" style="vertical-align:middle;" /></a>
+					<a class="nslink" href="/nearest_systems.php?allegiance=Empire<?php echo $addtolink2;?>" title="Empire"><img src="style/img/empire.png" alt="Empire" style="vertical-align:middle;" /></a>&nbsp;
+					<a class="nslink" href="/nearest_systems.php?allegiance=Alliance<?php echo $addtolink2;?>" title="Alliance"><img src="style/img/alliance.png" alt="Alliance" style="vertical-align:middle;" /></a>&nbsp;
+					<a class="nslink" href="/nearest_systems.php?allegiance=Federation<?php echo $addtolink2;?>" title="Federation"><img src="style/img/federation.png" alt="Federation" style="vertical-align:middle;" /></a>&nbsp;
+					<a class="nslink" href="/nearest_systems.php?allegiance=Independent<?php echo $addtolink2;?>" title="Independent"><img src="style/img/system.png" alt="Independent" style="vertical-align:middle;" /></a>
 					<!-- search systems and stations-->
 					<div style="text-align:left;">
 						<div style="width:180px;margin-top:35px;">
-							<input class="textbox" type="text" name="system_name" placeholder="System (optional)" id="system_21" style="width:180px;" oninput="showResult(this.value, '11', 'no', 'no', 'yes')" autofocus="autofocus" /><br />
+							<input class="textbox" type="text" name="system_name" placeholder="System (optional)" id="system_21" style="width:180px;" oninput="showResult(this.value, '11', 'no', 'no', 'yes')" /><br />
 							<input class="textbox" type="text" name="station_name" placeholder="Station (optional)" id="station_21" style="width:180px;" oninput="showResult(this.value, '12', 'no', 'yes', 'yes')" />
 							<div class="suggestions" id="suggestions_11" style="margin-left:0px;margin-top:-36px;min-width:168px;"></div>
 							<div class="suggestions" id="suggestions_12" style="margin-left:0px;min-width:168px;"></div>
@@ -400,9 +444,9 @@ YUI().use('pjax', function (Y) {
 				</td>
 				<!-- allegiances -->
 				<td class="station_info_price_info_t" style="vertical-align:top;width:25%;white-space:nowrap;">
-					<a class="nslink" href="/nearest_systems.php?system_allegiance=Empire<?php echo $addtolink2;?>" title="Empire"><img src="style/img/empire.png" alt="All" style="vertical-align:middle;" /></a>&nbsp;
-					<a class="nslink" href="/nearest_systems.php?system_allegiance=Alliance<?php echo $addtolink2;?>" title="Alliance"><img src="style/img/alliance.png" alt="All" style="vertical-align:middle;" /></a>&nbsp;
-					<a class="nslink" href="/nearest_systems.php?system_allegiance=Federation<?php echo $addtolink2;?>" title="Federation"><img src="style/img/federation.png" alt="All" style="vertical-align:middle;" /></a>&nbsp;
+					<a class="nslink" href="/nearest_systems.php?system_allegiance=Empire<?php echo $addtolink2;?>" title="Empire"><img src="style/img/empire.png" alt="Empire" style="vertical-align:middle;" /></a>&nbsp;
+					<a class="nslink" href="/nearest_systems.php?system_allegiance=Alliance<?php echo $addtolink2;?>" title="Alliance"><img src="style/img/alliance.png" alt="Alliance" style="vertical-align:middle;" /></a>&nbsp;
+					<a class="nslink" href="/nearest_systems.php?system_allegiance=Federation<?php echo $addtolink2;?>" title="Federation"><img src="style/img/federation.png" alt="Federation" style="vertical-align:middle;" /></a>&nbsp;
 					<a class="nslink" href="/nearest_systems.php?system_allegiance=None<?php echo $addtolink2;?>" title="None allied"><img src="style/img/system.png" alt="None allied" style="vertical-align:middle;" /></a>
 					<br /><br />
 				</td>
@@ -515,7 +559,7 @@ YUI().use('pjax', function (Y) {
 						<!--<input id="ship_submit" class="button" type="submit" value="Search" style="width:180px;" />-->
 					</form>
 					<!-- facilities -->
-					<form method="get" action="<?php echo $_SERVER['PHP_SELF'];?>" name="go" id="ships">
+					<form method="get" action="<?php echo $_SERVER['PHP_SELF'];?>" name="go" id="facilities">
 						<?php
 						echo $hidden_inputs;
 						?>
@@ -535,7 +579,8 @@ YUI().use('pjax', function (Y) {
 						</select><br />
 						<!--<input id="ship_submit" class="button" type="submit" value="Search" style="width:180px;" />-->
 					</form>
-					<form method="get" action="<?php echo $_SERVER['PHP_SELF'];?>" name="go" id="ships">
+					<!-- landing pads -->
+					<form method="get" action="<?php echo $_SERVER['PHP_SELF'];?>" name="go" id="landingpads">
 						<?php
 						echo $hidden_inputs;
 						?>
@@ -646,11 +691,67 @@ YUI().use('pjax', function (Y) {
 									$station_is_planetary = $arr["is_planetary"];
 									$station_type = $arr["type"];
 
-									/*$planetary = $station_is_planetary == "1" ? '<img src="/style/img/planetary.png" alt="planetary" style="margin-right:6px;vertical-align:middle;" />' : '<img src="/style/img/spaceport.png" alt="" style="margin-right:6px;vertical-align:middle;" />';*/
-
 									$icon = get_station_icon($station_type, $station_is_planetary);
 
-									echo '<td class="station_info_price_info_t">' . $icon . '' . $station_name . '</td>';
+									$station_id = $arr["station_id"];
+									$station_faction = $arr["station_faction"] == "" ? "" : "<b>Faction:</b> " . $arr["station_faction"] . "<br />";
+									$station_government = $arr["station_government"] == "" ? "" : "<b>Government:</b> " . $arr["station_government"] . "<br />";
+									$station_allegiance = $arr["station_allegiance"] == "" ? "" : "<b>Allegiance:</b> " . $arr["station_allegiance"] . "<br />";
+
+									$station_state = $arr["station_state"] == "" ? "" : "<b>State:</b> " . $arr["station_state"] . "<br />";
+									$station_type_d = $arr["type"] == "" ? "" : "<b>Type:</b> " . $arr["type"] . "<br />";
+									$station_economies = $arr["station_economies"] == "" ? "" : "<b>Economies:</b> " . $arr["station_economies"] . "<br />";
+
+									$station_import_commodities = $arr["import_commodities"] == "" ? "" : "<br /><b>Import commodities:</b> " . $arr["import_commodities"] . "<br />";
+									$station_export_commodities = $arr["export_commodities"] == "" ? "" : "<b>Export commodities:</b> " . $arr["export_commodities"] . "<br />";
+									$station_prohibited_commodities = $arr["prohibited_commodities"] == "" ? "" : "<b>Prohibited commodities:</b> " . $arr["prohibited_commodities"] . "<br />";
+
+									$station_selling_ships = $arr["selling_ships"] == "" ? "" : "<br /><b>Selling ships:</b> " . str_replace("'", "", $arr["selling_ships"]) . "<br />";
+
+									$station_shipyard = $arr["shipyard"];
+									$station_outfitting = $arr["outfitting"];
+									$station_commodities_market = $arr["commodities_market"];
+									$station_black_market = $arr["black_market"];
+									$station_refuel = $arr["refuel"];
+									$station_repair = $arr["repair"];
+									$station_rearm = $arr["rearm"];
+
+									$station_includes = array(  "shipyard" => $station_shipyard,
+																"outfitting" => $station_outfitting,
+																"commodities market" => $station_commodities_market,
+																"black market" => $station_black_market,
+																"refuel" => $station_refuel,
+																"repair" => $station_repair,
+																"restock" => $station_rearm);
+
+									$i = 0;
+									$station_services = "";
+									foreach ($station_includes as $name => $included)
+									{
+										if ($included == 1)
+										{
+											if ($i != 0)
+											{
+												$station_services .= ", ";
+											}
+											else
+											{
+												$station_services .= "<b>Facilities:</b> ";
+											}
+
+											$station_services .= $name;
+										$i++;
+										}
+									}
+									$station_services .= "<br />";
+
+									$info = $station_type_d.$station_faction.$station_government.$station_allegiance.$station_state.$station_economies.$station_services.$station_import_commodities.$station_export_commodities.$station_prohibited_commodities.$station_selling_ships;
+
+									$info = str_replace("['", "", $info);
+									$info = str_replace("']", "", $info);
+									$info = str_replace("', '", ", ", $info);
+
+									echo '<td class="station_info_price_info_t"><a href="javascript:void(0);" onmouseover="$(\'#si_statinfo_' . $station_id . '\').fadeToggle(\'fast\');" onmouseout="$(\'#si_statinfo_' . $station_id . '\').toggle();">' . $icon . '' . $station_name . '<div class="stationinfo_ns" id="si_statinfo_' . $station_id . '">' . $info . '</div></td>';
 									echo '<td class="station_info_price_info_t">' . $station_ls_from_star . '</td>';
 									echo '<td class="station_info_price_info_t">' . $station_max_landing_pad_size . '</td>';
 								}
