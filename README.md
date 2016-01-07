@@ -31,8 +31,8 @@ Requirements
   * On E:D 1.5 it's located in:
   * **C:\Users\%USERNAME%\AppData\Local\Frontier_Developments\Products\FORC-FDEV-D-XX**
   * Open the file in a text editor and scroll to the bottom. Replace this part:
-   
-  
+
+
     ```
     	<Network
     	  Port="0"
@@ -67,6 +67,19 @@ What exactly happens when I install EDTB?
 - The EDTB installer sets up a basic web server (Apache, MySQL and PHP) on the user's computer and installs a simple manager to easily control the server. EDTB will be accessed trough the user's web browser. The web server is only accessible from the local network for security reasons.
 
 - The best way to enjoy EDTB is to run Elite Dangerous in borderless window mode and have a second monitor for EDTB so you can see information at a glance and interact with EDTB easily. Run EDTB in full screen mode (press F11) for maximum coolness. You can even access EDTB from a secondary device such as your smart phone or tablet as long as it's in the same local network.
+
+How do I access the VoiceAttack module?
+---------------------------------------
+- In VoiceAttack, set the following urls as variables:
+	- Information about current system: http://localhost:3001/Marvin/SystemData.php?sys
+	- Nearest station: http://localhost:3001/Marvin/SystemData.php?cs
+	- Random quote/thought: http://localhost:3001/Marvin/SystemData.php?rm
+	- Check for new GalNet articles: http://localhost:3001/Marvin/GalnetData.php
+	- Four latest GalNet articles are in:
+		- http://localhost:3001/Marvin/galnet1.txt
+		- http://localhost:3001/Marvin/galnet2.txt
+		- http://localhost:3001/Marvin/galnet3.txt
+		- http://localhost:3001/Marvin/galnet4.txt
 
 [Visual C++ Redistributable for Visual Studio 2015]: <https://www.microsoft.com/en-us/download/details.aspx?id=48145>
 [edtb]: <https://github.com/joemccann/dillinger.git>
