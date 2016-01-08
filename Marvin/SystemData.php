@@ -60,7 +60,7 @@ if (isset($_GET["sys"]))
 		$va_text = "The " . $va_system . " system.\n\r";
 
 		$va_allegiance = $current_allegiance == "None" ? "No additional data available. " : $current_allegiance;
-		$va_allegiance = $va_allegiance == "" ? "No additional data available. " : strtolower($va_allegiance);
+		$va_allegiance = $va_allegiance == "" ? "No additional data available. " : $va_allegiance;
 
 		$rant = "";
 		$rants = array();
@@ -167,12 +167,12 @@ if (isset($_GET["sys"]))
 
 		$va_text .= "" . $article . " " . $va_allegiance . "" . strtolower($va_government) . "" . $va_power . "" . $va_pop . "";
 
-		$va_text .= ". " . $rant . "";
+		$va_text .= " " . $rant . "";
 
 		$ress = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT name, ls_from_star
 															FROM edtb_stations
 															WHERE system_id = '" . $current_id . "'
-															ORDER BY ls_from_star ASC, name");
+															ORDER BY -ls_from_star DESC, name");
 
 		$count = mysqli_num_rows($ress);
 
@@ -300,7 +300,7 @@ if (isset($_GET["cs"]))
 														LEFT JOIN edtb_systems on edtb_stations.system_id = edtb_systems.id
 														WHERE edtb_systems.x != ''
 														ORDER BY sqrt(pow((coordx-(" . $usex . ")),2)+pow((coordy-(" . $usey . ")),2)+pow((coordz-(" . $usez . ")),2)),
-														edtb_stations.ls_from_star
+														-edtb_stations.ls_from_star DESC
 														LIMIT 1");
 
 	echo $add2;
