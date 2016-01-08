@@ -214,6 +214,7 @@ $("#submitc").click(function(event)
 	event.preventDefault();
 	update_data('calc_form', '/add/coord.php?do', true);
 	tofront('null', true);
+	return false;
 });
 </script>
 <script>
@@ -224,5 +225,6 @@ $("#clear").click(function(event)
 	$('#ref_2_dist').val("");
 	$('#ref_3_dist').val("");
 	$('#ref_4_dist').val("");
+	return false;
 });
 </script>

@@ -111,5 +111,6 @@ $("#submitbm").click(function(event)
 	event.preventDefault();
 	update_data('bm_form', '/add/bookmark.php?do', true);
 	tofront('null', true);
+	return false;
 });
 </script>

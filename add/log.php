@@ -136,5 +136,6 @@ $("#submits").click(function(event)
 	update_data('log_form', '/add/log.php?do', true);
 	tofront('null', true);
 	$('#log_form').trigger('reset');
+	return false;
 });
 </script>

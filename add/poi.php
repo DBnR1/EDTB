@@ -76,7 +76,7 @@ if ($_SERVER['PHP_SELF'] == "/poi.php")
     <div class="input" id="addpoi" style="text-align:center;">
 		<form method="post" id="poi_form" action="poi.php">
 			<div class="input-inner">
-			<div class="suggestions" id="suggestions_33" style="margin-top:110px;margin-left:10px;"></div>
+				<div class="suggestions" id="suggestions_33" style="margin-top:110px;margin-left:10px;"></div>
 				<table>
 					<tr>
 						<td class="systeminfo_station_name" colspan="2">Add/edit Point of Interest</td>
@@ -131,6 +131,7 @@ if ($_SERVER['PHP_SELF'] == "/poi.php")
 		event.preventDefault();
 		update_data('poi_form', '/add/poi.php?do', true);
 		tofront('null', true);
+		return false;
 	});
 	</script>
 <?php
