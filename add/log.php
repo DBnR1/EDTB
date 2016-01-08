@@ -4,7 +4,7 @@
 *    (C) 1984 - 2015 Frontier Developments Plc.
 *    ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
 *
-*    Copyright (C) 2015 Mauri Kujala (contact@edtb.xyz)
+*    Copyright (C) 2016 Mauri Kujala (contact@edtb.xyz)
 *
 *    This program is free software; you can redistribute it and/or
 *    modify it under the terms of the GNU General Public License
@@ -132,7 +132,6 @@ if (isset($_GET["do"]))
 <script>
 $("#submits").click(function(event)
 {
-	event.preventDefault();
 	update_data('log_form', '/add/log.php?do', true);
 	tofront('null', true);
 	$('#log_form').trigger('reset');

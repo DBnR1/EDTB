@@ -211,7 +211,6 @@ else
 <script>
 $("#submitc").click(function(event)
 {
-	event.preventDefault();
 	update_data('calc_form', '/add/coord.php?do', true);
 	tofront('null', true);
 	return false;
@@ -220,7 +219,6 @@ $("#submitc").click(function(event)
 <script>
 $("#clear").click(function(event)
 {
-	event.preventDefault();
 	$('#ref_1_dist').val("");
 	$('#ref_2_dist').val("");
 	$('#ref_3_dist').val("");

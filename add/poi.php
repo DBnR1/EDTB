@@ -128,7 +128,6 @@ if ($_SERVER['PHP_SELF'] == "/poi.php")
 	<script>
 	$("#submitpoi").click(function(event)
 	{
-		event.preventDefault();
 		update_data('poi_form', '/add/poi.php?do', true);
 		tofront('null', true);
 		return false;
