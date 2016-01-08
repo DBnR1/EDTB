@@ -38,7 +38,7 @@ $data = "";
 $data_start = '{"categories":{';
 if ($settings["galmap_show_visited_systems"] == "true")
 {
-	$data_start .= '"Allegiances":{"1":{"name":"Empire","color":"e7d884"},"2":{"name":"Federation","color":"FFF8E6"},"3":{"name":"Alliance","color":"09b4f4"},"20":{"name":"Anarchy","color":"B704E3"},"21":{"name":"Independent","color":"34242F"}},';
+	$data_start .= '"Allegiances":{"1":{"name":"Empire","color":"e7d884"},"2":{"name":"Federation","color":"FFF8E6"},"3":{"name":"Alliance","color":"09b4f4"},"20":{"name":"Anarchy","color":"B704E3"},"21":{"name":"Independent","color":"34242F"},"99":{"name":"Rest","color":"8c8c8c"}},';
 }
 $data_start .= '"Other":{"5":{"name":"Current location","color":"FF0000"},';
 
@@ -54,7 +54,7 @@ if ($settings["galmap_show_rares"] == "true")
 {
 	$data_start .= '"10":{"name":"Rare commodities","color":"8B9F63"},';
 }
-$data_start .= '"11":{"name":"Logged systems","color":"2938F8"},"12":{"name":"Rest","color":"8c8c8c"}}}, "systems":[';
+$data_start .= '"11":{"name":"Logged systems","color":"2938F8"}}}, "systems":[';
 
 $last_row = "";
 
@@ -126,7 +126,7 @@ if ($settings["galmap_show_visited_systems"] == "true")
 			}
 			else
 			{
-				$cat = ',"cat": [12]';
+				$cat = ',"cat": [99]';
 			}
 
 			if ($name == $current_system)
