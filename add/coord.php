@@ -75,7 +75,7 @@ if (isset($_GET["do"]))
 													'" . $newcoords_x . "',
 													'" . $newcoords_y . "',
 													'" . $newcoords_z . "',
-													'" . $reference_distances . "')") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]));
+													'" . $reference_distances . "')") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 	}
 	else
 	{
@@ -86,7 +86,7 @@ if (isset($_GET["do"]))
 														z = '" . $newcoords_z . "',
 														reference_distances = '" . $reference_distances . "'
 													WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $target_system) . "'
-													LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]));
+													LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 	}
 
 	/*
@@ -96,7 +96,7 @@ if (isset($_GET["do"]))
 	$json_string = '{
 	"data": {
 		"fromSoftware": "ED ToolBox",
-		"fromSoftwareVersion": "0.9.6",
+		"fromSoftwareVersion": "' . $settings["edtb_version"] . '",
 		"commander": "' . $settings["edsm_cmdr_name"] . '",
 		"p0": {
 			"name": "' . $target_system . '"
@@ -122,6 +122,7 @@ if (isset($_GET["do"]))
 	$context = stream_context_create($opts);
 
 	$result = file_get_contents('http://www.edsm.net/api-v1/submit-distances', false, $context);
+
 	write_log($json_string, __FILE__, __LINE__);
 	write_log($result, __FILE__, __LINE__);
 
@@ -133,7 +134,7 @@ if (isset($_GET["do"]))
 $system_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id, reference_distances
 															FROM user_systems_own
 															WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $current_system) . "'
-															LIMIT 1");
+															LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 $system_exists = mysqli_num_rows($system_res);
 

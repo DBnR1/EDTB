@@ -24,6 +24,7 @@
 $ini_dir = str_replace("/EDTB", "", $_SERVER['DOCUMENT_ROOT']);
 $ini_file = "" . $ini_dir . "/data/edtoolbox.ini";
 $settings = parse_ini_file($ini_file);
+global $settings;
 
 $dropdown = $settings["dropdown"];
 array_push($dropdown, $settings["maxdistance"]);

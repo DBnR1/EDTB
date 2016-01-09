@@ -77,7 +77,7 @@ if (is_dir($settings["log_dir"]))
 																		security, power, power_state, x, y, z
 																FROM edtb_systems
 																WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $current_system) . "'
-																LIMIT 1");
+																LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
             $exists = mysqli_num_rows($res);
 
             if ($exists > 0)
@@ -105,7 +105,7 @@ if (is_dir($settings["log_dir"]))
 				$cres = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT x, y, z
 																	FROM user_systems_own
 																	WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $current_system) . "'
-																	LIMIT 1");
+																	LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 				$oexists = mysqli_num_rows($cres);
 
@@ -128,14 +128,21 @@ if (is_dir($settings["log_dir"]))
 			}
 
             // fetch previous system
-            $p_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT value FROM edtb_common WHERE id = '1' LIMIT 1");
+            $p_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT value
+																FROM edtb_common
+																WHERE id = '1'
+																LIMIT 1")
+																or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
             $p_arr = mysqli_fetch_assoc($p_res);
             $prev_system = $p_arr["value"];
 
             if ($prev_system != $cssystemname && $cssystemname != "")
             {
                 // add system to user_visited_systems
-                $rows = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT system_name FROM user_visited_systems ORDER BY id DESC LIMIT 1");
+                $rows = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT system_name
+																	FROM user_visited_systems
+																	ORDER BY id
+																	DESC LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
                 $vs_arr = mysqli_fetch_assoc($rows);
 
 				$visited_on = "" . date("Y-m-d") . " " . $visited_time . "";
@@ -145,7 +152,17 @@ if (is_dir($settings["log_dir"]))
                     mysqli_query($GLOBALS["___mysqli_ston"], "	INSERT INTO user_visited_systems (system_name, visit)
 																VALUES
 																('" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $current_system) . "',
-																'" . $visited_on . "')");
+																'" . $visited_on . "')") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+
+					// export to edsm
+					if ($settings["edsm_api_key"] != "" && $settings["edsm_export"] == "true" && $settings["edsm_cmdr_name"] != "")
+					{
+						$visited_on_utc = date("Y-m-d H:i:s");
+						$export = file_get_contents("http://www.edsm.net/api-logs-v1/set-log?commanderName=" . urlencode($settings["edsm_cmdr_name"]) . "&apiKey=" . $settings["edsm_api_key"] . "&systemName=" . urlencode($current_system) . "&dateVisited=" . urlencode($visited_on_utc) . "");
+
+						write_log($export, __FILE__, __LINE__);
+					}
+
 					$newSystem = TRUE;
                 }
 
@@ -153,15 +170,7 @@ if (is_dir($settings["log_dir"]))
                 mysqli_query($GLOBALS["___mysqli_ston"], "	UPDATE edtb_common
 															SET value = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $current_system) . "'
 															WHERE id = '1'
-															LIMIT 1");
-
-				// export to edsm
-				if ($settings["edsm_api_key"] != "" && $settings["edsm_export"] == "true" && $settings["edsm_cmdr_name"] != "")
-				{
-					$visited_on_utc = date("Y-m-d H:i:s");
-					$export = file_get_contents("http://www.edsm.net/api-logs-v1/set-log?commanderName=" . urlencode($settings["edsm_cmdr_name"]) . "&apiKey=" . $settings["edsm_api_key"] . "&systemName=" . urlencode($current_system) . "&dateVisited=" . urlencode($visited_on_utc) . "");
-					write_log($export, __FILE__, __LINE__);
-				}
+															LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
                 $newSystem = TRUE;
             }
@@ -176,8 +185,15 @@ if (is_dir($settings["log_dir"]))
         }
     }
 }
+else
+{
+	write_log("Error #7", __FILE__, __LINE__);
+}
 
-// screenshots
+/*
+*	 screenshots
+*/
+
 if (isset($settings["old_screendir"]) && is_dir($settings["old_screendir"]) && $settings["old_screendir"] != "C:\Users")
 {
 	// move screenshots
@@ -193,7 +209,8 @@ if (isset($settings["old_screendir"]) && is_dir($settings["old_screendir"]) && $
 			{
 				if (!mkdir($newscreendir, 0775, true))
 				{
-					die("Could not create new screendir");
+					write_log("Could not create new screendir", __FILE__, __LINE__);
+					//die("Could not create new screendir");
 					break;
 				}
 			}
@@ -205,11 +222,11 @@ if (isset($settings["old_screendir"]) && is_dir($settings["old_screendir"]) && $
 			$new_screenshot = "" . $newscreendir . "/" . $new_filename . "";
 
 			// convert from bmp to jpg
-			exec("\"" . $settings["install_path"] . "/bin/ImageMagick/convert\" \"" . $old_file_bmp . "\" \"" . $new_file_jpg . "\"");
+			exec("\"" . $settings["install_path"] . "/bin/ImageMagick/convert\" \"" . $old_file_bmp . "\" \"" . $new_file_jpg . "\"") or write_log("Error #8", __FILE__, __LINE__);;
 
 			if ($settings["keep_og"] == "false")
 			{
-				unlink($old_file_bmp);
+				unlink($old_file_bmp) or write_log("Error #1", __FILE__, __LINE__);
 			}
 			else
 			{
@@ -217,14 +234,15 @@ if (isset($settings["old_screendir"]) && is_dir($settings["old_screendir"]) && $
 				{
 					if (!mkdir("" . $settings["old_screendir"] . "/originals", 0775, true))
 					{
-						die("Could not create directory for original screens");
+						write_log("Could not create directory for original screens", __FILE__, __LINE__);
+						//die("Could not create directory for original screens");
 						break;
 					}
 				}
-				rename("" . $old_file_bmp . "", "" . $old_file_og . "");
+				rename("" . $old_file_bmp . "", "" . $old_file_og . "") or write_log("Error #2", __FILE__, __LINE__);
 			}
 			// move to new screenshot folder
-			rename("" . $new_file_jpg . "", "" . $new_screenshot . "");
+			rename("" . $new_file_jpg . "", "" . $new_screenshot . "") or write_log("Error #3", __FILE__, __LINE__);
 			$added++;
 
 			/*
@@ -240,12 +258,15 @@ if (isset($settings["old_screendir"]) && is_dir($settings["old_screendir"]) && $
 	// make thumbnails for the gallery
 	if ($added > 0)
 	{
-		exec("mkdir \"" . $newscreendir . "/thumbs\"");
-		exec("\"" . $settings["install_path"] . "/bin/ImageMagick/mogrify\" -resize " . $settings["thumbnail_size"] . " -background #333333 -gravity center -extent " . $settings["thumbnail_size"] . " -format jpg -quality 95 -path \"" . $newscreendir . "/thumbs\" \"" . $newscreendir . "/\"*.jpg");
+		exec("mkdir \"" . $newscreendir . "/thumbs\"") or write_log("Error #4", __FILE__, __LINE__);
+		exec("\"" . $settings["install_path"] . "/bin/ImageMagick/mogrify\" -resize " . $settings["thumbnail_size"] . " -background #333333 -gravity center -extent " . $settings["thumbnail_size"] . " -format jpg -quality 95 -path \"" . $newscreendir . "/thumbs\" \"" . $newscreendir . "/\"*.jpg") or write_log("Error #5", __FILE__, __LINE__);
 	}
 }
 
-// return last known system and coords
+/*
+*	 return last known system and coords
+*/
+
 function last_known_system()
 {
 	$coord_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT user_visited_systems.system_name,
@@ -258,7 +279,7 @@ function last_known_system()
 															LEFT JOIN user_systems_own ON user_visited_systems.system_name = user_systems_own.name
 															WHERE edtb_systems.x != '' OR user_systems_own.x != ''
 															ORDER BY user_visited_systems.visit DESC
-															LIMIT 1");
+															LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 	$results = mysqli_num_rows($coord_res);
 	$last_system = array();
@@ -289,7 +310,10 @@ function last_known_system()
 	return $last_system;
 }
 
-// diplay notice message
+/*
+*	 diplay notice message
+*/
+
 function notice($msg, $title = "Notice")
 {
 	$notice = '<div class="notice">';
@@ -299,7 +323,10 @@ function notice($msg, $title = "Notice")
 	return $notice;
 }
 
-// calculating coordinates
+/*
+*	 calculating coordinates
+*/
+
 function trilateration3d($p1,$p2,$p3,$p4)
 {
         $ex = vector_unit(vector_diff($p2, $p1));
@@ -437,6 +464,10 @@ function vector_unit($v){
         }
         return vector_div($v, $l);
 }
+
+/*
+*	 https://gist.github.com/laiello/8189351
+*/
 
 function xml2array($url, $get_attributes = 1, $priority = 'tag')
 {
@@ -577,7 +608,10 @@ function xml2array($url, $get_attributes = 1, $priority = 'tag')
     return ($xml_array);
 }
 
-// http://stackoverflow.com/questions/27330650/how-to-display-time-in-x-days-ago-in-php
+/*
+*	 http://stackoverflow.com/questions/27330650/how-to-display-time-in-x-days-ago-in-php
+*/
+
 function get_timeago($ptime)
 {
 	$etime = time() - $ptime;
@@ -636,7 +670,10 @@ function random_insult($who_to_insult)
 	return $insult;
 }
 
-// write a debug log with variables
+/*
+*	write a debug log with variables
+*/
+
 function debug($vars, $file = "debug", $all = false)
 {
 	$debug_data = "";
@@ -775,7 +812,6 @@ function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
 		$this_row .= '<td style="padding:10px;vertical-align:middle;">' . preg_replace($reg_exUrl, "<a href='" . $url[0] . "' target='_BLANK'>" . $urli . "</a> ", $value) . '</td>';
 	}
 	// make 0,1 human readable
-	//else if ($value == "0" && strrpos($key, "id") === false || $value == "1" && strrpos($key, "id") === false)
 	else if ($enum !== false)
 	{
 		$real_value = "-";
@@ -883,15 +919,23 @@ function get_station_icon($type, $planetary = "0", $style = "margin-right:6px;ve
 *	simple log
 */
 
-function write_log($msg, $file = "", $line = "")
+function write_log($msg, $file = "", $line = "", $debug_override = false)
 {
-	$logfile = "" . $_SERVER["DOCUMENT_ROOT"] . "/edtb_log.txt";
-	// open file
-	$fd = fopen($logfile, "a");
-	// append date/time to message
-	$str = "[" . date("d.m.Y H:i:s", mktime()) . "][" . $file . " line " . $line . "] " . $msg;
-	// write string
-	fwrite($fd, $str . "\n");
-	// close file
-	fclose($fd);
+	global $settings;
+	if (isset($settings["debug"]) && $settings["debug"] == "true" || $debug_override !== false)
+	{
+		$logfile = "" . $_SERVER["DOCUMENT_ROOT"] . "/edtb_log.txt";
+		$fd = fopen($logfile, "a");
+
+		if (isset($file))
+		{
+			$on_line = $line == "" ? "" : " on line " . $line . "";
+			$where = "[" . $file . "" . $on_line . "]";
+		}
+
+		$str = "[" . date("d.m.Y H:i:s", mktime()) . "]" . $where . " " . $msg;
+
+		fwrite($fd, $str . "\n");
+		fclose($fd);
+	}
 }

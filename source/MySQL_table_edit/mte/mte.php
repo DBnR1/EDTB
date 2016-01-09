@@ -219,11 +219,11 @@ class MySQLtabledit
 		$hits_total = mysqli_num_rows($result);
 
 		$sql .= " LIMIT $start, $this->num_rows_list_view";
-		$result = mysqli_query($GLOBALS["___mysqli_ston"], $sql);
+		$result = mysqli_query($GLOBALS["___mysqli_ston"], $sql) or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 		if (mysqli_num_rows($result)>0)
 		{
-			$result2 = mysqli_query($GLOBALS["___mysqli_ston"], "SHOW COLUMNS FROM `$this->table`");
+			$result2 = mysqli_query($GLOBALS["___mysqli_ston"], "SHOW COLUMNS FROM `$this->table`") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 			while ($rij2 = mysqli_fetch_assoc($result2))
 			{
 				extract($rij2);
