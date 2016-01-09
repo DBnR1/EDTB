@@ -99,7 +99,7 @@ if (isset($_GET["do"]))
 					</td>
 				<tr>
 					<td colspan="2" class="station_info_price_info2">
-						<button id="submitbm">Add Bookmark</button>
+						<button id="submitbm" onclick="update_data('bm_form', '/add/bookmark.php?do', true);tofront('null', true);return false;">Add Bookmark</button>
 						<span id="delete_bm"></span>
 					</td>
 				</tr>
@@ -107,11 +107,3 @@ if (isset($_GET["do"]))
 		</div>
 	</form>
 </div>
-<script>
-$("#submitbm").click(function(event)
-{
-	update_data('bm_form', '/add/bookmark.php?do', true);
-	tofront('null', true);
-	return false;
-});
-</script>

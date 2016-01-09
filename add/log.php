@@ -119,7 +119,7 @@ if (isset($_GET["do"]))
 				</tr>
 				<tr>
 					<td class="station_info_price_info2" colspan="2">
-						<button id="submits">Submit log entry</button>
+						<button id="submits" onclick="update_data('log_form', '/add/log.php?do', true);tofront('null', true);$('#log_form').trigger('reset');return false;">Submit log entry</button>
 						<span id="delete"></span>
 					</td>
 				</tr>
@@ -127,12 +127,3 @@ if (isset($_GET["do"]))
 		</div>
 	</form>
 </div>
-<script>
-$("#submits").click(function(event)
-{
-	update_data('log_form', '/add/log.php?do', true);
-	tofront('null', true);
-	$('#log_form').trigger('reset');
-	return false;
-});
-</script>

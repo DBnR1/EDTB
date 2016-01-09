@@ -182,7 +182,7 @@ else
 				</tr>
 				<tr>
 					<td class="station_info_price_category" style="text-align:right;">Reference system</td>
-					<td class="station_info_price_category">Distance&nbsp;&nbsp;&nbsp;<button id="clear" style="width:80px;white-space:nowrap;">Clear All</button></td>
+					<td class="station_info_price_category">Distance&nbsp;&nbsp;&nbsp;<button id="clear" style="width:80px;white-space:nowrap;" onclick="$('#ref_1_dist').val('');$('#ref_2_dist').val('');$('#ref_3_dist').val('');$('#ref_4_dist').val('');return false;">Clear All</button></td>
 				</tr>
 					<?php
 					$i = 1;
@@ -202,28 +202,10 @@ else
 					?>
 				<tr>
 					<td class="station_info_price_category" colspan="2">
-						<button id="submitc">Submit Query</button>
+						<button id="submitc" onclick="update_data('calc_form', '/add/coord.php?do', true);tofront('null', true);return false;">Submit Query</button>
 					</td>
 				</tr>
 			</table>
 		</div>
 	</form>
 </div>
-<script>
-$("#submitc").click(function(event)
-{
-	update_data('calc_form', '/add/coord.php?do', true);
-	tofront('null', true);
-	return false;
-});
-</script>
-<script>
-$("#clear").click(function(event)
-{
-	$('#ref_1_dist').val("");
-	$('#ref_2_dist').val("");
-	$('#ref_3_dist').val("");
-	$('#ref_4_dist').val("");
-	return false;
-});
-</script>

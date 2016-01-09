@@ -933,7 +933,7 @@ function write_log($msg, $file = "", $line = "", $debug_override = false)
 			$where = "[" . $file . "" . $on_line . "]";
 		}
 
-		$str = "[" . date("d.m.Y H:i:s", mktime()) . "]" . $where . " " . $msg;
+		$str = "[" . date("d.m.Y H:i:s", time()) . "]" . $where . " " . $msg;
 
 		fwrite($fd, $str . "\n");
 		fclose($fd);
