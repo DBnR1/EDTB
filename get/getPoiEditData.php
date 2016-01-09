@@ -25,7 +25,7 @@ require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 
 $poi_id = $_GET["poi_id"];
 
-$poi_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id, poi_name, system_name, text, category_id, x, y, z,
+$poi_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id, poi_name, system_name, text, category_id, x, y, z
 														FROM user_poi
 														WHERE id = '" . $poi_id . "'
 														LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);

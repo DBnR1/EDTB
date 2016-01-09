@@ -137,7 +137,7 @@ if ($settings["galmap_show_visited_systems"] == "true")
 			$logged = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id
 																				FROM user_log
 																				WHERE system_id = '" . $sysid . "'
-																				LIMIT 1")) or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+																				LIMIT 1"));
 
 			if ($logged == 1 && $name != $current_system)
 			{

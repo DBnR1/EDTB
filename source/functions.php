@@ -159,7 +159,8 @@ if (is_dir($settings["log_dir"]))
 				if ($settings["edsm_api_key"] != "" && $settings["edsm_export"] == "true" && $settings["edsm_cmdr_name"] != "")
 				{
 					$visited_on_utc = date("Y-m-d H:i:s");
-					file_get_contents("http://www.edsm.net/api-logs-v1/set-log?commanderName=" . urlencode($settings["edsm_cmdr_name"]) . "&apiKey=" . $settings["edsm_api_key"] . "&systemName=" . urlencode($current_system) . "&dateVisited=" . urlencode($visited_on_utc) . "");
+					$export = file_get_contents("http://www.edsm.net/api-logs-v1/set-log?commanderName=" . urlencode($settings["edsm_cmdr_name"]) . "&apiKey=" . $settings["edsm_api_key"] . "&systemName=" . urlencode($current_system) . "&dateVisited=" . urlencode($visited_on_utc) . "");
+					write_log($export, __FILE__, __LINE__);
 				}
 
                 $newSystem = TRUE;
@@ -884,11 +885,11 @@ function get_station_icon($type, $planetary = "0", $style = "margin-right:6px;ve
 
 function write_log($msg, $file = "", $line = "")
 {
-	$logfile = "" . $_SERVER["DOCUMENT_ROOT"] . "/log.txt";
+	$logfile = "" . $_SERVER["DOCUMENT_ROOT"] . "/edtb_log.txt";
 	// open file
 	$fd = fopen($logfile, "a");
 	// append date/time to message
-	$str = "[" . date("d.m.Y h:i:s", mktime()) . "][" . $file . " line " . $line . "] " . $msg;
+	$str = "[" . date("d.m.Y H:i:s", mktime()) . "][" . $file . " line " . $line . "] " . $msg;
 	// write string
 	fwrite($fd, $str . "\n");
 	// close file

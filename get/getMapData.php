@@ -41,8 +41,7 @@ $count = mysqli_num_rows($ress);
 
 $ress2 = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT user_bookmarks.comment, user_bookmarks.added_on
 													FROM user_bookmarks
-													WHERE
-													user_bookmarks.system_id = '" . $system_id  . "'
+													WHERE user_bookmarks.system_id = '" . $system_id  . "'
 													LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 $count2 = mysqli_num_rows($ress2);
 

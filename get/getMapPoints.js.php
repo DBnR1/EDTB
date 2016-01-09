@@ -51,21 +51,21 @@ $last_row = "";
 // fetch point of interest data for the map
 if ($settings["nmap_show_pois"] == "true")
 {
-	$result = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT poi_name, system_name, coordinates
+	$result = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT poi_name, system_name, x, y, z
 															FROM user_poi
-															WHERE coordinates != ''") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+															WHERE x != '' AND y != '' AND z != ''")
+															or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 	while ($row = mysqli_fetch_array($result))
 	{
 		$name = $row["system_name"];
 		$disp_name = $row["poi_name"] != "" ? $row["poi_name"] : $row["system_name"];
-		$coord = $row["coordinates"];
 
-		// parse coordinates for distance calculations
-		$poi_coord = explode(",", $coord);
-		$poi_coordx = $poi_coord[0];
-		$poi_coordy = $poi_coord[1];
-		$poi_coordz = $poi_coord[2];
+		$poi_coordx = $row["x"];
+		$poi_coordy = $row["y"];
+		$poi_coordz = $row["z"];
+
+		$coord = "$poi_coordx,$poi_coordy,$poi_coordz";
 
 		if ($coordx != "")
 		{
@@ -83,8 +83,7 @@ if ($settings["nmap_show_pois"] == "true")
 																					FROM user_visited_systems
 																					WHERE
 																					system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $name) . "'
-																					LIMIT 1"))
-																					or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+																					LIMIT 1"));
 
 			if ($name == "SOL")
 			{
@@ -156,18 +155,18 @@ if ($settings["nmap_show_bookmarks"] == "true")
 if ($settings["nmap_show_rares"] == "true")
 {
 	$rare_result = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT
-																edtb_rares.item, edtb_rares.station, edtb_rares.system, edtb_rares.distance_to_star,
+																edtb_rares.item, edtb_rares.station, edtb_rares.system_name, edtb_rares.ls_to_star,
 																edtb_systems.x, edtb_systems.y, edtb_systems.z
 																FROM edtb_rares
-																LEFT JOIN edtb_systems ON edtb_rares.system = edtb_systems.name")
+																LEFT JOIN edtb_systems ON edtb_rares.system_name = edtb_systems.name")
 																or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 	while ($rare_row = mysqli_fetch_array($rare_result))
 	{
 		$rare_item = $rare_row["item"];
 		$rare_station = $rare_row["station"];
-		$rare_system = $rare_row["system"];
-		$rare_dist_to_star = number_format($rare_row["distance_to_star"]);
+		$rare_system = $rare_row["system_name"];
+		$rare_dist_to_star = number_format($rare_row["ls_to_star"]);
 
 		$rare_disp_name = "" . $rare_item . " - " . $rare_system . " (" . $rare_station . " - " . $rare_dist_to_star . " ls)";
 

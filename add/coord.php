@@ -122,8 +122,8 @@ if (isset($_GET["do"]))
 	$context = stream_context_create($opts);
 
 	$result = file_get_contents('http://www.edsm.net/api-v1/submit-distances', false, $context);
-	write_log($json_string);
-	write_log($result);
+	write_log($json_string, __FILE__, __LINE__);
+	write_log($result, __FILE__, __LINE__);
 
 	((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
 
