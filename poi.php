@@ -58,7 +58,8 @@ require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/add/poi.php");
 																				FROM user_poi
 																				LEFT JOIN edtb_systems ON user_poi.system_name = edtb_systems.name
 																				LEFT JOIN user_poi_categories ON user_poi_categories.id = user_poi.category_id
-																				ORDER BY sqrt(pow((poi_coordx-(" . $usex . ")),2)+pow((poi_coordy-(" . $usey . ")),2)+pow((poi_coordz-(" . $usez . ")),2))");
+																				ORDER BY sqrt(pow((poi_coordx-(" . $usex . ")),2)+pow((poi_coordy-(" . $usey . ")),2)+pow((poi_coordz-(" . $usez . ")),2))")
+																				or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 						$poinum = mysqli_num_rows($poi_res);
 
@@ -93,7 +94,8 @@ require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/add/poi.php");
 									$c_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT x, y, z
 																						FROM user_systems_own
 																						WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $poi_system_name) . "'
-																						LIMIT 1");
+																						LIMIT 1")
+																						or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 									$c_arr = mysqli_fetch_assoc($c_res);
 
@@ -309,7 +311,8 @@ require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/add/poi.php");
 																			FROM user_bookmarks
 																			LEFT JOIN edtb_systems ON user_bookmarks.system_id = edtb_systems.id
 																			LEFT JOIN user_bm_categories ON user_bookmarks.category_id = user_bm_categories.id
-																			ORDER BY sqrt(pow((bm_coordx-(" . $usex . ")),2)+pow((bm_coordy-(" . $usey . ")),2)+pow((bm_coordz-(" . $usez . ")),2))");
+																			ORDER BY sqrt(pow((bm_coordx-(" . $usex . ")),2)+pow((bm_coordy-(" . $usey . ")),2)+pow((bm_coordz-(" . $usez . ")),2))")
+																			or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 					$bmnum = mysqli_num_rows($bm_res);
 
@@ -342,7 +345,8 @@ require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/add/poi.php");
 								$cb_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT x, y, z
 																						FROM user_systems_own
 																						WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $bm_system_name) . "'
-																						LIMIT 1");
+																						LIMIT 1")
+																						or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 								$cb_arr = mysqli_fetch_assoc($cb_res);
 

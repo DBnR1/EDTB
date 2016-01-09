@@ -4,7 +4,7 @@
 *    (C) 1984 - 2015 Frontier Developments Plc.
 *    ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
 *
-*    Copyright (C) 2015 Mauri Kujala (contact@edtb.xyz)
+*    Copyright (C) 2016 Mauri Kujala (contact@edtb.xyz)
 *
 *    This program is free software; you can redistribute it and/or
 *    modify it under the terms of the GNU General Public License
@@ -45,7 +45,8 @@ if (isset($_GET["sys"]))
 {
 	$num_visits = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id
 																				FROM user_visited_systems
-																				WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $current_system) . "'"));
+																				WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $current_system) . "'"))
+																				or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 	$va_text .= "No system data.";
 
@@ -172,7 +173,8 @@ if (isset($_GET["sys"]))
 		$ress = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT name, ls_from_star
 															FROM edtb_stations
 															WHERE system_id = '" . $current_id . "'
-															ORDER BY -ls_from_star DESC, name");
+															ORDER BY -ls_from_star DESC, name")
+															or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 		$count = mysqli_num_rows($ress);
 
@@ -214,7 +216,6 @@ if (isset($_GET["sys"]))
 			$inputs = array();
 			$inputs[] = " We have not visited this system before.";
 			$inputs[] = " This is our first time visiting this system.";
-			//$inputs[] = " This is a previously unknown system to us.";
 			shuffle($inputs);
 
 			$va_text .= $inputs[0];
@@ -225,7 +226,7 @@ if (isset($_GET["sys"]))
 																	FROM user_visited_systems
 																	WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $current_system) . "'
 																	ORDER BY visit ASC
-																	LIMIT 1");
+																	LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 			$vis_arr = mysqli_fetch_assoc($vis_res);
 
 			$first_vis = get_timeago(strtotime($vis_arr["visit"]));
@@ -237,7 +238,7 @@ if (isset($_GET["sys"]))
 																	FROM user_visited_systems
 																	WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $current_system) . "'
 																	ORDER BY visit ASC
-																	LIMIT 1");
+																	LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 			$vis_arr = mysqli_fetch_assoc($vis_res);
 
 			$num_vis = $num_visits-1;
@@ -301,7 +302,7 @@ if (isset($_GET["cs"]))
 														WHERE edtb_systems.x != ''
 														ORDER BY sqrt(pow((coordx-(" . $usex . ")),2)+pow((coordy-(" . $usey . ")),2)+pow((coordz-(" . $usez . ")),2)),
 														-edtb_stations.ls_from_star DESC
-														LIMIT 1");
+														LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 	echo $add2;
 
@@ -422,14 +423,23 @@ if (isset($_GET["cs"]))
 
 if (isset($_GET["rm"]))
 {
-	$res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id, text FROM edtb_musings WHERE used = '0' ORDER BY rand() LIMIT 1");
+	$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id, text
+														FROM edtb_musings
+														WHERE used = '0'
+														ORDER BY rand()
+														LIMIT 1")
+														or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 	$arr = mysqli_fetch_assoc($res);
 
 	$rm_id = $arr["id"];
 	$rm_text = $arr["text"];
 	echo $rm_text;
 
-	mysqli_query($GLOBALS["___mysqli_ston"], "UPDATE edtb_musings SET used = '1' WHERE id = '" . $rm_id . "' LIMIT 1");
+	mysqli_query($GLOBALS["___mysqli_ston"], "	UPDATE edtb_musings
+												SET used = '1'
+												WHERE id = '" . $rm_id . "'
+												LIMIT 1")
+												or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 	((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
 	exit();

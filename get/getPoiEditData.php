@@ -4,7 +4,7 @@
 *    (C) 1984 - 2015 Frontier Developments Plc.
 *    ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
 *
-*    Copyright (C) 2015 Mauri Kujala (contact@edtb.xyz)
+*    Copyright (C) 2016 Mauri Kujala (contact@edtb.xyz)
 *
 *    This program is free software; you can redistribute it and/or
 *    modify it under the terms of the GNU General Public License
@@ -25,7 +25,10 @@ require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 
 $poi_id = $_GET["poi_id"];
 
-$poi_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT * FROM user_poi WHERE id = '" . $poi_id . "' LIMIT 1");
+$poi_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id, poi_name, system_name, text, category_id, x, y, z,
+														FROM user_poi
+														WHERE id = '" . $poi_id . "'
+														LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 $poi_arr = mysqli_fetch_assoc($poi_res);
 
 $data = array();

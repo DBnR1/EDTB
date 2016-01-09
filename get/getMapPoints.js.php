@@ -51,7 +51,9 @@ $last_row = "";
 // fetch point of interest data for the map
 if ($settings["nmap_show_pois"] == "true")
 {
-	$result = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT poi_name, system_name, coordinates FROM user_poi WHERE coordinates != ''");
+	$result = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT poi_name, system_name, coordinates
+															FROM user_poi
+															WHERE coordinates != ''") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 	while ($row = mysqli_fetch_array($result))
 	{
@@ -81,7 +83,8 @@ if ($settings["nmap_show_pois"] == "true")
 																					FROM user_visited_systems
 																					WHERE
 																					system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $name) . "'
-																					LIMIT 1"));
+																					LIMIT 1"))
+																					or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 			if ($name == "SOL")
 			{
@@ -112,7 +115,8 @@ if ($settings["nmap_show_bookmarks"] == "true")
 															FROM user_bookmarks
 															LEFT JOIN edtb_systems ON user_bookmarks.system_id = edtb_systems.id
 															LEFT JOIN user_bm_categories ON user_bookmarks.category_id = user_bm_categories.id
-															WHERE edtb_systems.x != ''");
+															WHERE edtb_systems.x != ''")
+															or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 	while ($bm_row = mysqli_fetch_array($bm_result))
 	{
@@ -155,7 +159,8 @@ if ($settings["nmap_show_rares"] == "true")
 																edtb_rares.item, edtb_rares.station, edtb_rares.system, edtb_rares.distance_to_star,
 																edtb_systems.x, edtb_systems.y, edtb_systems.z
 																FROM edtb_rares
-																LEFT JOIN edtb_systems ON edtb_rares.system = edtb_systems.name");
+																LEFT JOIN edtb_systems ON edtb_rares.system = edtb_systems.name")
+																or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 	while ($rare_row = mysqli_fetch_array($rare_result))
 	{
@@ -203,7 +208,8 @@ if ($settings["nmap_show_visited_systems"] == "true")
 														FROM user_visited_systems
 														LEFT JOIN edtb_systems ON user_visited_systems.system_name = edtb_systems.name
 														GROUP BY user_visited_systems.system_name
-														ORDER BY user_visited_systems.visit ASC");
+														ORDER BY user_visited_systems.visit ASC")
+														or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 	while ($row = mysqli_fetch_array($result))
 	{
@@ -224,7 +230,8 @@ if ($settings["nmap_show_visited_systems"] == "true")
 			$cb_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT x, y, z
 																	FROM user_systems_own
 																	WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $name) . "'
-																	LIMIT 1");
+																	LIMIT 1")
+																	or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 			$cb_arr = mysqli_fetch_assoc($cb_res);
 

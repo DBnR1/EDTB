@@ -1,11 +1,9 @@
 <?php
-
 /*
  * khoaofgod@gmail.com
  * Website: http://www.phpfastcache.com
  * Example at our website, any bugs, problems, please visit http://faster.phpfastcache.com
  */
-
 
 interface phpfastcache_driver {
     /*
@@ -45,9 +43,4 @@ interface phpfastcache_driver {
      * Clean up whole cache
      */
      function driver_clean($option = array());
-
-
-
-
-
 }

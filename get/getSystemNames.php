@@ -4,7 +4,7 @@
 *    (C) 1984 - 2015 Frontier Developments Plc.
 *    ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
 *
-*    Copyright (C) 2015 Mauri Kujala (contact@edtb.xyz)
+*    Copyright (C) 2016 Mauri Kujala (contact@edtb.xyz)
 *
 *    This program is free software; you can redistribute it and/or
 *    modify it under the terms of the GNU General Public License
@@ -31,13 +31,19 @@ if (isset($_GET["q"]) && $_GET["q"] != "" && isset($_GET["divid"]))
 
 	$addtl = "";
 	if (isset($_GET["allegiance"]) && $_GET["allegiance"] != "undefined")
+	{
 		$addtl .= "&allegiance=" . $_GET['allegiance'] . "";
+	}
 
 	if (isset($_GET["system_allegiance"]) && $_GET["system_allegiance"] != "undefined")
+	{
 		$addtl .= "&system_allegiance=" . $_GET['system_allegiance'] . "";
+	}
 
 	if (isset($_GET["power"]) && $_GET["power"] != "undefined")
+	{
 		$addtl .= "&power=" . $_GET['power'] . "";
+	}
 
 	$suggest_query = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT DISTINCT(name),
 																id, x, y, z
@@ -45,7 +51,7 @@ if (isset($_GET["q"]) && $_GET["q"] != "" && isset($_GET["divid"]))
 																WHERE name LIKE('%" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $search) . "%')
 																ORDER BY name = '" . $search . "' DESC,
 																name
-																LIMIT 30");
+																LIMIT 30") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 	$found = mysqli_num_rows($suggest_query);
 
@@ -105,4 +111,5 @@ if (isset($_GET["q"]) && $_GET["q"] != "" && isset($_GET["divid"]))
 		}
 	}
 }
+
 ((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);

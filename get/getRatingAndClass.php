@@ -4,7 +4,7 @@
 *    (C) 1984 - 2015 Frontier Developments Plc.
 *    ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
 *
-*    Copyright (C) 2015 Mauri Kujala (contact@edtb.xyz)
+*    Copyright (C) 2016 Mauri Kujala (contact@edtb.xyz)
 *
 *    This program is free software; you can redistribute it and/or
 *    modify it under the terms of the GNU General Public License
@@ -36,7 +36,7 @@ if (isset($_GET["group_id"]) && $_GET["group_id"] != "")
 														FROM edtb_modules
 														WHERE class != ''
 														AND group_id = '" . $group_id . "'
-														ORDER BY class");
+														ORDER BY class") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 	$found = mysqli_num_rows($res);
 
@@ -57,7 +57,7 @@ if (isset($_GET["group_id"]) && $_GET["group_id"] != "")
 																FROM edtb_modules
 																WHERE class != ''
 																AND group_id = '" . $group_id . "'
-																ORDER BY rating");
+																ORDER BY rating") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 	$found_rating = mysqli_num_rows($rating_res);
 
@@ -71,4 +71,5 @@ if (isset($_GET["group_id"]) && $_GET["group_id"] != "")
 }
 
 echo json_encode($data);
+
 ((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);

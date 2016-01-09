@@ -4,7 +4,7 @@
 *    (C) 1984 - 2015 Frontier Developments Plc.
 *    ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
 *
-*    Copyright (C) 2015 Mauri Kujala (contact@edtb.xyz)
+*    Copyright (C) 2016 Mauri Kujala (contact@edtb.xyz)
 *
 *    This program is free software; you can redistribute it and/or
 *    modify it under the terms of the GNU General Public License
@@ -36,14 +36,14 @@ $ress = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT user_poi.text AS text,
 													WHERE user_poi.system_name = '" . $system . "'
 													OR user_poi.poi_name = '" . $system . "'
 													OR user_visited_systems.system_name = '" . $system . "'
-													LIMIT 1");
+													LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 $count = mysqli_num_rows($ress);
 
 $ress2 = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT user_bookmarks.comment, user_bookmarks.added_on
 													FROM user_bookmarks
 													WHERE
 													user_bookmarks.system_id = '" . $system_id  . "'
-													LIMIT 1");
+													LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 $count2 = mysqli_num_rows($ress2);
 
 if ($count > 0)
@@ -62,7 +62,7 @@ if ($count > 0)
 																FROM user_log
 																WHERE system_name = '" . $system . "'
 																ORDER BY stardate
-																LIMIT 1");
+																LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 		$logged = mysqli_num_rows($logres);
 
 		if (isset($visit))

@@ -1,5 +1,4 @@
 <?php
-
 abstract class BasePhpFastCache {
 
     var $tmp = array();
@@ -58,7 +57,7 @@ abstract class BasePhpFastCache {
         if($object == null) {
             return null;
         }
-		
+
 		$value = isset( $object['value'] ) ? $object['value'] : null;
 		return isset( $option['all_keys'] ) && $option['all_keys'] ? $object : $value;
     }
@@ -422,6 +421,4 @@ allow from 127.0.0.1";
     protected function __setChmodAuto() {
         return phpFastCache::__setChmodAuto($this->config);
     }
-
-
 }

@@ -75,7 +75,7 @@ if (isset($_GET["do"]))
 													'" . $newcoords_x . "',
 													'" . $newcoords_y . "',
 													'" . $newcoords_z . "',
-													'" . $reference_distances . "')");
+													'" . $reference_distances . "')") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]));
 	}
 	else
 	{
@@ -86,7 +86,7 @@ if (isset($_GET["do"]))
 														z = '" . $newcoords_z . "',
 														reference_distances = '" . $reference_distances . "'
 													WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $target_system) . "'
-													LIMIT 1");
+													LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]));
 	}
 
 	/*

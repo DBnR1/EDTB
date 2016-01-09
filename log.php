@@ -4,7 +4,7 @@
 *    (C) 1984 - 2015 Frontier Developments Plc.
 *    ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
 *
-*    Copyright (C) 2015 Mauri Kujala (contact@edtb.xyz)
+*    Copyright (C) 2016 Mauri Kujala (contact@edtb.xyz)
 *
 *    This program is free software; you can redistribute it and/or
 *    modify it under the terms of the GNU General Public License
@@ -46,7 +46,7 @@ require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 																FROM user_log
 																LEFT JOIN edtb_stations ON edtb_stations.id = user_log.station_id
 																WHERE user_log.system_id = '" . $logsystem_id . "' OR user_log.system_name = '" . $logsystem . "'
-																ORDER BY user_log.stardate DESC");
+																ORDER BY user_log.stardate DESC") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]));
 		$num = mysqli_num_rows($log_res);
 
 		if ($num > 0)

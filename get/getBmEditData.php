@@ -4,7 +4,7 @@
 *    (C) 1984 - 2015 Frontier Developments Plc.
 *    ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
 *
-*    Copyright (C) 2015 Mauri Kujala (contact@edtb.xyz)
+*    Copyright (C) 2016 Mauri Kujala (contact@edtb.xyz)
 *
 *    This program is free software; you can redistribute it and/or
 *    modify it under the terms of the GNU General Public License
@@ -32,7 +32,7 @@ $bm_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT
 														FROM user_bookmarks
 														LEFT JOIN edtb_systems ON user_bookmarks.system_id = edtb_systems.id
 														WHERE user_bookmarks.id = '" . $bm_id . "'
-														LIMIT 1");
+														LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 $bm_arr = mysqli_fetch_assoc($bm_res);
 
 $data = array();

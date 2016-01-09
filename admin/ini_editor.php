@@ -4,7 +4,7 @@
 *    (C) 1984 - 2015 Frontier Developments Plc.
 *    ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
 *
-*    Copyright (C) 2015 Mauri Kujala (contact@edtb.xyz)
+*    Copyright (C) 2016 Mauri Kujala (contact@edtb.xyz)
 *
 *    This program is free software; you can redistribute it and/or
 *    modify it under the terms of the GNU General Public License
@@ -20,9 +20,12 @@
 *    along with this program; if not, write to the Free Software
 *    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 */
+
 $notify = "";
 $pagetitle = "Variable Editor";
+
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
+
 if (isset($_POST["code"]))
 {
 	$code = $_POST["code"];
@@ -60,4 +63,4 @@ $ini = file_get_contents($ini_file);
 	</div>
 </div>
 <?php
-require_once("../style/footer.php");
+require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");

@@ -35,7 +35,7 @@ if ($system != "")
 	$sys_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT name, id, x, y, z
 															FROM edtb_systems
 															WHERE id = '" . $system . "'
-															LIMIT 1");
+															LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 	$sys_arr = mysqli_fetch_assoc($sys_res);
 
 	$sys_name = $sys_arr["name"];
@@ -64,8 +64,6 @@ else
 	$usey = $last_coords["y"];
 	$usez = $last_coords["z"];
 
-
-	//$stations = true;
 	$is_unknown = " *";
 }
 
@@ -155,12 +153,12 @@ if ($facility != "" && $facility != "0")
 														WHERE edtb_systems.x != ''
 														AND edtb_stations." . $facility . " = '1'" . $add . "" . $add2 . "" . $add3 . "" . $add4 . "
 														ORDER BY sqrt(pow((coordx-(" . $usex . ")),2)+pow((coordy-(" . $usey . ")),2)+pow((coordz-(" . $usez . ")),2))
-														LIMIT 10");
+														LIMIT 10") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 	$stations = true;
 	$f_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT name
 														FROM edtb_facilities
 														WHERE code = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $facility) . "'
-														LIMIT 1");
+														LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 	$f_arr = mysqli_fetch_assoc($f_res);
 	$f_name = $f_arr["name"];
 
@@ -217,7 +215,7 @@ if ($stations !== false)
 														WHERE edtb_systems.x != ''" . $add . "" . $add2 . "" . $add3 . "" . $add4 . "
 														ORDER BY sqrt(pow((coordx-(" . $usex . ")),2)+pow((coordy-(" . $usey . ")),2)+pow((coordz-(" . $usez . ")),2)),
 														-edtb_stations.ls_from_star DESC
-														LIMIT 10");
+														LIMIT 10") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 }
 else
 {
@@ -233,7 +231,7 @@ else
 														FROM edtb_systems
 														WHERE edtb_systems.x != ''" . $add . "" . $add2 . "" . $add3 . "
 														ORDER BY sqrt(pow((coordx-(" . $usex . ")),2)+pow((coordy-(" . $usey . ")),2)+pow((coordz-(" . $usez . ")),2))
-														LIMIT 10");
+														LIMIT 10") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 }
 
 // if we're searching modules
@@ -254,7 +252,10 @@ if ($group_id != "" && $group_id != "0")
 		$rating_add = " AND rating = '" . $_GET["rating"] . "'";
 	}
 
-	$gnres = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT group_name FROM edtb_modules WHERE group_id = '" . $group_id . "' LIMIT 1");
+	$gnres = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT group_name
+														FROM edtb_modules
+														WHERE group_id = '" . $group_id . "'
+														LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]));
 	$gnarr = mysqli_fetch_assoc($gnres);
 
 	$group_name = $gnarr["group_name"];
@@ -272,7 +273,12 @@ if ($group_id != "" && $group_id != "0")
 	}
 	if ($class != "" && $class != "0" && $rating != "" && $rating != "0")
 	{
-		$pres = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT price FROM edtb_modules WHERE group_id = '" . $group_id . "' AND rating = '" . $rating . "' AND class = '" . $class . "' LIMIT 1");
+		$pres = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT price
+															FROM edtb_modules
+															WHERE group_id = '" . $group_id . "'
+															AND rating = '" . $rating . "'
+															AND class = '" . $class . "'
+															LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 		$parr = mysqli_fetch_assoc($pres);
 		$modules_price = number_format($parr["price"]);
 		$price = " (normal price " . $modules_price . " CR) ";
@@ -285,7 +291,7 @@ if ($group_id != "" && $group_id != "0")
 	$module_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id
 																FROM edtb_modules
 																WHERE group_id = '" . $group_id . "'" . $class_add . "" . $rating_add . "
-																LIMIT 1");
+																LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 	$mod_count = mysqli_num_rows($module_res);
 
 	if ($mod_count > 0)
@@ -317,7 +323,7 @@ if ($group_id != "" && $group_id != "0")
 															WHERE edtb_systems.x != ''
 															AND edtb_stations.selling_modules LIKE '-%" . $modules_id . "%-'" . $add . "" . $add2 . "" . $add3 . "" . $add4 . "
 															ORDER BY sqrt(pow((coordx-(" . $usex . ")),2)+pow((coordy-(" . $usey . ")),2)+pow((coordz-(" . $usez . ")),2))
-															LIMIT 10");
+															LIMIT 10") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 		$stations = true;
 	}
 	else
@@ -353,9 +359,12 @@ if ($ship_name != "" && $ship_name != "0")
 														WHERE edtb_systems.x != ''
 														AND edtb_stations.selling_ships LIKE '%\'" . $ship_name . "\'%'" . $add . "" . $add2 . "" . $add3 . "" . $add4 . "
 														ORDER BY sqrt(pow((coordx-(" . $usex . ")),2)+pow((coordy-(" . $usey . ")),2)+pow((coordz-(" . $usez . ")),2))
-														LIMIT 10");
+														LIMIT 10") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
-	$p_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT price FROM edtb_ships WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $ship_name) . "'");
+	$p_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT price
+														FROM edtb_ships
+														WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $ship_name) . "'")
+														or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 	$p_arr = mysqli_fetch_assoc($p_res);
 	$ship_price = number_format($p_arr["price"]);
 
@@ -453,7 +462,10 @@ YUI().use('pjax', function (Y) {
 				<!-- powers -->
 				<td class="station_info_price_info_t" style="vertical-align:top;width:25%;white-space:nowrap;">
 					<?php
-					$p_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT name FROM edtb_powers ORDER BY name");
+					$p_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT name
+																		FROM edtb_powers
+																		ORDER BY name")
+																		or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 					while ($p_arr = mysqli_fetch_assoc($p_res))
 					{
@@ -484,7 +496,8 @@ YUI().use('pjax', function (Y) {
 								<?php
 								$mod_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT DISTINCT group_id, group_name, category_name
 																						FROM edtb_modules
-																						ORDER BY category_name, group_name");
+																						ORDER BY category_name, group_name")
+																						or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 								$cur_cat = "";
 								while ($mod_arr = mysqli_fetch_assoc($mod_res))
@@ -507,7 +520,8 @@ YUI().use('pjax', function (Y) {
 								<?php
 								$mod_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT DISTINCT class
 																						FROM edtb_modules WHERE class != ''" . $modi . "
-																						ORDER BY class");
+																						ORDER BY class")
+																						or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 								while ($mod_arr = mysqli_fetch_assoc($mod_res))
 								{
@@ -522,7 +536,8 @@ YUI().use('pjax', function (Y) {
 								$mod_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT DISTINCT rating
 																						FROM edtb_modules
 																						WHERE rating != ''" . $modi . "
-																						ORDER BY rating");
+																						ORDER BY rating")
+																						or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 								while ($mod_arr = mysqli_fetch_assoc($mod_res))
 								{
@@ -547,7 +562,8 @@ YUI().use('pjax', function (Y) {
 
 								$ship_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT name
 																						FROM edtb_ships
-																						ORDER BY name");
+																						ORDER BY name")
+																						or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 								while ($ship_arr = mysqli_fetch_assoc($ship_res))
 								{
@@ -568,7 +584,8 @@ YUI().use('pjax', function (Y) {
 								<?php
 								$facility_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT name, code
 																							FROM edtb_facilities
-																							ORDER BY name");
+																							ORDER BY name")
+																							or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 								while ($facility_arr = mysqli_fetch_assoc($facility_res))
 								{

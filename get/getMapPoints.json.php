@@ -67,7 +67,7 @@ if ($settings["galmap_show_visited_systems"] == "true")
 														FROM user_visited_systems
 														LEFT JOIN edtb_systems ON user_visited_systems.system_name = edtb_systems.name
 														GROUP BY user_visited_systems.system_name
-														ORDER BY user_visited_systems.visit ASC");
+														ORDER BY user_visited_systems.visit ASC") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 	while ($row = mysqli_fetch_array($result))
 	{
@@ -89,7 +89,7 @@ if ($settings["galmap_show_visited_systems"] == "true")
 			$cb_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT x, y, z
 																FROM user_systems_own
 																WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $name) . "'
-																LIMIT 1");
+																LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 			$cb_arr = mysqli_fetch_assoc($cb_res);
 
@@ -137,7 +137,7 @@ if ($settings["galmap_show_visited_systems"] == "true")
 			$logged = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id
 																				FROM user_log
 																				WHERE system_id = '" . $sysid . "'
-																				LIMIT 1"));
+																				LIMIT 1")) or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 			if ($logged == 1 && $name != $current_system)
 			{
@@ -192,7 +192,7 @@ if ($settings["galmap_show_pois"] == "true")
 														user_poi_categories.name AS category_name
 														FROM user_poi
 														LEFT JOIN user_poi_categories ON user_poi.category_id = user_poi_categories.id
-														WHERE user_poi.x != ''");
+														WHERE user_poi.x != ''") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 	while ($row = mysqli_fetch_array($result))
 	{
@@ -221,7 +221,7 @@ if ($settings["galmap_show_pois"] == "true")
 																FROM user_visited_systems
 																WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $name) . "'
 																ORDER BY visit ASC
-																LIMIT 1");
+																LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 		$visited = mysqli_num_rows($visitres);
 
 		if ($visited > 0)
@@ -281,7 +281,7 @@ if ($settings["galmap_show_bookmarks"] == "true")
 															FROM user_bookmarks
 															LEFT JOIN edtb_systems ON user_bookmarks.system_id = edtb_systems.id
 															LEFT JOIN user_bm_categories ON user_bookmarks.category_id = user_bm_categories.id
-															WHERE edtb_systems.x != ''");
+															WHERE edtb_systems.x != ''") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 
 	while ($bm_row = mysqli_fetch_array($bm_result))
@@ -348,7 +348,8 @@ if ($settings["galmap_show_rares"] == "true")
 																edtb_systems.x, edtb_systems.y, edtb_systems.z
 																FROM edtb_rares
 																LEFT JOIN edtb_systems ON edtb_rares.system_name = edtb_systems.name
-																WHERE edtb_rares.system_name != ''");
+																WHERE edtb_rares.system_name != ''")
+																or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 	while ($rare_row = mysqli_fetch_array($rare_result))
 	{

@@ -5,7 +5,6 @@
  * Example at our website, any bugs, problems, please visit http://faster.phpfastcache.com
  */
 
-
 require_once(dirname(__FILE__)."/abstract.php");
 require_once(dirname(__FILE__)."/driver.php");
 
@@ -286,6 +285,4 @@ allow from 127.0.0.1";
     public static function required($class) {
         require_once(dirname(__FILE__)."/drivers/".$class.".php");
     }
-
-
 }

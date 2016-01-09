@@ -387,20 +387,20 @@ class MySQLtabledit
 						{
 							if (substr($this->table, 0, 4) == "edtb")
 							{
-								$buttons = "<td style='width:1%;white-space:nowrap;padding:10px;'></td>";
+								$buttons = "<td style='width:1%;white-space:nowrap;padding:10px;vertical-align:middle;'></td>";
 							}
 							else
 							{
-								$buttons = "<td style='width:1%;white-space:nowrap;padding:10px;'><a href='javascript:void(0)' onclick='del_confirm($value)' title='Delete {$this->show_text[$key]} $value'><img src='$this->url_base/images/del.png' style='width:16px;height:16px;border:none;' alt=''></a>&nbsp;<a href='?$query_string&mte_a=edit&id=$value' title='Edit {$this->show_text[$key]} $value'><img src='$this->url_base/images/edit.png' style='width:16px;height:16px;border:none;' alt=''></a></td>";
+								$buttons = "<td style='width:1%;white-space:nowrap;padding:10px;vertical-align:middle;'><a href='javascript:void(0)' onclick='del_confirm($value)' title='Delete {$this->show_text[$key]} $value'><img src='$this->url_base/images/del.png' style='width:16px;height:16px;border:none;' alt=''></a>&nbsp;<a href='?$query_string&mte_a=edit&id=$value' title='Edit {$this->show_text[$key]} $value'><img src='$this->url_base/images/edit.png' style='width:16px;height:16px;border:none;' alt=''></a></td>";
 							}
 
 							if ($key == "id" && $this->table == "edtb_systems")
 							{
-								$this_row .= "<td style='width:1%;padding:10px;'><a href='/system.php?system_id=" . $value . "'>" . $value . "</a></td>";
+								$this_row .= "<td style='width:1%;padding:10px;vertical-align:middle;'><a href='/system.php?system_id=" . $value . "'>" . $value . "</a></td>";
 							}
 							else
 							{
-								$this_row .= "<td style='width:1%;padding:10px;'>$value</td>";
+								$this_row .= "<td style='width:1%;padding:10px;vertical-align:middle;'>$value</td>";
 							}
 						}
 						else
@@ -947,6 +947,17 @@ class MySQLtabledit
 					$('.se-pre-con').show();
 				});
 				pjax2.on(['error', 'load'], function (e) {
+					$('.se-pre-con').fadeOut('slow');
+				});
+			});
+		</script>
+		<script>
+			YUI().use('pjax', function (Y) {
+				var pjax3 = new Y.Pjax({container: '.entries_inner', linkSelector: '.mte_head', contentSelector: '.mte_content'});
+				pjax3.on('navigate', function (e) {
+					$('.se-pre-con').show();
+				});
+				pjax3.on(['error', 'load'], function (e) {
 					$('.se-pre-con').fadeOut('slow');
 				});
 			});

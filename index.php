@@ -4,7 +4,7 @@
 *    (C) 1984 - 2015 Frontier Developments Plc.
 *    ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
 *
-*    Copyright (C) 2015 Mauri Kujala (contact@edtb.xyz)
+*    Copyright (C) 2016 Mauri Kujala (contact@edtb.xyz)
 *
 *    This program is free software; you can redistribute it and/or
 *    modify it under the terms of the GNU General Public License
@@ -43,13 +43,13 @@ if (file_exists("" . $_SERVER["DOCUMENT_ROOT"] . "/install.php"))
 
 	if (isset($_GET["doned"]))
 	{
-		//$script_path = "" . $settings["install_path"] . "\\EDTB\\install.sql";
+		$script_path = "" . $settings["install_path"] . "\\EDTB\\install.sql";
 		$installer_path = "" . $settings["install_path"] . "\\EDTB\\install.php";
 
-		// if (file_exists($script_path))
-		// {
-			// unlink($script_path);
-		// }
+		if (file_exists($script_path))
+		{
+			unlink($script_path);
+		}
 		if (file_exists($installer_path))
 		{
 			unlink($installer_path);
@@ -89,7 +89,7 @@ if (file_exists("" . $_SERVER["DOCUMENT_ROOT"] . "/install.php"))
 	}
 	else
 	{
-		echo notice("Looks like you've recently updated ED ToolBox to a newer version.<br /><br />To get everything set up, you need to run a script that makes any necessary changes to the database. The script may take a while to run.<br /><br /><div id='text' style='text-align:center;'><a href='install.php?upgrade' onclick='document.getElementById(\"loadin\").style.display=\"block\";document.getElementById(\"text\").style.display=\"none\";'>Click here when you're ready to go.</a></div><div id='loadin' style='text-align:center;display:none;'><img src='/style/img/loading.gif' alt='Loading' \></div>", "Install ED ToolBox 1/2");
+		echo notice("Looks like you've recently updated ED ToolBox to a newer version.<br /><br />To get everything set up, you need to run a script that makes any necessary changes to the database. The script may take a while to run.<br /><br /><div id='text' style='text-align:center;'><a href='install.php?upgrade' onclick='document.getElementById(\"loadin\").style.display=\"block\";document.getElementById(\"text\").style.display=\"none\";'>Click here when you're ready to go.</a></div><div id='loadin' style='text-align:center;display:none;'><img src='/style/img/loading.gif' alt='Loading' \></div>", "Upgrade ED ToolBox 1/2");
 	}
 
 	echo installer_footer();
@@ -102,6 +102,20 @@ require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 if (isset($_GET["import_done"]))
 {
 	echo '<div class="entries"><div class="entries_inner">';
+	?>
+	<script type="text/javascript">
+	$.ajax(
+	{
+		url: "/get/getMapPoints.json.php",
+		cache: false,
+		dataType: 'html',
+		success: function()
+		{
+			//console.log('success')
+		}
+	});
+	</script>
+	<?php
 	echo notice("Succesfully added " . number_format($_GET["num"]) . " visited systems to the database.", "Logs imported");
 	echo '</div></div>';
 	require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");

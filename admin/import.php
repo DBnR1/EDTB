@@ -4,7 +4,7 @@
 *    (C) 1984 - 2015 Frontier Developments Plc.
 *    ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
 *
-*    Copyright (C) 2015 Mauri Kujala (contact@edtb.xyz)
+*    Copyright (C) 2016 Mauri Kujala (contact@edtb.xyz)
 *
 *    This program is free software; you can redistribute it and/or
 *    modify it under the terms of the GNU General Public License
@@ -24,29 +24,17 @@
 $pagetitle = "Import Log Files";
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 
-$batch_limit = 104857600; // 80 MB
+$batch_limit = 104857600; // 100 MB
 $batches_left = isset($_GET["batches_left"]) ? $_GET["batches_left"] : "";
 
 echo '<div class="entries"><div class="entries_inner">';
-?>
-<script type="text/javascript">
-	$.ajax(
-	{
-		url: "/get/getMapPoints.json.php",
-		cache: false,
-		dataType: 'html',
-		success: function()
-		{
-			//console.log('success')
-		}
-	});
-</script>
-<?php
+
 if (is_dir($settings["log_dir"]))
 {
 	$logfiles2 = glob("" . $settings["log_dir"] . "/netLog*");
 	$logfiles = array();
 	$total_size = 0;
+
 	foreach ($logfiles2 as $file)
 	{
 		$size = filesize($file);
@@ -103,7 +91,6 @@ if (is_dir($settings["log_dir"]))
 
 			// read file to an array
 			$filr = file("" . $newest_file . "");
-			//$lines = array_reverse($filr);
 			$lines = $filr;
 
 			foreach ($lines as $line_num => $line)
@@ -132,7 +119,8 @@ if (is_dir($settings["log_dir"]))
 							mysqli_query($GLOBALS["___mysqli_ston"], "	INSERT INTO user_visited_systems (system_name, visit)
 																		VALUES (
 																		'" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $cssystemname) . "',
-																		'" . $visited_on . "')");
+																		'" . $visited_on . "')")
+																		or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 							if (mysqli_affected_rows($GLOBALS["___mysqli_ston"]) >= 1)
 							{

@@ -4,7 +4,7 @@
 *    (C) 1984 - 2015 Frontier Developments Plc.
 *    ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
 *
-*    Copyright (C) 2015 Mauri Kujala (contact@edtb.xyz)
+*    Copyright (C) 2016 Mauri Kujala (contact@edtb.xyz)
 *
 *    This program is free software; you can redistribute it and/or
 *    modify it under the terms of the GNU General Public License
@@ -27,7 +27,7 @@ require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 $ga_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT unixtime
 														FROM edtb_common
 														WHERE name = 'last_galnet_update'
-														LIMIT 1");
+														LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 $ga_arr = mysqli_fetch_assoc($ga_res);
 
 $ga_last_update = $ga_arr["unixtime"] + 30*60; // 30 minutes
@@ -83,7 +83,7 @@ if ($ga_last_update < time())
 					mysqli_query($GLOBALS["___mysqli_ston"], "	UPDATE edtb_common
 																SET unixtime = UNIX_TIMESTAMP()
 																WHERE name = 'last_galnet_new'
-																LIMIT 1");
+																LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 				}
 			}
 			$in++;
@@ -92,13 +92,13 @@ if ($ga_last_update < time())
 	mysqli_query($GLOBALS["___mysqli_ston"], "	UPDATE edtb_common
 												SET unixtime = UNIX_TIMESTAMP()
 												WHERE name = 'last_galnet_update'
-												LIMIT 1");
+												LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 }
 
 $m_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT unixtime
 													FROM edtb_common
 													WHERE name = 'last_galnet_check'
-													LIMIT 1");
+													LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 $m_arr = mysqli_fetch_assoc($m_res);
 
 $last_galnet_check = $m_arr["unixtime"];
@@ -106,7 +106,7 @@ $last_galnet_check = $m_arr["unixtime"];
 $g_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT unixtime
 													FROM edtb_common
 													WHERE name = 'last_galnet_new'
-													LIMIT 1");
+													LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 $g_arr = mysqli_fetch_assoc($g_res);
 
 $last_galnet_new = $g_arr["unixtime"];
@@ -125,6 +125,6 @@ file_put_contents("" . $_SERVER["DOCUMENT_ROOT"] . "/Marvin/galnet_new.txt", $la
 mysqli_query($GLOBALS["___mysqli_ston"], "	UPDATE edtb_common
 											SET unixtime = UNIX_TIMESTAMP()
 											WHERE name = 'last_galnet_check'
-											LIMIT 1");
+											LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 ((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);

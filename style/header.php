@@ -4,7 +4,7 @@
 *    (C) 1984 - 2015 Frontier Developments Plc.
 *    ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
 *
-*    Copyright (C) 2015 Mauri Kujala (contact@edtb.xyz)
+*    Copyright (C) 2016 Mauri Kujala (contact@edtb.xyz)
 *
 *    This program is free software; you can redistribute it and/or
 *    modify it under the terms of the GNU General Public License
@@ -176,7 +176,12 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 						/*
 						*	Display notification if user hasn't updated data in a while
 						*/
-						$res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT unixtime FROM edtb_common WHERE name = 'last_data_update' LIMIT 1");
+
+						$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT unixtime
+																			FROM edtb_common
+																			WHERE name = 'last_data_update'
+																			LIMIT 1")
+																			or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 						$arr = mysqli_fetch_assoc($res);
 						$last_update = $arr["unixtime"];
 						$now = time() - (7*24*60*60); // 7 days

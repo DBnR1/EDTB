@@ -92,7 +92,7 @@ if ($newSystem !== FALSE || $request == 0)
 														population, allegiance, economy, government, ruling_faction, state, security, power, power_state, simbad_ref
 														FROM edtb_systems
 														WHERE id = '" . $current_id . "'
-														LIMIT 1");
+														LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 	$exists = mysqli_num_rows($res);
 	$arr = mysqli_fetch_assoc($res);
 
@@ -213,7 +213,7 @@ if ($newSystem !== FALSE || $request == 0)
 																							FROM user_systems_own
 																							WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $current_system) . "'
 																							LIMIT 1"));
-	if ($system_user_calculated > 0)
+	if ($system_user_calculated > 0 && $current_system != "")
 	{
 		$data['system_info'] .= '<span style="float:right;margin-right:10px;margin-top:12px;"><a href="javascript:void(0);" onclick="tofront(\'calculate\');get_cs(\'target_system\');" title="Review calculations">';
 		$data['system_info'] .= '<img src="/style/img/calculator.png" style="vertical-align:middle;" />';
@@ -258,7 +258,7 @@ if ($newSystem !== FALSE || $request == 0)
 																	simbad_ref
 																	FROM edtb_systems
 																	WHERE id = '" . $system_id . "'
-																	LIMIT 1");
+																	LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 		$si_system_arr = mysqli_fetch_assoc($si_system_res);
 
@@ -280,7 +280,6 @@ if ($newSystem !== FALSE || $request == 0)
 		$si_system_ruling_faction = $si_system_arr["ruling_faction"] == "" ? "None" : $si_system_arr["ruling_faction"];
 		$si_system_state = $si_system_arr["state"] == "" ? "None" : $si_system_arr["state"];
 		$si_system_power = $si_system_arr["power"] == "" ? "None" : $si_system_arr["power"];
-		//$si_system_power = $si_system_power == "" ? "none" : $si_system_power;
 		$si_system_security = $si_system_arr["security"] == "" ? "None" : $si_system_arr["security"];
 		$si_system_power_state = $si_system_arr["power_state"] == "" ? "None" : $si_system_arr["power_state"];
 
@@ -352,11 +351,12 @@ if ($newSystem !== FALSE || $request == 0)
 		{
 			$rare_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT SQL_CACHE
 																	sqrt(pow((edtb_systems.x-(" . $coordx . ")),2)+pow((edtb_systems.y-(" . $coordy . ")),2)+pow((edtb_systems.z-(" . $coordz . ")),2)) AS distance,
-																	edtb_rares.item, edtb_rares.system, edtb_rares.station, edtb_rares.price, edtb_rares.suppressed, edtb_rares.sc_est_mins, edtb_rares.distance_to_star,
+																	edtb_rares.item, edtb_rares.system_name, edtb_rares.station, edtb_rares.price,
+																	edtb_rares.sc_est_mins, edtb_rares.ls_to_star,
 																	edtb_rares.needs_permit, edtb_rares.max_landing_pad_size,
 																	edtb_systems.x, edtb_systems.y, edtb_systems.z
 																	FROM edtb_rares
-																	LEFT JOIN edtb_systems ON edtb_rares.system = edtb_systems.name
+																	LEFT JOIN edtb_systems ON edtb_rares.system_name = edtb_systems.name
 																	WHERE
 																	edtb_systems.x BETWEEN " . $coordx . "-" . $settings["rare_range"] . "
 																	AND " . $coordx . "+" . $settings["rare_range"] . " &&
@@ -365,9 +365,9 @@ if ($newSystem !== FALSE || $request == 0)
 																	edtb_systems.z BETWEEN " . $coordz . "-" . $settings["rare_range"] . "
 																	AND " . $coordz . "+" . $settings["rare_range"] . "
 																	ORDER BY
-																	edtb_rares.system = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $si_system_name) . "' DESC,
+																	edtb_rares.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $si_system_name) . "' DESC,
 																	distance ASC
-																	LIMIT 10");
+																	LIMIT 10") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 			$rares_closeby = mysqli_num_rows($rare_res);
 		}
@@ -401,7 +401,7 @@ if ($newSystem !== FALSE || $request == 0)
 			$user_dist_q = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id, x, y, z
 																		FROM edtb_systems
 																		WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $dist_sys) . "'
-																		LIMIT 1");
+																		LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 			$user_dist_a = mysqli_fetch_assoc($user_dist_q);
 			$dist_sys_id = $user_dist_a["id"];
@@ -423,7 +423,7 @@ if ($newSystem !== FALSE || $request == 0)
 	}
 	$user_dists .= "</span>";
 
-	$data['si_name'] = '<div class="stationinfo" id="rares" style="display:none;position:absolute;margin-top:20px;margin-left:200px;z-index:1000;max-height:630px;overflow:auto;white-space:nowrap;">';
+	$data['si_name'] = '<div class="stationinfo" id="rares" style="display:none;position:absolute;margin-top:20px;margin-left:690px;z-index:1000;max-height:630px;overflow:auto;white-space:nowrap;">';
 
 	if ($rares_closeby > 0)
 	{
@@ -440,11 +440,12 @@ if ($newSystem !== FALSE || $request == 0)
 				$data['si_name'] .= number_format($rare_arr["price"]);
 				$data['si_name'] .= "&nbsp;CR)";
 				$data['si_name'] .= "<br /><span style='font-weight:normal;'>";
-				$data['si_name'] .= $rare_arr["system"];
-				$data['si_name'] .= "&nbsp;(";
+				$data['si_name'] .= "<a href='/system.php?system_name=" . urlencode($rare_arr["system_name"]) . "'>";
+				$data['si_name'] .= $rare_arr["system_name"];
+				$data['si_name'] .= "</a>&nbsp;(";
 				$data['si_name'] .= $rare_arr["station"];
 				$data['si_name'] .= ")&nbsp;-&nbsp;";
-				$data['si_name'] .= number_format($rare_arr["distance_to_star"], 0);
+				$data['si_name'] .= number_format($rare_arr["ls_to_star"], 0);
 				$data['si_name'] .= "&nbsp;ls&nbsp;";
 				$data['si_name'] .= "(";
 				$data['si_name'] .= $rare_arr["sc_est_mins"];
@@ -452,7 +453,6 @@ if ($newSystem !== FALSE || $request == 0)
 				$data['si_name'] .= $rare_arr["needs_permit"] = "1" ? "" : "&nbsp;-&nbsp;Permit needed";
 				$data['si_name'] .= "-&nbsp;";
 				$data['si_name'] .= $rare_arr["max_landing_pad_size"];
-				$data['si_name'] .= $rare_arr["suppressed"] = "f" ? "" : "&nbsp;-&nbsp;Suppressed";
 				$data['si_name'] .= "</span><br /><br />";
 				$actual_num_res++;
 			}
@@ -483,7 +483,7 @@ if ($newSystem !== FALSE || $request == 0)
 	$si_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT SQL_CACHE *
 														FROM edtb_stations
 														WHERE system_id = '" . $si_system_id . "'
-														ORDER BY -ls_from_star DESC, name");
+														ORDER BY -ls_from_star DESC, name") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 	$station_exists = mysqli_num_rows($si_res);
 
 	if ($station_exists == 0)
@@ -541,7 +541,7 @@ if ($newSystem !== FALSE || $request == 0)
 					$m_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT SQL_CACHE class, rating, price, group_name
 																		FROM edtb_modules
 																		WHERE id = '" . $module . "'
-																		LIMIT 1");
+																		LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 					$m_num = mysqli_num_rows($m_res);
 
 					if ($m_num > 0)
@@ -591,23 +591,6 @@ if ($newSystem !== FALSE || $request == 0)
 
 			$i = 0;
 			$services = "";
-			/*foreach ($facilities as $name => $included)
-			{
-				if ($included == 1)
-				{
-					if ($i != 0)
-					{
-						$services .= ", ";
-					}
-					else
-					{
-						$services .= "<b>Facilities:</b> ";
-					}
-
-					$services .= $name;
-					$i++;
-				}
-			}*/
 			foreach ($facilities as $name => $included)
 			{
 				$dname = str_replace("_", " ", $name);
@@ -756,7 +739,7 @@ if ($newSystem !== FALSE || $request == 0)
 																	LEFT JOIN edtb_systems ON user_log.system_id = edtb_systems.id
 																	LEFT JOIN edtb_stations ON user_log.station_id = edtb_stations.id
 																	WHERE user_log.system_id = '" . $current_id . "'
-																	ORDER BY stardate DESC");
+																	ORDER BY stardate DESC") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 		}
 		else
 		{
@@ -792,7 +775,7 @@ if ($newSystem !== FALSE || $request == 0)
 																	ORDER BY user_log.system_name = '" . $current_system . "' DESC,
 																	distance ASC, distance2 ASC,
 																	user_log.stardate DESC
-																	LIMIT 10");
+																	LIMIT 10") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 		}
 		$num = mysqli_num_rows($log_res);
 
@@ -857,7 +840,7 @@ if ($newSystem !== FALSE || $request == 0)
 															id, log_entry, stardate
 															FROM user_log WHERE system_id = '' AND system_name = ''
 															ORDER BY stardate DESC
-															LIMIT 5");
+															LIMIT 5") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 	$gnum = mysqli_num_rows($glog_res);
 
 	if ($gnum > 0)
@@ -895,7 +878,7 @@ if ($newSystem !== FALSE || $request == 0)
 														FROM edtb_stations
 														WHERE system_id = '" . $current_id . "'
 														ORDER BY -ls_from_star DESC, name
-														LIMIT 5");
+														LIMIT 5") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 	$count = mysqli_num_rows($ress);
 
 	if ($count > 0)

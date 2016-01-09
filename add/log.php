@@ -64,13 +64,13 @@ if (isset($_GET["do"]))
 													station_id = '" . $l_station . "',
 													log_entry = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $l_entry) . "'
 													WHERE id = '" . $l_id . "'
-													LIMIT 1");
+													LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]));
 	}
 	else if (isset($_GET["deleteid"]))
 	{
 		mysqli_query($GLOBALS["___mysqli_ston"], "	DELETE FROM user_log
 													WHERE id = '" . $_GET["deleteid"] . "'
-													LIMIT 1");
+													LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]));
 	}
 	else
 	{
@@ -79,7 +79,7 @@ if (isset($_GET["do"]))
 													('" . $l_system . "',
 													'" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $l_system_name) . "',
 													'" . $l_station . "',
-													'" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $l_entry) . "')");
+													'" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $l_entry) . "')") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]));
 	}
 
 	((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
@@ -105,8 +105,6 @@ if (isset($_GET["do"]))
 				<tr>
 					<td class="station_info_price_info2">
 						<input type="hidden" name="edit_id" id="edit_id" />
-						<!--<input type="hidden" name="system_id" id="system_id" />
-						<input type="hidden" name="station_id" id="station_id" />-->
 						<input class="textbox" type="text" name="system_name" placeholder="System name (leave empty for general log entry)" id="system_1" style="width:96%;margin-left:0px;" oninput="showResult(this.value, '1')" />
 					</td>
 					<td class="station_info_price_info2">

@@ -24,6 +24,7 @@
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
 require_once("" . $settings["install_path"] . "/data/server_config.inc.php");
 date_default_timezone_set('UTC');
+
 /*
 *    connect to database
 */
@@ -677,20 +678,6 @@ function debug($vars, $file = "debug", $all = false)
 	}
 }
 
-// simple log
-function writelog($msg)
-{
-	$logfile = "" . $settings["install_path"] . "/logs/user_log.txt";
-	// open file
-	$fd = fopen($logfile, "a");
-	// append date/time to message
-	$str = "[" . date("d.m.Y h:i:s", mktime()) . "] " . $msg;
-	// write string
-	fwrite($fd, $str . "\n");
-	// close file
-	fclose($fd);
-}
-
 /*
 *	http://stackoverflow.com/questions/7497733/how-can-use-php-to-check-if-a-directory-is-empty
 */
@@ -708,7 +695,7 @@ function is_dir_empty($dir)
 function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
 {
 	global $coordx, $coordy, $coordz;
-	// The Regular Expression filter
+	// Regular Expression filter for links
 	$reg_exUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
 
 	if ($value == "")
@@ -742,11 +729,11 @@ function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
 		if (is_numeric($d_x) && is_numeric($d_y) && is_numeric($d_z))
 		{
 			$distance = number_format(sqrt(pow(($d_x-($usex)), 2)+pow(($d_y-($usey)), 2)+pow(($d_z-($usez)), 2)), 2);
-			$this_row .= '<td style="padding:10px;white-space:nowrap;">' . $distance . ' ' . $exact . '</td>';
+			$this_row .= '<td style="padding:10px;white-space:nowrap;vertical-align:middle;">' . $distance . ' ' . $exact . '</td>';
 		}
 		else
 		{
-			$this_row .= '<td style="padding:10px;">n/a' . $d_x . '</td>';
+			$this_row .= '<td style="padding:10px;vertical-align:middle;">n/a' . $d_x . '</td>';
 		}
 
 		$dist = false;
@@ -754,23 +741,23 @@ function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
 	// make a link for systems with an id
 	if ($key == "system_id" && $value != "0")
 	{
-		$this_row .= '<td style="padding:10px;"><a href="/system.php?system_id=' . $value . '">' . $value . '</a></td>';
+		$this_row .= '<td style="padding:10px;vertical-align:middle;"><a href="/system.php?system_id=' . $value . '">' . $value . '</a></td>';
 	}
 	// make a link for systems with system name
 	else if ($key == "system_name" && $value != "0" || $key == "name" && $table == "edtb_systems")
 	{
-		$this_row .= '<td style="padding:10px;"><a href="/system.php?system_name=' . urlencode($value) . '">' . $value . '</a></td>';
+		$this_row .= '<td style="padding:10px;vertical-align:middle;"><a href="/system.php?system_name=' . urlencode($value) . '">' . $value . '</a></td>';
 	}
 	// number format some values
 	else if (strrpos($key, "price") !== false || strrpos($key, "ls") !== false || strrpos($key, "population") !== false || strrpos($key, "distance") !== false)
 	{
 		if (is_numeric($value) && $value != null)
 		{
-			$this_row .= '<td style="padding:10px;">' . number_format($value) . '</td>';
+			$this_row .= '<td style="padding:10px;vertical-align:middle;">' . number_format($value) . '</td>';
 		}
 		else
 		{
-			$this_row .= '<td style="padding:10px;">n/a</td>';
+			$this_row .= '<td style="padding:10px;vertical-align:middle;">n/a</td>';
 		}
 	}
 	// make links
@@ -784,7 +771,7 @@ function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
 		{
 			$urli = $value;
 		}
-		$this_row .= '<td style="padding:10px;">' . preg_replace($reg_exUrl, "<a href='" . $url[0] . "' target='_BLANK'>" . $urli . "</a> ", $value) . '</td>';
+		$this_row .= '<td style="padding:10px;vertical-align:middle;">' . preg_replace($reg_exUrl, "<a href='" . $url[0] . "' target='_BLANK'>" . $urli . "</a> ", $value) . '</td>';
 	}
 	// make 0,1 human readable
 	//else if ($value == "0" && strrpos($key, "id") === false || $value == "1" && strrpos($key, "id") === false)
@@ -801,17 +788,17 @@ function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
 			$real_value = "&#10003;";
 		}
 
-		$this_row .= '<td style="padding:10px;text-align:center;">' .  $real_value . '</td>';
+		$this_row .= '<td style="padding:10px;text-align:center;vertical-align:middle;">' .  $real_value . '</td>';
 	}
 	else
 	{
-		$this_row .= '<td style="padding:10px;">' . substr(strip_tags($value), 0, 100) . '</td>';
+		$this_row .= '<td style="padding:10px;vertical-align:middle;">' . substr(strip_tags($value), 0, 100) . '</td>';
 	}
 
 	// parse log entries
 	if ($key == "log_entry")
 	{
-		$this_row = '<td style="padding:10px;">' . substr(strip_tags($value), 0, 100) . '...</td>';
+		$this_row = '<td style="padding:10px;vertical-align:middle;">' . substr(strip_tags($value), 0, 100) . '...</td>';
 	}
 
 	return $this_row;
@@ -891,14 +878,17 @@ function get_station_icon($type, $planetary = "0", $style = "margin-right:6px;ve
 	return $icon;
 }
 
-// simple log
-function write_log($msg)
+/*
+*	simple log
+*/
+
+function write_log($msg, $file = "", $line = "")
 {
 	$logfile = "" . $_SERVER["DOCUMENT_ROOT"] . "/log.txt";
 	// open file
 	$fd = fopen($logfile, "a");
 	// append date/time to message
-	$str = "[" . date("d.m.Y h:i:s", mktime()) . "] " . $msg;
+	$str = "[" . date("d.m.Y h:i:s", mktime()) . "][" . $file . " line " . $line . "] " . $msg;
 	// write string
 	fwrite($fd, $str . "\n");
 	// close file

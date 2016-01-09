@@ -46,11 +46,13 @@ if (isset($_GET["do"]))
 													x = '" . $p_x . "',
 													y = '" . $p_y . "',
 													z = '" . $p_z . "'
-													WHERE id = '" . $p_id . "'");
+													WHERE id = '" . $p_id . "'") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 	}
 	else if (isset($_GET["deleteid"]))
 	{
-		mysqli_query($GLOBALS["___mysqli_ston"], "DELETE FROM user_poi WHERE id = '" . $_GET["deleteid"] . "' LIMIT 1");
+		mysqli_query($GLOBALS["___mysqli_ston"], "	DELETE FROM user_poi
+													WHERE id = '" . $_GET["deleteid"] . "'
+													LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 	}
 	else
 	{
@@ -62,7 +64,7 @@ if (isset($_GET["do"]))
 														'" . $category_id . "',
 														'" . $p_x . "',
 														'" . $p_y . "',
-														'" . $p_z . "')");
+														'" . $p_z . "')") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 	}
 
 	((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);

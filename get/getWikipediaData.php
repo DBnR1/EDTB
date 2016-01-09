@@ -109,7 +109,6 @@ if (isset($_GET["search"]) && $_GET["search"] != "")
 				$title_m = str_replace("<li>", "", $title_m);
 				$title_m = str_replace("</li>", "", $title_m);
 				$title_link = explode(',', $title_m);
-				//$title_link = explode('(', $title_link[0]);
 				$title_link = preg_split('/\(\d/', $title_link[0]);
 				$title_first = str_replace(" ", "_", strip_tags(trim($title_link[0])));
 
@@ -151,7 +150,6 @@ if (isset($_GET["search"]) && $_GET["search"] != "")
 					$title_m = str_replace("<li>", "", $title_m);
 					$title_m = str_replace("</li>", "", $title_m);
 					$title_link = explode(',', $title_m);
-					//$title_link = explode('(', $title_link[0]);
 					$title_link = preg_split('/\(\d/', $title_link[0]);
 					$title_first = str_replace(" ", "_", strip_tags(trim($title_link[0])));
 

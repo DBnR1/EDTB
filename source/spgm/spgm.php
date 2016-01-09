@@ -109,9 +109,6 @@ define('CLASS_DIV_GALHEADER', 'div-galheader');
 define('ANCHOR_PICTURE', 'spgmPicture');
 define('ANCHOR_SPGM', 'spgm');
 
-// define('preview_size_width', $settings["preview_size_width"]);
-// define('preview_size_height', $settings["preview_size_height"]);
-
 define('ERRMSG_UNKNOWN_GALLERY', 'unknown gallery');
 define('ERRMSG_UNKNOWN_PICTURE', 'unknown picture');
 define('ERRMSG_INVALID_NUMBER_OF_PICTURES', 'invalid number of picture');
@@ -144,7 +141,6 @@ $strVarGalleryId = PARAM_NAME_GALID;
 $strVarPictureId = PARAM_NAME_PICID;
 $strVarPageIndex = PARAM_NAME_PAGE;
 $strVarFilterFlags = PARAM_NAME_FILTER;
-
 
 global $spgm_cfg ;
 $spgm_cfg = array();
@@ -1924,6 +1920,5 @@ print ' </tr>'."\n";
 print ' <tr>'."\n".'  <td colspan="'.$spgm_cfg['conf']['galleryListingCols'].'" class="'.CLASS_TD_SPGM_LINK.'">'."\n";
 spgm_DispSPGMLink();
 print '  </td>'."\n".' </tr>'."\n";
-
 
 print '</table>'."\n".'<!-- end table wrapper -->'."\n\n";
