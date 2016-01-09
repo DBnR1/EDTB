@@ -705,7 +705,7 @@ function is_dir_empty($dir)
 *	parse data for data point
 */
 
-function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table)
+function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
 {
 	global $coordx, $coordy, $coordz;
 	// The Regular Expression filter
@@ -762,7 +762,7 @@ function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table)
 		$this_row .= '<td style="padding:10px;"><a href="/system.php?system_name=' . urlencode($value) . '">' . $value . '</a></td>';
 	}
 	// number format some values
-	else if (strrpos($key, "price") !== false || strrpos($key, "ls") !== false || strrpos($key, "population") !== false)
+	else if (strrpos($key, "price") !== false || strrpos($key, "ls") !== false || strrpos($key, "population") !== false || strrpos($key, "distance") !== false)
 	{
 		if (is_numeric($value) && $value != null)
 		{
@@ -787,20 +787,21 @@ function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table)
 		$this_row .= '<td style="padding:10px;">' . preg_replace($reg_exUrl, "<a href='" . $url[0] . "' target='_BLANK'>" . $urli . "</a> ", $value) . '</td>';
 	}
 	// make 0,1 human readable
-	else if ($value == "0" && strrpos($key, "id") === false || $value == "1" && strrpos($key, "id") === false )
+	//else if ($value == "0" && strrpos($key, "id") === false || $value == "1" && strrpos($key, "id") === false)
+	else if ($enum !== false)
 	{
-		$real_value = "n/a";
+		$real_value = "-";
 		if ($value == "0")
 		{
-			$real_value = "no";
+			$real_value = "&#10799;";
 		}
 
 		if ($value == "1")
 		{
-			$real_value = "yes";
+			$real_value = "&#10003;";
 		}
 
-		$this_row .= '<td style="padding:10px;">' .  $real_value . '</td>';
+		$this_row .= '<td style="padding:10px;text-align:center;">' .  $real_value . '</td>';
 	}
 	else
 	{

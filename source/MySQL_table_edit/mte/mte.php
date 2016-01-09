@@ -223,6 +223,13 @@ class MySQLtabledit
 
 		if (mysqli_num_rows($result)>0)
 		{
+			$result2 = mysqli_query($GLOBALS["___mysqli_ston"], "SHOW COLUMNS FROM `$this->table`");
+			while ($rij2 = mysqli_fetch_assoc($result2))
+			{
+				extract($rij2);
+				$field_type[$Field] = $Type;
+			}
+
 			$count = 0;
 			while ($rij = mysqli_fetch_assoc($result))
 			{
@@ -314,6 +321,17 @@ class MySQLtabledit
 				$ii = 0;
 				foreach ($rij AS $key => $value)
 				{
+					$field_kind = $field_type[$key];
+
+					$enum = false;
+					$align = "";
+					if ($field_kind == "enum('','0','1')" || $field_kind == "enum('0','1')")
+					{
+						$align = "text-align:center;";
+						$enum = true;
+					}
+					//echo $field_kind;
+
 					$sort_image = '';
 					if (in_array($key, $this->fields_in_list_view))
 					{
@@ -349,12 +367,12 @@ class MySQLtabledit
 							{
 								if (!in_array($key, $this->skip))
 								{
-									$head .= "<td style='white-space:nowrap;padding:10px;'><a href='$this->url_script?$query_sort' class='mte_head'>$show_key</a> $sort_image</td>";
+									$head .= "<td style='white-space:nowrap;padding:10px;" . $align . "'><a href='$this->url_script?$query_sort' class='mte_head'>$show_key</a> $sort_image</td>";
 								}
 							}
 							else
 							{
-								$head .= "<td style='white-space:nowrap;padding:10px;'><a href='$this->url_script?$query_sort' class='mte_head'>$show_key</a> $sort_image</td>";
+								$head .= "<td style='white-space:nowrap;padding:10px;" . $align . "'><a href='$this->url_script?$query_sort' class='mte_head'>$show_key</a> $sort_image</td>";
 							}
 
 							// add distance if x,y,z are defined
@@ -391,12 +409,12 @@ class MySQLtabledit
 							{
 								if (!in_array($key, $this->skip))
 								{
-									$this_row .= set_data($key, $value, $d_x, $d_y, $d_z, $dist, $this->table);
+									$this_row .= set_data($key, $value, $d_x, $d_y, $d_z, $dist, $this->table, $enum);
 								}
 							}
 							else
 							{
-								$this_row .= set_data($key, $value, $d_x, $d_y, $d_z, $dist, $this->table);
+								$this_row .= set_data($key, $value, $d_x, $d_y, $d_z, $dist, $this->table, $enum);
 							}
 						}
 					$ii++;
@@ -957,12 +975,18 @@ class MySQLtabledit
 		foreach ($this->links_to_db as $link_h => $link_t)
 		{
 			if ($this->table == $link_h)
+			{
 				$active = " class='actives'";
+			}
 			else
+			{
 				$active = "";
+			}
 
-			if ($i == 7 || $i == 14)
+			if (($i % 7) == 0)
+			{
 				echo "</ul><br /><ul class='pagination' style='margin-top:-26px;'>";
+			}
 
 			echo '<li' . $active . '><a class="mtelink" href="/datapoint.php?table=' . $link_h . '">' . $link_t . '</a></li>';
 			$i++;
