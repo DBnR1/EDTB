@@ -33,7 +33,6 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 			<!-- jquery -->
             <script type="text/javascript" src="/source/jquery-2.1.4.min.js"></script>
 
-			<link href="/source/ED3D-Galaxy-Map/css/styles.css" rel="stylesheet" type="text/css" />
 			<!-- pjax -->
 			<script type="text/javascript" src="/source/yui-min.js"></script>
 			<script>
