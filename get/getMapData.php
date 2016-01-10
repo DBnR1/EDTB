@@ -41,9 +41,24 @@ $count = mysqli_num_rows($ress);
 
 $ress2 = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT user_bookmarks.comment, user_bookmarks.added_on
 													FROM user_bookmarks
-													WHERE user_bookmarks.system_id = '" . $system_id  . "'
+													WHERE user_bookmarks.system_name = '" . $system  . "'
 													LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 $count2 = mysqli_num_rows($ress2);
+
+if ($count2 > 0)
+{
+	$arras = mysqli_fetch_assoc($ress2);
+	$comment = $arras["comment"];
+	$added_on = $arras["added_on"];
+
+	if ($comment != "")
+	{
+		echo 'Bookmark comment: ' . $comment . ' - ';
+	}
+
+	echo 'Added: ' . get_timeago($added_on) . '';
+	echo '<br />';
+}
 
 if ($count > 0)
 {
@@ -101,17 +116,6 @@ if ($count > 0)
 					</a>';
 		}
 	}
-	exit();
-}
-
-if ($count2 > 0)
-{
-	$arras = mysqli_fetch_assoc($ress2);
-	$comment = $arras["comment"];
-	$added_on = $arras["added_on"];
-
-	echo 'Bookmark comment: ' . $comment . ' - Added: ' . get_timeago($added_on) . '';
-
 	exit();
 }
 

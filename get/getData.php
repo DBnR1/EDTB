@@ -143,11 +143,15 @@ if ($newSystem !== FALSE || $request == 0)
 
 	$data['system_title'] .= "<div class='leftpanel-title-text'><span id='ltitle'>";
 
-	$bres = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id
-														FROM user_bookmarks
-														WHERE system_id = '" . $current_id . "'
-														LIMIT 1");
-	$bookmarked = mysqli_num_rows($bres);
+	$bookmarked = 0;
+	if ($current_id != "")
+	{
+		$bres = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id
+															FROM user_bookmarks
+															WHERE system_id = '" . $current_id . "'
+															LIMIT 1");
+		$bookmarked = mysqli_num_rows($bres);
+	}
 
 	$pres = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id
 														FROM user_poi
