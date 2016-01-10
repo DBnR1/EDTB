@@ -38,7 +38,7 @@ $data = "";
 $data_start = '{"categories":{';
 if ($settings["galmap_show_visited_systems"] == "true")
 {
-	$data_start .= '"Allegiances":{"1":{"name":"Empire","color":"e7d884"},"2":{"name":"Federation","color":"FFF8E6"},"3":{"name":"Alliance","color":"09b4f4"},"20":{"name":"Anarchy","color":"B704E3"},"21":{"name":"Independent","color":"34242F"},"99":{"name":"Rest","color":"8c8c8c"}},';
+	$data_start .= '"Allegiances":{"1":{"name":"Empire","color":"e7d884"},"2":{"name":"Federation","color":"FFF8E6"},"3":{"name":"Alliance","color":"09b4f4"},"21":{"name":"Independent","color":"34242F"},"99":{"name":"Rest","color":"8c8c8c"}},';
 }
 $data_start .= '"Other":{"5":{"name":"Current location","color":"FF0000"},';
 
@@ -72,13 +72,19 @@ if ($settings["galmap_show_visited_systems"] == "true")
 	while ($row = mysqli_fetch_array($result))
 	{
 		$info = "";
-		// coordinates for distance calculations
+
+		$name = $row["system_name"];
+
+		if (strtolower($name) == strtolower($current_system))
+		{
+			break;
+		}
+
+		$sysid = $row["sysid"];
+		// coordinates
 		$vs_coordx = $row["x"];
 		$vs_coordy = $row["y"];
 		$vs_coordz = $row["z"];
-
-		$name = $row["system_name"];
-		$sysid = $row["sysid"];
 
 		/*
 		*	if coords are not set, see if user has calculated them
@@ -116,10 +122,6 @@ if ($settings["galmap_show_visited_systems"] == "true")
 			{
 				$cat = ',"cat": [1]';
 			}
-			else if ($allegiance == "Anarchy")
-			{
-				$cat = ',"cat": [20]';
-			}
 			else if ($allegiance == "Independent")
 			{
 				$cat = ',"cat": [21]';
@@ -129,29 +131,15 @@ if ($settings["galmap_show_visited_systems"] == "true")
 				$cat = ',"cat": [99]';
 			}
 
-			if ($name == $current_system)
-			{
-				$cat = ',"cat": [5]';
-			}
-
 			$logged = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id
 																				FROM user_log
 																				WHERE system_id = '" . $sysid . "'
 																				LIMIT 1"));
 
-			if ($logged == 1 && $name != $current_system)
+			if ($logged == 1 && strtolower($name) != strtolower($current_system))
 			{
 				$cat = ',"cat": [11]';
 			}
-
-			/*if ($coordx != "")
-			{
-				$distance_from_current = sqrt(pow(($vs_coordx-($coordx)), 2)+pow(($vs_coordy-($coordy)), 2)+pow(($vs_coordz-($coordz)), 2));
-			}
-			else
-			{
-				$distance_from_current = 0;
-			}*/
 
 			$info .= '<div class="map_info"><span class="map_info_title">Visited system</span><br />';
 
@@ -184,7 +172,10 @@ if ($settings["galmap_show_visited_systems"] == "true")
 	}
 }
 
-// fetch point of interest data for the map
+/*
+*	 fetch point of interest data for the map
+*/
+
 if ($settings["galmap_show_pois"] == "true")
 {
 	$result = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT user_poi.poi_name, user_poi.system_name,
@@ -197,8 +188,14 @@ if ($settings["galmap_show_pois"] == "true")
 	while ($row = mysqli_fetch_array($result))
 	{
 		$info = "";
+		$cat = "";
 		$name = $row["system_name"];
-		//$disp_name = $row["poi_name"] != "" ? $row["poi_name"] : $row["system_name"];
+
+		if (strtolower($name) == strtolower($current_system))
+		{
+			break;
+		}
+
 		$disp_name = $row["system_name"];
 		$poi_name = $row["poi_name"];
 		$text = $row["text"];
@@ -207,15 +204,6 @@ if ($settings["galmap_show_pois"] == "true")
 		$poi_coordx = $row["x"];
 		$poi_coordy = $row["y"];
 		$poi_coordz = $row["z"];
-
-		/*if ($coordx != "")
-		{
-			$distance_from_current = sqrt(pow(($poi_coordx-($coordx)), 2)+pow(($poi_coordy-($coordy)), 2)+pow(($poi_coordz-($coordz)), 2));
-		}
-		else
-		{
-			$distance_from_current = 0;
-		}*/
 
 		$visitres = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id, visit
 																FROM user_visited_systems
@@ -231,11 +219,6 @@ if ($settings["galmap_show_pois"] == "true")
 		else
 		{
 			$cat = ',"cat": [7]';
-		}
-
-		if ($name == $current_system)
-		{
-			$cat = ',"cat": [5]';
 		}
 
 		$info .= '<div class="map_info"><span class="map_info_title">Point of Interest</span><br />';
@@ -272,7 +255,10 @@ if ($settings["galmap_show_pois"] == "true")
 	}
 }
 
-// fetch bookmark data for the map
+/*
+*	 fetch bookmark data for the map
+*/
+
 if ($settings["galmap_show_bookmarks"] == "true")
 {
 	$bm_result = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT user_bookmarks.comment, user_bookmarks.added_on,
@@ -287,33 +273,24 @@ if ($settings["galmap_show_bookmarks"] == "true")
 	while ($bm_row = mysqli_fetch_array($bm_result))
 	{
 		$info = "";
+		$cat = "";
 		$bm_system_name = $bm_row["system_name"];
+
+		if (strtolower($bm_system_name) == strtolower($current_system))
+		{
+			break;
+		}
+
 		$bm_comment = $bm_row["comment"];
 		$bm_added_on = $bm_row["added_on"];
 		$bm_category_name = $bm_row["category_name"];
 
-		// coordinates for distance calculations
+		// coordinates
 		$bm_coordx = $bm_row["x"];
 		$bm_coordy = $bm_row["y"];
 		$bm_coordz = $bm_row["z"];
 
-		if ($bm_system_name == $current_system)
-		{
-			$cat = ',"cat": [5]';
-		}
-		else
-		{
-			$cat = ',"cat": [6]';
-		}
-
-		/*if ($coordx != "")
-		{
-			$distance_from_current = sqrt(pow(($bm_coordx-($coordx)), 2)+pow(($bm_coordy-($coordy)), 2)+pow(($bm_coordz-($coordz)), 2));
-		}
-		else
-		{
-			$distance_from_current = 0;
-		}*/
+		$cat = ',"cat": [6]';
 
 		$info .= '<div class="map_info"><span class="map_info_title">Bookmarked System</span><br />';
 
@@ -340,7 +317,10 @@ if ($settings["galmap_show_bookmarks"] == "true")
 	}
 }
 
-// fetch rares data for the map
+/*
+*	 fetch rares data for the map
+*/
+
 if ($settings["galmap_show_rares"] == "true")
 {
 	$rare_result = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT
@@ -354,34 +334,25 @@ if ($settings["galmap_show_rares"] == "true")
 	while ($rare_row = mysqli_fetch_array($rare_result))
 	{
 		$info = "";
+		$cat = "";
+		$rare_system = $rare_row["system_name"];
+
+		if (strtolower($rare_system) == strtolower($current_system))
+		{
+			break;
+		}
+
 		$rare_item = $rare_row["item"];
 		$rare_station = $rare_row["station"];
-		$rare_system = $rare_row["system_name"];
 		$rare_dist_to_star = number_format($rare_row["ls_to_star"]);
 		$rare_disp_name = $rare_system;
 
-		// coordinates for distance calculations
+		// coordinates
 		$rare_coordx = $rare_row["x"];
 		$rare_coordy = $rare_row["y"];
 		$rare_coordz = $rare_row["z"];
 
-		if ($rare_system == $current_system)
-		{
-			$cat = ',"cat": [5]';
-		}
-		else
-		{
-			$cat = ',"cat": [10]';
-		}
-
-		/*if ($coordx != "")
-		{
-			$rare_distance_from_current = sqrt(pow(($rare_coordx-($coordx)), 2)+pow(($rare_coordy-($coordy)), 2)+pow(($rare_coordz-($coordz)), 2));
-		}
-		else
-		{
-			$rare_distance_from_current = 0;
-		}*/
+		$cat = ',"cat": [10]';
 
 		$info .= '<div class="map_info"><span class="map_info_title">Rare Commodity</span><br />';
 		$info .= '<b>Rare commodity</b><br />' . $rare_item . '<br /><br />';
@@ -396,7 +367,10 @@ if ($settings["galmap_show_rares"] == "true")
 	}
 }
 
-$data = "" . $data_start . "" . $data . "]}";
+$info = '</div>';
+$cur_sys_data = '{"name": "' . $current_system  . '","cat": [5],"coords": {"x": ' . $coordx . ',"y": ' . $coordy . ',"z": ' . $coordz . '},"infos":' . json_encode($info) . '}';
+
+$data = "" . $data_start . "" . $data . "," . $cur_sys_data . "]}";
 $map_json = "" . $_SERVER["DOCUMENT_ROOT"] . "/map_points.json";
 file_put_contents($map_json, $data);
 

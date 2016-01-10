@@ -10,6 +10,8 @@ var Grid = {
 
   'minDistView' : null,
 
+  'visible' : true,
+
   /**
    * Create 2 base grid scaled on Elite: Dangerous grid
    */
@@ -84,5 +86,39 @@ var Grid = {
       scene.add(this.coordGrid);
 
     }
+  },
+
+  /**
+   * Toggle grid view
+   */
+  'toggleGrid' : function() {
+
+    this.visible = !this.visible;
+
+    if(this.size < 10000 && isFarView) return;
+    this.obj.visible = this.visible;
+
+  },
+
+  /**
+   * Show grid
+   */
+  'show' : function() {
+
+    if(!this.visible) return;
+
+    this.obj.visible = true;
+
+  },
+
+  /**
+   * Hide grid
+   */
+  'hide' : function() {
+
+    this.obj.visible = false;
+
   }
+
 }
+

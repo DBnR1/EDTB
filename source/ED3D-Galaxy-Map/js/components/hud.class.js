@@ -1,7 +1,16 @@
-
 var HUD = {
 
   'container' : null,
+
+  /**
+   *
+   */
+  'init' : function() {
+
+    this.initHudAction();
+    this.initControls();
+
+  },
 
   /**
    *
@@ -33,24 +42,51 @@ var HUD = {
     $('#'+this.container).append('<div id="systemDetails" style="display:none;"></div>');
 	$('#'+this.container).append('<div id="navDetails" style="display:none;"></div>');
     $('#'+this.container).append(
+
       '  <div id="controls">'+
-      '    <a href="#" data-view="3d" class="selected">3D</a>'+
-      '    <a href="#" data-view="top">2D</a>'+
+	  '    <div id="options" style="display:none;"></div>'+
+      '    <a href="#" data-view="3d" class="view selected">3D</a>'+
+      '    <a href="#" data-view="top" class="view">2D</a>'+
+      '    <a href="#" data-view="options"><img src="/style/img/map_settings.png" alt="settings" style="vertical-align:middle;margin-bottom:3px;" /></a>'+
       '  </div>'
     );
+	this.createSubOptions();
 
   },
-
 
   /**
-   *
+   * Create option panel
    */
-  'init' : function() {
+  'createSubOptions' : function() {
 
-    this.initHudAction();
-    this.initControls();
+    //-- Toggle milky way
+    $( "<a></a>" )
+      .addClass( "sub-opt opt_active" )
+      .attr('href','#')
+      .html('Toggle Milky Way')
+      .click(function() {
+        var state = Galaxy.milkyway[0].visible;
+        Galaxy.milkyway[0].visible = !state;
+        Galaxy.milkyway[1].visible = !state;
+        $(this).toggleClass('opt_active');
+      })
+      .appendTo( "#options" );
+
+    //-- Toggle Grid
+    $( "<a></a>" )
+      .addClass( "sub-opt opt_active" )
+      .attr('href','#')
+      .html('Toggle grid')
+      .click(function() {
+        Ed3d.grid1H.toggleGrid();
+        Ed3d.grid1K.toggleGrid();
+        Ed3d.grid1XL.toggleGrid();
+        $(this).toggleClass('opt_active');
+      })
+      .appendTo( "#options" );
 
   },
+
 
   /**
    * Controls init for camera views
@@ -59,52 +95,57 @@ var HUD = {
 
     $('#controls a').click(function(e) {
 
-      $('#controls a').removeClass('selected')
-      $(this).addClass('selected');
+      if($(this).hasClass('view')) {
+        $('#controls a.view').removeClass('selected')
+        $(this).addClass('selected');
+      }
 
       var view = $(this).data('view');
 
-      var moveFrom = {
-        x: camera.position.x, y: camera.position.y , z: camera.position.z
-      };
+
 
       switch(view) {
 
         case 'top':
+          Ed3d.isTopView = true;
+          var moveFrom = {x: camera.position.x, y: camera.position.y , z: camera.position.z};
           var moveCoords = {x: controls.center.x, y: controls.center.y+500, z: controls.center.z};
+          HUD.moveCamera(moveFrom,moveCoords);
           break;
 
         case '3d':
-        default:
+
           Ed3d.isTopView = false;
+          var moveFrom = {x: camera.position.x, y: camera.position.y , z: camera.position.z};
           var moveCoords = {x: controls.center.x-100, y: controls.center.y+500, z: controls.center.z+500};
+          HUD.moveCamera(moveFrom,moveCoords);
           break;
 
+
+        case 'options':
+          $('#options').toggle();
+          break;
       }
-
-      Ed3d.tween = new TWEEN.Tween(moveFrom, {override:true}).to(moveCoords, 800)
-        .start()
-        .onUpdate(function () {
-          camera.position.set(moveFrom.x, moveFrom.y, moveFrom.z);
-        })
-        .onComplete(function () {
-          controls.update();
-          switch(view) {
-
-            case 'top':
-              Ed3d.isTopView = true;
-              break;
-
-          }
-        });
-
-
 
 
     });
 
   },
 
+  /**
+   * Move camera to a target
+   */
+  'moveCamera' : function(from, to) {
+
+    Ed3d.tween = new TWEEN.Tween(from, {override:true}).to(to, 800)
+      .start()
+      .onUpdate(function () {
+        camera.position.set(from.x, from.y, from.z);
+      })
+      .onComplete(function () {
+        controls.update();
+      });
+  },
   /**
    *
    */
@@ -133,7 +174,8 @@ var HUD = {
     //-- Add Count filters
     $('.map_filter').each(function(e) {
       var idCat = $(this).data('filter');
-      $(this).append(' ('+Ed3d.catObjs[idCat].length+')');
+      var count = Ed3d.catObjs[idCat].length;
+      if(count>1) $(this).append(' ('+count+')');
     });
 
     //-- Add map filters
@@ -200,11 +242,13 @@ var HUD = {
 
   'initFilters' : function(categories) {
 
+    var grpNb = 1;
     $.each(categories, function(typeFilter, values) {
 
       if(typeof values === "object" ) {
-        var groupId = typeFilter.toLowerCase();
-        groupId.replace(" ", "-");
+        var groupId = 'group_'+grpNb;
+
+
 
         $('#filters').append('<h2>'+typeFilter+'</h2>');
         $('#filters').append('<div id="'+groupId+'"></div>');
@@ -213,6 +257,7 @@ var HUD = {
           HUD.addFilter(groupId, key, val);
           Ed3d.catObjs[key] = []
         });
+        grpNb++;
       }
 
     });

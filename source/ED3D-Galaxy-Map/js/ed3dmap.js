@@ -17,10 +17,10 @@ var lensFlareSel;
 
 var Ed3d = {
 
-  'container'   : 'edmap',
-  'basePath'    : '../source/ED3D-Galaxy-Map',
+  'container'   : '',
+  'basePath'    : '',
   'jsonPath'    : null,
-  'jsonContainer' : 'json_data',
+  'jsonContainer' : '',
 
   'grid1H' : null,
   'grid1K' : null,
@@ -562,8 +562,8 @@ function enableFarView (scale, withAnim) {
 
   //Galaxy.obj.scale.set(20,20,20);
   if(Action.cursorSel != null)  Action.cursorSel.scale.set(60,60,60);
-  Ed3d.grid1H.obj.visible = false;
-  Ed3d.grid1K.obj.visible = false;
+  Ed3d.grid1H.hide();
+  Ed3d.grid1K.hide();
   Ed3d.starfield.visible = false;
   scene.fog.density = 0.000009;
 }
@@ -601,8 +601,8 @@ function disableFarView(scale, withAnim) {
 //
   camera.scale.set(1,1,1);
   if(Action.cursorSel != null)  Action.cursorSel.scale.set(1,1,1);
-  Ed3d.grid1H.obj.visible = true;
-  Ed3d.grid1K.obj.visible = true;
+  Ed3d.grid1H.show();
+  Ed3d.grid1K.show();
   Ed3d.starfield.visible = true;
   scene.fog.density = Ed3d.fogDensity;
 }
