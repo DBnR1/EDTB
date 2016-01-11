@@ -367,12 +367,12 @@ class MySQLtabledit
 							{
 								if (!in_array($key, $this->skip))
 								{
-									$head .= "<td style='white-space:nowrap;padding:10px;" . $align . "'><a href='$this->url_script?$query_sort' class='mte_head'>$show_key</a> $sort_image</td>";
+									$head .= "<td style='white-space:nowrap;padding:10px;" . $align . "'><a data-replace='true' data-target='.rightpanel' href='$this->url_script?$query_sort' class='mte_head'>$show_key</a> $sort_image</td>";
 								}
 							}
 							else
 							{
-								$head .= "<td style='white-space:nowrap;padding:10px;" . $align . "'><a href='$this->url_script?$query_sort' class='mte_head'>$show_key</a> $sort_image</td>";
+								$head .= "<td style='white-space:nowrap;padding:10px;" . $align . "'><a data-replace='true' data-target='.rightpanel' href='$this->url_script?$query_sort' class='mte_head'>$show_key</a> $sort_image</td>";
 							}
 
 							// add distance if x,y,z are defined
@@ -466,7 +466,7 @@ class MySQLtabledit
 			}
 			else
 			{
-				$navigation .= "<td class='mte_nav' style='background-color:#0e0e11;'><a class='mtelink' href='$this->url_script?$query_nav&start=$nav_toon'>$f</a></td>";
+				$navigation .= "<td class='mte_nav' style='background-color:#0e0e11;'><a data-replace='true' data-target='.rightpanel' class='mtelink' href='$this->url_script?$query_nav&start=$nav_toon'>$f</a></td>";
 			}
 		}
 		if ($hits_total<$this->num_rows_list_view) { $navigation = '';}
@@ -475,14 +475,14 @@ class MySQLtabledit
 		if ($this_page > 1)
 		{
 			$last =  (($this_page - 1) * $this->num_rows_list_view ) - $this->num_rows_list_view;
-			$last_page_html = "<a href='$this->url_script?$query_nav&start=$last' class='mte_nav_prev_next'>{$this->text['Previous']}</a>";
+			$last_page_html = "<a data-replace='true' data-target='.rightpanel' href='$this->url_script?$query_nav&start=$last' class='mte_nav_prev_next'>{$this->text['Previous']}</a>";
 		}
 
 		# Next if:
 		if ($this_page != $last_page && $hits_total>1)
 		{
 			$next =  $start + $this->num_rows_list_view;
-			$next_page_html =  "<a href='$this->url_script?$query_nav&start=$next' class='mte_nav_prev_next'>{$this->text['Next']}</a>";
+			$next_page_html =  "<a data-replace='true' data-target='.rightpanel' href='$this->url_script?$query_nav&start=$next' class='mte_nav_prev_next'>{$this->text['Next']}</a>";
 		}
 
 		if ($navigation)
@@ -928,8 +928,9 @@ class MySQLtabledit
 
 		if ($this->query_joomla_component) $add_joomla = '?option=' . $this->query_joomla_component;
 
-		echo "
-		<script>
+		echo "";
+		?>
+		<!--<script>
 			YUI().use('pjax', function (Y) {
 				var pjax = new Y.Pjax({container: '.entries_inner', linkSelector: '.mtelink', contentSelector: '.mte_content'});
 				pjax.on('navigate', function (e) {
@@ -961,8 +962,10 @@ class MySQLtabledit
 					$('.se-pre-con').fadeOut('slow');
 				});
 			});
-		</script>
+		</script>-->
+		<?php
 
+		echo "
 		<div class='mte_content'>
 		<script>
 			$this->javascript
@@ -999,7 +1002,7 @@ class MySQLtabledit
 				echo "</ul><br /><ul class='pagination' style='margin-top:-26px;'>";
 			}
 
-			echo '<li' . $active . '><a class="mtelink" href="/datapoint.php?table=' . $link_h . '">' . $link_t . '</a></li>';
+			echo '<li' . $active . '><a data-replace="true" data-target=".rightpanel" class="mtelink" href="/datapoint.php?table=' . $link_h . '">' . $link_t . '</a></li>';
 			$i++;
 		}
 		echo "</ul></div>

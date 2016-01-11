@@ -29,7 +29,7 @@ require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 <script type="text/javascript" src="/source/spgm/contrib/overlib410/overlib.js"></script>
 <link rel="stylesheet" href="/source/spgm/css/style.css" />
 <link rel="Stylesheet" href="/source/spgm/flavors/default/spgm_style.css" />
-<script>
+<!--<script>
 YUI().use('pjax', function (Y) {
 	var pjax2 = new Y.Pjax({container: '.entries', linkSelector: '.td-galitem-title', contentSelector: '.entries_inner'});
 	pjax2.on('navigate', function (e) {
@@ -39,7 +39,7 @@ YUI().use('pjax', function (Y) {
 		$(".se-pre-con").fadeOut("slow");
 	});
 });
-</script>
+</script>-->
 
 <div class="entries">
 	<div class="entries_inner">

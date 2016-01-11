@@ -1031,7 +1031,7 @@ function FileSizeConvert($bytes)
 *	return the correct starport icon
 */
 
-function get_station_icon($type, $planetary = "0", $style = "margin-right:6px;vertical-align:middle;")
+function get_station_icon($type, $planetary = "0", $style = "margin-right:6px;")
 {
 	$icon = $planetary == "1" ? '<img src="/style/img/spaceports/planetary.png" alt="Planetary" style="' . $style . '" />' : '<img src="/style/img/spaceports/spaceport.png" alt="Starport" style="' . $style . '" />';
 
