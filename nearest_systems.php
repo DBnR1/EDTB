@@ -77,29 +77,31 @@ $pad = isset($_GET["pad"]) ? $_GET["pad"] : "";
 $stations = true;
 $hidden_inputs = "";
 
-$add3 = "";
+$add = "";
 if ($power != "")
 {
-    $add3 = " AND edtb_systems.power = '" . $power . "'";
 	$stations = false;
+
+    $add .= " AND edtb_systems.power = '" . $power . "'";
 	$text .= " " . $power . " systems";
 	$hidden_inputs .= '<input type="hidden" name="power" value="' . $power . '" />';
 	$addtolink .= "&power=" . urlencode($power) . "";
 	$addtolink2 .= "&power=" . urlencode($power) . "";
 }
 
-$add = "";
 if ($only != "")
 {
+	$stations = true;
+
 	if ($only != "all")
 	{
-		$add = " AND edtb_stations.allegiance = '" . $only . "'";
+		$add .= " AND edtb_stations.allegiance = '" . $only . "'";
 	}
 	else
 	{
-		$add = " AND edtb_stations.allegiance = 'None'";
+		$add .= " AND edtb_stations.allegiance = 'None'";
 	}
-	$stations = true;
+
 	if ($only != "all" && $only != "Independent")
 	{
 		$text .= " systems with " . $only . " controlled stations";
@@ -112,15 +114,16 @@ if ($only != "")
 	{
 		$text .= " systems with non-allied stations";
 	}
+
 	$hidden_inputs .= '<input type="hidden" name="allegiance" value="' . $only . '" />';
 	$addtolink .= "&allegiance=" . $only . "";
 }
 
-$add2 = "";
 if ($system_allegiance != "")
 {
-    $add2 = " AND edtb_systems.allegiance = '" . $system_allegiance . "'";
 	$stations = false;
+
+    $add .= " AND edtb_systems.allegiance = '" . $system_allegiance . "'";
 	$text .= " " . str_replace('None', 'Non-allied', $system_allegiance) . " systems";
 	$hidden_inputs .= '<input type="hidden" name="system_allegiance" value="' . $system_allegiance . '" />';
 	$addtolink .= "&system_allegiance=" . $system_allegiance . "";
@@ -129,32 +132,9 @@ if ($system_allegiance != "")
 // if we're searching facilities
 if ($facility != "" && $facility != "0")
 {
-	$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT edtb_stations.system_id AS system_id, edtb_stations.name AS station_name,
-														edtb_stations.ls_from_star, edtb_stations.max_landing_pad_size,
-														edtb_stations.is_planetary, edtb_stations.type,
-														edtb_stations.id AS station_id, edtb_stations.faction AS station_faction,
-														edtb_stations.government AS station_government, edtb_stations.allegiance AS station_allegiance,
-														edtb_stations.state AS station_state, edtb_stations.black_market, edtb_stations.commodities_market,
-														edtb_stations.refuel, edtb_stations.repair,  edtb_stations.rearm,
-														edtb_stations.outfitting, edtb_stations.shipyard,
-														edtb_stations.import_commodities, edtb_stations.export_commodities,
-														edtb_stations.prohibited_commodities, edtb_stations.economies, edtb_stations.selling_ships,
-														edtb_systems.allegiance AS allegiance,
-														edtb_systems.name AS system,
-														edtb_systems.x AS coordx,
-														edtb_systems.y AS coordy,
-														edtb_systems.z AS coordz,
-														edtb_systems.population,
-														edtb_systems.government,
-														edtb_systems.security,
-														edtb_systems.economy
-														FROM edtb_stations
-														LEFT JOIN edtb_systems on edtb_stations.system_id = edtb_systems.id
-														WHERE edtb_systems.x != ''
-														AND edtb_stations." . $facility . " = '1'" . $add . "" . $add2 . "" . $add3 . "" . $add4 . "
-														ORDER BY sqrt(pow((coordx-(" . $usex . ")),2)+pow((coordy-(" . $usey . ")),2)+pow((coordz-(" . $usez . ")),2))
-														LIMIT 10") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 	$stations = true;
+
+	$add .= " AND edtb_stations." . $facility . " = '1'";
 	$f_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT name
 														FROM edtb_facilities
 														WHERE code = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $facility) . "'
@@ -176,11 +156,11 @@ if ($facility != "" && $facility != "0")
 	$addtolink2 .= "&facility=" . $facility . "";
 }
 
-$add4 = "";
 if ($pad != "")
 {
-    $add4 = " AND edtb_stations.max_landing_pad_size = '" . $pad . "'";
 	$stations = true;
+
+    $add .= " AND edtb_stations.max_landing_pad_size = '" . $pad . "'";
 	$padsize = $pad == "L" ? "Large" : "Medium";
 	$text .= "  stations with " . $padsize . " sized landing pads";
 	$hidden_inputs .= '<input type="hidden" name="pad" value="' . $pad . '" />';
@@ -197,7 +177,7 @@ if ($stations !== false)
 														edtb_stations.id AS station_id, edtb_stations.faction AS station_faction,
 														edtb_stations.government AS station_government, edtb_stations.allegiance AS station_allegiance,
 														edtb_stations.state AS station_state, edtb_stations.black_market, edtb_stations.commodities_market,
-														edtb_stations.refuel, edtb_stations.repair,  edtb_stations.rearm,
+														edtb_stations.refuel, edtb_stations.repair, edtb_stations.rearm,
 														edtb_stations.outfitting, edtb_stations.shipyard,
 														edtb_stations.import_commodities, edtb_stations.export_commodities,
 														edtb_stations.prohibited_commodities, edtb_stations.economies, edtb_stations.selling_ships,
@@ -212,7 +192,7 @@ if ($stations !== false)
 														edtb_systems.economy
 														FROM edtb_stations
 														LEFT JOIN edtb_systems on edtb_stations.system_id = edtb_systems.id
-														WHERE edtb_systems.x != ''" . $add . "" . $add2 . "" . $add3 . "" . $add4 . "
+														WHERE edtb_systems.x != ''" . $add . "
 														ORDER BY sqrt(pow((coordx-(" . $usex . ")),2)+pow((coordy-(" . $usey . ")),2)+pow((coordz-(" . $usez . ")),2)),
 														-edtb_stations.ls_from_star DESC
 														LIMIT 10") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
@@ -229,7 +209,7 @@ else
 														edtb_systems.security,
 														edtb_systems.economy
 														FROM edtb_systems
-														WHERE edtb_systems.x != ''" . $add . "" . $add2 . "" . $add3 . "
+														WHERE edtb_systems.x != ''" . $add . "
 														ORDER BY sqrt(pow((coordx-(" . $usex . ")),2)+pow((coordy-(" . $usey . ")),2)+pow((coordz-(" . $usez . ")),2))
 														LIMIT 10") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 }
@@ -307,7 +287,7 @@ if ($group_id != "" && $group_id != "0")
 															edtb_stations.id AS station_id, edtb_stations.faction AS station_faction,
 															edtb_stations.government AS station_government, edtb_stations.allegiance AS station_allegiance,
 															edtb_stations.state AS station_state, edtb_stations.black_market, edtb_stations.commodities_market,
-															edtb_stations.refuel, edtb_stations.repair,  edtb_stations.rearm,
+															edtb_stations.refuel, edtb_stations.repair, edtb_stations.rearm,
 															edtb_stations.outfitting, edtb_stations.shipyard,
 															edtb_stations.import_commodities, edtb_stations.export_commodities,
 															edtb_stations.prohibited_commodities, edtb_stations.economies, edtb_stations.selling_ships,
@@ -323,7 +303,7 @@ if ($group_id != "" && $group_id != "0")
 															FROM edtb_stations
 															LEFT JOIN edtb_systems on edtb_stations.system_id = edtb_systems.id
 															WHERE edtb_systems.x != ''
-															AND edtb_stations.selling_modules LIKE '-%" . $modules_id . "%-'" . $add . "" . $add2 . "" . $add3 . "" . $add4 . "
+															AND edtb_stations.selling_modules LIKE '-%" . $modules_id . "%-'" . $add . "
 															ORDER BY sqrt(pow((coordx-(" . $usex . ")),2)+pow((coordy-(" . $usey . ")),2)+pow((coordz-(" . $usez . ")),2))
 															LIMIT 10") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 		$stations = true;
@@ -343,7 +323,7 @@ if ($ship_name != "" && $ship_name != "0")
 														edtb_stations.id AS station_id, edtb_stations.faction AS station_faction,
 														edtb_stations.government AS station_government, edtb_stations.allegiance AS station_allegiance,
 														edtb_stations.state AS station_state, edtb_stations.black_market, edtb_stations.commodities_market,
-														edtb_stations.refuel, edtb_stations.repair,  edtb_stations.rearm,
+														edtb_stations.refuel, edtb_stations.repair, edtb_stations.rearm,
 														edtb_stations.outfitting, edtb_stations.shipyard,
 														edtb_stations.import_commodities, edtb_stations.export_commodities,
 														edtb_stations.prohibited_commodities, edtb_stations.economies, edtb_stations.selling_ships,
@@ -359,7 +339,7 @@ if ($ship_name != "" && $ship_name != "0")
 														FROM edtb_stations
 														LEFT JOIN edtb_systems on edtb_stations.system_id = edtb_systems.id
 														WHERE edtb_systems.x != ''
-														AND edtb_stations.selling_ships LIKE '%\'" . $ship_name . "\'%'" . $add . "" . $add2 . "" . $add3 . "" . $add4 . "
+														AND edtb_stations.selling_ships LIKE '%\'" . $ship_name . "\'%'" . $add . "
 														ORDER BY sqrt(pow((coordx-(" . $usex . ")),2)+pow((coordy-(" . $usey . ")),2)+pow((coordz-(" . $usez . ")),2))
 														LIMIT 10") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 

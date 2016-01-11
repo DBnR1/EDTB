@@ -222,7 +222,7 @@ if (isset($settings["old_screendir"]) && is_dir($settings["old_screendir"]) && $
 			$new_screenshot = "" . $newscreendir . "/" . $new_filename . "";
 
 			// convert from bmp to jpg
-			exec("\"" . $settings["install_path"] . "/bin/ImageMagick/convert\" \"" . $old_file_bmp . "\" \"" . $new_file_jpg . "\"") or write_log("Error #8", __FILE__, __LINE__);;
+			exec("\"" . $settings["install_path"] . "/bin/ImageMagick/convert\" \"" . $old_file_bmp . "\" \"" . $new_file_jpg . "\"") or write_log("Error #8", __FILE__, __LINE__);
 
 			if ($settings["keep_og"] == "false")
 			{
