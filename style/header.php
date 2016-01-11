@@ -30,43 +30,25 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
     <html>
         <head>
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-			<!-- jquery -->
-            <script type="text/javascript" src="/source/jquery-2.1.4.min.js"></script>
-
-			<!-- pjax -->
-			<script type="text/javascript" src="/source/yui-min.js"></script>
-			<script>
-				YUI().use('pjax', function (Y) {
-					var pjax = new Y.Pjax({container: '.rightpanel', contentSelector: '.rightpanel'});
-					pjax.on('navigate', function (e) {
-						$(".se-pre-con").show();
-					});
-					pjax.on(['error', 'load'], function (e) {
-						$(".se-pre-con").fadeOut("slow");
-					});
-				});
-			</script>
-
-			<!-- own js -->
-            <script type="text/javascript" src="/source/javascript.js"></script>
-
-			<!-- update data every 10000 ms -->
-            <script type="text/javascript">
-                var int=self.setInterval(get_data, 10000);
-            </script>
-
 			<!-- icon, styles and custom fonts -->
             <link type="image/png" href="/style/img/icon.png" rel="icon" />
             <link type="text/css" href="/style/style.css" rel="stylesheet" />
 
-            <script type="text/javascript">
-				// Wait for window load
-				$(window).load(function()
-				{
-					// Animate loader off screen
-					$(".se-pre-con").fadeOut("slow");
-				});
-            </script>
+			<!-- stuff for log editor -->
+			<link type="text/css" rel="stylesheet" href="/source/markitup/skins/markitup/style.css" />
+			<link type="text/css" rel="stylesheet" href="/source/markitup/sets/html/style.css" />
+
+			<!-- jquery -->
+            <script type="text/javascript" src="/source/jquery-2.1.4.min.js"></script>
+
+			<!-- wiselinks -->
+			<script type="text/javascript" src="/source/wiselinks-1.2.2.min.js"></script>
+
+			<!-- own js -->
+            <script type="text/javascript" src="/source/javascript.js"></script>
+
+			<script type="text/javascript" src="/source/markitup/sets/html/set.js"></script>
+			<script type="text/javascript" src="/source/markitup/jquery.markitup.js"></script>
 
             <title>CMDR <?php echo $settings["cmdr_name"]; ?>'s ToolBox</title>
         </head>
@@ -129,7 +111,7 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 
 							if ($reload != "true")
 							{
-								$aclass = ' class="yui3-pjax"';
+								$aclass = ' data-push="true"';
 								$onclick = ' onclick="setActive(\'' . $i . '\', \'' . $count . '\')"';
 							}
 							else

@@ -87,12 +87,6 @@ if (isset($_GET["do"]))
 }
 
 ?>
-<!-- stuff for log editor -->
-<link type="text/css" rel="stylesheet" href="/source/markitup/skins/markitup/style.css" />
-<link type="text/css" rel="stylesheet" href="/source/markitup/sets/html/style.css" />
-<script type="text/javascript" src="/source/markitup/sets/html/set.js"></script>
-<script type="text/javascript" src="/source/markitup/jquery.markitup.js"></script>
-
 <div class="input" id="addlog">
 	<form method="post" id="log_form" action="log.php">
 		<div class="input-inner">

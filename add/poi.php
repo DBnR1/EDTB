@@ -119,7 +119,7 @@ if ($_SERVER['PHP_SELF'] == "/poi.php")
 					</tr>
 					<tr>
 						<td class="station_info_price_info2" colspan="2">
-							<button id="submitpoi" onclick="update_data('poi_form', '/add/poi.php?do', true);tofront('null', true);return false;">Submit Point of Interest</button>
+							<a href="/poi.php" data-replace="true" data-target=".entries"><div class="button" onclick="update_data('poi_form', '/add/poi.php?do', true);tofront('null', true);return false;">Submit Point of Interest</div></a>
 							<span id="delete_poi"></span>
 						</td>
 					</tr>

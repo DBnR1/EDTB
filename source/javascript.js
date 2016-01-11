@@ -259,7 +259,7 @@ function update_values(editurl, deleteid)
         document.getElementById('delete').innerHTML = '';
         if (deleteid !== false)
         {
-            document.getElementById('delete').innerHTML = '<a href="javascript:void(0);" onclick="confirmation('+deleteid+',\'log\')"><input class="delete_button" type="button" value="Delete log entry" style="width:125px;margin-left:10px;"></a>';
+            document.getElementById('delete').innerHTML = '<a href="javascript:void(0);" onclick="confirmation('+deleteid+',\'log\')" title="Delete item"><div class="delete_button"><img src="/style/img/delete.png" alt="Delete" /></div></a>';
         }
     }
 
@@ -268,7 +268,7 @@ function update_values(editurl, deleteid)
         document.getElementById('delete_poi').innerHTML = '';
         if (deleteid !== false)
         {
-            document.getElementById('delete_poi').innerHTML = '<a href="javascript:void(0);" onclick="confirmation('+deleteid+',\'poi\')"><input class="delete_button" type="button" value="Delete POI entry" style="width:125px;margin-left:10px;"></a>';
+            document.getElementById('delete_poi').innerHTML = '<a href="/poi.php" data-replace="true" data-target=".entries" onclick="confirmation('+deleteid+',\'poi\')" title="Delete item"><div class="delete_button"><img src="/style/img/delete.png" alt="Delete" /></div></a>';
         }
     }
 
@@ -277,7 +277,8 @@ function update_values(editurl, deleteid)
         document.getElementById('delete_bm').innerHTML = '';
         if (deleteid !== false)
         {
-            document.getElementById('delete_bm').innerHTML = '<a href="javascript:void(0);" onclick="confirmation('+deleteid+',\'bm\')"><input class="delete_button" type="button" value="Delete Bookmark" style="width:125px;margin-left:10px;"></a>';
+            //document.getElementById('delete_bm').innerHTML = '<a href="javascript:void(0);" onclick="confirmation('+deleteid+',\'bm\')"><input class="delete_button" type="button" value="Delete Bookmark" style="width:125px;margin-left:10px;"></a>';
+			document.getElementById('delete_bm').innerHTML = '<a href="/poi.php" data-replace="true" data-target=".entries" onclick="confirmation('+deleteid+',\'bm\')" title="Delete item"><div class="delete_button"><img src="/style/img/delete.png" alt="Delete" /></div></a>';
         }
     }
 
@@ -418,7 +419,7 @@ function confirmation(delid, what)
                 cache: false,
                 success: function(result)
                 {
-                    console.log(delid+' a thing was deleted');
+                    //console.log(delid+' a thing was deleted');
                 }
             });
         }
@@ -889,16 +890,17 @@ function get_wikipedia(search, id)
 *	update class and rating on nearest_systems.php
 */
 
-function getCR(group_id)
+function getCR(group_id, class_name)
 {
 	$.ajax({
-	url: "/get/getRatingAndClass.php?group_id="+group_id,
+	url: "/get/getRatingAndClass.php?group_id="+group_id+"&class_name="+class_name,
 	cache: false,
     dataType: 'json',
 	success: function(result)
 	{
 		$('#rating').html(result['rating']);
-		$('#class').html(result['class']);
+		if (class_name == "")
+			$('#class').html(result['class']);
 	}
 	});
 }
