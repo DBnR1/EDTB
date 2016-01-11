@@ -128,38 +128,36 @@
 			<img class="callout" alt="co" src="style/img/callout_black.gif" style="top:-14px;left:20px;" />Click the date and time to open external links
 		</div>
 		<!-- -->
+		<script>
+			$(document).ready(function()
+			{
+				window.wiselinks = new Wiselinks($('.rightpanel'));
 
-			<script>
-				$(document).ready(function()
-				{
-					window.wiselinks = new Wiselinks($('.rightpanel'));
-
-					$(document).off('page:loading').on('page:loading', function(event, $target, render, url) {
-						$('.se-pre-con').show();
-					});
-
-					$(document).off('page:always').on('page:always', function(event, xhr, settings) {
-						$('.se-pre-con').fadeOut('slow');
-					});
-
-					$(document).off('page:done').on('page:done', function(event, $target, status, url, data) {
-						$('.se-pre-con').fadeOut('slow');
-					});
+				$(document).off('page:loading').on('page:loading', function(event, $target, render, url) {
+					$('.se-pre-con').show();
 				});
-			</script>
 
-			<!-- update data every 10000 ms -->
-            <script type="text/javascript">
-                var int=self.setInterval(get_data, 10000);
-            </script>
-
-            <script type="text/javascript">
-				// Wait for window load
-				$(window).load(function()
-				{
-					// Animate loader off screen
-					$(".se-pre-con").fadeOut("slow");
+				$(document).off('page:always').on('page:always', function(event, xhr, settings) {
+					$('.se-pre-con').fadeOut('slow');
 				});
-            </script>
+
+				$(document).off('page:done').on('page:done', function(event, $target, status, url, data) {
+					$('.se-pre-con').fadeOut('slow');
+				});
+			});
+		</script>
+		<!-- update data every 10000 ms -->
+		<script type="text/javascript">
+			var int=self.setInterval(get_data, 10000);
+		</script>
+
+		<script type="text/javascript">
+			// Wait for window load
+			$(window).load(function()
+			{
+				// Animate loader off screen
+				$(".se-pre-con").fadeOut("slow");
+			});
+		</script>
     </body>
 </html>

@@ -63,7 +63,7 @@ if (isset($_GET["do"]))
 	exit();
 }
 ?>
-<div class="input" id="addbm" style="text-align:center;">
+<div class="input" id="addbm">
 	<form method="post" id="bm_form" action="bookmark.php">
 		<div class="input-inner">
 			<table>
@@ -75,7 +75,7 @@ if (isset($_GET["do"]))
 					<input type="hidden" name="bm_edit_id" id="bm_edit_id">
 					<input type="hidden" name="bm_system_id" id="bm_system_id">
 					<div>
-						<input class="textbox" type="text" name="bm_system_name" placeholder="System name" id="bm_system_name" style="width:469px;" onkeyup="showResult(this.value, '3', 'no', 'no', 'no', 'yes')" />
+						<input class="textbox" type="text" name="bm_system_name" placeholder="System name" id="bm_system_name" style="width:469px;" oninput="showResult(this.value, '3', 'no', 'no', 'no', 'yes')" />
 						<div class="suggestions" id="suggestions_3" style="margin-left:15px;"></div>
 					</div>
 					</td>
@@ -99,10 +99,8 @@ if (isset($_GET["do"]))
 					</td>
 				<tr>
 					<td colspan="2" class="station_info_price_info2">
-					<div>
 						<a href="/poi.php" data-replace="true" data-target=".entries"><div class="button" onclick="update_data('bm_form', '/add/bookmark.php?do', true);tofront('null', true);return false;">Add Bookmark</div></a>
-						<div id="delete_bm"></div>
-					</div>
+						<span id="delete_bm"></span>
 					</td>
 				</tr>
 			</table>

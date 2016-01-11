@@ -34,10 +34,6 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
             <link type="image/png" href="/style/img/icon.png" rel="icon" />
             <link type="text/css" href="/style/style.css" rel="stylesheet" />
 
-			<!-- stuff for log editor -->
-			<link type="text/css" rel="stylesheet" href="/source/markitup/skins/markitup/style.css" />
-			<link type="text/css" rel="stylesheet" href="/source/markitup/sets/html/style.css" />
-
 			<!-- jquery -->
             <script type="text/javascript" src="/source/jquery-2.1.4.min.js"></script>
 

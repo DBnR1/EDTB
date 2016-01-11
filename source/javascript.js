@@ -259,7 +259,7 @@ function update_values(editurl, deleteid)
         document.getElementById('delete').innerHTML = '';
         if (deleteid !== false)
         {
-            document.getElementById('delete').innerHTML = '<a href="javascript:void(0);" onclick="confirmation('+deleteid+',\'log\')" title="Delete item"><div class="delete_button"><img src="/style/img/delete.png" alt="Delete" /></div></a>';
+            document.getElementById('delete').innerHTML = '<a href="javascript:void(0);" onclick="confirmation('+deleteid+',\'log\')" title="Delete item"><div class="delete_button" style="right:-271px;"><img src="/style/img/delete.png" alt="Delete" /></div></a>';
         }
     }
 

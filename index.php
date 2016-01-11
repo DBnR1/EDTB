@@ -104,16 +104,16 @@ if (isset($_GET["import_done"]))
 	echo '<div class="entries"><div class="entries_inner">';
 	?>
 	<script type="text/javascript">
-	$.ajax(
-	{
-		url: "/get/getMapPoints.json.php",
-		cache: false,
-		dataType: 'html',
-		success: function()
+		$.ajax(
 		{
-			//console.log('success')
-		}
-	});
+			url: "/get/getMapPoints.json.php",
+			cache: false,
+			dataType: 'html',
+			success: function()
+			{
+				//console.log('success')
+			}
+		});
 	</script>
 	<?php
 	echo notice("Succesfully added " . number_format($_GET["num"]) . " visited systems to the database.", "Logs imported");
