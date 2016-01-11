@@ -265,11 +265,13 @@ if ($group_id != "" && $group_id != "0")
 	{
 		$ratings = " " . $_GET["rating"] . " rated ";
 		$hidden_inputs .= '<input type="hidden" name="rating" value="' . $rating . '" />';
+		$addtolink .= "&rating=" . $rating . "";
 	}
 	if ($class != "" && $class != "0")
 	{
 		$classes = " class " . $_GET["class"] . " ";
 		$hidden_inputs .= '<input type="hidden" name="class" value="' . $class . '" />';
+		$addtolink .= "&class=" . $class . "";
 	}
 	if ($class != "" && $class != "0" && $rating != "" && $rating != "0")
 	{
@@ -413,17 +415,6 @@ if ($pos > 1)
 
 $count = mysqli_num_rows($res);
 ?>
-<script>
-YUI().use('pjax', function (Y) {
-	var pjax2 = new Y.Pjax({container: '.entries_inner', linkSelector: '.nslink', contentSelector: '#nscontent'});
-	pjax2.on('navigate', function (e) {
-		$(".se-pre-con").show();
-	});
-	pjax2.on(['error', 'load'], function (e) {
-		$(".se-pre-con").fadeOut("slow");
-	});
-});
-</script>
 <div class="entries">
 	<div class="entries_inner">
 		<table id="nscontent" style="margin-top:16px;width:100%">
@@ -437,10 +428,10 @@ YUI().use('pjax', function (Y) {
 			<tr>
 				<!-- station allegiances -->
 				<td class="station_info_price_info_t" style="vertical-align:top;width:25%;white-space:nowrap;">
-					<a class="nslink" href="/nearest_systems.php?allegiance=Empire<?php echo $addtolink2;?>" title="Empire"><img src="style/img/empire.png" alt="Empire" style="vertical-align:middle;" /></a>&nbsp;
-					<a class="nslink" href="/nearest_systems.php?allegiance=Alliance<?php echo $addtolink2;?>" title="Alliance"><img src="style/img/alliance.png" alt="Alliance" style="vertical-align:middle;" /></a>&nbsp;
-					<a class="nslink" href="/nearest_systems.php?allegiance=Federation<?php echo $addtolink2;?>" title="Federation"><img src="style/img/federation.png" alt="Federation" style="vertical-align:middle;" /></a>&nbsp;
-					<a class="nslink" href="/nearest_systems.php?allegiance=Independent<?php echo $addtolink2;?>" title="Independent"><img src="style/img/system.png" alt="Independent" style="vertical-align:middle;" /></a>
+					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?allegiance=Empire<?php echo $addtolink2;?>" title="Empire"><img src="style/img/empire.png" alt="Empire" style="vertical-align:middle;" /></a>&nbsp;
+					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?allegiance=Alliance<?php echo $addtolink2;?>" title="Alliance"><img src="style/img/alliance.png" alt="Alliance" style="vertical-align:middle;" /></a>&nbsp;
+					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?allegiance=Federation<?php echo $addtolink2;?>" title="Federation"><img src="style/img/federation.png" alt="Federation" style="vertical-align:middle;" /></a>&nbsp;
+					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?allegiance=Independent<?php echo $addtolink2;?>" title="Independent"><img src="style/img/system.png" alt="Independent" style="vertical-align:middle;" /></a>
 					<!-- search systems and stations-->
 					<div style="text-align:left;">
 						<div style="width:180px;margin-top:35px;">
@@ -453,10 +444,10 @@ YUI().use('pjax', function (Y) {
 				</td>
 				<!-- allegiances -->
 				<td class="station_info_price_info_t" style="vertical-align:top;width:25%;white-space:nowrap;">
-					<a class="nslink" href="/nearest_systems.php?system_allegiance=Empire<?php echo $addtolink2;?>" title="Empire"><img src="style/img/empire.png" alt="Empire" style="vertical-align:middle;" /></a>&nbsp;
-					<a class="nslink" href="/nearest_systems.php?system_allegiance=Alliance<?php echo $addtolink2;?>" title="Alliance"><img src="style/img/alliance.png" alt="Alliance" style="vertical-align:middle;" /></a>&nbsp;
-					<a class="nslink" href="/nearest_systems.php?system_allegiance=Federation<?php echo $addtolink2;?>" title="Federation"><img src="style/img/federation.png" alt="Federation" style="vertical-align:middle;" /></a>&nbsp;
-					<a class="nslink" href="/nearest_systems.php?system_allegiance=None<?php echo $addtolink2;?>" title="None allied"><img src="style/img/system.png" alt="None allied" style="vertical-align:middle;" /></a>
+					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?system_allegiance=Empire<?php echo $addtolink2;?>" title="Empire"><img src="style/img/empire.png" alt="Empire" style="vertical-align:middle;" /></a>&nbsp;
+					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?system_allegiance=Alliance<?php echo $addtolink2;?>" title="Alliance"><img src="style/img/alliance.png" alt="Alliance" style="vertical-align:middle;" /></a>&nbsp;
+					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?system_allegiance=Federation<?php echo $addtolink2;?>" title="Federation"><img src="style/img/federation.png" alt="Federation" style="vertical-align:middle;" /></a>&nbsp;
+					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?system_allegiance=None<?php echo $addtolink2;?>" title="None allied"><img src="style/img/system.png" alt="None allied" style="vertical-align:middle;" /></a>
 					<br /><br />
 				</td>
 				<!-- powers -->
@@ -477,13 +468,13 @@ YUI().use('pjax', function (Y) {
 							$addtolink = str_replace("?power=", "", $addtolink);
 							$addtolink = str_replace(urlencode($power), "", $addtolink);
 						}
-						echo '<a class="nslink" href="/nearest_systems.php?power=' . urlencode($power_name). '' . $addtolink . '" title="' . $power_name . '">' . $power_name . '</a><br />';
+						echo '<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?power=' . urlencode($power_name). '' . $addtolink . '" title="' . $power_name . '">' . $power_name . '</a><br />';
 					}
 					?>
 				</td>
 				<!-- modules -->
 				<td class="station_info_price_info_t" style="vertical-align:top;width:25%;white-space:nowrap;">
-					<form method="get" action="<?php echo $_SERVER['PHP_SELF'];?>" name="go">
+					<form method="get" action="<?php echo $_SERVER['PHP_SELF'];?>" name="go" data-push="true" data-target="#nscontent" data-include-blank-url-params="true" data-optimize-url-params="false">
 						<?php
 						echo $hidden_inputs;
 						if (isset($group_id) && $group_id != "0")
@@ -491,7 +482,7 @@ YUI().use('pjax', function (Y) {
 							$modi = " AND group_id = '" . $group_id . "'";
 						}
 						?>
-						<select class="selectbox" name="group_id" style="width:222px;" onchange="getCR($('select[name=group_id]').val());">
+						<select class="selectbox" name="group_id" style="width:222px;" onchange="getCR($('select[name=group_id]').val(),'');">
 								<optgroup label="Module"><option value="0">Module</option>
 								<?php
 								$mod_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT DISTINCT group_id, group_name, category_name
@@ -515,7 +506,7 @@ YUI().use('pjax', function (Y) {
 								}
 								?>
 						</select><br />
-						<select class="selectbox" name="class" style="width:222px;" id="class">
+						<select class="selectbox" name="class" style="width:222px;" id="class" onchange="getCR($('select[name=group_id]').val(),$('select[name=class]').val());">
 								<option value="0">Class</option>
 								<?php
 								$mod_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT DISTINCT class
@@ -552,11 +543,11 @@ YUI().use('pjax', function (Y) {
 				<!-- ships & facilities -->
 				<td class="station_info_price_info_t" style="vertical-align:top;width:25%;white-space:nowrap;">
 					<!-- ships -->
-					<form method="get" action="<?php echo $_SERVER['PHP_SELF'];?>" name="go" id="ships">
+					<form method="get" action="<?php echo $_SERVER['PHP_SELF'];?>" name="go" id="ships" data-push="true" data-target="#nscontent" data-include-blank-url-params="true" data-optimize-url-params="false">
 						<?php
 						echo $hidden_inputs;
 						?>
-						<select class="selectbox" name="ship_name" style="width:180px;" onchange="this.form.submit();">
+						<select class="selectbox" name="ship_name" style="width:180px;" onchange="$('.se-pre-con').show();this.form.submit();">
 								<option value="0">Sells Ships</option>
 								<?php
 
@@ -575,11 +566,11 @@ YUI().use('pjax', function (Y) {
 						<!--<input id="ship_submit" class="button" type="submit" value="Search" style="width:180px;" />-->
 					</form>
 					<!-- facilities -->
-					<form method="get" action="<?php echo $_SERVER['PHP_SELF'];?>" name="go" id="facilities">
+					<form method="get" action="<?php echo $_SERVER['PHP_SELF'];?>" name="go" id="facilities" data-push="true" data-target="#nscontent" data-include-blank-url-params="true" data-optimize-url-params="false">
 						<?php
 						echo $hidden_inputs;
 						?>
-						<select class="selectbox" name="facility" style="width:180px;" onchange="this.form.submit();">
+						<select class="selectbox" name="facility" style="width:180px;" onchange="$('.se-pre-con').show();this.form.submit();">
 								<option value="0">Has Facilities</option>
 								<?php
 								$facility_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT name, code
@@ -597,11 +588,11 @@ YUI().use('pjax', function (Y) {
 						<!--<input id="ship_submit" class="button" type="submit" value="Search" style="width:180px;" />-->
 					</form>
 					<!-- landing pads -->
-					<form method="get" action="<?php echo $_SERVER['PHP_SELF'];?>" name="go" id="landingpads">
+					<form method="get" action="<?php echo $_SERVER['PHP_SELF'];?>" name="go" id="landingpads" data-push="true" data-target="#nscontent" data-include-blank-url-params="true" data-optimize-url-params="false">
 						<?php
 						echo $hidden_inputs;
 						?>
-						<select class="selectbox" name="pad" style="width:180px;" onchange="this.form.submit();">
+						<select class="selectbox" name="pad" style="width:180px;" onchange="$('.se-pre-con').show();this.form.submit();">
 							<?php
 							$selectedL = $_GET["pad"] == "L" ? " selected='selected'" : "";
 							$selectedM = $_GET["pad"] == "M" ? " selected='selected'" : "";
@@ -619,7 +610,7 @@ YUI().use('pjax', function (Y) {
 			</tr>
 			<tr>
 				<td class="station_info_price_info_t" colspan="5">
-					<table>
+					<table id="nearest_systems">
 						<tr>
 							<td class="station_info_price_category" colspan="7">System</td>
 

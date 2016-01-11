@@ -298,7 +298,12 @@ function spgm_BuildLink($text, $cssClass, $anchor, $galId, $pageIdx, $picId, $fi
     $url .= '#'.ANCHOR_SPGM;
   }
 
-  $link = '<a href="'.$url.'" class="'.$cssClass.'">'.$text.'</a>';
+  if ($cssClass == "td-galitem-title" || $cssClass == "")
+  {
+	$pjax = 'data-replace="true" data-target=".entries" ';
+  }
+
+  $link = '<a ' . $pjax . 'href="'.$url.'" class="'.$cssClass.'">'.$text.'</a>';
 
   return $link;
 }
@@ -1469,7 +1474,7 @@ function spgm_DisplayPicture($strGalleryId, $iPictureId, $strFilterFlags) {
       print '   <td class="'.CLASS_TD_PICTURE_NAVI.'"><a id="'.ID_PICTURE_NAVI.'"></a>'."\n";
 
       if ($iPreviousPictureId >= 0) {
-        print spgm_BuildLink($spgm_cfg['theme']['previousPictureIcon'], CLASS_TD_GALITEM_TITLE, ANCHOR_PICTURE, $strGalleryId, -1, $iPreviousPictureId, str_replace(PARAM_VALUE_FILTER_SLIDESHOW, '', $strFilterFlags));
+        print spgm_BuildLink($spgm_cfg['theme']['previousPictureIcon'], 'h', ANCHOR_PICTURE, $strGalleryId, -1, $iPreviousPictureId, str_replace(PARAM_VALUE_FILTER_SLIDESHOW, '', $strFilterFlags));
       }
       //multi-language support
       $spgm_cfg['locale']['pictureNaviBar'] = str_replace(PATTERN_CURRENT_PIC, "$iNextPictureId", $spgm_cfg['locale']['pictureNaviBar']);
@@ -1477,7 +1482,7 @@ function spgm_DisplayPicture($strGalleryId, $iPictureId, $strFilterFlags) {
       print ' '.$spgm_cfg['locale']['pictureNaviBar'].' ';
 
       if ($iNextPictureId < $iPictureNumber) {
-        print spgm_BuildLink($spgm_cfg['theme']['nextPictureIcon'], CLASS_TD_GALITEM_TITLE, ANCHOR_PICTURE, $strGalleryId, -1, $iNextPictureId, str_replace(PARAM_VALUE_FILTER_SLIDESHOW, '', $strFilterFlags));
+        print spgm_BuildLink($spgm_cfg['theme']['nextPictureIcon'], 'h', ANCHOR_PICTURE, $strGalleryId, -1, $iNextPictureId, str_replace(PARAM_VALUE_FILTER_SLIDESHOW, '', $strFilterFlags));
       }
       print '  </td>'."\n".' </tr>'."\n";
     }

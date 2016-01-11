@@ -815,7 +815,7 @@ if ($newSystem !== FALSE || $request == 0)
 					}
 
 					$logdata .= '<h3>
-									<a href="javascript:void(0);" onclick="$(\'#test\').attr(\'id\', \'html\');$(\'#html\').markItUp(mySettings);update_values(\'/get/getLogEditData.php?logid=' . $log_arr["id"] . '\',\'' . $log_arr["id"] . '\');tofront(\'addlog\');" style="color:inherit;" title="Click to edit entry">';
+									<a href="javascript:void(0);" onclick="$(\'#test\').attr(\'id\', \'html\');$(\'#html\').markItUp(mySettings);update_values(\'/get/getLogEditData.php?logid=' . $log_arr["id"] . '\',\'' . $log_arr["id"] . '\');tofront(\'addlog\');" style="color:inherit;" title="Edit entry">';
 					$logdata .= date_format($log_added, "j M Y, H:i");
 					if (!empty($log_station_name))
 					{
@@ -861,7 +861,7 @@ if ($newSystem !== FALSE || $request == 0)
 							<a href="javascript:void(0);"
 							onclick="update_values(\'/get/getLogEditData.php?logid=' . $glog_arr["id"] . '\',\'' . $glog_arr["id"] . '\');tofront(\'addlog\');$(\'#html\').markItUp(mySettings);"
 							style="color:inherit;"
-							title="Click to edit entry">';
+							title="Edit entry">';
 			$logdata .= date_format($glog_added, "j M Y, H:i");
 			$logdata .= '</a></h3><pre class="entriespre">';
 			$logdata .= $glog_text;
@@ -963,7 +963,7 @@ if ($newSystem !== FALSE || $request == 0)
 			$info = str_replace("']", "", $info);
 			$info = str_replace("', '", ", ", $info);
 
-			$info = $info == "" ? "Click to edit station information" : $info;
+			$info = $info == "" ? "Edit station information" : $info;
 
 			// $station_data .= '<div><a href="javascript:void(0);" onclick="update_values(\'/get/getStationEditData.php?station_id=' . $station_id . '\',\'' . $station_id . '\');tofront(\'addstation\');" style="color:inherit;" onmouseover="$(\'#statinfo_' . $station_id . '\').toggle();" onmouseout="$(\'#statinfo_' . $station_id . '\').toggle();">' . $station_name;
 			$station_data .= '<div>' . $icon  . '<a href="javascript:void(0);" style="color:inherit;" onmouseover="$(\'#statinfo_' . $station_id . '\').fadeToggle(\'fast\');" onmouseout="$(\'#statinfo_' . $station_id . '\').toggle();">' . $station_name;
@@ -973,7 +973,7 @@ if ($newSystem !== FALSE || $request == 0)
 				$station_data .= ' (' . number_format($ls_from_star) . ' ls)';
 			}
 
-			$station_data .= "</a>&nbsp;<a href='javascript:void(0);' title='Click to add to new log as station' onclick='addstation(\"" . $station_name . "\", \"" . $station_id . "\");'><img src='/style/img/right.png' alt='Add to log' style='vertical-align:top;' class='addstations' width='16' height='16' /></a>";
+			$station_data .= "</a>&nbsp;<a href='javascript:void(0);' title='Add to new log as station' onclick='addstation(\"" . $station_name . "\", \"" . $station_id . "\");'><img src='/style/img/right.png' alt='Add to log' style='vertical-align:top;' class='addstations' width='16' height='16' /></a>";
 
 			$station_data .= '<div class="stationinfo" id="statinfo_' . $station_id . '">' . $info . '</div></div>';
 

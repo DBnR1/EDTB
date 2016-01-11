@@ -52,10 +52,18 @@ if (isset($_GET["group_id"]) && $_GET["group_id"] != "")
 	*	set rating
 	*/
 
+	$class_name = $_GET["class_name"] == "" ? "" : $_GET["class_name"];
+
+	$also_class = "";
+	if ($class_name != "")
+	{
+		$also_class = " AND class='" . $class_name . "'";
+	}
+
 	$data['rating'] .= '<option value="0">Rating</option>';
 	$rating_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT DISTINCT rating
 																FROM edtb_modules
-																WHERE class != ''
+																WHERE class != ''" . $also_class . "
 																AND group_id = '" . $group_id . "'
 																ORDER BY rating") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
