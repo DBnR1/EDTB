@@ -222,7 +222,7 @@ if (isset($settings["old_screendir"]) && is_dir($settings["old_screendir"]) && $
 			$new_screenshot = "" . $newscreendir . "/" . $new_filename . "";
 
 			// convert from bmp to jpg
-			exec("\"" . $settings["install_path"] . "/bin/ImageMagick/convert\" \"" . $old_file_bmp . "\" \"" . $new_file_jpg . "\"") or write_log("Error #8", __FILE__, __LINE__);
+			$out = exec("\"" . $settings["install_path"] . "/bin/ImageMagick/convert\" \"" . $old_file_bmp . "\" \"" . $new_file_jpg . "\"", $output) or write_log("Error #8: " . $out . "", __FILE__, __LINE__);
 
 			if ($settings["keep_og"] == "false")
 			{
@@ -258,8 +258,8 @@ if (isset($settings["old_screendir"]) && is_dir($settings["old_screendir"]) && $
 	// make thumbnails for the gallery
 	if ($added > 0)
 	{
-		exec("mkdir \"" . $newscreendir . "/thumbs\"") or write_log("Error #4", __FILE__, __LINE__);
-		exec("\"" . $settings["install_path"] . "/bin/ImageMagick/mogrify\" -resize " . $settings["thumbnail_size"] . " -background #333333 -gravity center -extent " . $settings["thumbnail_size"] . " -format jpg -quality 95 -path \"" . $newscreendir . "/thumbs\" \"" . $newscreendir . "/\"*.jpg") or write_log("Error #5", __FILE__, __LINE__);
+		$out2 = exec("mkdir \"" . $newscreendir . "/thumbs\"", $output) or write_log("Error #4: " . $out2 . "", __FILE__, __LINE__);
+		$out3 = exec("\"" . $settings["install_path"] . "/bin/ImageMagick/mogrify\" -resize " . $settings["thumbnail_size"] . " -background #333333 -gravity center -extent " . $settings["thumbnail_size"] . " -format jpg -quality 95 -path \"" . $newscreendir . "/thumbs\" \"" . $newscreendir . "/\"*.jpg", $output) or write_log("Error #5: ". $out3 . "", __FILE__, __LINE__);
 	}
 }
 
@@ -323,12 +323,11 @@ function notice($msg, $title = "Notice")
 	return $notice;
 }
 
-
-$u_agent = $_SERVER['HTTP_USER_AGENT'];
-
 /*
 *	http://php.net/manual/en/function.get-browser.php
 */
+
+$u_agent = $_SERVER['HTTP_USER_AGENT'];
 
 function getBrowser()
 {
@@ -811,52 +810,6 @@ function random_insult($who_to_insult)
 }
 
 /*
-*	write a debug log with variables
-*/
-
-function debug($vars, $file = "debug", $all = false)
-{
-	$debug_data = "";
-	//$file == "" ? "debug" : $file;
-	if (is_array($vars))
-	{
-		if ($all === false)
-		{
-			foreach ($vars as $variable)
-			{
-				foreach ($GLOBALS as $var_name => $var_value)
-				{
-					if ($var_value === $variable)
-					{
-						$debug_data .= 'Variable name: ' . $var_name . ', value: ' . $var_value . '';
-						$debug_data .= '
-	';
-						break;
-					}
-				}
-			}
-			file_put_contents("./source/debug/" . $file . ".txt", $debug_data);
-		}
-		else
-		{
-			foreach ($GLOBALS as $var_name => $var_value)
-			{
-				$debug_data .= 'Variable name: ' . $var_name . ', value: ' . $var_value . '';
-				$debug_data .= '
-	';
-			}
-			file_put_contents("./source/debug/all.txt", $debug_data);
-			break;
-		}
-	}
-	else
-	{
-		$debug_data .= 'Variable value: ' . $vars . '';
-		file_put_contents("./source/debug/" . $file . ".txt", $debug_data);
-	}
-}
-
-/*
 *	http://stackoverflow.com/questions/7497733/how-can-use-php-to-check-if-a-directory-is-empty
 */
 
@@ -975,7 +928,14 @@ function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
 	// parse log entries
 	if ($key == "log_entry")
 	{
-		$this_row = '<td style="padding:10px;vertical-align:middle;">' . substr(strip_tags($value), 0, 100) . '...</td>';
+		if (mb_strlen($value) >= 100)
+		{
+			$this_row = '<td style="padding:10px;vertical-align:middle;">' . substr(strip_tags($value), 0, 100) . '...</td>';
+		}
+		else
+		{
+			$this_row = '<td style="padding:10px;vertical-align:middle;">' . $value . '</td>';
+		}
 	}
 
 	return $this_row;

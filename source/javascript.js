@@ -811,7 +811,7 @@ function tofront(divid, toback)
 * 	upload to imgur
 */
 
-function imgurUpload(file)
+function imgurUpload(file, fileurl)
 {
 	$('#uploaded').html("Uploading image...<br /><img src='/style/img/loading.gif' style='vertical-align:middle;' />");
 	$.ajax({
@@ -831,7 +831,19 @@ function imgurUpload(file)
 		{
 			var url = result.data.link;
 
-			$('#uploaded').html("Image succesfully uploaded!<br /><a target='_BLANK' href='"+url+"'>Link to your image on imgur.com&nbsp;<img src='/style/img/external_link.png' style='vertical-align:middle;margin-bottom:3px;' alt='ext' /></a>");
+			$('#uploaded').html("Image succesfully uploaded!<br /><a target='_BLANK' href='"+url+"'>Link to your image on imgur.com<img src='/style/img/external_link.png' style='margin-bottom:3px;margin-left:6px;' alt='ext' /></a>");
+
+			// write to file so we can retrieve url later
+			$.ajax(
+			{
+				url: "/add/imgurURL.php?url="+url+"&file="+fileurl,
+				cache: false,
+				dataType: 'html',
+				success: function(re)
+				{
+					//console.log(re);
+				},
+			});
 			//console.log(result);
 		},
 	});
