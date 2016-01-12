@@ -511,22 +511,22 @@ if ($newSystem !== FALSE || $request == 0)
 			$ls_from_star = $sarr2["ls_from_star"];
 			$max_landing_pad_size = $sarr2["max_landing_pad_size"];
 
-			$s_faction = $sarr2["faction"] == "" ? "" : "<b>Faction:</b> " . $sarr2["faction"] . "";
+			$s_faction = $sarr2["faction"] == "" ? "" : "<strong>Faction:</strong> " . $sarr2["faction"] . "";
 			$s_distance_from_star = $ls_from_star == 0 ? "" : "" . number_format($ls_from_star, 0) . " ls - ";
 			$s_information = "<span style='float:right;margin-right:8px;'>└&nbsp;" . $s_distance_from_star . "Landing pad: " . $max_landing_pad_size . "</span><br />";
 			$s_government = $sarr2["government"] == "" ? "Government unknown" : "" . $sarr2["government"] . "";
 			$s_allegiance = $sarr2["allegiance"] == "" ? "Allegiance unknown" : "" . $sarr2["allegiance"] . "";
 
-			$s_state = $sarr2["state"] == "" ? "" : "<b>State:</b> " . $sarr2["state"] . "<br />";
+			$s_state = $sarr2["state"] == "" ? "" : "<strong>State:</strong> " . $sarr2["state"] . "<br />";
 			$type = $sarr2["type"] == "" ? "Type unknown" : "" . $sarr2["type"] . "";
 			$economies = $sarr2["economies"] == "" ? "Economies unknown" : "" . $sarr2["economies"] . "";
 			$economies = $economies == "" ? "Economies unknown" : $economies;
 
-			$import_commodities = $sarr2["import_commodities"] == "" ? "" : "<br /><b>Import commodities:</b> " . $sarr2["import_commodities"] . "<br />";
-			$export_commodities = $sarr2["export_commodities"] == "" ? "" : "<b>Export commodities:</b> " . $sarr2["export_commodities"] . "<br />";
-			$prohibited_commodities = $sarr2["prohibited_commodities"] == "" ? "" : "<b>Prohibited commodities:</b> " . $sarr2["prohibited_commodities"] . "<br />";
+			$import_commodities = $sarr2["import_commodities"] == "" ? "" : "<br /><strong>Import commodities:</strong> " . $sarr2["import_commodities"] . "<br />";
+			$export_commodities = $sarr2["export_commodities"] == "" ? "" : "<strong>Export commodities:</strong> " . $sarr2["export_commodities"] . "<br />";
+			$prohibited_commodities = $sarr2["prohibited_commodities"] == "" ? "" : "<strong>Prohibited commodities:</strong> " . $sarr2["prohibited_commodities"] . "<br />";
 
-			$selling_ships = $sarr2["selling_ships"] == "" ? "" : "<br /><br /><b>Selling ships:</b> " . str_replace("'", "", $sarr2["selling_ships"]) . "";
+			$selling_ships = $sarr2["selling_ships"] == "" ? "" : "<br /><br /><strong>Selling ships:</strong> " . str_replace("'", "", $sarr2["selling_ships"]) . "";
 
 			$selling_modules = "";
 
@@ -561,7 +561,7 @@ if ($newSystem !== FALSE || $request == 0)
 							$modules_t .= "<br />";
 
 						if ($m_name != $last_module_name)
-							$modules_t .= "<br /><b>" . $m_name . "</b><br />";
+							$modules_t .= "<br /><strong>" . $m_name . "</strong><br />";
 
 						$modules_t .= " [" . $m_class . "" . $m_rating . " - " . number_format($m_price, 0) . "]";
 
@@ -718,11 +718,11 @@ if ($newSystem !== FALSE || $request == 0)
 		$data['si_detailed'] .= '<img src="/style/img/powers/' . str_replace(" ", "_", $si_system_power) . '.jpg" alt="' . $si_system_power . '" style="vertical-align:top;width:250px;height:419px;margin-bottom:6px; border: 1px solid #000;" /><br />';
 		$data['si_detailed'] .= '<span style="font-size: 13px; font-weight:bold;">' . $si_system_data . '</span><br /><br />';
 		$data['si_detailed'] .= '<span>
-									<b>Allegiance:</b> ' . $si_system_allegiance . '<br />
-									<b>Government:</b> ' . $si_system_government . '<br />
-									<b>Population:</b> ' . number_format($si_system_population) . '<br />
-									<b>Economy:</b> ' . $si_system_economy . '<br />
-									<b>Faction:</b> ' . $si_system_ruling_faction . '
+									<strong>Allegiance:</strong> ' . $si_system_allegiance . '<br />
+									<strong>Government:</strong> ' . $si_system_government . '<br />
+									<strong>Population:</strong> ' . number_format($si_system_population) . '<br />
+									<strong>Economy:</strong> ' . $si_system_economy . '<br />
+									<strong>Faction:</strong> ' . $si_system_ruling_faction . '
 								</span>';
 	}
 
@@ -899,23 +899,23 @@ if ($newSystem !== FALSE || $request == 0)
 			}
 
 			$ls_from_star = $arra["ls_from_star"];
-			$max_landing_pad_size = $arra["max_landing_pad_size"] == "" ? "" : "<b>Landing pad:</b> " . $arra["max_landing_pad_size"] . "<br />";
+			$max_landing_pad_size = $arra["max_landing_pad_size"] == "" ? "" : "<strong>Landing pad:</strong> " . $arra["max_landing_pad_size"] . "<br />";
 			$station_id = $arra["id"];
 
-			$faction = $arra["faction"] == "" ? "" : "<b>Faction:</b> " . $arra["faction"] . "<br />";
-			$government = $arra["government"] == "" ? "" : "<b>Government:</b> " . $arra["government"] . "<br />";
-			$allegiance = $arra["allegiance"] == "" ? "" : "<b>Allegiance:</b> " . $arra["allegiance"] . "<br />";
+			$faction = $arra["faction"] == "" ? "" : "<strong>Faction:</strong> " . $arra["faction"] . "<br />";
+			$government = $arra["government"] == "" ? "" : "<strong>Government:</strong> " . $arra["government"] . "<br />";
+			$allegiance = $arra["allegiance"] == "" ? "" : "<strong>Allegiance:</strong> " . $arra["allegiance"] . "<br />";
 
-			$state = $arra["state"] == "" ? "" : "<b>State:</b> " . $arra["state"] . "<br />";
+			$state = $arra["state"] == "" ? "" : "<strong>State:</strong> " . $arra["state"] . "<br />";
 			$s_type = $arra["type"];
-			$type = $arra["type"] == "" ? "" : "<b>Type:</b> " . $arra["type"] . "<br />";
-			$economies = $arra["economies"] == "" ? "" : "<b>Economies:</b> " . $arra["economies"] . "<br />";
+			$type = $arra["type"] == "" ? "" : "<strong>Type:</strong> " . $arra["type"] . "<br />";
+			$economies = $arra["economies"] == "" ? "" : "<strong>Economies:</strong> " . $arra["economies"] . "<br />";
 
-			$import_commodities = $arra["import_commodities"] == "" ? "" : "<br /><b>Import commodities:</b> " . $arra["import_commodities"] . "<br />";
-			$export_commodities = $arra["export_commodities"] == "" ? "" : "<b>Export commodities:</b> " . $arra["export_commodities"] . "<br />";
-			$prohibited_commodities = $arra["prohibited_commodities"] == "" ? "" : "<b>Prohibited commodities:</b> " . $arra["prohibited_commodities"] . "<br />";
+			$import_commodities = $arra["import_commodities"] == "" ? "" : "<br /><strong>Import commodities:</strong> " . $arra["import_commodities"] . "<br />";
+			$export_commodities = $arra["export_commodities"] == "" ? "" : "<strong>Export commodities:</strong> " . $arra["export_commodities"] . "<br />";
+			$prohibited_commodities = $arra["prohibited_commodities"] == "" ? "" : "<strong>Prohibited commodities:</strong> " . $arra["prohibited_commodities"] . "<br />";
 
-			$selling_ships = $arra["selling_ships"] == "" ? "" : "<br /><b>Selling ships:</b> " . str_replace("'", "", $arra["selling_ships"]) . "<br />";
+			$selling_ships = $arra["selling_ships"] == "" ? "" : "<br /><strong>Selling ships:</strong> " . str_replace("'", "", $arra["selling_ships"]) . "<br />";
 
 			$shipyard = $arra["shipyard"];
 			$outfitting = $arra["outfitting"];
@@ -948,7 +948,7 @@ if ($newSystem !== FALSE || $request == 0)
 					}
 					else
 					{
-						$services .= "<b>Facilities:</b> ";
+						$services .= "<strong>Facilities:</strong> ";
 					}
 
 					$services .= $name;

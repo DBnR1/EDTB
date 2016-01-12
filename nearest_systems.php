@@ -565,7 +565,6 @@ $count = mysqli_num_rows($res);
 								}
 								?>
 						</select><br />
-						<!--<input id="ship_submit" class="button" type="submit" value="Search" style="width:180px;" />-->
 					</form>
 					<!-- landing pads -->
 					<form method="get" action="<?php echo $_SERVER['PHP_SELF'];?>" name="go" id="landingpads" data-push="true" data-target="#nscontent" data-include-blank-url-params="true" data-optimize-url-params="false">
@@ -682,19 +681,19 @@ $count = mysqli_num_rows($res);
 									$icon = get_station_icon($station_type, $station_is_planetary);
 
 									$station_id = $arr["station_id"];
-									$station_faction = $arr["station_faction"] == "" ? "" : "<b>Faction:</b> " . $arr["station_faction"] . "<br />";
-									$station_government = $arr["station_government"] == "" ? "" : "<b>Government:</b> " . $arr["station_government"] . "<br />";
-									$station_allegiance = $arr["station_allegiance"] == "" ? "" : "<b>Allegiance:</b> " . $arr["station_allegiance"] . "<br />";
+									$station_faction = $arr["station_faction"] == "" ? "" : "<strong>Faction:</strong> " . $arr["station_faction"] . "<br />";
+									$station_government = $arr["station_government"] == "" ? "" : "<strong>Government:</strong> " . $arr["station_government"] . "<br />";
+									$station_allegiance = $arr["station_allegiance"] == "" ? "" : "<strong>Allegiance:</strong> " . $arr["station_allegiance"] . "<br />";
 
-									$station_state = $arr["station_state"] == "" ? "" : "<b>State:</b> " . $arr["station_state"] . "<br />";
-									$station_type_d = $arr["type"] == "" ? "" : "<b>Type:</b> " . $arr["type"] . "<br />";
-									$station_economies = $arr["station_economies"] == "" ? "" : "<b>Economies:</b> " . $arr["station_economies"] . "<br />";
+									$station_state = $arr["station_state"] == "" ? "" : "<strong>State:</strong> " . $arr["station_state"] . "<br />";
+									$station_type_d = $arr["type"] == "" ? "" : "<strong>Type:</strong> " . $arr["type"] . "<br />";
+									$station_economies = $arr["station_economies"] == "" ? "" : "<strong>Economies:</strong> " . $arr["station_economies"] . "<br />";
 
-									$station_import_commodities = $arr["import_commodities"] == "" ? "" : "<br /><b>Import commodities:</b> " . $arr["import_commodities"] . "<br />";
-									$station_export_commodities = $arr["export_commodities"] == "" ? "" : "<b>Export commodities:</b> " . $arr["export_commodities"] . "<br />";
-									$station_prohibited_commodities = $arr["prohibited_commodities"] == "" ? "" : "<b>Prohibited commodities:</b> " . $arr["prohibited_commodities"] . "<br />";
+									$station_import_commodities = $arr["import_commodities"] == "" ? "" : "<br /><strong>Import commodities:</strong> " . $arr["import_commodities"] . "<br />";
+									$station_export_commodities = $arr["export_commodities"] == "" ? "" : "<strong>Export commodities:</strong> " . $arr["export_commodities"] . "<br />";
+									$station_prohibited_commodities = $arr["prohibited_commodities"] == "" ? "" : "<strong>Prohibited commodities:</strong> " . $arr["prohibited_commodities"] . "<br />";
 
-									$station_selling_ships = $arr["selling_ships"] == "" ? "" : "<br /><b>Selling ships:</b> " . str_replace("'", "", $arr["selling_ships"]) . "<br />";
+									$station_selling_ships = $arr["selling_ships"] == "" ? "" : "<br /><strong>Selling ships:</strong> " . str_replace("'", "", $arr["selling_ships"]) . "<br />";
 
 									$station_shipyard = $arr["shipyard"];
 									$station_outfitting = $arr["outfitting"];
@@ -724,7 +723,7 @@ $count = mysqli_num_rows($res);
 											}
 											else
 											{
-												$station_services .= "<b>Facilities:</b> ";
+												$station_services .= "<strong>Facilities:</strong> ";
 											}
 
 											$station_services .= $name;
@@ -739,7 +738,7 @@ $count = mysqli_num_rows($res);
 									$info = str_replace("']", "", $info);
 									$info = str_replace("', '", ", ", $info);
 
-									echo '<td class="station_info_price_info_t"><a href="javascript:void(0);" onmouseover="$(\'#si_statinfo_' . $station_id . '\').fadeToggle(\'fast\');" onmouseout="$(\'#si_statinfo_' . $station_id . '\').toggle();">' . $icon . '' . $station_name . '<div class="stationinfo_ns" id="si_statinfo_' . $station_id . '">' . $info . '</div></td>';
+									echo '<td class="station_info_price_info_t">' . $icon . '<a href="javascript:void(0);" onmouseover="$(\'#si_statinfo_' . $station_id . '\').fadeToggle(\'fast\');" onmouseout="$(\'#si_statinfo_' . $station_id . '\').toggle();">' . $station_name . '<div class="stationinfo_ns" id="si_statinfo_' . $station_id . '">' . $info . '</div></td>';
 									echo '<td class="station_info_price_info_t">' . $station_ls_from_star . '</td>';
 									echo '<td class="station_info_price_info_t">' . $station_max_landing_pad_size . '</td>';
 								}

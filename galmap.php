@@ -43,12 +43,6 @@ else
 	$is_unknown = " *";
 }
 ?>
-<!-- Three.js -->
-<script src="/source/three.min.js"></script>
-<!-- ED3D-Galaxy-Map stuff -->
-<link href="/source/ED3D-Galaxy-Map/css/styles.css" rel="stylesheet" type="text/css" />
-<script src="/source/ED3D-Galaxy-Map/js/ed3dmap.js"></script>
-
 <div style="display:none;" id="curx"><?php echo $ucoordx?></div>
 <div style="display:none;" id="cury"><?php echo $ucoordy?></div>
 <div style="display:none;" id="curz"><?php echo $ucoordz?></div>

@@ -33,18 +33,21 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 			<!-- icon, styles and custom fonts -->
             <link type="image/png" href="/style/img/icon.png" rel="icon" />
             <link type="text/css" href="/style/style.css" rel="stylesheet" />
+			<link href="/source/ED3D-Galaxy-Map/css/styles.css" rel="stylesheet" type="text/css" />
 
+			<!-- Three.js -->
+			<script src="/source/three.min.js"></script>
+			<!-- ED3D-Galaxy-Map -->
+			<script src="/source/ED3D-Galaxy-Map/js/ed3dmap.js"></script>
 			<!-- jquery -->
             <script type="text/javascript" src="/source/jquery-2.1.4.min.js"></script>
-
 			<!-- wiselinks -->
 			<script type="text/javascript" src="/source/wiselinks-1.2.2.min.js"></script>
-
-			<!-- own js -->
-            <script type="text/javascript" src="/source/javascript.js"></script>
-
+			<!-- markitup -->
 			<script type="text/javascript" src="/source/markitup/sets/html/set.js"></script>
 			<script type="text/javascript" src="/source/markitup/jquery.markitup.js"></script>
+			<!-- own js -->
+            <script type="text/javascript" src="/source/javascript.js"></script>
 
             <title>CMDR <?php echo $settings["cmdr_name"]; ?>'s ToolBox</title>
         </head>

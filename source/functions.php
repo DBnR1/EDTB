@@ -222,7 +222,7 @@ if (isset($settings["old_screendir"]) && is_dir($settings["old_screendir"]) && $
 			$new_screenshot = "" . $newscreendir . "/" . $new_filename . "";
 
 			// convert from bmp to jpg
-			$out = exec("\"" . $settings["install_path"] . "/bin/ImageMagick/convert\" \"" . $old_file_bmp . "\" \"" . $new_file_jpg . "\"", $output) or write_log("Error #8: " . $out . "", __FILE__, __LINE__);
+			exec("\"" . $settings["install_path"] . "/bin/ImageMagick/convert\" \"" . $old_file_bmp . "\" \"" . $new_file_jpg . "\"", $out) or write_log("Error #8: " . $out . "", __FILE__, __LINE__);
 
 			if ($settings["keep_og"] == "false")
 			{
@@ -258,8 +258,8 @@ if (isset($settings["old_screendir"]) && is_dir($settings["old_screendir"]) && $
 	// make thumbnails for the gallery
 	if ($added > 0)
 	{
-		$out2 = exec("mkdir \"" . $newscreendir . "/thumbs\"", $output) or write_log("Error #4: " . $out2 . "", __FILE__, __LINE__);
-		$out3 = exec("\"" . $settings["install_path"] . "/bin/ImageMagick/mogrify\" -resize " . $settings["thumbnail_size"] . " -background #333333 -gravity center -extent " . $settings["thumbnail_size"] . " -format jpg -quality 95 -path \"" . $newscreendir . "/thumbs\" \"" . $newscreendir . "/\"*.jpg", $output) or write_log("Error #5: ". $out3 . "", __FILE__, __LINE__);
+		exec("mkdir \"" . $newscreendir . "/thumbs\"", $out2) or write_log("Error #4: " . $out2 . "", __FILE__, __LINE__);
+		exec("\"" . $settings["install_path"] . "/bin/ImageMagick/mogrify\" -resize " . $settings["thumbnail_size"] . " -background #333333 -gravity center -extent " . $settings["thumbnail_size"] . " -format jpg -quality 95 -path \"" . $newscreendir . "/thumbs\" \"" . $newscreendir . "/\"*.jpg", $out3) or write_log("Error #5: ". $out3 . "", __FILE__, __LINE__);
 	}
 }
 
@@ -907,15 +907,15 @@ function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
 	// make 0,1 human readable
 	else if ($enum !== false)
 	{
-		$real_value = "-";
+		$real_value = "n/a";
 		if ($value == "0")
 		{
-			$real_value = "&#10799;";
+			$real_value = "<span class='enum_no'>&#10799;</span>";
 		}
 
 		if ($value == "1")
 		{
-			$real_value = "&#10003;";
+			$real_value = "<span class='enum_yes'>&#10003;</span>";
 		}
 
 		$this_row .= '<td style="padding:10px;text-align:center;vertical-align:middle;">' .  $real_value . '</td>';

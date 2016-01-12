@@ -876,7 +876,7 @@ function get_wikipedia(search, id)
 		//$("#wpsearch_"+id).toggle();
 		//document.getElementById("wpsearch_"+id).style.display = "block";
 		$("#wpsearch_"+id).fadeIn();
-		$("#wpsearch_"+id).html('<b>Querying Wikipedia</b><br /><img src="/style/img/loading.gif" alt="loading" />');
+		$("#wpsearch_"+id).html('<strong>Querying Wikipedia</strong><br /><img src="/style/img/loading.gif" alt="loading" />');
 
 		$.ajax(
 		{

@@ -38,7 +38,7 @@ if (!is_numeric($coordx))
 	$coordy = $last_coords["y"];
 	$coordz = $last_coords["z"];
 
-	$disclaimer = "<p><b>No coordinates for current location, last known location used</b></p>";
+	$disclaimer = "<p><strong>No coordinates for current location, last known location used</strong></p>";
 }
 else
 {

@@ -744,7 +744,7 @@ class MySQLtabledit
 				else {$background='#273238';}
 			if ($this->show_text[$key]) {$show_key = $this->show_text[$key];}
 				else {$show_key = $key;}
-			$rows .= "\n\n<tr style='border-bottom:1px solid #000;background:$background'>\n<td style='vertical-align:middle;padding:8px;'><b>$show_key</b></td>\n<td style='padding:8px;'>$field</td></tr>";
+			$rows .= "\n\n<tr style='border-bottom:1px solid #000;background:$background'>\n<td style='vertical-align:middle;padding:8px;'><strong>$show_key</strong></td>\n<td style='padding:8px;'>$field</td></tr>";
 		}
 
 		$this->javascript = "

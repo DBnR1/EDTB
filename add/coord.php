@@ -195,7 +195,7 @@ else
 						}
 						echo '<tr><td class="station_info_price_info2" style="text-align:right;"><input class="textbox" type="hidden" name="reference_' . $i . '" value="' . $ref_rname . '" />
 						<input class="textbox" type="hidden" name="reference_' . $i . '_coordinates" value="' . $ref_coordinates . '" />
-						<b>' . $ref_rname . '</b></td><td class="station_info_price_info2">
+						<strong>' . $ref_rname . '</strong></td><td class="station_info_price_info2">
 						<input class="textbox" type="text" id="ref_' . $i . '_dist" name="reference_' . $i . '_distance" value="' . $ref[$i]["distance"] . '" placeholder="Distance" style="width:100px;" /></td></tr>';
 						$i++;
 					}

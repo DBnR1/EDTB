@@ -153,7 +153,7 @@ if ($settings["galmap_show_visited_systems"] == "true")
 				$visit_unix = strtotime($visit_og);
 				$visit_ago = get_timeago($visit_unix, true);
 
-				$info .= '<b>First visit</b><br />' . $visit . ' (' . $visit_ago . ')<br />';
+				$info .= '<strong>First visit</strong><br />' . $visit . ' (' . $visit_ago . ')<br />';
 			}
 
 			$info .= '</div>';
@@ -222,9 +222,9 @@ if ($settings["galmap_show_pois"] == "true")
 		}
 
 		$info .= '<div class="map_info"><span class="map_info_title">Point of Interest</span><br />';
-		$info .= $category_name == "" ? "" : '<b>Category</b><br />' . $category_name . '<br /><br />';
-		$info .= $poi_name == "" ? "" : '<b>Name</b><br />' . $poi_name . '<br /><br />';
-		$info .= $text == "" ? "" : '<b>Comment</b><br />' . $text . '<br /><br />';
+		$info .= $category_name == "" ? "" : '<strong>Category</strong><br />' . $category_name . '<br /><br />';
+		$info .= $poi_name == "" ? "" : '<strong>Name</strong><br />' . $poi_name . '<br /><br />';
+		$info .= $text == "" ? "" : '<strong>Comment</strong><br />' . $text . '<br /><br />';
 
 		if ($visited > 0)
 		{
@@ -243,7 +243,7 @@ if ($settings["galmap_show_pois"] == "true")
 				$visit_unix = strtotime($visit_og);
 				$visit_ago = get_timeago($visit_unix, true);
 
-				$info .= '<b>First visit</b><br />' . $visit . ' (' . $visit_ago . ')<br /><br />';
+				$info .= '<strong>First visit</strong><br />' . $visit . ' (' . $visit_ago . ')<br /><br />';
 			}
 		}
 
@@ -305,10 +305,10 @@ if ($settings["galmap_show_bookmarks"] == "true")
 
 			$bm_added_on_ago = get_timeago($bm_added_on_og, true);
 
-			$info .= '<b>Bookmarked on</b><br />' . $bm_added_on . ' (' . $bm_added_on_ago . ')<br /><br />';
+			$info .= '<strong>Bookmarked on</strong><br />' . $bm_added_on . ' (' . $bm_added_on_ago . ')<br /><br />';
 		}
-		$info .= $bm_category_name == "" ? "" : '<b>Category</b><br />' . $bm_category_name . '<br /><br />';
-		$info .= $bm_comment == "" ? "" : '<b>Comment</b><br />' . $bm_comment . '<br /><br />';
+		$info .= $bm_category_name == "" ? "" : '<strong>Category</strong><br />' . $bm_category_name . '<br /><br />';
+		$info .= $bm_comment == "" ? "" : '<strong>Comment</strong><br />' . $bm_comment . '<br /><br />';
 
 		$info .= '</div>';
 
@@ -355,9 +355,9 @@ if ($settings["galmap_show_rares"] == "true")
 		$cat = ',"cat": [10]';
 
 		$info .= '<div class="map_info"><span class="map_info_title">Rare Commodity</span><br />';
-		$info .= '<b>Rare commodity</b><br />' . $rare_item . '<br /><br />';
-		$info .= '<b>Station</b><br />' . $rare_station . '<br /><br />';
-		$info .= '<b>Distance from star</b><br />' . number_format($rare_dist_to_star) . ' ls';
+		$info .= '<strong>Rare commodity</strong><br />' . $rare_item . '<br /><br />';
+		$info .= '<strong>Station</strong><br />' . $rare_station . '<br /><br />';
+		$info .= '<strong>Distance from star</strong><br />' . number_format($rare_dist_to_star) . ' ls';
 
 		$info .= '</div>';
 
