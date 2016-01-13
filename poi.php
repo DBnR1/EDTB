@@ -136,7 +136,7 @@ function makeitem($arr, $type, &$to_last, &$i)
 			echo $item_name;
 		}
 
-		echo '</a>' . $loglink  . '<span class="right">' . $item_cat_name . '</span><br />';
+		echo '</a>' . $loglink  . '<span class="right" style="margin-left:5px;">' . $item_cat_name . '</span><br />';
 
 		// make a link if text includes url
 		$reg_exUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
@@ -223,7 +223,7 @@ function maketable($res, $type, &$to_last)
 	<div class="entries_inner">
 		<table>
 			<tr>
-				<td class="systeminfo_station_name" style="min-width:400px;"><a href="javascript:void(0);" onclick="tofront('addPoi');$('#system_33').focus();" title="Add point of interest">Points of Interest</a></td>
+				<td class="systeminfo_station_name" style="min-width:400px;"><a href="javascript:void(0);" onclick="tofront('addPoi');update_values('/get/getPoiEditData.php?Poi_id=0');$('#system_33').focus();" title="Add point of interest">Points of Interest</a></td>
 				<td class="systeminfo_station_name" style="min-width:400px;">Bookmarks</td>
 			</tr>
 			<tr>

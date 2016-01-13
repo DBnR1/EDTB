@@ -223,6 +223,7 @@ function get_cs(formid, coordformid, onlyid)
 // function to update data for system editing
 function update_values(editurl, deleteid)
 {
+	console.log(editurl);
     deleteid = deleteid || false;
     $.ajax({
         url: editurl,
@@ -234,10 +235,12 @@ function update_values(editurl, deleteid)
             {
                 if (document.getElementById(id).type == "checkbox")
                 {
-                    if (value == 0) {
+                    if (value == 0)
+					{
                         //document.getElementById(id).checked="false";
                     }
-                    else {
+                    else
+					{
                         document.getElementById(id).checked="true";
                     }
                 }
@@ -537,6 +540,9 @@ function setbm(name, sysid)
 {
     $('#bm_system_name').val(name);
 	$('#bm_system_id').val(sysid);
+	$('#bm_edit_id').val('');
+	$('#bm_text').val('');
+	$('#bm_catid').val('0');
 	document.getElementById("suggestions_3").style.display="none";
 }
 function setl(name, stationid)

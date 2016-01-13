@@ -66,6 +66,7 @@ if (isset($_GET["do"]))
 <div class="input" id="addBm">
 	<form method="post" id="bm_form" action="bookmark.php">
 		<div class="input-inner">
+			<div class="suggestions" id="suggestions_3" style="margin-top:73px;margin-left:14px;"></div>
 			<table>
 				<tr>
 					<td class="systeminfo_station_name" colspan="2">Add/edit bookmark</td>
@@ -76,7 +77,6 @@ if (isset($_GET["do"]))
 					<input type="hidden" name="bm_system_id" id="bm_system_id">
 					<div>
 						<input class="textbox" type="text" name="bm_system_name" placeholder="System name" id="bm_system_name" style="width:469px;" oninput="showResult(this.value, '3', 'no', 'no', 'no', 'yes')" />
-						<div class="suggestions" id="suggestions_3" style="margin-left:15px;"></div>
 					</div>
 					</td>
 				</tr>

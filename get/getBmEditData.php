@@ -24,24 +24,34 @@
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 
 $bm_id = $_GET["Bm_id"];
-
-$bm_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT
-														user_bookmarks.id, user_bookmarks.system_id, user_bookmarks.system_name AS bm_system_name,
-														user_bookmarks.comment, user_bookmarks.category_id,
-														edtb_systems.name AS system_name
-														FROM user_bookmarks
-														LEFT JOIN edtb_systems ON user_bookmarks.system_id = edtb_systems.id
-														WHERE user_bookmarks.id = '" . $bm_id . "'
-														LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-$bm_arr = mysqli_fetch_assoc($bm_res);
-
 $data = array();
-$data["bm_edit_id"] = $bm_arr["id"];
-$data["bm_system_name"] = $bm_arr["system_name"] == "" ? $bm_arr["bm_system_name"] : $bm_arr["system_name"];
-$data["bm_system_id"] = $bm_arr["system_id"];
-$data["bm_catid"] = $bm_arr["category_id"];
-$data["bm_text"] = $bm_arr["comment"];
 
+if ($bm_id == "0")
+{
+	$data["bm_edit_id"] = "";
+	$data["bm_system_name"] = "";
+	$data["bm_system_id"] = "";
+	$data["bm_catid"] = "";
+	$data["bm_text"] = "";
+}
+else
+{
+	$bm_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT
+															user_bookmarks.id, user_bookmarks.system_id, user_bookmarks.system_name AS bm_system_name,
+															user_bookmarks.comment, user_bookmarks.category_id,
+															edtb_systems.name AS system_name
+															FROM user_bookmarks
+															LEFT JOIN edtb_systems ON user_bookmarks.system_id = edtb_systems.id
+															WHERE user_bookmarks.id = '" . $bm_id . "'
+															LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+	$bm_arr = mysqli_fetch_assoc($bm_res);
+
+	$data["bm_edit_id"] = $bm_arr["id"];
+	$data["bm_system_name"] = $bm_arr["system_name"] == "" ? $bm_arr["bm_system_name"] : $bm_arr["system_name"];
+	$data["bm_system_id"] = $bm_arr["system_id"];
+	$data["bm_catid"] = $bm_arr["category_id"];
+	$data["bm_text"] = $bm_arr["comment"];
+}
 echo json_encode($data);
 
 ((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
