@@ -29,9 +29,8 @@ date_default_timezone_set('UTC');
 *    connect to database
 */
 
-function db_connect()
+function db_connect($server, $user, $pwd, $db)
 {
-	global $server, $user, $pwd, $db;
 	$link = ($GLOBALS["___mysqli_ston"] = mysqli_connect($server, $user, $pwd));
 	if (!$link)
 	{
@@ -43,7 +42,8 @@ function db_connect()
 	}
 }
 
-db_connect();
+db_connect($server, $user, $pwd, $db);
+
 /*
 *    get current system
 */
@@ -51,148 +51,160 @@ db_connect();
 if (is_dir($settings["log_dir"]))
 {
     // select the newest  file
-    $files = scandir($settings["log_dir"], SCANDIR_SORT_DESCENDING);
+    if (!$files = scandir($settings["log_dir"], SCANDIR_SORT_DESCENDING))
+	{
+		$error = error_get_last();
+		write_log($error["message"], __FILE__, __LINE__);
+	}
     $newest_file = $files[0];
 
-    // read file to an array and reverse
-    $line = file("" . $settings["log_dir"] . "/" . $newest_file . "");
-    $lines = array_reverse($line);
+    // read file to an array
+    if (!$line = file("" . $settings["log_dir"] . "/" . $newest_file . ""))
+	{
+		$error = error_get_last();
+		write_log($error["message"], __FILE__, __LINE__);
+	}
+	else
+	{
+		//  reverse array
+		$lines = array_reverse($line);
 
-    foreach ($lines as $line_num => $line)
-    {
-        $pos = strrpos($line, "System:");
-        if ($pos !== false)
-        {
-            preg_match_all("/\((.*?)\) B/", $line, $matches);
-            $cssystemname = $matches[1][0];
-            $current_system = $cssystemname;
-
-			preg_match_all("/\{(.*?)\} System:/", $line, $matches2);
-			$visited_time = $matches2[1][0];
-
-			$current_system = isset($current_system) ? $current_system : "";
-
-            $current_coordinates = "";
-            $coordx = "";
-            $coordy = "";
-            $coordz = "";
-            $current_id = -1;
-
-            $res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT 	id, population, allegiance, economy, government, ruling_faction, state,
-																		security, power, power_state, x, y, z
-																FROM edtb_systems
-																WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $current_system) . "'
-																LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-            $exists = mysqli_num_rows($res);
-
-            if ($exists > 0)
-            {
-                $arr = mysqli_fetch_assoc($res);
-
-                $current_coordinates = "" . $arr['x'] . "," . $arr['y'] . "," . $arr['z'] . "";
-                $current_id = $arr["id"];
-                $current_population = $arr["population"];
-                $current_allegiance = $arr["allegiance"];
-                $current_economy = $arr["economy"];
-                $current_government = $arr["government"];
-                $current_ruling_faction = $arr["ruling_faction"];
-				$current_state = $arr["state"];
-				$current_security = $arr["security"];
-				$current_power = $arr["power"];
-				$current_power_state = $arr["power_state"];
-
-				$coordx = $arr["x"];
-				$coordy = $arr["y"];
-				$coordz = $arr["z"];
-            }
-			else
+		foreach ($lines as $line_num => $line)
+		{
+			$pos = strrpos($line, "System:");
+			if ($pos !== false)
 			{
-				$cres = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT x, y, z
-																	FROM user_systems_own
+				preg_match_all("/\((.*?)\) B/", $line, $matches);
+				$cssystemname = $matches[1][0];
+				$current_system = $cssystemname;
+
+				preg_match_all("/\{(.*?)\} System:/", $line, $matches2);
+				$visited_time = $matches2[1][0];
+
+				$current_system = isset($current_system) ? $current_system : "";
+
+				$current_coordinates = "";
+				$coordx = "";
+				$coordy = "";
+				$coordz = "";
+				$current_id = -1;
+
+				$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT 	id, population, allegiance, economy, government, ruling_faction, state,
+																			security, power, power_state, x, y, z
+																	FROM edtb_systems
 																	WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $current_system) . "'
 																	LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+				$exists = mysqli_num_rows($res);
 
-				$oexists = mysqli_num_rows($cres);
-
-				if ($oexists > 0)
+				if ($exists > 0)
 				{
-					$carr = mysqli_fetch_assoc($cres);
+					$arr = mysqli_fetch_assoc($res);
 
-					$coordx = $carr["x"] == "" ? "" : $carr["x"];
-					$coordy = $carr["y"] == "" ? "" : $carr["y"];
-					$coordz = $carr["z"] == "" ? "" : $carr["z"];
-					$current_coordinates = "" . $coordx . "," . $coordy . "," . $coordz . "";
+					$current_coordinates = "" . $arr['x'] . "," . $arr['y'] . "," . $arr['z'] . "";
+					$current_id = $arr["id"];
+					$current_population = $arr["population"];
+					$current_allegiance = $arr["allegiance"];
+					$current_economy = $arr["economy"];
+					$current_government = $arr["government"];
+					$current_ruling_faction = $arr["ruling_faction"];
+					$current_state = $arr["state"];
+					$current_security = $arr["security"];
+					$current_power = $arr["power"];
+					$current_power_state = $arr["power_state"];
+
+					$coordx = $arr["x"];
+					$coordy = $arr["y"];
+					$coordz = $arr["z"];
 				}
 				else
 				{
-					$current_coordinates = "";
-					$coordx = "";
-					$coordy = "";
-					$coordz = "";
-				}
-			}
+					$cres = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT x, y, z
+																		FROM user_systems_own
+																		WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $current_system) . "'
+																		LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
-            // fetch previous system
-            $p_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT value
-																FROM edtb_common
-																WHERE id = '1'
-																LIMIT 1")
-																or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-            $p_arr = mysqli_fetch_assoc($p_res);
-            $prev_system = $p_arr["value"];
+					$oexists = mysqli_num_rows($cres);
 
-            if ($prev_system != $cssystemname && $cssystemname != "")
-            {
-                // add system to user_visited_systems
-                $rows = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT system_name
-																	FROM user_visited_systems
-																	ORDER BY id
-																	DESC LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-                $vs_arr = mysqli_fetch_assoc($rows);
-
-				$visited_on = "" . date("Y-m-d") . " " . $visited_time . "";
-
-                if ($vs_arr["system_name"] != $current_system && $current_system != "")
-				{
-                    mysqli_query($GLOBALS["___mysqli_ston"], "	INSERT INTO user_visited_systems (system_name, visit)
-																VALUES
-																('" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $current_system) . "',
-																'" . $visited_on . "')") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-
-					// export to edsm
-					if ($settings["edsm_api_key"] != "" && $settings["edsm_export"] == "true" && $settings["edsm_cmdr_name"] != "")
+					if ($oexists > 0)
 					{
-						$visited_on_utc = date("Y-m-d H:i:s");
-						$export = file_get_contents("http://www.edsm.net/api-logs-v1/set-log?commanderName=" . urlencode($settings["edsm_cmdr_name"]) . "&apiKey=" . $settings["edsm_api_key"] . "&systemName=" . urlencode($current_system) . "&dateVisited=" . urlencode($visited_on_utc) . "");
+						$carr = mysqli_fetch_assoc($cres);
 
-						write_log($export, __FILE__, __LINE__);
+						$coordx = $carr["x"] == "" ? "" : $carr["x"];
+						$coordy = $carr["y"] == "" ? "" : $carr["y"];
+						$coordz = $carr["z"] == "" ? "" : $carr["z"];
+						$current_coordinates = "" . $coordx . "," . $coordy . "," . $coordz . "";
+					}
+					else
+					{
+						$current_coordinates = "";
+						$coordx = "";
+						$coordy = "";
+						$coordz = "";
+					}
+				}
+
+				// fetch previous system
+				$p_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT value
+																	FROM edtb_common
+																	WHERE id = '1'
+																	LIMIT 1")
+																	or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+				$p_arr = mysqli_fetch_assoc($p_res);
+				$prev_system = $p_arr["value"];
+
+				if ($prev_system != $cssystemname && $cssystemname != "")
+				{
+					// add system to user_visited_systems
+					$rows = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT system_name
+																		FROM user_visited_systems
+																		ORDER BY id
+																		DESC LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+					$vs_arr = mysqli_fetch_assoc($rows);
+
+					$visited_on = "" . date("Y-m-d") . " " . $visited_time . "";
+
+					if ($vs_arr["system_name"] != $current_system && $current_system != "")
+					{
+						mysqli_query($GLOBALS["___mysqli_ston"], "	INSERT INTO user_visited_systems (system_name, visit)
+																	VALUES
+																	('" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $current_system) . "',
+																	'" . $visited_on . "')") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+
+						// export to edsm
+						if ($settings["edsm_api_key"] != "" && $settings["edsm_export"] == "true" && $settings["edsm_cmdr_name"] != "")
+						{
+							$visited_on_utc = date("Y-m-d H:i:s");
+							$export = file_get_contents("http://www.edsm.net/api-logs-v1/set-log?commanderName=" . urlencode($settings["edsm_cmdr_name"]) . "&apiKey=" . $settings["edsm_api_key"] . "&systemName=" . urlencode($current_system) . "&dateVisited=" . urlencode($visited_on_utc) . "");
+
+							write_log($export, __FILE__, __LINE__);
+						}
+
+						$newSystem = TRUE;
 					}
 
+					// update latest system
+					mysqli_query($GLOBALS["___mysqli_ston"], "	UPDATE edtb_common
+																SET value = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $current_system) . "'
+																WHERE id = '1'
+																LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+
 					$newSystem = TRUE;
-                }
+				}
+				else
+				{
+					$newSystem = FALSE;
+				}
 
-				// update latest system
-                mysqli_query($GLOBALS["___mysqli_ston"], "	UPDATE edtb_common
-															SET value = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $current_system) . "'
-															WHERE id = '1'
-															LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+				GLOBAL $current_coordinates, $coordx, $coordy, $coordz, $current_system, $current_id, $current_population, $current_allegiance, $current_economy, $current_government, $current_ruling_faction, $newSystem;
 
-                $newSystem = TRUE;
-            }
-            else
-            {
-                $newSystem = FALSE;
-            }
-
-            GLOBAL $current_coordinates, $coordx, $coordy, $coordz, $current_system, $current_id, $current_population, $current_allegiance, $current_economy, $current_government, $current_ruling_faction, $newSystem;
-
-            break;
-        }
-    }
+				break;
+			}
+		}
+	}
 }
 else
 {
-	write_log("Error #7", __FILE__, __LINE__);
+	write_log("Error: " . $settings["log_dir"] . " is not a directory", __FILE__, __LINE__);
 }
 
 /*
@@ -202,61 +214,72 @@ else
 if (isset($settings["old_screendir"]) && is_dir($settings["old_screendir"]) && $settings["old_screendir"] != "C:\Users" && $settings["old_screendir"] != "C:\Users\\")
 {
 	// move screenshots
-	$screenshots = scandir($settings["old_screendir"]);
-	$newscreendir = "" . $settings["new_screendir"] . "/" . $prev_system . "";
-
-	$added = 0;
-	foreach ($screenshots as $file)
+	if (!$screenshots = scandir($settings["old_screendir"]))
 	{
-		if (substr($file, -3) == "bmp")
+		$error = error_get_last();
+		write_log($error["message"], __FILE__, __LINE__);
+	}
+	else
+	{
+		$newscreendir = "" . $settings["new_screendir"] . "/" . $prev_system . "";
+
+		$added = 0;
+		foreach ($screenshots as $file)
 		{
-			if (!is_dir($newscreendir))
+			if (substr($file, -3) == "bmp")
 			{
-				if (!mkdir($newscreendir, 0775, true))
+				if (!is_dir($newscreendir))
 				{
-					write_log("Could not create new screendir", __FILE__, __LINE__);
-					//die("Could not create new screendir");
-					break;
-				}
-			}
-			$old_file_bmp = "" . $settings["old_screendir"] . "/" . $file . "";
-			$old_file_og = "" . $settings["old_screendir"] . "/originals/" . $file . "";
-			$edited = "" . date ("Y-m-d_H-i-s", filemtime($old_file_bmp)) . "";
-			$new_filename = "" . $edited . "-" . $prev_system . ".jpg";
-			$new_file_jpg = "" . $settings["old_screendir"] . "/" . $new_filename . "";
-			$new_screenshot = "" . $newscreendir . "/" . $new_filename . "";
-
-			// convert from bmp to jpg
-			exec("\"" . $settings["install_path"] . "/bin/ImageMagick/convert\" \"" . $old_file_bmp . "\" \"" . $new_file_jpg . "\"", $out) or write_log("Error #8: " . var_dump($out) . "", __FILE__, __LINE__);
-
-			if ($settings["keep_og"] == "false")
-			{
-				unlink($old_file_bmp) or write_log("Error #1", __FILE__, __LINE__);
-			}
-			else
-			{
-				if (!is_dir("" . $settings["old_screendir"] . "/originals"))
-				{
-					if (!mkdir("" . $settings["old_screendir"] . "/originals", 0775, true))
+					if (!mkdir($newscreendir, 0775, true))
 					{
-						write_log("Could not create directory for original screens", __FILE__, __LINE__);
-						//die("Could not create directory for original screens");
+						write_log("Could not create new screendir", __FILE__, __LINE__);
+						//die("Could not create new screendir");
 						break;
 					}
 				}
-				rename("" . $old_file_bmp . "", "" . $old_file_og . "") or write_log("Error #2", __FILE__, __LINE__);
-			}
-			// move to new screenshot folder
-			rename("" . $new_file_jpg . "", "" . $new_screenshot . "") or write_log("Error #3", __FILE__, __LINE__);
-			$added++;
+				$old_file_bmp = "" . $settings["old_screendir"] . "/" . $file . "";
+				$old_file_og = "" . $settings["old_screendir"] . "/originals/" . $file . "";
+				$edited = "" . date ("Y-m-d_H-i-s", filemtime($old_file_bmp)) . "";
+				$new_filename = "" . $edited . "-" . $prev_system . ".jpg";
+				$new_file_jpg = "" . $settings["old_screendir"] . "/" . $new_filename . "";
+				$new_screenshot = "" . $newscreendir . "/" . $new_filename . "";
 
-			/*
-			*	add no more than 10 at a time
-			*/
+				// convert from bmp to jpg
+				if (!exec("\"" . $settings["install_path"] . "/bin/ImageMagick/convert\" \"" . $old_file_bmp . "\" \"" . $new_file_jpg . "\"", $out))
+				{
+					$error = var_dump($out);
+					write_log("Error #8: " . $out . "", __FILE__, __LINE__);
+				}
 
-			if ($added > 10)
-			{
-				break;
+				if ($settings["keep_og"] == "false")
+				{
+					unlink($old_file_bmp) or write_log("Error: Could not remove " . $old_file_bmp . "", __FILE__, __LINE__);
+				}
+				else
+				{
+					if (!is_dir("" . $settings["old_screendir"] . "/originals"))
+					{
+						if (!mkdir("" . $settings["old_screendir"] . "/originals", 0775, true))
+						{
+							write_log("Could not create directory " . $settings["old_screendir"] . "/originals", __FILE__, __LINE__);
+							//die("Could not create directory for original screens");
+							break;
+						}
+					}
+					rename("" . $old_file_bmp . "", "" . $old_file_og . "") or write_log("Error: Could not rename " . $old_file_bmp . " to " . $old_file_og . "", __FILE__, __LINE__);
+				}
+				// move to new screenshot folder
+				rename("" . $new_file_jpg . "", "" . $new_screenshot . "") or write_log("Error: Could not rename " . $new_file_jpg . " to " . $new_screenshot . "", __FILE__, __LINE__);
+				$added++;
+
+				/*
+				*	add no more than 10 at a time
+				*/
+
+				if ($added > 10)
+				{
+					break;
+				}
 			}
 		}
 	}
@@ -269,12 +292,20 @@ if (isset($settings["old_screendir"]) && is_dir($settings["old_screendir"]) && $
 		{
 			if (!mkdir("" . $thumbdir . "", 0775, true))
 			{
-				write_log("Could not create thumbnail directory", __FILE__, __LINE__);
+				write_log("Could not create directory " . $thumbdir . "", __FILE__, __LINE__);
 				break;
 			}
 		}
-		exec("\"" . $settings["install_path"] . "/bin/ImageMagick/mogrify\" -resize " . $settings["thumbnail_size"] . " -background #333333 -gravity center -extent " . $settings["thumbnail_size"] . " -format jpg -quality 95 -path \"" . $thumbdir . "\" \"" . $newscreendir . "/\"*.jpg", $out3) or write_log("Error #5: ". var_dump($out3) . "", __FILE__, __LINE__);
+		if (!exec("\"" . $settings["install_path"] . "/bin/ImageMagick/mogrify\" -resize " . $settings["thumbnail_size"] . " -background #333333 -gravity center -extent " . $settings["thumbnail_size"] . " -format jpg -quality 95 -path \"" . $thumbdir . "\" \"" . $newscreendir . "/\"*.jpg", $out3))
+		{
+			$error = var_dump($out3);
+			write_log("Error #5: ". $error . "", __FILE__, __LINE__);
+		}
 	}
+}
+else
+{
+	write_log("Error #11", __FILE__, __LINE__);
 }
 
 /*
@@ -829,8 +860,8 @@ function random_insult($who_to_insult)
 
 function is_dir_empty($dir)
 {
-  if (!is_readable($dir)) return NULL;
-  return (count(scandir($dir)) == 2);
+	if (!is_readable($dir)) return NULL;
+	return (count(scandir($dir)) == 2);
 }
 
 /*
@@ -851,27 +882,13 @@ function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
 	if ($dist !== false)
 	{
 		// figure out what coords to calculate from
-		if ($coordx != "" && $coordy != "" && $coordz != "")
-		{
-			$usex = $coordx;
-			$usey = $coordy;
-			$usez = $coordz;
+		$usable_coords = usable_coords();
+		$usex = $usable_coords["x"];
+		$usey = $usable_coords["y"];
+		$usez = $usable_coords["z"];
+		$exact = $usable_coords["current"] === true ? "" : " *";
 
-			$exact = "";
-		}
-		else
-		{
-			// get last known coordinates
-			$last_coords = last_known_system();
-
-			$usex = $last_coords["x"];
-			$usey = $last_coords["y"];
-			$usez = $last_coords["z"];
-
-			$exact = " *";
-		}
-
-		if (is_numeric($d_x) && is_numeric($d_y) && is_numeric($d_z))
+		if (valid_coordinates($d_x, $d_y, $d_z))
 		{
 			$distance = number_format(sqrt(pow(($d_x-($usex)), 2)+pow(($d_y-($usey)), 2)+pow(($d_z-($usez)), 2)), 2);
 			$this_row .= '<td style="padding:10px;white-space:nowrap;vertical-align:middle;">' . $distance . ' ' . $exact . '</td>';
@@ -1109,7 +1126,7 @@ function usable_coords()
 
 function valid_coordinates($x, $y, $z)
 {
-	if (is_numeric($x) && is_numeric($y) &&is_numeric($z))
+	if (is_numeric($x) && is_numeric($y) && is_numeric($z))
 	{
 		return true;
 	}
