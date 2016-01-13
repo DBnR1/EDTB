@@ -299,6 +299,8 @@ function spgm_BuildLink($text, $cssClass, $anchor, $galId, $pageIdx, $picId, $fi
 	$url .= '#'.ANCHOR_SPGM;
   }
 
+  $url = str_replace("removed", "r", $url);
+
   if ($cssClass == "td-galitem-title" || $cssClass == "")
   {
 	$pjax = 'data-replace="true" data-target=".entries" ';

@@ -28,22 +28,22 @@ require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 <script type="text/javascript" src="/source/spgm/spgm.js"></script>
 <script type="text/javascript" src="/source/spgm/contrib/overlib410/overlib.js"></script>
 <link rel="stylesheet" href="/source/spgm/css/style.css" />
-<link rel="Stylesheet" href="/source/spgm/flavors/default/spgm_style.css" />
-<!--<script>
-YUI().use('pjax', function (Y) {
-	var pjax2 = new Y.Pjax({container: '.entries', linkSelector: '.td-galitem-title', contentSelector: '.entries_inner'});
-	pjax2.on('navigate', function (e) {
-		$(".se-pre-con").show();
-	});
-	pjax2.on(['error', 'load'], function (e) {
-		$(".se-pre-con").fadeOut("slow");
-	});
-});
-</script>-->
+<link rel="stylesheet" href="/source/spgm/flavors/default/spgm_style.css" />
 
 <div class="entries">
 	<div class="entries_inner">
 		<?php
+		if (isset($_GET["removed"]))
+		{
+			if ($_GET["removed"] != "1")
+			{
+				echo "<div class='notify_success'>Screenshot succesfully deleted</div>";
+			}
+			else
+			{
+				echo "<div class='notify_deleted'>Screenshot deletion failed.</div>";
+			}
+		}
 		if (is_dir($settings['old_screendir']) && $settings['old_screendir'] != "C:\Users")
 		{
 			?>

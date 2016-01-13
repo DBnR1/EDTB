@@ -421,16 +421,18 @@ function confirmation(delid, what)
                 cache: false,
                 success: function(result)
                 {
+					if (what == "screenshot")
+					{
+						var url = result;
+						console.log(url);
+						window.location = url;
+					}
                     //console.log(delid+' a thing was deleted');
                 }
             });
         }
     }
-	if (what == "screenshot")
-	{
-		location.reload(true);
-	}
-	else
+	if (what != "screenshot")
 	{
 		get_data(true);
 		tofront('null', true);
