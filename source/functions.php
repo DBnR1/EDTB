@@ -232,8 +232,8 @@ if (isset($settings["old_screendir"]) && is_dir($settings["old_screendir"]) && $
 				{
 					if (!mkdir($newscreendir, 0775, true))
 					{
-						write_log("Could not create new screendir", __FILE__, __LINE__);
-						//die("Could not create new screendir");
+						$error = error_get_last();
+						write_log("Error: " . $error['message'] . " - Could not create new screendir", __FILE__, __LINE__);
 						break;
 					}
 				}
@@ -245,15 +245,21 @@ if (isset($settings["old_screendir"]) && is_dir($settings["old_screendir"]) && $
 				$new_screenshot = "" . $newscreendir . "/" . $new_filename . "";
 
 				// convert from bmp to jpg
-				if (!exec("\"" . $settings["install_path"] . "/bin/ImageMagick/convert\" \"" . $old_file_bmp . "\" \"" . $new_file_jpg . "\"", $out))
+				exec("\"" . $settings["install_path"] . "/bin/ImageMagick/convert\" \"" . $old_file_bmp . "\" \"" . $new_file_jpg . "\"", $out);
+
+				if (!empty($out))
 				{
-					$error = var_dump($out);
-					write_log("Error #8: " . $out . "", __FILE__, __LINE__);
+					$error = json_encode($out);
+					write_log("Error #8: " . $error . "", __FILE__, __LINE__);
 				}
 
 				if ($settings["keep_og"] == "false")
 				{
-					unlink($old_file_bmp) or write_log("Error: Could not remove " . $old_file_bmp . "", __FILE__, __LINE__);
+					if (!unlink($old_file_bmp))
+					{
+						$error = error_get_last();
+						write_log("Error: " . $error['message'] . " - Could not remove " . $old_file_bmp . "", __FILE__, __LINE__);
+					}
 				}
 				else
 				{
@@ -261,15 +267,23 @@ if (isset($settings["old_screendir"]) && is_dir($settings["old_screendir"]) && $
 					{
 						if (!mkdir("" . $settings["old_screendir"] . "/originals", 0775, true))
 						{
-							write_log("Could not create directory " . $settings["old_screendir"] . "/originals", __FILE__, __LINE__);
-							//die("Could not create directory for original screens");
+							$error = error_get_last();
+							write_log("Error: " . $error['message'] . " - Could not create directory " . $settings["old_screendir"] . "/originals", __FILE__, __LINE__);
 							break;
 						}
 					}
-					rename("" . $old_file_bmp . "", "" . $old_file_og . "") or write_log("Error: Could not rename " . $old_file_bmp . " to " . $old_file_og . "", __FILE__, __LINE__);
+					if (!rename("" . $old_file_bmp . "", "" . $old_file_og . ""))
+					{
+						$error = error_get_last();
+						write_log("Error: " . $error['message'] . " - Could not rename " . $old_file_bmp . " to " . $old_file_og . "", __FILE__, __LINE__);
+					}
 				}
 				// move to new screenshot folder
-				rename("" . $new_file_jpg . "", "" . $new_screenshot . "") or write_log("Error: Could not rename " . $new_file_jpg . " to " . $new_screenshot . "", __FILE__, __LINE__);
+				if (!rename("" . $new_file_jpg . "", "" . $new_screenshot . ""))
+				{
+					$error = error_get_last();
+					write_log("Error: " . $error['message'] . " - Could not rename " . $new_file_jpg . " to " . $new_screenshot . "", __FILE__, __LINE__);
+				}
 				$added++;
 
 				/*
@@ -292,13 +306,16 @@ if (isset($settings["old_screendir"]) && is_dir($settings["old_screendir"]) && $
 		{
 			if (!mkdir("" . $thumbdir . "", 0775, true))
 			{
-				write_log("Could not create directory " . $thumbdir . "", __FILE__, __LINE__);
+				$error = error_get_last();
+				write_log("Error: " . $error['message'] . " - Could not create directory " . $thumbdir . "", __FILE__, __LINE__);
 				break;
 			}
 		}
-		if (!exec("\"" . $settings["install_path"] . "/bin/ImageMagick/mogrify\" -resize " . $settings["thumbnail_size"] . " -background #333333 -gravity center -extent " . $settings["thumbnail_size"] . " -format jpg -quality 95 -path \"" . $thumbdir . "\" \"" . $newscreendir . "/\"*.jpg", $out3))
+		exec("\"" . $settings["install_path"] . "/bin/ImageMagick/mogrify\" -resize " . $settings["thumbnail_size"] . " -background #333333 -gravity center -extent " . $settings["thumbnail_size"] . " -format jpg -quality 95 -path \"" . $thumbdir . "\" \"" . $newscreendir . "/\"*.jpg", $out3);
+
+		if (!empty($out3))
 		{
-			$error = var_dump($out3);
+			$error = json_encode($out3);
 			write_log("Error #5: ". $error . "", __FILE__, __LINE__);
 		}
 	}

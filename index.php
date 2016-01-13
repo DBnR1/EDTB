@@ -89,7 +89,7 @@ if (file_exists("" . $_SERVER["DOCUMENT_ROOT"] . "/install.php"))
 	}
 	else
 	{
-		echo notice("Looks like you've recently updated ED ToolBox to a newer version.<br /><br />To get everything set up, you need to run a script that makes any necessary changes to the database. The script may take a while to run.<br /><br /><div id='text' style='text-align:center;'><a href='install.php?upgrade' onclick='document.getElementById(\"loadin\").style.display=\"block\";document.getElementById(\"text\").style.display=\"none\";'>Click here when you're ready to go.</a></div><div id='loadin' style='text-align:center;display:none;'><img src='/style/img/loading.gif' alt='Loading' \></div>", "Upgrade ED ToolBox 1/2");
+		echo notice("Looks like you've recently updated ED ToolBox to a new version.<br /><br />To get everything set up, you need to run a script that makes any necessary changes to the database. The script may take a while to run.<br /><br /><div id='text' style='text-align:center;'><a href='install.php?upgrade' onclick='document.getElementById(\"loadin\").style.display=\"block\";document.getElementById(\"text\").style.display=\"none\";'>Click here when you're ready to go.</a></div><div id='loadin' style='text-align:center;display:none;'><img src='/style/img/loading.gif' alt='Loading' \></div>", "Upgrade ED ToolBox 1/2");
 	}
 
 	echo installer_footer();
