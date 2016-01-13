@@ -1033,20 +1033,7 @@ button:hover, .button:hover
 
 .delete_button:hover
 {
-	border-radius:4px;
-	font-family:Sintony;
-	color:#fffffa;
-	font-size:12px;
 	background-color:red;
-	border:1px solid #131722;
-	resize:none;
-	font-weight:700;
-	letter-spacing:normal;
-	padding:5px;
-	margin-top:5px;
-	outline:0;
-	cursor:url(/style/img/cursor.png), auto;
-	text-transform:uppercase;
 }
 
 /* the additional info for systems on map.php */
@@ -1585,6 +1572,11 @@ div.tooltip
 .right
 {
 	float:right;
+}
+
+.left
+{
+	float:left;
 }
 
 /* -------------------------------------------------------------------------- */

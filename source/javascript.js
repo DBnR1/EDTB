@@ -400,22 +400,24 @@ function confirmation(delid, what)
 {
     if (confirm("Sure you want to delete a thing?") == true)
     {
-        var location = "";
+        var script = "";
         if (what == "log")
-            var location = "/add/log.php?do&deleteid="+delid;
+            var script = "/add/log.php?do&deleteid="+delid;
         else if (what == "poi")
-            var location = "/add/poi.php?do&deleteid="+delid;
+            var script = "/add/poi.php?do&deleteid="+delid;
         else if (what == "bm")
-            var location = "/add/bookmark.php?do&deleteid="+delid;
+            var script = "/add/bookmark.php?do&deleteid="+delid;
+        else if (what == "screenshot")
+            var script = "/add/deleteScreenshot.php?img="+delid;
        /* else if (what == "station")
             var location = "/add/station.php?deleteid="+delid;
         else if (what == "system")
             var location = "/add/systemE.php?deleteid="+delid;*/
 
-        if (location != "")
+        if (script != "")
         {
             $.ajax({
-                url: location,
+                url: script,
                 cache: false,
                 success: function(result)
                 {
@@ -424,8 +426,15 @@ function confirmation(delid, what)
             });
         }
     }
-    get_data(true);
-    tofront('null', true);
+	if (what == "screenshot")
+	{
+		location.reload(true);
+	}
+	else
+	{
+		get_data(true);
+		tofront('null', true);
+	}
 }
 
 // get info from clicking on a map point
