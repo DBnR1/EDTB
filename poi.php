@@ -201,7 +201,7 @@ function maketable($res, $type, &$to_last)
 
 		foreach ($to_last as $item)
 		{
-			echo makeitem($item, $type);
+			echo makeitem($item, $type, $to_last, $i);
 		}
 	}
 	else
@@ -242,7 +242,7 @@ function maketable($res, $type, &$to_last)
 																			FROM user_poi
 																			LEFT JOIN edtb_systems ON user_poi.system_name = edtb_systems.name
 																			LEFT JOIN user_poi_categories ON user_poi_categories.id = user_poi.category_id
-																			ORDER BY sqrt(pow((item_coordx-(" . $usex . ")),2)+pow((item_coordy-(" . $usey . ")),2)+pow((item_coordz-(" . $usez . ")),2))")
+																			ORDER BY sqrt(pow((item_coordx-(" . $usex . ")),2)+pow((item_coordy-(" . $usey . ")),2)+pow((item_coordz-(" . $usez . ")),2)), poi_name, system_name")
 																			or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 					echo maketable($poi_res, "Poi");
 					?>
@@ -259,7 +259,7 @@ function maketable($res, $type, &$to_last)
 																			FROM user_bookmarks
 																			LEFT JOIN edtb_systems ON user_bookmarks.system_name = edtb_systems.name
 																			LEFT JOIN user_bm_categories ON user_bookmarks.category_id = user_bm_categories.id
-																			ORDER BY sqrt(pow((item_coordx-(" . $usex . ")),2)+pow((item_coordy-(" . $usey . ")),2)+pow((item_coordz-(" . $usez . ")),2))")
+																			ORDER BY sqrt(pow((item_coordx-(" . $usex . ")),2)+pow((item_coordy-(" . $usey . ")),2)+pow((item_coordz-(" . $usez . ")),2)), system_name")
 																			or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 					echo maketable($bm_res, "Bm");
 					?>

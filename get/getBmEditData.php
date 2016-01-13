@@ -31,7 +31,7 @@ if ($bm_id == "0")
 	$data["bm_edit_id"] = "";
 	$data["bm_system_name"] = "";
 	$data["bm_system_id"] = "";
-	$data["bm_catid"] = "";
+	$data["bm_catid"] = "0";
 	$data["bm_text"] = "";
 }
 else

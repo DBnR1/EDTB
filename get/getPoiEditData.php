@@ -35,7 +35,7 @@ if ($poi_id == "0")
 	$data["coordsz_33"] = "";
 	$data["poi_text"] = "";
 	$data["poi_name"] = "";
-	$data["category_id"] = "";
+	$data["category_id"] = "0";
 }
 else
 {
