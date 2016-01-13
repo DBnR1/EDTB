@@ -772,7 +772,7 @@ function tofront(divid, toback)
     setindex = zindexmax++;
     toback = toback || false;
 
-    var divs = ['addlog','calculate','addpoi','addstation','distance','editsystem','report','addbm','search_system'];
+    var divs = ['addlog','calculate','addPoi','addstation','distance','editsystem','report','addBm','search_system'];
 
     if (toback == false)
     {

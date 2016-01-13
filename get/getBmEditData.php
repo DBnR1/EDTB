@@ -23,7 +23,7 @@
 
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 
-$bm_id = $_GET["bm_id"];
+$bm_id = $_GET["Bm_id"];
 
 $bm_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT
 														user_bookmarks.id, user_bookmarks.system_id, user_bookmarks.system_name AS bm_system_name,

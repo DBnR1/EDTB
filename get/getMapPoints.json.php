@@ -24,7 +24,7 @@
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 Header("content-type: application/json");
 
-if (!is_numeric($coordx))
+if (valid_coordinates($coordx, $coordy, $coordz))
 {
 	// get last known coordinates
 	$last_coords = last_known_system();
@@ -75,99 +75,97 @@ if ($settings["galmap_show_visited_systems"] == "true")
 
 		$name = $row["system_name"];
 
-		if (strtolower($name) == strtolower($current_system))
+		if (strtolower($name) != strtolower($current_system))
 		{
-			break;
-		}
+			$sysid = $row["sysid"];
+			// coordinates
+			$vs_coordx = $row["x"];
+			$vs_coordy = $row["y"];
+			$vs_coordz = $row["z"];
 
-		$sysid = $row["sysid"];
-		// coordinates
-		$vs_coordx = $row["x"];
-		$vs_coordy = $row["y"];
-		$vs_coordz = $row["z"];
+			/*
+			*	if coords are not set, see if user has calculated them
+			*/
 
-		/*
-		*	if coords are not set, see if user has calculated them
-		*/
-
-		if (!is_numeric($vs_coordx) && !is_numeric($vs_coordy) && !is_numeric($vs_coordz))
-		{
-			$cb_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT x, y, z
-																FROM user_systems_own
-																WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $name) . "'
-																LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-
-			$cb_arr = mysqli_fetch_assoc($cb_res);
-
-			$vs_coordx = $cb_arr["x"] == "" ? "" : $cb_arr["x"];
-			$vs_coordy = $cb_arr["y"] == "" ? "" : $cb_arr["y"];
-			$vs_coordz = $cb_arr["z"] == "" ? "" : $cb_arr["z"];
-		}
-
-		if ($vs_coordx != "" && $vs_coordy != "" && $vs_coordz != "")
-		{
-			$allegiance = $row["allegiance"];
-			$visit = $row["visit"];
-			$visit_og = $row["visit"];
-
-			if ($allegiance == "Federation")
+			if (!is_numeric($vs_coordx) && !is_numeric($vs_coordy) && !is_numeric($vs_coordz))
 			{
-				$cat = ',"cat": [2]';
-			}
-			else if ($allegiance == "Alliance")
-			{
-				$cat = ',"cat": [3]';
-			}
-			else if ($allegiance == "Empire")
-			{
-				$cat = ',"cat": [1]';
-			}
-			else if ($allegiance == "Independent")
-			{
-				$cat = ',"cat": [21]';
-			}
-			else
-			{
-				$cat = ',"cat": [99]';
+				$cb_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT x, y, z
+																	FROM user_systems_own
+																	WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $name) . "'
+																	LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+
+				$cb_arr = mysqli_fetch_assoc($cb_res);
+
+				$vs_coordx = $cb_arr["x"] == "" ? "" : $cb_arr["x"];
+				$vs_coordy = $cb_arr["y"] == "" ? "" : $cb_arr["y"];
+				$vs_coordz = $cb_arr["z"] == "" ? "" : $cb_arr["z"];
 			}
 
-			$logged = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id
-																				FROM user_log
-																				WHERE system_id = '" . $sysid . "'
-																				LIMIT 1"));
-
-			if ($logged == 1 && strtolower($name) != strtolower($current_system))
+			if ($vs_coordx != "" && $vs_coordy != "" && $vs_coordz != "")
 			{
-				$cat = ',"cat": [11]';
+				$allegiance = $row["allegiance"];
+				$visit = $row["visit"];
+				$visit_og = $row["visit"];
+
+				if ($allegiance == "Federation")
+				{
+					$cat = ',"cat": [2]';
+				}
+				else if ($allegiance == "Alliance")
+				{
+					$cat = ',"cat": [3]';
+				}
+				else if ($allegiance == "Empire")
+				{
+					$cat = ',"cat": [1]';
+				}
+				else if ($allegiance == "Independent")
+				{
+					$cat = ',"cat": [21]';
+				}
+				else
+				{
+					$cat = ',"cat": [99]';
+				}
+
+				$logged = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id
+																					FROM user_log
+																					WHERE system_id = '" . $sysid . "'
+																					LIMIT 1"));
+
+				if ($logged == 1 && strtolower($name) != strtolower($current_system))
+				{
+					$cat = ',"cat": [11]';
+				}
+
+				$info .= '<div class="map_info"><span class="map_info_title">Visited system</span><br />';
+
+				if (isset($visit))
+				{
+					$visit = date_create($visit);
+					$visit_date = date_modify($visit, "+1286 years");
+
+					$visit = date_format($visit_date, "d.m.Y, H:i");
+
+					$visit_unix = strtotime($visit_og);
+					$visit_ago = get_timeago($visit_unix, true);
+
+					$info .= '<strong>First visit</strong><br />' . $visit . ' (' . $visit_ago . ')<br />';
+				}
+
+				$info .= '</div>';
+
+				if (isset($name) && isset($vs_coordx) && isset($vs_coordy) && isset($vs_coordz))
+				{
+					$data = '{"name": "' . $name  . '"' . $cat . ',"coords": {"x": ' . $vs_coordx . ',"y": ' . $vs_coordy . ',"z": ' . $vs_coordz . '},"infos":' . json_encode($info) . '}' . $last_row . '';
+				}
+				else
+				{
+					$data = $last_row;
+				}
+
+				$last_row = "," . $data . "";
 			}
-
-			$info .= '<div class="map_info"><span class="map_info_title">Visited system</span><br />';
-
-			if (isset($visit))
-			{
-				$visit = date_create($visit);
-				$visit_date = date_modify($visit, "+1286 years");
-
-				$visit = date_format($visit_date, "d.m.Y, H:i");
-
-				$visit_unix = strtotime($visit_og);
-				$visit_ago = get_timeago($visit_unix, true);
-
-				$info .= '<strong>First visit</strong><br />' . $visit . ' (' . $visit_ago . ')<br />';
-			}
-
-			$info .= '</div>';
-
-			if (isset($name) && isset($vs_coordx) && isset($vs_coordy) && isset($vs_coordz))
-			{
-				$data = '{"name": "' . $name  . '"' . $cat . ',"coords": {"x": ' . $vs_coordx . ',"y": ' . $vs_coordy . ',"z": ' . $vs_coordz . '},"infos":' . json_encode($info) . '}' . $last_row . '';
-			}
-			else
-			{
-				$data = $last_row;
-			}
-
-			$last_row = "," . $data . "";
 		}
 	}
 }
@@ -191,67 +189,65 @@ if ($settings["galmap_show_pois"] == "true")
 		$cat = "";
 		$name = $row["system_name"];
 
-		if (strtolower($name) == strtolower($current_system))
+		if (strtolower($name) != strtolower($current_system))
 		{
-			break;
-		}
+			$disp_name = $row["system_name"];
+			$poi_name = $row["poi_name"];
+			$text = $row["text"];
+			$category_name = $row["category_name"];
 
-		$disp_name = $row["system_name"];
-		$poi_name = $row["poi_name"];
-		$text = $row["text"];
-		$category_name = $row["category_name"];
+			$poi_coordx = $row["x"];
+			$poi_coordy = $row["y"];
+			$poi_coordz = $row["z"];
 
-		$poi_coordx = $row["x"];
-		$poi_coordy = $row["y"];
-		$poi_coordz = $row["z"];
+			$visitres = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id, visit
+																	FROM user_visited_systems
+																	WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $name) . "'
+																	ORDER BY visit ASC
+																	LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+			$visited = mysqli_num_rows($visitres);
 
-		$visitres = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id, visit
-																FROM user_visited_systems
-																WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $name) . "'
-																ORDER BY visit ASC
-																LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-		$visited = mysqli_num_rows($visitres);
-
-		if ($visited > 0)
-		{
-			$cat = ',"cat": [8]';
-		}
-		else
-		{
-			$cat = ',"cat": [7]';
-		}
-
-		$info .= '<div class="map_info"><span class="map_info_title">Point of Interest</span><br />';
-		$info .= $category_name == "" ? "" : '<strong>Category</strong><br />' . $category_name . '<br /><br />';
-		$info .= $poi_name == "" ? "" : '<strong>Name</strong><br />' . $poi_name . '<br /><br />';
-		$info .= $text == "" ? "" : '<strong>Comment</strong><br />' . $text . '<br /><br />';
-
-		if ($visited > 0)
-		{
-			$visarr = mysqli_fetch_assoc($visitres);
-
-			$visit = $visarr["visit"];
-			$visit_og = $visarr["visit"];
-
-			if (isset($visit))
+			if ($visited > 0)
 			{
-				$visit = date_create($visit);
-				$visit_date = date_modify($visit, "+1286 years");
-
-				$visit = date_format($visit_date, "d.m.Y, H:i");
-
-				$visit_unix = strtotime($visit_og);
-				$visit_ago = get_timeago($visit_unix, true);
-
-				$info .= '<strong>First visit</strong><br />' . $visit . ' (' . $visit_ago . ')<br /><br />';
+				$cat = ',"cat": [8]';
 			}
+			else
+			{
+				$cat = ',"cat": [7]';
+			}
+
+			$info .= '<div class="map_info"><span class="map_info_title">Point of Interest</span><br />';
+			$info .= $category_name == "" ? "" : '<strong>Category</strong><br />' . $category_name . '<br /><br />';
+			$info .= $poi_name == "" ? "" : '<strong>Name</strong><br />' . $poi_name . '<br /><br />';
+			$info .= $text == "" ? "" : '<strong>Comment</strong><br />' . $text . '<br /><br />';
+
+			if ($visited > 0)
+			{
+				$visarr = mysqli_fetch_assoc($visitres);
+
+				$visit = $visarr["visit"];
+				$visit_og = $visarr["visit"];
+
+				if (isset($visit))
+				{
+					$visit = date_create($visit);
+					$visit_date = date_modify($visit, "+1286 years");
+
+					$visit = date_format($visit_date, "d.m.Y, H:i");
+
+					$visit_unix = strtotime($visit_og);
+					$visit_ago = get_timeago($visit_unix, true);
+
+					$info .= '<strong>First visit</strong><br />' . $visit . ' (' . $visit_ago . ')<br /><br />';
+				}
+			}
+
+			$info .= '</div>';
+
+			$data = '{"name": "' . $disp_name  . '"' . $cat . ',"coords": {"x": ' . $poi_coordx . ',"y": ' . $poi_coordy . ',"z": ' . $poi_coordz . '},"infos":' . json_encode($info) . '}' . $last_row . '';
+
+			$last_row = "," . $data . "";
 		}
-
-		$info .= '</div>';
-
-		$data = '{"name": "' . $disp_name  . '"' . $cat . ',"coords": {"x": ' . $poi_coordx . ',"y": ' . $poi_coordy . ',"z": ' . $poi_coordz . '},"infos":' . json_encode($info) . '}' . $last_row . '';
-
-		$last_row = "," . $data . "";
 	}
 }
 
@@ -276,44 +272,42 @@ if ($settings["galmap_show_bookmarks"] == "true")
 		$cat = "";
 		$bm_system_name = $bm_row["system_name"];
 
-		if (strtolower($bm_system_name) == strtolower($current_system))
+		if (strtolower($bm_system_name) != strtolower($current_system))
 		{
-			break;
+			$bm_comment = $bm_row["comment"];
+			$bm_added_on = $bm_row["added_on"];
+			$bm_category_name = $bm_row["category_name"];
+
+			// coordinates
+			$bm_coordx = $bm_row["x"];
+			$bm_coordy = $bm_row["y"];
+			$bm_coordz = $bm_row["z"];
+
+			$cat = ',"cat": [6]';
+
+			$info .= '<div class="map_info"><span class="map_info_title">Bookmarked System</span><br />';
+
+			if (isset($bm_added_on))
+			{
+				$bm_added_on_og = $bm_added_on;
+				$bm_added_on = gmdate("Y-m-d\TH:i:s\Z", $bm_added_on);
+				$bm_added_on = date_create($bm_added_on);
+				$bm_added_on_date = date_modify($bm_added_on, "+1286 years");
+
+				$bm_added_on = date_format($bm_added_on_date, "d.m.Y, H:i");
+
+				$bm_added_on_ago = get_timeago($bm_added_on_og, true);
+
+				$info .= '<strong>Bookmarked on</strong><br />' . $bm_added_on . ' (' . $bm_added_on_ago . ')<br /><br />';
+			}
+			$info .= $bm_category_name == "" ? "" : '<strong>Category</strong><br />' . $bm_category_name . '<br /><br />';
+			$info .= $bm_comment == "" ? "" : '<strong>Comment</strong><br />' . $bm_comment . '<br /><br />';
+
+			$info .= '</div>';
+
+			$data = '{"name": "' . $bm_system_name  . '"' . $cat . ',"coords": {"x": ' . $bm_coordx . ',"y": ' . $bm_coordy . ',"z": ' . $bm_coordz . '},"infos":' . json_encode($info) . '}' . $last_row . '';
+			$last_row = "," . $data . "";
 		}
-
-		$bm_comment = $bm_row["comment"];
-		$bm_added_on = $bm_row["added_on"];
-		$bm_category_name = $bm_row["category_name"];
-
-		// coordinates
-		$bm_coordx = $bm_row["x"];
-		$bm_coordy = $bm_row["y"];
-		$bm_coordz = $bm_row["z"];
-
-		$cat = ',"cat": [6]';
-
-		$info .= '<div class="map_info"><span class="map_info_title">Bookmarked System</span><br />';
-
-		if (isset($bm_added_on))
-		{
-			$bm_added_on_og = $bm_added_on;
-			$bm_added_on = gmdate("Y-m-d\TH:i:s\Z", $bm_added_on);
-			$bm_added_on = date_create($bm_added_on);
-			$bm_added_on_date = date_modify($bm_added_on, "+1286 years");
-
-			$bm_added_on = date_format($bm_added_on_date, "d.m.Y, H:i");
-
-			$bm_added_on_ago = get_timeago($bm_added_on_og, true);
-
-			$info .= '<strong>Bookmarked on</strong><br />' . $bm_added_on . ' (' . $bm_added_on_ago . ')<br /><br />';
-		}
-		$info .= $bm_category_name == "" ? "" : '<strong>Category</strong><br />' . $bm_category_name . '<br /><br />';
-		$info .= $bm_comment == "" ? "" : '<strong>Comment</strong><br />' . $bm_comment . '<br /><br />';
-
-		$info .= '</div>';
-
-		$data = '{"name": "' . $bm_system_name  . '"' . $cat . ',"coords": {"x": ' . $bm_coordx . ',"y": ' . $bm_coordy . ',"z": ' . $bm_coordz . '},"infos":' . json_encode($info) . '}' . $last_row . '';
-		$last_row = "," . $data . "";
 	}
 }
 
@@ -337,33 +331,31 @@ if ($settings["galmap_show_rares"] == "true")
 		$cat = "";
 		$rare_system = $rare_row["system_name"];
 
-		if (strtolower($rare_system) == strtolower($current_system))
+		if (strtolower($rare_system) != strtolower($current_system))
 		{
-			break;
+			$rare_item = $rare_row["item"];
+			$rare_station = $rare_row["station"];
+			$rare_dist_to_star = number_format($rare_row["ls_to_star"]);
+			$rare_disp_name = $rare_system;
+
+			// coordinates
+			$rare_coordx = $rare_row["x"];
+			$rare_coordy = $rare_row["y"];
+			$rare_coordz = $rare_row["z"];
+
+			$cat = ',"cat": [10]';
+
+			$info .= '<div class="map_info"><span class="map_info_title">Rare Commodity</span><br />';
+			$info .= '<strong>Rare commodity</strong><br />' . $rare_item . '<br /><br />';
+			$info .= '<strong>Station</strong><br />' . $rare_station . '<br /><br />';
+			$info .= '<strong>Distance from star</strong><br />' . number_format($rare_dist_to_star) . ' ls';
+
+			$info .= '</div>';
+
+			$data = '{"name": "' . $rare_disp_name  . '"' . $cat . ',"coords": {"x": ' . $rare_coordx . ',"y": ' . $rare_coordy . ',"z": ' . $rare_coordz . '},"infos":' . json_encode($info) . '}' . $last_row . '';
+
+			$last_row = "," . $data . "";
 		}
-
-		$rare_item = $rare_row["item"];
-		$rare_station = $rare_row["station"];
-		$rare_dist_to_star = number_format($rare_row["ls_to_star"]);
-		$rare_disp_name = $rare_system;
-
-		// coordinates
-		$rare_coordx = $rare_row["x"];
-		$rare_coordy = $rare_row["y"];
-		$rare_coordz = $rare_row["z"];
-
-		$cat = ',"cat": [10]';
-
-		$info .= '<div class="map_info"><span class="map_info_title">Rare Commodity</span><br />';
-		$info .= '<strong>Rare commodity</strong><br />' . $rare_item . '<br /><br />';
-		$info .= '<strong>Station</strong><br />' . $rare_station . '<br /><br />';
-		$info .= '<strong>Distance from star</strong><br />' . number_format($rare_dist_to_star) . ' ls';
-
-		$info .= '</div>';
-
-		$data = '{"name": "' . $rare_disp_name  . '"' . $cat . ',"coords": {"x": ' . $rare_coordx . ',"y": ' . $rare_coordy . ',"z": ' . $rare_coordz . '},"infos":' . json_encode($info) . '}' . $last_row . '';
-
-		$last_row = "," . $data . "";
 	}
 }
 

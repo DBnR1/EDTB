@@ -27,11 +27,23 @@ if (isset($_GET["do"]))
 
 	$data = json_decode($_REQUEST["input"], true);
 
-	$p_system = strtoupper($data["poi_system_name"]);
+	$p_system = $data["poi_system_name"];
 	$p_name = $data["poi_name"];
 	$p_x = $data["poi_coordx"];
 	$p_y = $data["poi_coordy"];
 	$p_z = $data["poi_coordz"];
+
+	if (valid_coordinates($p_x, $p_y, $p_z))
+	{
+		$addc = ", x = '" . $p_x . "', y = '" . $p_y . "', z = '" . $p_z . "'";
+		$addb = ", '" . $p_x . "', '" . $p_y . "', '" . $p_z . "'";
+	}
+	else
+	{
+		$addc = ", x = null, y = null, z = null";
+		$addb = ", null, null, null";
+	}
+
 	$p_entry = $data["poi_text"];
 	$p_id = $data["poi_edit_id"];
 	$category_id = $data["category_id"];
@@ -42,10 +54,7 @@ if (isset($_GET["do"]))
 													poi_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $p_name) . "',
 													system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $p_system) . "',
 													text = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $p_entry) . "',
-													category_id = '" . $category_id . "',
-													x = '" . $p_x . "',
-													y = '" . $p_y . "',
-													z = '" . $p_z . "'
+													category_id = '" . $category_id . "'" . $addc . "
 													WHERE id = '" . $p_id . "'") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 	}
 	else if (isset($_GET["deleteid"]))
@@ -61,10 +70,7 @@ if (isset($_GET["do"]))
 														('" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $p_name) . "',
 														'" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $p_system) . "',
 														'" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $p_entry) . "',
-														'" . $category_id . "',
-														'" . $p_x . "',
-														'" . $p_y . "',
-														'" . $p_z . "')") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+														'" . $category_id . "'" . $addb . ")") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 	}
 
 	((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
@@ -75,7 +81,7 @@ if (isset($_GET["do"]))
 if ($_SERVER['PHP_SELF'] == "/poi.php")
 {
 ?>
-    <div class="input" id="addpoi" style="text-align:center;">
+    <div class="input" id="addPoi" style="text-align:center;">
 		<form method="post" id="poi_form" action="poi.php">
 			<div class="input-inner">
 				<div class="suggestions" id="suggestions_33" style="margin-top:110px;margin-left:10px;"></div>
@@ -86,12 +92,12 @@ if ($_SERVER['PHP_SELF'] == "/poi.php")
 					<tr>
 						<td class="station_info_price_info2" style="width:90%;">
 							<input type="hidden" name="poi_edit_id" id="poi_edit_id">
-							<input class="textbox" type="text" name="poi_system_name" placeholder="System name" id="system_33" style="width:95%;" onkeyup="showResult(this.value, '33')" />
+							<input class="textbox" type="text" name="poi_system_name" placeholder="System name" id="system_33" style="width:95%;" oninput="showResult(this.value, '33')" />
 						</td>
 						<td class="station_info_price_info2">
-							<input class="textbox" type="text" name="poi_coordx" placeholder="x.x" id="coordsx_33" style="" />
-							<input class="textbox" type="text" name="poi_coordy" placeholder="y.y" id="coordsy_33" style="" />
-							<input class="textbox" type="text" name="poi_coordz" placeholder="z.z" id="coordsz_33" style="" />
+							<input class="textbox" type="text" name="poi_coordx" placeholder="x.x" id="coordsx_33" />
+							<input class="textbox" type="text" name="poi_coordy" placeholder="y.y" id="coordsy_33" />
+							<input class="textbox" type="text" name="poi_coordz" placeholder="z.z" id="coordsz_33" />
 						</td>
 					</tr>
 					<tr>
@@ -119,7 +125,7 @@ if ($_SERVER['PHP_SELF'] == "/poi.php")
 					</tr>
 					<tr>
 						<td class="station_info_price_info2" colspan="2">
-							<a href="/poi.php" data-replace="true" data-target=".entries"><div class="button" onclick="update_data('poi_form', '/add/poi.php?do', true);tofront('null', true);return false;">Submit Point of Interest</div></a>
+							<a href="/poi.php" data-replace="true" data-target=".entries"><div class="button" onclick="update_data('poi_form', '/add/poi.php?do', true);tofront('null', true);">Submit Point of Interest</div></a>
 							<span id="delete_poi"></span>
 						</td>
 					</tr>

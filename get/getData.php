@@ -81,6 +81,7 @@ if ($newSystem !== FALSE || $request == 0)
 	{
 		$data['update_map'] = "true";
 	}
+
 	$data['current_system_name'] = $current_system;
 	$data['current_coordinates'] = $current_coordinates;
 
@@ -136,7 +137,7 @@ if ($newSystem !== FALSE || $request == 0)
 	}
 
 	$data['system_title'] = '	<div class="leftpanel-add-data">
-									<a href="javascript:void(0);" id="toggle" onclick="setbm(\'' . $current_system . '\', \'' . $current_id . '\');tofront(\'addbm\');" title="Bookmark system">
+									<a href="javascript:void(0);" id="toggle" onclick="setbm(\'' . $current_system . '\', \'' . $current_id . '\');tofront(\'addBm\');$(\'#bm_text\').focus();" title="Bookmark system">
 										<img src="/style/img/' . $pic . '" style="vertical-align:middle;margin-right:5px;" alt="' . $allegiance . '" />
 									</a>
 								</div>';
@@ -170,7 +171,7 @@ if ($newSystem !== FALSE || $request == 0)
 		$class = "poid";
 	}
 
-	$data['system_title'] .= "<a class='" . $class . "' href='javascript:void(0);' onclick='tofront(\"distance\");get_cs(\"system_2\",\"coords_2\");' onmouseover='slide();' onmouseout='slideout();' title='Calculate distances'>";
+	$data['system_title'] .= "<a class='" . $class . "' href='javascript:void(0);' onclick='tofront(\"distance\");get_cs(\"system_2\",\"coords_2\");$(\"#system_6\").focus();' onmouseover='slide();' onmouseout='slideout();' title='Calculate distances'>";
 	if (isset($current_system) && $current_system != "")
 	{
 		$data['system_title'] .= htmlspecialchars($current_system);
@@ -219,7 +220,7 @@ if ($newSystem !== FALSE || $request == 0)
 																							LIMIT 1"));
 	if ($system_user_calculated > 0 && $current_system != "")
 	{
-		$data['system_info'] .= '<span style="float:right;margin-right:10px;margin-top:12px;"><a href="javascript:void(0);" onclick="tofront(\'calculate\');get_cs(\'target_system\');" title="Review calculations">';
+		$data['system_info'] .= '<span style="float:right;margin-right:10px;margin-top:12px;"><a href="javascript:void(0);" onclick="tofront(\'calculate\');get_cs(\'target_system\');" title="Review distances">';
 		$data['system_info'] .= '<img src="/style/img/calculator.png" style="vertical-align:middle;" />';
 		$data['system_info'] .= '</a></span>';
 	}
@@ -288,7 +289,7 @@ if ($newSystem !== FALSE || $request == 0)
 		$si_system_power_state = $si_system_arr["power_state"] == "" ? "None" : $si_system_arr["power_state"];
 
 		// get distance to current system
-		if (is_numeric($coordx))
+		if (valid_coordinates($coordx, $coordy, $coordz))
 		{
 			$adds = "";
 			$dist1 = sqrt(pow(($coordx-($si_system_arr["si_system_coordx"])), 2)+pow(($coordy-($si_system_arr["si_system_coordy"])), 2)+pow(($coordz-($si_system_arr["si_system_coordz"])), 2));

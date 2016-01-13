@@ -63,7 +63,7 @@ if (isset($_GET["do"]))
 	exit();
 }
 ?>
-<div class="input" id="addbm">
+<div class="input" id="addBm">
 	<form method="post" id="bm_form" action="bookmark.php">
 		<div class="input-inner">
 			<table>
@@ -99,7 +99,7 @@ if (isset($_GET["do"]))
 					</td>
 				<tr>
 					<td colspan="2" class="station_info_price_info2">
-						<a href="/poi.php" data-replace="true" data-target=".entries"><div class="button" onclick="update_data('bm_form', '/add/bookmark.php?do', true);tofront('null', true);return false;">Add Bookmark</div></a>
+						<a href="/poi.php" data-replace="true" data-target=".entries"><div class="button" onclick="update_data('bm_form', '/add/bookmark.php?do', true);tofront('null', true);">Add Bookmark</div></a>
 						<span id="delete_bm"></span>
 					</td>
 				</tr>

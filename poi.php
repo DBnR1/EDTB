@@ -223,7 +223,7 @@ function maketable($res, $type, &$to_last)
 	<div class="entries_inner">
 		<table>
 			<tr>
-				<td class="systeminfo_station_name" style="min-width:400px;"><a href="javascript:void(0);" onclick="tofront('addPoi');" title="Add point of interest">Points of Interest</a></td>
+				<td class="systeminfo_station_name" style="min-width:400px;"><a href="javascript:void(0);" onclick="tofront('addPoi');$('#system_33').focus();" title="Add point of interest">Points of Interest</a></td>
 				<td class="systeminfo_station_name" style="min-width:400px;">Bookmarks</td>
 			</tr>
 			<tr>
