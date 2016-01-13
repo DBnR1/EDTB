@@ -97,7 +97,7 @@
 							</tr>
 							<tr>
 								<td class="station_info_price_info2" style="width:200px;">
-									<input class="textbox" type="text" name="system_name" placeholder="System" id="system_22" style="width:96%;" oninput="showResult(this.value, '8', 'yes')" autofocus="autofocus" />
+									<input class="textbox" type="text" name="system_name" placeholder="System" id="system_22" style="width:96%;" oninput="showResult(this.value, '8', 'yes')" />
 								</td>
 								<td class="station_info_price_info2" style="width:200px;">
 									<input class="textbox" type="text" name="station_name" placeholder="Station" id="station_1" style="width:96%;" oninput="showResult(this.value, '9', 'yes', 'yes')" />

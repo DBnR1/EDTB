@@ -149,7 +149,7 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 					</a>
 
 					<span class="rightpanel-pagetitle">
-						<a href="javascript:void(0);" onclick="tofront('search_system');" title="Search for a system"><?php echo str_replace("&nbsp;&nbsp;", "&nbsp;", $pagetitle)?></a>
+						<a href="javascript:void(0);" onclick="tofront('search_system');$('#system_22').focus();" title="Search for a system"><?php echo str_replace("&nbsp;&nbsp;", "&nbsp;", $pagetitle)?></a>
 					</span>
 					<span style="float:right;margin-right:10px;margin-top:15px;">
 						<?php

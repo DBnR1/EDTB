@@ -49,7 +49,7 @@ if ($system != "")
 	$addtolink .= "&system=" . $system . "";
 	$addtolink2 .= "&system=" . $system . "";
 }
-else if (is_numeric($coordx) && $system == "")
+else if (valid_coordinates($coordx, $coordy, $coordz) && $system == "")
 {
 	$usex = $coordx;
 	$usey = $coordy;
@@ -517,7 +517,7 @@ $count = mysqli_num_rows($res);
 								}
 								?>
 						</select><br />
-						<input class="button" type="submit" value="Search" style="width:222px;" />
+						<input class="button" type="submit" value="Search" style="width:222px;margin-top:5px;" />
 					</form>
 				</td>
 				<!-- ships & facilities -->
@@ -738,7 +738,7 @@ $count = mysqli_num_rows($res);
 									$info = str_replace("']", "", $info);
 									$info = str_replace("', '", ", ", $info);
 
-									echo '<td class="station_info_price_info_t">' . $icon . '<a href="javascript:void(0);" onmouseover="$(\'#si_statinfo_' . $station_id . '\').fadeToggle(\'fast\');" onmouseout="$(\'#si_statinfo_' . $station_id . '\').toggle();">' . $station_name . '<div class="stationinfo_ns" id="si_statinfo_' . $station_id . '">' . $info . '</div></td>';
+									echo '<td class="station_info_price_info_t">' . $icon . '<a href="javascript:void(0);" onclick="$(\'#si_statinfo_' . $station_id . '\').fadeToggle(\'fast\');" title="Additional information">' . $station_name . '<div class="stationinfo_ns" id="si_statinfo_' . $station_id . '">' . $info . '</div></td>';
 									echo '<td class="station_info_price_info_t">' . $station_ls_from_star . '</td>';
 									echo '<td class="station_info_price_info_t">' . $station_max_landing_pad_size . '</td>';
 								}
