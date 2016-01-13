@@ -23,7 +23,7 @@
 
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 
-$poi_id = $_GET["poi_id"];
+$poi_id = $_GET["Poi_id"];
 
 $poi_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id, poi_name, system_name, text, category_id, x, y, z
 														FROM user_poi
@@ -34,6 +34,7 @@ $poi_arr = mysqli_fetch_assoc($poi_res);
 $data = array();
 $data["poi_edit_id"] = $poi_arr["id"];
 $data["system_33"] = $poi_arr["system_name"];
+
 if (isset($poi_arr["x"]))
 {
 	$data["coordsx_33"] = $poi_arr["x"];

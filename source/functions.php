@@ -29,16 +29,21 @@ date_default_timezone_set('UTC');
 *    connect to database
 */
 
-$link = ($GLOBALS["___mysqli_ston"] = mysqli_connect($server, $user, $pwd));
-if (!$link)
+function db_connect()
 {
-    exit('Could not connect: ' . ((is_object($GLOBALS["___mysqli_ston"])) ? mysqli_error($GLOBALS["___mysqli_ston"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)));
-}
-if (!((bool)mysqli_query($GLOBALS["___mysqli_ston"], "USE " . $db)))
-{
-    exit('Could not select database: ' . ((is_object($GLOBALS["___mysqli_ston"])) ? mysqli_error($GLOBALS["___mysqli_ston"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)));
+	global $server, $user, $pwd, $db;
+	$link = ($GLOBALS["___mysqli_ston"] = mysqli_connect($server, $user, $pwd));
+	if (!$link)
+	{
+		exit('Could not connect: ' . ((is_object($GLOBALS["___mysqli_ston"])) ? mysqli_error($GLOBALS["___mysqli_ston"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)));
+	}
+	if (!((bool)mysqli_query($GLOBALS["___mysqli_ston"], "USE " . $db)))
+	{
+		exit('Could not select database: ' . ((is_object($GLOBALS["___mysqli_ston"])) ? mysqli_error($GLOBALS["___mysqli_ston"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)));
+	}
 }
 
+db_connect();
 /*
 *    get current system
 */
@@ -194,7 +199,7 @@ else
 *	 screenshots
 */
 
-if (isset($settings["old_screendir"]) && is_dir($settings["old_screendir"]) && $settings["old_screendir"] != "C:\Users")
+if (isset($settings["old_screendir"]) && is_dir($settings["old_screendir"]) && $settings["old_screendir"] != "C:\Users" && $settings["old_screendir"] != "C:\Users\\")
 {
 	// move screenshots
 	$screenshots = scandir($settings["old_screendir"]);
@@ -222,7 +227,7 @@ if (isset($settings["old_screendir"]) && is_dir($settings["old_screendir"]) && $
 			$new_screenshot = "" . $newscreendir . "/" . $new_filename . "";
 
 			// convert from bmp to jpg
-			exec("\"" . $settings["install_path"] . "/bin/ImageMagick/convert\" \"" . $old_file_bmp . "\" \"" . $new_file_jpg . "\"", $out) or write_log("Error #8: " . $out . "", __FILE__, __LINE__);
+			exec("\"" . $settings["install_path"] . "/bin/ImageMagick/convert\" \"" . $old_file_bmp . "\" \"" . $new_file_jpg . "\"", $out) or write_log("Error #8: " . var_dump($out) . "", __FILE__, __LINE__);
 
 			if ($settings["keep_og"] == "false")
 			{
@@ -258,8 +263,17 @@ if (isset($settings["old_screendir"]) && is_dir($settings["old_screendir"]) && $
 	// make thumbnails for the gallery
 	if ($added > 0)
 	{
-		exec("mkdir \"" . $newscreendir . "/thumbs\"", $out2) or write_log("Error #4: " . $out2 . "", __FILE__, __LINE__);
-		exec("\"" . $settings["install_path"] . "/bin/ImageMagick/mogrify\" -resize " . $settings["thumbnail_size"] . " -background #333333 -gravity center -extent " . $settings["thumbnail_size"] . " -format jpg -quality 95 -path \"" . $newscreendir . "/thumbs\" \"" . $newscreendir . "/\"*.jpg", $out3) or write_log("Error #5: ". $out3 . "", __FILE__, __LINE__);
+		$thumbdir = "" . $newscreendir . "/thumbs";
+
+		if (!is_dir($thumbdir))
+		{
+			if (!mkdir("" . $thumbdir . "", 0775, true))
+			{
+				write_log("Could not create thumbnail directory", __FILE__, __LINE__);
+				break;
+			}
+		}
+		exec("\"" . $settings["install_path"] . "/bin/ImageMagick/mogrify\" -resize " . $settings["thumbnail_size"] . " -background #333333 -gravity center -extent " . $settings["thumbnail_size"] . " -format jpg -quality 95 -path \"" . $thumbdir . "\" \"" . $newscreendir . "/\"*.jpg", $out3) or write_log("Error #5: ". var_dump($out3) . "", __FILE__, __LINE__);
 	}
 }
 
@@ -1055,5 +1069,52 @@ function write_log($msg, $file = "", $line = "", $debug_override = false)
 
 		fwrite($fd, $str . "\n");
 		fclose($fd);
+	}
+}
+
+/*
+*	return usable coordinates
+*/
+
+function usable_coords()
+{
+	global $coordx, $coordy, $coordz;
+
+	$usable = array();
+
+	if (is_numeric($coordx) && is_numeric($coordy) && is_numeric($coordz))
+	{
+		$usable["x"] = $coordx;
+		$usable["y"] = $coordy;
+		$usable["z"] = $coordz;
+
+		$usable["current"] = true;
+	}
+	else
+	{
+		$last_coords = last_known_system();
+
+		$usable["x"] = $last_coords["x"];
+		$usable["y"] = $last_coords["y"];
+		$usable["z"] = $last_coords["z"];
+
+		$usable["current"] = false;
+	}
+	return $usable;
+}
+
+/*
+* 	validate coordinates
+*/
+
+function valid_coordinates($x, $y, $z)
+{
+	if (is_numeric($x) && is_numeric($y) &&is_numeric($z))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
 	}
 }
