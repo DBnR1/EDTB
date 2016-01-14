@@ -122,9 +122,13 @@ function makeitem($arr, $type, &$to_last, &$i)
 		{
 			echo '(' . $distance . ')</a>&nbsp;<a title="System information" href="/system.php?system_id=' . $item_system_id . '" style="color:inherit;">';
 		}
-		else
+		else if ($item_system_name != "")
 		{
 			echo '(' . $distance . ')</a>&nbsp;<a title="System information" href="/system.php?system_name=' . urlencode($item_system_name) . '" style="color:inherit;">';
+		}
+		else
+		{
+			echo '(' . $distance . ')</a>&nbsp;<a href="#" style="color:inherit;">';
 		}
 
 		if (empty($item_name))

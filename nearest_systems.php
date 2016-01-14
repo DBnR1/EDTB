@@ -591,12 +591,12 @@ $count = mysqli_num_rows($res);
 				<td class="ns_nearest" colspan="5">
 					<table id="nearest_systems">
 						<tr>
-							<td class="light" colspan="7">System</td>
+							<td class="light" colspan="7"><strong>System</strong></td>
 							<?php
 							if ($stations !== false)
 							{
 							?>
-								<td class="light" colspan="3">Station</td>
+								<td class="light" colspan="3"><strong>Station</strong></td>
 							<?php
 							}
 							?>
