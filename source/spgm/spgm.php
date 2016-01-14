@@ -1579,7 +1579,7 @@ function spgm_DisplayPicture($strGalleryId, $iPictureId, $strFilterFlags) {
 				$iPopupHeight = $arrPictureDim[1];
 				$strJustPicture = 'true';
 			}
-			print '		 <a target="_BLANK" href="'.$strPictureURL.'">';
+			print '		 <a id="spgmPicture" target="_BLANK" href="'.$strPictureURL.'">';
 			print $strHtmlPicture;
 			print '</a>'."\n";
 		}
@@ -1604,7 +1604,7 @@ function spgm_DisplayPicture($strGalleryId, $iPictureId, $strFilterFlags) {
 	{
 		print '<tr>'."\n";
 		print '  <td class="'.CLASS_TD_PICTURE_FILENAME.'">'."\n";
-		echo '<span class="left"><a href="javascript:void(0);" onclick="confirmation(\'' . $strPictureURL . '\',\'screenshot\')" title="Delete screenshot"><div class="delete_button" style="position:relative;left:0px;top:5px;"><img src="/style/img/delete.png" alt="Delete" /></div></a></span>'."\n";
+		echo '<span class="left"><a href="javascript:void(0);" onclick="confirmation(\'' . $strPictureURL . '\',\'screenshot\')" title="Delete screenshot"><div class="delete_button" style="position:relative;left:-6px;top:0px;"><img src="/style/img/delete.png" alt="Delete" /></div></a></span>'."\n";
 		print $strPictureBasename.''.$_strFileExtension.'';
 
 		$imgurfile = "" . $_SERVER["DOCUMENT_ROOT"] . "/screenshots/Imgur/" . urldecode($strPictureBasename) . ".txt";

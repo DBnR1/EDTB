@@ -585,7 +585,7 @@ function toinput(system, coordinates, price, tonnage, to, id)
 		$('#to_id').val(id);
 	}
 }
-
+/*
 function hailait(name, to)
 {
 	var x = document.getElementsByName(name);
@@ -593,54 +593,54 @@ function hailait(name, to)
 
 	if (to == "buy")
 	{
-		var buys = document.getElementsByClassName("station_info_price_info_highlight");
+		var buys = document.getElementsByClassName("dark_highlight");
 		var is;
 		for (is = 0; is < buys.length; is++)
 		{
-			buys[is].className="station_info_price_info";
+			buys[is].className="dark";
 		}
 		for (is = 0; is < buys.length; is++)
 		{
-			buys[is].className="station_info_price_info";
+			buys[is].className="dark";
 		}
 		for (is = 0; is < buys.length; is++)
 		{
-			buys[is].className="station_info_price_info";
+			buys[is].className="dark";
 		}
 		for (is = 0; is < buys.length; is++)
 		{
-			buys[is].className="station_info_price_info";
+			buys[is].className="dark";
 		}
 		//
 		for (i = 0; i < x.length; i++)
 		{
-			x[i].className="station_info_price_info_highlight";
+			x[i].className="dark_highlight";
 		}
 	}
 	else if (to == "sell")
 	{
-		var sells = document.getElementsByClassName("station_info_price_info_highlight2");
+		var sells = document.getElementsByClassName("dark_highlight2");
 		var isa;
 		for (isa = 0; isa < sells.length; isa++)
 		{
-			sells[isa].className="station_info_price_info";
+			sells[isa].className="dark";
 		}
 		for (isa = 0; isa < sells.length; isa++)
 		{
-			sells[isa].className="station_info_price_info";
+			sells[isa].className="dark";
 		}
 		for (isa = 0; isa < sells.length; isa++)
 		{
-			sells[isa].className="station_info_price_info";
+			sells[isa].className="dark";
 		}
 		for (isa = 0; isa < sells.length; isa++)
 		{
-			sells[isa].className="station_info_price_info";
+			sells[isa].className="dark";
 		}
 		//
 		for (i = 0; i < x.length; i++)
 		{
-			x[i].className="station_info_price_info_highlight2";
+			x[i].className="dark_highlight2";
 		}
 	}
 }
@@ -654,45 +654,45 @@ function empty()
 	document.getElementById('distance_mp').value='';
 	document.getElementById('return').value='';
 
-	var cases = document.getElementsByClassName("station_info_price_info_highlight");
+	var cases = document.getElementsByClassName("dark_highlight");
 	var num = 0;
 	for (num = 0; num < cases.length; num++)
 	{
-		cases[num].className="station_info_price_info";
+		cases[num].className="dark";
 	}
 	for (num = 0; num < cases.length; num++)
 	{
-		cases[num].className="station_info_price_info";
+		cases[num].className="dark";
 	}
 	for (num = 0; num < cases.length; num++)
 	{
-		cases[num].className="station_info_price_info";
+		cases[num].className="dark";
 	}
 	for (num = 0; num < cases.length; num++)
 	{
-		cases[num].className="station_info_price_info";
+		cases[num].className="dark";
 	}
 
-	var cases2 = document.getElementsByClassName("station_info_price_info_highlight2");
+	var cases2 = document.getElementsByClassName("dark_highlight2");
 	var num2 = 0;
 	for (num2 = 0; num2 < cases2.length; num2++)
 	{
-		cases2[num2].className="station_info_price_info";
+		cases2[num2].className="dark";
 	}
 	for (num2 = 0; num2 < cases2.length; num2++)
 	{
-		cases2[num2].className="station_info_price_info";
+		cases2[num2].className="dark";
 	}
 	for (num2 = 0; num2 < cases2.length; num2++)
 	{
-		cases2[num2].className="station_info_price_info";
+		cases2[num2].className="dark";
 	}
 	for (num2 = 0; num2 < cases2.length; num2++)
 	{
-		cases2[num2].className="station_info_price_info";
+		cases2[num2].className="dark";
 	}
 }
-
+*/
 // function to calculate distances
 function calcDist(coord_fromx, coord_fromy, coord_fromz, coord_tox, coord_toy, coord_toz, from, to, price1, price2, tonnage, to_id, from_id)
 {
@@ -751,7 +751,7 @@ function calcDist(coord_fromx, coord_fromy, coord_fromz, coord_tox, coord_toy, c
 function addstation(station, station_id)
 {
     document.getElementById("statname").value=station;
-	document.getElementById("station_id").value=station_id;
+	//document.getElementById("station_id").value=station_id;
 }
 
 // function to save session log
@@ -796,12 +796,10 @@ function tofront(divid, toback)
         if (document.getElementById(divid).style.display == "block")
         {
             document.getElementById(divid).style.display = "none";
-            //document.getElementsByClassName('entries')[0].style.display = "block";
 			$(".entries").fadeIn("fast");
         }
         else
         {
-            //document.getElementById(divid).style.display = "block";
 			$("#"+divid).fadeIn("fast");
             document.getElementById(divid).style.zindex = setindex;
             document.getElementsByClassName('entries')[0].style.display = "none";
@@ -810,7 +808,6 @@ function tofront(divid, toback)
     else
     {
         get_data(true);
-        //document.getElementsByClassName('entries')[0].style.display = "block";
 		$(".entries").fadeIn("fast");
     }
     var index;

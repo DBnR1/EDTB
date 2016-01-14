@@ -150,6 +150,7 @@ if ($newSystem !== FALSE || $request == 0)
 		$bres = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id
 															FROM user_bookmarks
 															WHERE system_id = '" . $current_id . "'
+															AND system_id != ''
 															LIMIT 1");
 		$bookmarked = mysqli_num_rows($bres);
 	}
@@ -157,6 +158,7 @@ if ($newSystem !== FALSE || $request == 0)
 	$pres = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id
 														FROM user_poi
 														WHERE system_name = '" . $current_system . "'
+														AND system_name != ''
 														LIMIT 1");
 	$poid = mysqli_num_rows($pres);
 
@@ -540,38 +542,90 @@ if ($newSystem !== FALSE || $request == 0)
 				$modules_t = "";
 				$last_class = "";
 				$last_module_name = "";
+				$last_category_name = "";
 
-				foreach ($modules_s as $module)
+				$mod_cat = array();
+				$i = 0;
+				foreach ($modules_s as $mods)
 				{
-					$m_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT SQL_CACHE class, rating, price, group_name
-																		FROM edtb_modules
-																		WHERE id = '" . $module . "'
-																		LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-					$m_num = mysqli_num_rows($m_res);
+					$mods_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT SQL_CACHE class, rating, price, group_name, category_name
+																			FROM edtb_modules
+																			WHERE id = '" . $mods . "'
+																			LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
-					if ($m_num > 0)
+					$mods_num = mysqli_num_rows($mods_res);
+
+					if ($mods_num > 0)
 					{
-						$m_arr = mysqli_fetch_assoc($m_res);
+						$mods_arr = mysqli_fetch_assoc($mods_res);
 
-						$m_name = $m_arr["group_name"];
-						$m_class = $m_arr["class"];
-						$m_rating = $m_arr["rating"];
-						$m_price = $m_arr["price"];
+						$mods_name = $mods_arr["group_name"];
+						$mods_category_name = $mods_arr["category_name"];
+						$mods_class = $mods_arr["class"];
+						$mods_rating = $mods_arr["rating"];
+						$mods_price = $mods_arr["price"];
 
-						if ($m_class != $last_class)
-							$modules_t .= "<br />";
+						$mod_cat[$mods_category_name][$i] = array();
+						$mod_cat[$mods_category_name][$i]["group_name"] = $mods_name;
+						$mod_cat[$mods_category_name][$i]["class"] = $mods_class;
+						$mod_cat[$mods_category_name][$i]["price"] = $mods_price;
+						$mod_cat[$mods_category_name][$i]["rating"] = $mods_rating;
+						$i++;
+					}
+				}
+
+				arsort($mod_cat);
+
+				$modules_t .= '<table style="margin-top:10px;"><tr style="vertical-align:top;">';
+				foreach ($mod_cat as $key => $value)
+				{
+					$m_category_name = $key;
+					$modules_t .= '<td><table style="margin-right:10px;">';
+					$modules_t .= '<tr><td class="heading" colspan="3">';
+					$modules_t .= $m_category_name;
+					$modules_t .= '</td></tr>';
+
+					asort($value);
+
+					foreach ($value as $module)
+					{
+
+						$m_name = $module["group_name"];
+						$m_class = $module["class"];
+						$m_rating = $module["rating"];
+						$m_price = $module["price"];
 
 						if ($m_name != $last_module_name)
-							$modules_t .= "<br /><strong>" . $m_name . "</strong><br />";
+						{
+							$modules_t .= '<tr><td class="dark" colspan="3"><strong>' . $m_name . '</strong></td></tr>';
+							$last_class = "";
+						}
 
-						$modules_t .= " [" . $m_class . "" . $m_rating . " - " . number_format($m_price, 0) . "]";
+						$modules_t .= '<tr>';
+						if ($m_class != $last_class)
+						{
+							$modules_t .= '<td class="light">Class ' . $m_class . '</td>';
+						}
+						else
+						{
+							$modules_t .= '<td class="transparent"></td>';
+						}
+
+
+						$modules_t .= '<td class="light">Rating ' . $m_rating . '</td>';
+						$modules_t .= '<td class="light">Price ' . number_format($m_price, 0) . '</td>';
+
 
 						$last_module_name = $m_name;
 						$last_class = $m_class;
+						$modules_t .= '</tr>';
 					}
+					$modules_t .= "</td></table>";
 				}
+				$modules_t .= "</tr></table>";
+
 				$selling_modules = "<br /><br />
-									<div onclick=\"$('#modules_" . $station_id . "').fadeToggle('fast');\"><a href='javascript:void(0);'><img src=\"/style/img/plus.png\" alt=\"plus\" \>&nbsp;Selling modules</a></div>
+									<div onclick=\"$('#modules_" . $station_id . "').fadeToggle('fast');\"><a href='javascript:void(0);'><img src=\"/style/img/plus.png\" alt=\"plus\" style=\"margin-right:6px\" \>Selling modules</a></div>
 									<div id='modules_" . $station_id . "' style='display:none;'>" . $modules_t . "</div>";
 			}
 
@@ -621,8 +675,8 @@ if ($newSystem !== FALSE || $request == 0)
 			$economies = str_replace("', '", ", ", $economies);
 
 			$data['si_stations'] .= '<div class="systeminfo_station">';
-				//$data['si_stations'] .= '<div class="systeminfo_station_name" onclick="$(\'#info_'.$station_id.'\').toggle();$(\'#prices_'.$station_id.'\').toggle();">';
-				$data['si_stations'] .= '<div class="systeminfo_station_name">';
+				//$data['si_stations'] .= '<div class="heading" onclick="$(\'#info_'.$station_id.'\').toggle();$(\'#prices_'.$station_id.'\').toggle();">';
+				$data['si_stations'] .= '<div class="heading">';
 					$data['si_stations'] .= '' . $icon . '' . $s_name . '	<span style="font-weight:normal;font-size:10px;">
 																	[ ' . $type . ' - ' . $s_allegiance . ' - ' . $s_government . ' - ' . $economies . ' ]
 																</span>';
@@ -670,20 +724,20 @@ if ($newSystem !== FALSE || $request == 0)
 						if ($cur_cat != $category_id)
 						{
 							$data['si_stations'] .= '<tr>';
-								$data['si_stations'] .= '<td class="station_info_price_category">' . $category . '</td>';
-								$data['si_stations'] .= '<td class="station_info_price_category">Supply</td>';
-								$data['si_stations'] .= '<td class="station_info_price_category">Buy price</td>';
-								$data['si_stations'] .= '<td class="station_info_price_category">Sell price</td>';
-								$data['si_stations'] .= '<td class="station_info_price_category">Demand</td>';
+								$data['si_stations'] .= '<td class="light">' . $category . '</td>';
+								$data['si_stations'] .= '<td class="light">Supply</td>';
+								$data['si_stations'] .= '<td class="light">Buy price</td>';
+								$data['si_stations'] .= '<td class="light">Sell price</td>';
+								$data['si_stations'] .= '<td class="light">Demand</td>';
 							$data['si_stations'] .= '</tr>';
 						}
 
 						$data['si_stations'] .= '<tr>';
-							$data['si_stations'] .= '<td class="station_info_price_info">' . $commodity . '</td>';
-							$data['si_stations'] .= '<td class="station_info_price_info">' . number_format($supply) . '</td>';
-							$data['si_stations'] .= '<td class="station_info_price_info">' . number_format($buy) . '</td>';
-							$data['si_stations'] .= '<td class="station_info_price_info">' . number_format($sell) . '</td>';
-							$data['si_stations'] .= '<td class="station_info_price_info">' . number_format($demand) . '</td>';
+							$data['si_stations'] .= '<td class="dark">' . $commodity . '</td>';
+							$data['si_stations'] .= '<td class="dark">' . number_format($supply) . '</td>';
+							$data['si_stations'] .= '<td class="dark">' . number_format($buy) . '</td>';
+							$data['si_stations'] .= '<td class="dark">' . number_format($sell) . '</td>';
+							$data['si_stations'] .= '<td class="dark">' . number_format($demand) . '</td>';
 						$data['si_stations'] .= '</tr>';
 
 						$cur_cat = $arr3["category_id"];
@@ -816,7 +870,7 @@ if ($newSystem !== FALSE || $request == 0)
 					}
 
 					$logdata .= '<h3>
-									<a href="javascript:void(0);" onclick="$(\'#test\').attr(\'id\', \'html\');$(\'#html\').markItUp(mySettings);update_values(\'/get/getLogEditData.php?logid=' . $log_arr["id"] . '\',\'' . $log_arr["id"] . '\');tofront(\'addlog\');" style="color:inherit;" title="Edit entry">';
+									<a href="javascript:void(0);" onclick="tofront(\'addlog\');update_values(\'/get/getLogEditData.php?logid=' . $log_arr["id"] . '\',\'' . $log_arr["id"] . '\');" style="color:inherit;" title="Edit entry">';
 					$logdata .= date_format($log_added, "j M Y, H:i");
 					if (!empty($log_station_name))
 					{
@@ -860,7 +914,7 @@ if ($newSystem !== FALSE || $request == 0)
 			$glog_added = date_modify($gdate, "+1286 years");
 			$logdata .= '<h3>
 							<a href="javascript:void(0);"
-							onclick="update_values(\'/get/getLogEditData.php?logid=' . $glog_arr["id"] . '\',\'' . $glog_arr["id"] . '\');tofront(\'addlog\');$(\'#html\').markItUp(mySettings);"
+							onclick="tofront(\'addlog\');update_values(\'/get/getLogEditData.php?logid=' . $glog_arr["id"] . '\',\'' . $glog_arr["id"] . '\');"
 							style="color:inherit;"
 							title="Edit entry">';
 			$logdata .= date_format($glog_added, "j M Y, H:i");

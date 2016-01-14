@@ -69,10 +69,10 @@ if (isset($_GET["do"]))
 			<div class="suggestions" id="suggestions_3" style="margin-top:73px;margin-left:14px;"></div>
 			<table>
 				<tr>
-					<td class="systeminfo_station_name" colspan="2">Add/edit bookmark</td>
+					<td class="heading" colspan="2">Add/edit bookmark<span class="right"><a href="javascript:void(0);" onclick="tofront('addBm');" title="Close form"><img src="/style/img/close.png" alt="close" /></a></span></td>
 				</tr>
 				<tr>
-					<td colspan="2" class="station_info_price_info2">
+					<td colspan="2" class="dark">
 					<input type="hidden" name="bm_edit_id" id="bm_edit_id">
 					<input type="hidden" name="bm_system_id" id="bm_system_id">
 					<div>
@@ -81,10 +81,10 @@ if (isset($_GET["do"]))
 					</td>
 				</tr>
 				<tr>
-					<td class="station_info_price_info2">
+					<td class="dark">
 						<input class="textbox" type="text" name="bm_text" id="bm_text" placeholder="Comment (optional)" style="width:326px;" />
 					</td>
-					<td class="station_info_price_info2">
+					<td class="dark">
 					<select class="selectbox" name="bm_catid" id="bm_catid" style="width:140px;">
 						<option value="0">Category (optional)</option>
 						<?php
@@ -98,7 +98,7 @@ if (isset($_GET["do"]))
 					</select>
 					</td>
 				<tr>
-					<td colspan="2" class="station_info_price_info2">
+					<td colspan="2" class="dark">
 						<a href="/poi.php" data-replace="true" data-target=".entries"><div class="button" onclick="update_data('bm_form', '/add/bookmark.php?do', true);tofront('null', true);">Add Bookmark</div></a>
 						<span id="delete_bm"></span>
 					</td>

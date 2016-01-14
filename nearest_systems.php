@@ -399,15 +399,15 @@ $count = mysqli_num_rows($res);
 	<div class="entries_inner">
 		<table id="nscontent" style="margin-top:16px;width:100%">
 			<tr>
-				<td class="systeminfo_station_name" style="width:25%;white-space:nowrap;">Nearest stations</td>
-				<td class="systeminfo_station_name" style="width:25%;white-space:nowrap;">Nearest Allegiances</td>
-				<td class="systeminfo_station_name" style="width:25%;white-space:nowrap;">Nearest Powers</td>
-				<td class="systeminfo_station_name" style="width:25%;white-space:nowrap;">Selling Modules</td>
-				<td class="systeminfo_station_name" style="width:25%;white-space:nowrap;">Ships & Facilities</td>
+				<td class="heading" style="width:25%;white-space:nowrap;">Nearest stations</td>
+				<td class="heading" style="width:25%;white-space:nowrap;">Nearest Allegiances</td>
+				<td class="heading" style="width:25%;white-space:nowrap;">Nearest Powers</td>
+				<td class="heading" style="width:25%;white-space:nowrap;">Selling Modules</td>
+				<td class="heading" style="width:25%;white-space:nowrap;">Ships & Facilities</td>
 			</tr>
 			<tr>
 				<!-- station allegiances -->
-				<td class="station_info_price_info_t" style="vertical-align:top;width:25%;white-space:nowrap;">
+				<td class="transparent" style="vertical-align:top;width:25%;white-space:nowrap;">
 					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?allegiance=Empire<?php echo $addtolink2;?>" title="Empire"><img src="style/img/empire.png" alt="Empire" style="vertical-align:middle;" /></a>&nbsp;
 					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?allegiance=Alliance<?php echo $addtolink2;?>" title="Alliance"><img src="style/img/alliance.png" alt="Alliance" style="vertical-align:middle;" /></a>&nbsp;
 					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?allegiance=Federation<?php echo $addtolink2;?>" title="Federation"><img src="style/img/federation.png" alt="Federation" style="vertical-align:middle;" /></a>&nbsp;
@@ -423,7 +423,7 @@ $count = mysqli_num_rows($res);
 					</div>
 				</td>
 				<!-- allegiances -->
-				<td class="station_info_price_info_t" style="vertical-align:top;width:25%;white-space:nowrap;">
+				<td class="transparent" style="vertical-align:top;width:25%;white-space:nowrap;">
 					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?system_allegiance=Empire<?php echo $addtolink2;?>" title="Empire"><img src="style/img/empire.png" alt="Empire" style="vertical-align:middle;" /></a>&nbsp;
 					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?system_allegiance=Alliance<?php echo $addtolink2;?>" title="Alliance"><img src="style/img/alliance.png" alt="Alliance" style="vertical-align:middle;" /></a>&nbsp;
 					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?system_allegiance=Federation<?php echo $addtolink2;?>" title="Federation"><img src="style/img/federation.png" alt="Federation" style="vertical-align:middle;" /></a>&nbsp;
@@ -431,7 +431,7 @@ $count = mysqli_num_rows($res);
 					<br /><br />
 				</td>
 				<!-- powers -->
-				<td class="station_info_price_info_t" style="vertical-align:top;width:25%;white-space:nowrap;">
+				<td class="transparent" style="vertical-align:top;width:25%;white-space:nowrap;">
 					<?php
 					$p_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT name
 																		FROM edtb_powers
@@ -453,7 +453,7 @@ $count = mysqli_num_rows($res);
 					?>
 				</td>
 				<!-- modules -->
-				<td class="station_info_price_info_t" style="vertical-align:top;width:25%;white-space:nowrap;">
+				<td class="transparent" style="vertical-align:top;width:25%;white-space:nowrap;">
 					<form method="get" action="<?php echo $_SERVER['PHP_SELF'];?>" name="go" data-push="true" data-target="#nscontent" data-include-blank-url-params="true" data-optimize-url-params="false">
 						<?php
 						echo $hidden_inputs;
@@ -521,7 +521,7 @@ $count = mysqli_num_rows($res);
 					</form>
 				</td>
 				<!-- ships & facilities -->
-				<td class="station_info_price_info_t" style="vertical-align:top;width:25%;white-space:nowrap;">
+				<td class="transparent" style="vertical-align:top;width:25%;white-space:nowrap;">
 					<!-- ships -->
 					<form method="get" action="<?php echo $_SERVER['PHP_SELF'];?>" name="go" id="ships" data-push="true" data-target="#nscontent" data-include-blank-url-params="true" data-optimize-url-params="false">
 						<?php
@@ -585,38 +585,37 @@ $count = mysqli_num_rows($res);
 				</td>
 			</tr>
 			<tr>
-				<td class="systeminfo_station_name" colspan="5"><?php echo $text?></td>
+				<td class="heading" colspan="5"><?php echo $text?></td>
 			</tr>
 			<tr>
-				<td class="station_info_price_info_t" colspan="5">
+				<td class="ns_nearest" colspan="5">
 					<table id="nearest_systems">
 						<tr>
-							<td class="station_info_price_category" colspan="7">System</td>
-
+							<td class="light" colspan="7">System</td>
 							<?php
 							if ($stations !== false)
 							{
 							?>
-								<td class="station_info_price_category" colspan="3">Station</td>
+								<td class="light" colspan="3">Station</td>
 							<?php
 							}
 							?>
 						</tr>
 						<tr>
-							<td class="station_info_price_info2">Allegiance</td>
-							<td class="station_info_price_info2">Distance</td>
-							<td class="station_info_price_info2">Name</td>
-							<td class="station_info_price_info2">Pop.</td>
-							<td class="station_info_price_info2">Economy</td>
-							<td class="station_info_price_info2">Government</td>
-							<td class="station_info_price_info2">Security</td>
+							<td class="dark">Allegiance</td>
+							<td class="dark">Distance</td>
+							<td class="dark">Name</td>
+							<td class="dark">Pop.</td>
+							<td class="dark">Economy</td>
+							<td class="dark">Government</td>
+							<td class="dark">Security</td>
 							<?php
 							if ($stations !== false)
 							{
 							?>
-								<td class="station_info_price_info2">Name</td>
-								<td class="station_info_price_info2">LS From Star</td>
-								<td class="station_info_price_info2">Landing Pad</td>
+								<td class="dark">Name</td>
+								<td class="dark">LS From Star</td>
+								<td class="dark">Landing Pad</td>
 							<?php
 							}
 							?>
@@ -654,21 +653,21 @@ $count = mysqli_num_rows($res);
 
 								if ($system != $last_system)
 								{
-									echo '<tr><td class="station_info_price_info_t" style="text-align:center;"><img src="style/img/' . $pic . '" alt="' . $allegiance . '" style="vertical-align:middle;" /></td>';
+									echo '<tr><td class="transparent" style="text-align:center;"><img src="style/img/' . $pic . '" alt="' . $allegiance . '" style="vertical-align:middle;" /></td>';
 
-									echo '<td class="station_info_price_info_t">';
+									echo '<td class="transparent">';
 									echo number_format($distance,2);
 									echo ' ly' . $is_unknown . '</td>';
 
-									echo '<td class="station_info_price_info_t"><a href="system.php?system_id=' . $system_id . '">' . $system . '</a></td>';
-									echo '<td class="station_info_price_info_t">' . $sys_population . '</td>';
-									echo '<td class="station_info_price_info_t">' . $sys_economy . '</td>';
-									echo '<td class="station_info_price_info_t">' . $sys_government . '</td>';
-									echo '<td class="station_info_price_info_t">' . $sys_security . '</td>';
+									echo '<td class="transparent"><a href="system.php?system_id=' . $system_id . '">' . $system . '</a></td>';
+									echo '<td class="transparent">' . $sys_population . '</td>';
+									echo '<td class="transparent">' . $sys_economy . '</td>';
+									echo '<td class="transparent">' . $sys_government . '</td>';
+									echo '<td class="transparent">' . $sys_security . '</td>';
 								}
 								else
 								{
-									echo '<tr><td class="station_info_price_info_t" colspan="7" style="height:45px;">&nbsp;</td>';
+									echo '<tr><td class="transparent" colspan="7" style="height:45px;">&nbsp;</td>';
 								}
 
 								if ($station_name != "")
@@ -738,9 +737,9 @@ $count = mysqli_num_rows($res);
 									$info = str_replace("']", "", $info);
 									$info = str_replace("', '", ", ", $info);
 
-									echo '<td class="station_info_price_info_t">' . $icon . '<a href="javascript:void(0);" onclick="$(\'#si_statinfo_' . $station_id . '\').fadeToggle(\'fast\');" title="Additional information">' . $station_name . '<div class="stationinfo_ns" id="si_statinfo_' . $station_id . '">' . $info . '</div></td>';
-									echo '<td class="station_info_price_info_t">' . $station_ls_from_star . '</td>';
-									echo '<td class="station_info_price_info_t">' . $station_max_landing_pad_size . '</td>';
+									echo '<td class="transparent">' . $icon . '<a href="javascript:void(0);" onclick="$(\'#si_statinfo_' . $station_id . '\').fadeToggle(\'fast\');" title="Additional information">' . $station_name . '<div class="stationinfo_ns" id="si_statinfo_' . $station_id . '">' . $info . '</div></td>';
+									echo '<td class="transparent">' . $station_ls_from_star . '</td>';
+									echo '<td class="transparent">' . $station_max_landing_pad_size . '</td>';
 								}
 
 								echo '</tr>';

@@ -94,11 +94,11 @@ function makeitem($arr, $type, &$to_last, &$i)
 
 		if ($i % 2)
 		{
-			$tdclass = "station_info_price_info";
+			$tdclass = "dark";
 		}
 		else
 		{
-			$tdclass = "station_info_price_info2";
+			$tdclass = "light";
 		}
 
 		echo '<tr>
@@ -183,9 +183,9 @@ function maketable($res, $type, &$to_last)
 
 	if ($num > 0)
 	{
-		if (!is_numeric($coordx) || !is_numeric($coordy) || !is_numeric($coordz))
+		if (!valid_coordinates($coordx, $coordy, $coordz))
 		{
-			echo "<tr><td class='station_info_price_info' style='min-width:420px;max-width:500;'><p><strong>No coordinates for current location, last known location used.</strong></p></td></tr>";
+			echo "<tr><td class='dark' style='min-width:420px;max-width:500;'><p><strong>No coordinates for current location, last known location used.</strong></p></td></tr>";
 		}
 
 		$i = 0;
@@ -208,11 +208,11 @@ function maketable($res, $type, &$to_last)
 	{
 		if ($type == "Poi")
 		{
-			echo '<tr><td class="station_info_price_info" style="min-width:420px;max-width:500;"><strong>No points of interest.<br />Click the "Points of Interest" text to add one.</strong></td></tr>';
+			echo '<tr><td class="dark" style="min-width:420px;max-width:500;"><strong>No points of interest.<br />Click the "Points of Interest" text to add one.</strong></td></tr>';
 		}
 		else
 		{
-			echo '<tr><td class="station_info_price_info" style="min-width:420px;max-width:500;"><strong>No bookmarks.<br />Click the allegiance icon on the top left corner to add one.</strong></td></tr>';
+			echo '<tr><td class="dark" style="min-width:420px;max-width:500;"><strong>No bookmarks.<br />Click the allegiance icon on the top left corner to add one.</strong></td></tr>';
 		}
 	}
 
@@ -223,11 +223,11 @@ function maketable($res, $type, &$to_last)
 	<div class="entries_inner">
 		<table>
 			<tr>
-				<td class="systeminfo_station_name" style="min-width:400px;"><a href="javascript:void(0);" onclick="tofront('addPoi');update_values('/get/getPoiEditData.php?Poi_id=0');$('#system_33').focus();" title="Add point of interest">Points of Interest</a></td>
-				<td class="systeminfo_station_name" style="min-width:400px;">Bookmarks</td>
+				<td class="heading" style="min-width:400px;"><a href="javascript:void(0);" onclick="tofront('addPoi');update_values('/get/getPoiEditData.php?Poi_id=0');$('#system_33').focus();" title="Add point of interest">Points of Interest</a></td>
+				<td class="heading" style="min-width:400px;">Bookmarks</td>
 			</tr>
 			<tr>
-				<td style="vertical-align:top;">
+				<td style="vertical-align:top;padding:0px;">
 					<?php
 					$usable = usable_coords();
 					$usex = $usable["x"];
@@ -247,7 +247,7 @@ function maketable($res, $type, &$to_last)
 					echo maketable($poi_res, "Poi");
 					?>
 				</td>
-				<td style="vertical-align:top;">
+				<td style="vertical-align:top;padding:0px;">
 					<?php
 					// get bookmarks
 					$bm_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT user_bookmarks.id, user_bookmarks.system_id, user_bookmarks.system_name,

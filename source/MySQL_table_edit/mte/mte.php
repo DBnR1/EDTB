@@ -554,7 +554,7 @@ class MySQLtabledit
 			if ($_GET['s'] && $_GET['f'])
 			{
 				if ($this->query_joomla_component) $add_joomla = '?option=' . $this->query_joomla_component;
-				$seach_form .= "<button class='button' onclick='window.location=\"$this->url_script$add_joomla\"' style='margin: 0 0 10px 10px;'>{$this->text['Clear_search']}</button>";
+				$seach_form .= "<button class='button' style='margin-left:0px;margin-top:6px;' onclick='window.location=\"$this->url_script$add_joomla\"' style='margin: 0 0 10px 10px;'>{$this->text['Clear_search']}</button>";
 			}
 
 			$seach_form .= "
@@ -927,43 +927,6 @@ class MySQLtabledit
 		}
 
 		if ($this->query_joomla_component) $add_joomla = '?option=' . $this->query_joomla_component;
-
-		echo "";
-		?>
-		<!--<script>
-			YUI().use('pjax', function (Y) {
-				var pjax = new Y.Pjax({container: '.entries_inner', linkSelector: '.mtelink', contentSelector: '.mte_content'});
-				pjax.on('navigate', function (e) {
-					$('.se-pre-con').show();
-				});
-				pjax.on(['error', 'load'], function (e) {
-					$('.se-pre-con').fadeOut('slow');
-				});
-			});
-		</script>
-		<script>
-			YUI().use('pjax', function (Y) {
-				var pjax2 = new Y.Pjax({container: '.entries_inner', linkSelector: '.mte_nav_prev_next', contentSelector: '.mte_content'});
-				pjax2.on('navigate', function (e) {
-					$('.se-pre-con').show();
-				});
-				pjax2.on(['error', 'load'], function (e) {
-					$('.se-pre-con').fadeOut('slow');
-				});
-			});
-		</script>
-		<script>
-			YUI().use('pjax', function (Y) {
-				var pjax3 = new Y.Pjax({container: '.entries_inner', linkSelector: '.mte_head', contentSelector: '.mte_content'});
-				pjax3.on('navigate', function (e) {
-					$('.se-pre-con').show();
-				});
-				pjax3.on(['error', 'load'], function (e) {
-					$('.se-pre-con').fadeOut('slow');
-				});
-			});
-		</script>-->
-		<?php
 
 		echo "
 		<div class='mte_content'>

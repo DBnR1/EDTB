@@ -144,7 +144,7 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 			</div>
 			<div class="rightpanel">
 				<div class="rightpanel-top">
-					<a href="javascript:void(0);" id="toggle" onclick="get_cs('system_1', 'false', 'system_id');tofront('addlog');$('.addstations').toggle();$('#html').markItUp(mySettings);$('#html').attr('id', 'test');$('#log_form').trigger('reset');" title="Add log entry">
+					<a href="javascript:void(0);" id="toggle" onclick="get_cs('system_1', 'false', 'system_id');tofront('addlog');$('.addstations').toggle();$('#log_form').trigger('reset');$('#edit_id').val('');" title="Add log entry">
 						<img src="/style/img/elite.png" alt="Add log" class="elite_emb" />
 					</a>
 
@@ -190,13 +190,13 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 					<div class="settings_panel" id="about">
 						<table>
 							<tr>
-								<td colspan="3" class="station_info_price_category">What is ED ToolBox?</td>
+								<td colspan="3" class="light">What is ED ToolBox?</td>
 							</tr>
 							<tr>
 								<td class="info_td" colspan="3" style="padding-bottom:5px;padding-top:5px;">ED ToolBox is a companion tool for the <a href="http://www.frontier.co.uk/" target="_BLANK">Frontier Developments&nbsp;<img src="/style/img/external_link.png" style="vertical-align:middle;margin-bottom:3px;" alt="ext" /></a> game <a href="http://www.elitedangerous.com" target="_BLANK">Elite: Dangerous&nbsp;<img src="/style/img/external_link.png" style="vertical-align:middle;margin-bottom:3px;" alt="ext" /></a>.<br />ED ToolBox is an unofficial tool and is in no way affiliated with Frontier Developments.</td>
 							</tr>
 							<tr>
-								<td colspan="3" class="station_info_price_category">Acknowledgements</td>
+								<td colspan="3" class="light">Acknowledgements</td>
 							</tr>
 							<tr>
 								<td class="info_td" colspan="3" style="padding-bottom:10px;padding-top:5px;">This tool and its usage rely heavily on open source resources. Here's a list of (hopefully) all of them:</td>

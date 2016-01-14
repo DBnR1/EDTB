@@ -1111,38 +1111,38 @@ button:hover, .button:hover
 	margin-bottom:14px;
 }
 
-.systeminfo_station_prices
+/*.systeminfo_station_prices
 {
 	display:none;
 	width:100%;
 	margin-bottom:14px;
 	vertical-align:middle;
-}
+}*/
 
-.station_info_price_category
+.light
 {
 	font-family:Sintony;
 	color:#fffffa;
 	font-size:12px;
-	font-weight:bold;
+	/*font-weight:bold;*/
 	background-color:#37474F;
-	padding:4px;
+	padding:6px;
 	vertical-align:middle;
 	opacity:0.9;
 }
 
-.station_info_price_info_t
+.transparent
 {
 	font-family:Sintony;
 	color:#fffffa;
 	font-size:12px;
-	padding:5px;
+	padding:6px;
 	vertical-align:middle;
 	background-color:transparent;
 	line-height:1.5;
 }
 
-.station_info_price_info
+/*.dark
 {
 	font-family:Sintony;
 	color:#fffffa;
@@ -1152,9 +1152,9 @@ button:hover, .button:hover
 	background-color:#38484F;
 	line-height:1.5;
 	opacity:0.9;
-}
+}*/
 
-.station_info_price_info2
+.dark
 {
 	font-family:Sintony;
 	color:#fffffa;
@@ -1166,7 +1166,7 @@ button:hover, .button:hover
 	opacity:0.9;
 }
 
-.station_info_price_info3
+/*.dark3
 {
 	padding:6px;
 	vertical-align:middle;
@@ -1174,39 +1174,41 @@ button:hover, .button:hover
 	line-height:1.5;
 	border:none;
 	opacity:0.9;
-}
+}*/
 
-.station_info_price_info_highlight
+/*.dark_highlight
 {
 	padding:6px;
 	vertical-align:middle;
 	background-color:#114359;
 }
 
-.station_info_price_info_highlight2
+.dark_highlight2
 {
 	padding:6px;
 	vertical-align:middle;
 	background-color:#114359;
-}
+}*/
 
-.systeminfo_station_name
+.heading
 {
 	font-family:Sintony;
-	color:#FFF;
+	color:#FFFFFA;
+	vertical-align:middle;
 	text-shadow:1px 1px 4px #333;
-	line-height:90%!important;
 	background-color:#0C1D24;
 	font-size:13px;
 	padding:7px;
 	text-transform:uppercase;
 	border:1px solid #171717;
+	border-left:none;
+	border-right:none;
 }
 
-.systeminfo_station_name:hover,.systeminfo_station_name:focus
+/*.heading:hover,.heading:focus
 {
 	box-shadow:inset 0 0 0 22px #0C1D24, 0 0 1px rgba(0,0,0,0);
-}
+}*/
 
 .systeminfo_station_info
 {
@@ -1229,40 +1231,6 @@ button:hover, .button:hover
 	font-family:Sintony;
 	color:#fffffa;
 	font-size:12px;
-}
-
-::-webkit-scrollbar
-{
-	width:5px;
-}
-
-/* this targets the default scrollbar (compulsory) */
-::-webkit-scrollbar-track
-{
-	background-color:#121619;
-	background-image:-webkit-gradient(linear, left top, left bottom, from(#121619), to(#313131));
-	background-repeat:stretch;
-}
-
-/* the new scrollbar will have a flat appearance with the set background color */
-::-webkit-scrollbar-thumb
-{
-	background-color:#39657b;
-	border-right:1px solid #374f8d;
-	border-left:1px solid #374f8d;
-	width:4px;
-}
-
-/* this will style the thumb, ignoring the track */
-::-webkit-scrollbar-button
-{
-	display:none;
-}
-
-/* optionally, you can style the top and the bottom buttons (left and right for horizontal bars) */
-::-webkit-scrollbar-corner
-{
-	background-color:#000;
 }
 
 /* http://www.menucool.com/tooltip/css-tooltip */
@@ -1579,6 +1547,12 @@ div.tooltip
 	float:left;
 }
 
+.ns_nearest
+{
+	margin-left:0px;
+	padding-left:0px;
+}
+
 /* -------------------------------------------------------------------------- */
 /* SVG loader (from ED3D Galaxy Map) */
 /* -------------------------------------------------------------------------- */
@@ -1870,35 +1844,81 @@ div.tooltip
 	background-color:#3C769D;
 }
 
-.markItUp .markItUpButton1 a {
+.markItUp .markItUpButton1 a
+{
 	background-image:url(/style/img/markItUp/bold.png);
 }
-.markItUp .markItUpButton2 a {
+.markItUp .markItUpButton2 a
+{
 	background-image:url(/style/img/markItUp/italic.png);
 }
-.markItUp .markItUpButton3 a {
+.markItUp .markItUpButton3 a
+{
 	background-image:url(/style/img/markItUp/stroke.png);
 }
-.markItUp .markItUpButton4 a {
+.markItUp .markItUpButton4 a
+{
 	background-image:url(/style/img/markItUp/list-bullet.png);
 }
-.markItUp .markItUpButton5 a {
+.markItUp .markItUpButton5 a
+{
 	background-image:url(/style/img/markItUp/list-numeric.png);
 }
-.markItUp .markItUpButton6 a {
+.markItUp .markItUpButton6 a
+{
 	background-image:url(/style/img/markItUp/list-item.png);
 }
-.markItUp .markItUpButton7 a {
+.markItUp .markItUpButton7 a
+{
 	background-image:url(/style/img/markItUp/picture.png);
 }
-.markItUp .markItUpButton8 a {
+.markItUp .markItUpButton8 a
+{
 	background-image:url(/style/img/markItUp/link.png);
 }
 
-.markItUp .clean a {
+.markItUp .clean a
+{
 	background-image:url(/style/img/markItUp/clean.png);
 }
-.markItUp .preview a {
+.markItUp .preview a
+{
 	background-image:url(/style/img/markItUp/preview.png);
+}
+
+/**/
+
+::-webkit-scrollbar
+{
+	width:7px;
+}
+
+/* this targets the default scrollbar (compulsory) */
+::-webkit-scrollbar-track
+{
+	background-color:#121619;
+	background-image:-webkit-gradient(linear, left top, left bottom, from(#121619), to(#313131));
+	background-repeat:stretch;
+}
+
+/* the new scrollbar will have a flat appearance with the set background color */
+::-webkit-scrollbar-thumb
+{
+	background-color:#39657b;
+	border-right:1px solid #374f8d;
+	border-left:1px solid #374f8d;
+	width:7px;
+}
+
+/* this will style the thumb, ignoring the track */
+::-webkit-scrollbar-button
+{
+	display:none;
+}
+
+/* optionally, you can style the top and the bottom buttons (left and right for horizontal bars) */
+::-webkit-scrollbar-corner
+{
+	background-color:#000;
 }
 

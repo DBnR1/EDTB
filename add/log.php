@@ -94,24 +94,24 @@ if (isset($_GET["do"]))
 			<div class="suggestions" id="suggestions_1" style="margin-left:10px;margin-top:73px;"></div>
 			<table>
 				<tr>
-					<td class="systeminfo_station_name" colspan="2">Add/Edit Log Entry</td>
+					<td class="heading" colspan="2">Add/Edit Log Entry<span class="right"><a href="javascript:void(0);" onclick="tofront('addlog');$('.addstations').toggle();" title="Close form"><img src="/style/img/close.png" alt="close" /></a></span></td>
 				</tr>
 				<tr>
-					<td class="station_info_price_info2">
+					<td class="dark">
 						<input type="hidden" name="edit_id" id="edit_id" />
 						<input class="textbox" type="text" name="system_name" placeholder="System name (leave empty for general log entry)" id="system_1" style="width:96%;margin-left:0px;" oninput="showResult(this.value, '1');" />
 					</td>
-					<td class="station_info_price_info2">
+					<td class="dark">
 						<input class="textbox" type="text" name="station_name" placeholder="Station name (optional)" id="statname" style="width:96%;" oninput="showResult(this.value, '41', 'no', 'yes', 'no', document.getElementById('system_1').value);" /><br />
 					</td>
 				</tr>
 				<tr>
-					<td class="station_info_price_info2" colspan="2">
+					<td class="dark" colspan="2">
 						<textarea id="html" name="log_entry" placeholder="Log entry" rows="10" cols="40"></textarea>
 					</td>
 				</tr>
 				<tr>
-					<td class="station_info_price_info2" colspan="2">
+					<td class="dark" colspan="2">
 						<a href="javascript:void(0);">
 							<div class="button" onclick="update_data('log_form', '/add/log.php?do', true);tofront('null', true);$('#log_form').trigger('reset');return false;">Submit log entry</div>
 						</a>

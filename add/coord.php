@@ -170,19 +170,19 @@ else
 		<div class="input-inner">
 			<table>
 				<tr>
-					<td class="systeminfo_station_name" colspan="2">Calculate Coordinates</td>
+					<td class="heading" colspan="2">Calculate Coordinates<span class="right"><a href="javascript:void(0);" onclick="tofront('calculate');" title="Close form"><img src="/style/img/close.png" alt="close" /></a></span></td>
 				</tr>
 				<tr>
-					<td class="station_info_price_category" colspan="2" style="text-align:left;">Target System</td>
+					<td class="light" colspan="2" style="text-align:left;">Target System</td>
 				</tr>
 				<tr>
-					<td class="station_info_price_info2" colspan="2">
+					<td class="dark" colspan="2">
 						<input class="textbox" type="text" name="target_system" value="<?php echo $current_system?>" id="target_system" placeholder="Target system" style="width:300px;" />
 					</td>
 				</tr>
 				<tr>
-					<td class="station_info_price_category" style="text-align:right;">Reference system</td>
-					<td class="station_info_price_category">Distance&nbsp;&nbsp;&nbsp;<button id="clear" style="width:80px;white-space:nowrap;" onclick="$('#ref_1_dist').val('');$('#ref_2_dist').val('');$('#ref_3_dist').val('');$('#ref_4_dist').val('');return false;">Clear All</button></td>
+					<td class="light" style="text-align:right;">Reference system</td>
+					<td class="light">Distance&nbsp;&nbsp;&nbsp;<button id="clear" style="width:80px;white-space:nowrap;" onclick="$('#ref_1_dist').val('');$('#ref_2_dist').val('');$('#ref_3_dist').val('');$('#ref_4_dist').val('');return false;">Clear All</button></td>
 				</tr>
 					<?php
 					$i = 1;
@@ -193,15 +193,15 @@ else
 						{
 							$ref_rname = $ref[$i]["name"];
 						}
-						echo '<tr><td class="station_info_price_info2" style="text-align:right;"><input class="textbox" type="hidden" name="reference_' . $i . '" value="' . $ref_rname . '" />
+						echo '<tr><td class="dark" style="text-align:right;"><input class="textbox" type="hidden" name="reference_' . $i . '" value="' . $ref_rname . '" />
 						<input class="textbox" type="hidden" name="reference_' . $i . '_coordinates" value="' . $ref_coordinates . '" />
-						<strong>' . $ref_rname . '</strong></td><td class="station_info_price_info2">
+						<strong>' . $ref_rname . '</strong></td><td class="dark">
 						<input class="textbox" type="text" id="ref_' . $i . '_dist" name="reference_' . $i . '_distance" value="' . $ref[$i]["distance"] . '" placeholder="Distance" style="width:100px;" /></td></tr>';
 						$i++;
 					}
 					?>
 				<tr>
-					<td class="station_info_price_category" colspan="2">
+					<td class="light" colspan="2">
 						<button id="submitc" onclick="update_data('calc_form', '/add/coord.php?do', true);tofront('null', true);return false;">Submit Query</button>
 					</td>
 				</tr>
