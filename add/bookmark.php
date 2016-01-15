@@ -66,7 +66,7 @@ if (isset($_GET["do"]))
 <div class="input" id="addBm">
 	<form method="post" id="bm_form" action="bookmark.php">
 		<div class="input-inner">
-			<div class="suggestions" id="suggestions_3" style="margin-top:73px;margin-left:14px;"></div>
+			<div class="suggestions" id="suggestions_3" style="margin-top:79px;margin-left:14px;"></div>
 			<table>
 				<tr>
 					<td class="heading" colspan="2">Add/edit bookmark<span class="right"><a href="javascript:void(0);" onclick="tofront('addBm');" title="Close form"><img src="/style/img/close.png" alt="close" /></a></span></td>

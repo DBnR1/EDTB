@@ -50,8 +50,8 @@
 				<!-- calculate distances -->
 				<div class="input" id="distance" style="text-align:center;">
 					<div class="input-inner">
-						<div class="suggestions" id="suggestions_2" style="margin-left:8px;margin-top:110px;"></div>
-						<div class="suggestions" id="suggestions_6" style="margin-left:8px;margin-top:232px;"></div>
+						<div class="suggestions" id="suggestions_2" style="margin-left:8px;margin-top:115px;"></div>
+						<div class="suggestions" id="suggestions_6" style="margin-left:8px;margin-top:237px;"></div>
 						<table>
 							<tr>
 								<td class="heading" colspan="2">Calculate Distances<span class="right"><a href="javascript:void(0);" onclick="tofront('distance');"><img src="/style/img/close.png" alt="close" /></a></span></td>
@@ -92,8 +92,8 @@
 				<!-- search systems and stations-->
 				<div class="input" id="search_system" style="text-align:center;">
 					<div class="input-inner">
-						<div class="suggestions" id="suggestions_8" style="margin-left:8px;margin-top:73px;"></div>
-						<div class="suggestions" id="suggestions_9" style="margin-left:223px;margin-top:73px;"></div>
+						<div class="suggestions" id="suggestions_8" style="margin-left:8px;margin-top:79px;"></div>
+						<div class="suggestions" id="suggestions_9" style="margin-left:223px;margin-top:79px;"></div>
 						<table>
 							<tr>
 								<td class="heading" colspan="2">Search Systems and Stations<span class="right"><a href="javascript:void(0);" onclick="tofront('search_system');" title="Close form"><img src="/style/img/close.png" alt="close" /></a></span></td>

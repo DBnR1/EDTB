@@ -84,7 +84,7 @@ if ($_SERVER['PHP_SELF'] == "/poi.php")
     <div class="input" id="addPoi" style="text-align:center;">
 		<form method="post" id="poi_form" action="poi.php">
 			<div class="input-inner">
-				<div class="suggestions" id="suggestions_33" style="margin-top:110px;margin-left:10px;"></div>
+				<div class="suggestions" id="suggestions_33" style="margin-top:115px;margin-left:10px;"></div>
 				<table>
 					<tr>
 						<td class="heading" colspan="2">Add/edit Point of Interest<span class="right"><a href="javascript:void(0);" onclick="tofront('addPoi');" title="Close form"><img src="/style/img/close.png" alt="close" /></a></span></td>

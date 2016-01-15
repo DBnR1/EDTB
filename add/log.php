@@ -90,8 +90,8 @@ if (isset($_GET["do"]))
 <div class="input" id="addlog">
 	<form method="post" id="log_form" action="log.php">
 		<div class="input-inner">
-			<div class="suggestions" id="suggestions_41" style="margin-left:400px;margin-top:73px;"></div>
-			<div class="suggestions" id="suggestions_1" style="margin-left:10px;margin-top:73px;"></div>
+			<div class="suggestions" id="suggestions_41" style="margin-left:400px;margin-top:79px;"></div>
+			<div class="suggestions" id="suggestions_1" style="margin-left:10px;margin-top:79px;"></div>
 			<table>
 				<tr>
 					<td class="heading" colspan="2">Add/Edit Log Entry<span class="right"><a href="javascript:void(0);" onclick="tofront('addlog');$('.addstations').toggle();" title="Close form"><img src="/style/img/close.png" alt="close" /></a></span></td>
