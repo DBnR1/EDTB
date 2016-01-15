@@ -49,7 +49,7 @@ $links = array( "ED ToolBox--log.png--true" => "/",
 				"System Log--log.png--true" => "/");
 
 // reference systems for trilateration, 4 needed
-$referencesystems = array(  "Ra" => "-20.843750,-43.937500,22.656250",
-                            "Ge" => "82.406250,-50.937500,-134.468750",
-                            "Ki" => "-16.781250,-29.156250,-65.156250",
+$referencesystems = array(  "Avik" => "13.9688,-4.59375,-6",
+                            "Annarthia" => "41.5,-252.25,37.625",
+                            "Vorden" => "-170.281,1.28125,-19.7188",
                             "Wi" => "13.531250,25.687500,-48.156250");

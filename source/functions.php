@@ -176,7 +176,12 @@ if (is_dir($settings["log_dir"]))
 							$visited_on_utc = date("Y-m-d H:i:s");
 							$export = file_get_contents("http://www.edsm.net/api-logs-v1/set-log?commanderName=" . urlencode($settings["edsm_cmdr_name"]) . "&apiKey=" . $settings["edsm_api_key"] . "&systemName=" . urlencode($current_system) . "&dateVisited=" . urlencode($visited_on_utc) . "");
 
-							write_log($export, __FILE__, __LINE__);
+							$exports = json_decode($export, true);
+
+							if ($exports["msgnum"] != "100")
+							{
+								write_log($export, __FILE__, __LINE__);
+							}
 						}
 
 						$newSystem = TRUE;

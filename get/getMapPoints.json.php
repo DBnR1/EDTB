@@ -24,7 +24,8 @@
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 Header("content-type: application/json");
 
-if (valid_coordinates($coordx, $coordy, $coordz))
+$last_system_name = $current_system;
+if (!valid_coordinates($coordx, $coordy, $coordz))
 {
 	// get last known coordinates
 	$last_coords = last_known_system();
@@ -32,6 +33,8 @@ if (valid_coordinates($coordx, $coordy, $coordz))
 	$coordx = $last_coords["x"];
 	$coordy = $last_coords["y"];
 	$coordz = $last_coords["z"];
+
+	$last_system_name = $last_coords["name"];
 }
 
 $data = "";
@@ -87,7 +90,7 @@ if ($settings["galmap_show_visited_systems"] == "true")
 			*	if coords are not set, see if user has calculated them
 			*/
 
-			if (!is_numeric($vs_coordx) && !is_numeric($vs_coordy) && !is_numeric($vs_coordz))
+			if (!valid_coordinates($vs_coordx, $vs_coordy, $vs_coordz))
 			{
 				$cb_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT x, y, z
 																	FROM user_systems_own
@@ -101,7 +104,7 @@ if ($settings["galmap_show_visited_systems"] == "true")
 				$vs_coordz = $cb_arr["z"] == "" ? "" : $cb_arr["z"];
 			}
 
-			if ($vs_coordx != "" && $vs_coordy != "" && $vs_coordz != "")
+			if (valid_coordinates($vs_coordx, $vs_coordy, $vs_coordz))
 			{
 				$allegiance = $row["allegiance"];
 				$visit = $row["visit"];
@@ -360,9 +363,14 @@ if ($settings["galmap_show_rares"] == "true")
 }
 
 $info = '</div>';
-$cur_sys_data = '{"name": "' . $current_system  . '","cat": [5],"coords": {"x": ' . $coordx . ',"y": ' . $coordy . ',"z": ' . $coordz . '},"infos":' . json_encode($info) . '}';
+$cur_sys_data = "";
 
-$data = "" . $data_start . "" . $data . "," . $cur_sys_data . "]}";
+if (strtolower($last_system_name) == strtolower($current_system))
+{
+	$cur_sys_data = ',{"name": "' . $current_system  . '","cat": [5],"coords": {"x": ' . $coordx . ',"y": ' . $coordy . ',"z": ' . $coordz . '}}';
+}
+
+$data = "" . $data_start . "" . $data . "" . $cur_sys_data . "]}";
 $map_json = "" . $_SERVER["DOCUMENT_ROOT"] . "/map_points.json";
 file_put_contents($map_json, $data);
 

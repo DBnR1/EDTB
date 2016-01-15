@@ -265,6 +265,7 @@ function maketable($res, $type, &$to_last)
 																			LEFT JOIN user_bm_categories ON user_bookmarks.category_id = user_bm_categories.id
 																			ORDER BY sqrt(pow((item_coordx-(" . $usex . ")),2)+pow((item_coordy-(" . $usey . ")),2)+pow((item_coordz-(" . $usez . ")),2)), system_name")
 																			or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+					$i = 0;
 					echo maketable($bm_res, "Bm");
 					?>
 				</td>

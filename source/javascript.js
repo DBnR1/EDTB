@@ -70,7 +70,8 @@ function get_data(override)
 {
     var override = override || false;
 
-    if (override == true) {
+    if (override == true)
+	{
         requestno = 0;
     }
 
@@ -94,6 +95,10 @@ function get_data(override)
                 $('#systeminfo').html(result['system_info']);
                 $('#scrollable').html(result['log_data']);
                 $('#stations').html(result['station_data']);
+				$('#ref_1_dist').val('');
+				$('#ref_2_dist').val('');
+				$('#ref_3_dist').val('');
+				$('#ref_4_dist').val('');
 
 				// if we're on the system info page
                 if (document.getElementById('system_page'))
@@ -331,7 +336,7 @@ function update_data(formid, file, update_map)
         url: file,
         data: { input: st}
     })
-    .done(function( msg )
+    .done(function(msg)
 	{
         if (msg)
 		{

@@ -44,87 +44,94 @@ if (isset($_GET["do"]))
 	$reference_3_distance = $data["reference_3_distance"];
 	$reference_4_distance = $data["reference_4_distance"];
 
-	$reference_distances = "" . $reference_1_system . ":" . $reference_1_distance . "-" . $reference_2_system . ":" . $reference_2_distance . "-" . $reference_3_system . ":" . $reference_3_distance . "-" . $reference_4_system . ":" . $reference_4_distance . "";
-
-	$reference_1 = explode(",", $reference_1_coordinates);
-	$reference_2 = explode(",", $reference_2_coordinates);
-	$reference_3 = explode(",", $reference_3_coordinates);
-	$reference_4 = explode(",", $reference_4_coordinates);
-
-	$system1 = array($reference_1[0], $reference_1[1], $reference_1[2], $reference_1_distance);
-	$system2 = array($reference_2[0], $reference_2[1], $reference_2[2], $reference_2_distance);
-	$system3 = array($reference_3[0], $reference_3[1], $reference_3[2], $reference_3_distance);
-	$system4 = array($reference_4[0], $reference_4[1], $reference_4[2], $reference_4_distance);
-
-	$newcoords = trilateration3d($system1, $system2, $system3, $system4);
-	$newcoords_x = $newcoords[0];
-	$newcoords_y = $newcoords[1];
-	$newcoords_z = $newcoords[2];
-
-	$system_exists = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id
-																				FROM user_systems_own
-																				WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $target_system) . "'
-																				LIMIT 1"));
-
-	if ($system_exists == 0)
+	if (is_numeric($reference_1_distance) && is_numeric($reference_2_distance) && is_numeric($reference_3_distance) && is_numeric($reference_4_distance))
 	{
-		mysqli_query($GLOBALS["___mysqli_ston"], "	INSERT INTO user_systems_own
-													(name, x, y, z, reference_distances)
-													VALUES
-													('" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $target_system) . "',
-													'" . $newcoords_x . "',
-													'" . $newcoords_y . "',
-													'" . $newcoords_z . "',
-													'" . $reference_distances . "')") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+		$reference_distances = "" . $reference_1_system . ":" . $reference_1_distance . "-" . $reference_2_system . ":" . $reference_2_distance . "-" . $reference_3_system . ":" . $reference_3_distance . "-" . $reference_4_system . ":" . $reference_4_distance . "";
+
+		$reference_1 = explode(",", $reference_1_coordinates);
+		$reference_2 = explode(",", $reference_2_coordinates);
+		$reference_3 = explode(",", $reference_3_coordinates);
+		$reference_4 = explode(",", $reference_4_coordinates);
+
+		$system1 = array($reference_1[0], $reference_1[1], $reference_1[2], $reference_1_distance);
+		$system2 = array($reference_2[0], $reference_2[1], $reference_2[2], $reference_2_distance);
+		$system3 = array($reference_3[0], $reference_3[1], $reference_3[2], $reference_3_distance);
+		$system4 = array($reference_4[0], $reference_4[1], $reference_4[2], $reference_4_distance);
+
+		$newcoords = trilateration3d($system1, $system2, $system3, $system4);
+		$newcoords_x = $newcoords[0];
+		$newcoords_y = $newcoords[1];
+		$newcoords_z = $newcoords[2];
+
+		$system_exists = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id
+																					FROM user_systems_own
+																					WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $target_system) . "'
+																					LIMIT 1"));
+
+		if ($system_exists == 0)
+		{
+			mysqli_query($GLOBALS["___mysqli_ston"], "	INSERT INTO user_systems_own
+														(name, x, y, z, reference_distances)
+														VALUES
+														('" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $target_system) . "',
+														'" . $newcoords_x . "',
+														'" . $newcoords_y . "',
+														'" . $newcoords_z . "',
+														'" . $reference_distances . "')") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+		}
+		else
+		{
+			mysqli_query($GLOBALS["___mysqli_ston"], "	UPDATE user_systems_own
+														SET name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $target_system) . "',
+															x = '" . $newcoords_x . "',
+															y = '" . $newcoords_y . "',
+															z = '" . $newcoords_z . "',
+															reference_distances = '" . $reference_distances . "'
+														WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $target_system) . "'
+														LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+		}
+
+		/*
+		*	submit to EDSM
+		*/
+
+		$json_string = '{
+		"data": {
+			"fromSoftware": "ED ToolBox",
+			"fromSoftwareVersion": "' . $settings["edtb_version"] . '",
+			"commander": "' . $settings["edsm_cmdr_name"] . '",
+			"p0": {
+				"name": "' . $target_system . '"
+			},
+			"refs": [{
+				"name": "' . $reference_1_system . '",
+				"dist": ' . $reference_1_distance . '
+			}, {
+				"name": "' . $reference_2_system . '",
+				"dist": ' . $reference_2_distance . '
+			}, {
+				"name": "' . $reference_3_system . '",
+				"dist": ' . $reference_3_distance . '
+			}, {
+				"name": "' . $reference_4_system . '",
+				"dist": ' . $reference_4_distance . '
+			}]
+		}
+		}';
+
+		$opts = array('http' => array('method' => 'POST', 'header' => "Content-type: json\r\n" ."Referer: http://www.edsm.net/api-v1/submit-distances\r\n", 'content' => $json_string ) );
+
+		$context = stream_context_create($opts);
+
+		$result = file_get_contents('http://www.edsm.net/api-v1/submit-distances', false, $context);
+
+		write_log($json_string, __FILE__, __LINE__);
+		write_log($result, __FILE__, __LINE__);
 	}
 	else
 	{
-		mysqli_query($GLOBALS["___mysqli_ston"], "	UPDATE user_systems_own
-													SET name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $target_system) . "',
-														x = '" . $newcoords_x . "',
-														y = '" . $newcoords_y . "',
-														z = '" . $newcoords_z . "',
-														reference_distances = '" . $reference_distances . "'
-													WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $target_system) . "'
-													LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+		write_log("Error: Distances not numeric or all distances not given.", __FILE__, __LINE__);
 	}
-
-	/*
-	*	submit to EDSM
-	*/
-
-	$json_string = '{
-	"data": {
-		"fromSoftware": "ED ToolBox",
-		"fromSoftwareVersion": "' . $settings["edtb_version"] . '",
-		"commander": "' . $settings["edsm_cmdr_name"] . '",
-		"p0": {
-			"name": "' . $target_system . '"
-		},
-		"refs": [{
-			"name": "' . $reference_1_system . '",
-			"dist": ' . $reference_1_distance . '
-		}, {
-			"name": "' . $reference_2_system . '",
-			"dist": ' . $reference_2_distance . '
-		}, {
-			"name": "' . $reference_3_system . '",
-			"dist": ' . $reference_3_distance . '
-		}, {
-			"name": "' . $reference_4_system . '",
-			"dist": ' . $reference_4_distance . '
-		}]
-	}
-	}';
-
-	$opts = array('http' => array('method' => 'POST', 'header' => "Content-type: json\r\n" ."Referer: http://www.edsm.net/api-v1/submit-distances\r\n", 'content' => $json_string ) );
-
-	$context = stream_context_create($opts);
-
-	$result = file_get_contents('http://www.edsm.net/api-v1/submit-distances', false, $context);
-
-	write_log($json_string, __FILE__, __LINE__);
-	write_log($result, __FILE__, __LINE__);
 
 	((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
 
@@ -173,7 +180,7 @@ else
 					<td class="heading" colspan="2">Calculate Coordinates<span class="right"><a href="javascript:void(0);" onclick="tofront('calculate');" title="Close form"><img src="/style/img/close.png" alt="close" /></a></span></td>
 				</tr>
 				<tr>
-					<td class="light" colspan="2" style="text-align:left;">Target System</td>
+					<td class="light" colspan="2" style="text-align:left;"><strong>Target System</strong></td>
 				</tr>
 				<tr>
 					<td class="dark" colspan="2">
@@ -181,8 +188,8 @@ else
 					</td>
 				</tr>
 				<tr>
-					<td class="light" style="text-align:right;">Reference system</td>
-					<td class="light">Distance&nbsp;&nbsp;&nbsp;<button id="clear" style="width:80px;white-space:nowrap;" onclick="$('#ref_1_dist').val('');$('#ref_2_dist').val('');$('#ref_3_dist').val('');$('#ref_4_dist').val('');return false;">Clear All</button></td>
+					<td class="light" style="text-align:right;"><strong>Reference system</strong></td>
+					<td class="light"><strong>Distance (ly)</strong><button id="clear" style="width:80px;white-space:nowrap;margin-left:10px;" onclick="$('#ref_1_dist').val('');$('#ref_2_dist').val('');$('#ref_3_dist').val('');$('#ref_4_dist').val('');return false;">Clear All</button></td>
 				</tr>
 					<?php
 					$i = 1;
@@ -196,7 +203,7 @@ else
 						echo '<tr><td class="dark" style="text-align:right;"><input class="textbox" type="hidden" name="reference_' . $i . '" value="' . $ref_rname . '" />
 						<input class="textbox" type="hidden" name="reference_' . $i . '_coordinates" value="' . $ref_coordinates . '" />
 						<strong>' . $ref_rname . '</strong></td><td class="dark">
-						<input class="textbox" type="text" id="ref_' . $i . '_dist" name="reference_' . $i . '_distance" value="' . $ref[$i]["distance"] . '" placeholder="Distance" style="width:100px;" /></td></tr>';
+						<input class="textbox" type="text" id="ref_' . $i . '_dist" name="reference_' . $i . '_distance" value="' . $ref[$i]["distance"] . '" placeholder="1234.56" style="width:100px;" /></td></tr>';
 						$i++;
 					}
 					?>
