@@ -24,19 +24,12 @@
 $logsystem = $_GET["system"];
 if (!$logsystem) exit("No system set");
 
-$logsystem_id = $_GET["system_id"] == "" ? "-1" : $_GET["system_id"];
+$logsystem_id = !isset($_GET["system_id"]) ? "-1" : $_GET["system_id"];
 /*if (!$logsystem_id) exit("No system id set");*/
 
 $pagetitle = "ED ToolBox";
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 ?>
-<script type="text/javascript">
-	function addname()
-	{
-		this.document.getElementById('system_1').value='<?php echo $logsystem ?>';
-		this.document.getElementById('system_id').value='<?php echo $logsystem_id ?>';
-	}
-</script>
 <div class="entries">
 	<div class="entries_inner">
 		<?php
@@ -61,7 +54,7 @@ require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 				$date = date_create($log_arr["stardate"]);
 				$log_added = date_modify($date, "+1286 years");
 
-				echo '<h3><a href="index.php?action=editlog&amp;logid=' . $log_arr["id"] . '&amp;returnto=' . $_SERVER["REQUEST_URI"] . '" style="color:inherit;" title="Click to edit entry">';
+				echo '<h3><a href="javascript:void();" onclick="toggle_log_edit(\'' . $log_arr["id"] . '\');" style="color:inherit;" title="Edit entry">';
 				echo date_format($log_added, "j M Y, H:i");
 				if (!empty($log_station_name))
 				{
@@ -75,7 +68,7 @@ require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 		else
 		{
 			echo "<h2>No log entries for " . $logsystem . "</h2><br />
-					<a href=\"javascript:void(0);\" id=\"toggle\" onclick=\"addname();tofront('addlog')\" title=\"Add log entry\" style=\"color:inherit;\">Click here to add one</a>";
+					<a href=\"javascript:void(0);\" id=\"toggle\" onclick=\"toggle_log('" . $logsystem . "');\" title=\"Add log entry\" style=\"color:inherit;\">Click here to add one</a>";
 		}
 		?>
 	</div>

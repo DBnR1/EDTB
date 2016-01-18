@@ -191,22 +191,22 @@ else
 					<td class="light" style="text-align:right;"><strong>Reference system</strong></td>
 					<td class="light"><strong>Distance (ly)</strong><button id="clear" style="width:80px;white-space:nowrap;margin-left:10px;" onclick="$('#ref_1_dist').val('');$('#ref_2_dist').val('');$('#ref_3_dist').val('');$('#ref_4_dist').val('');return false;">Clear All</button></td>
 				</tr>
-					<?php
-					$i = 1;
-					foreach ($referencesystems as $ref_name => $ref_coordinates)
+				<?php
+				$i = 1;
+				foreach ($referencesystems as $ref_name => $ref_coordinates)
+				{
+					$ref_rname = $ref_name;
+					if ($ref[$i]["name"] != "")
 					{
-						$ref_rname = $ref_name;
-						if ($ref[$i]["name"] != "")
-						{
-							$ref_rname = $ref[$i]["name"];
-						}
-						echo '<tr><td class="dark" style="text-align:right;"><input class="textbox" type="hidden" name="reference_' . $i . '" value="' . $ref_rname . '" />
-						<input class="textbox" type="hidden" name="reference_' . $i . '_coordinates" value="' . $ref_coordinates . '" />
-						<strong>' . $ref_rname . '</strong></td><td class="dark">
-						<input class="textbox" type="text" id="ref_' . $i . '_dist" name="reference_' . $i . '_distance" value="' . $ref[$i]["distance"] . '" placeholder="1234.56" style="width:100px;" /></td></tr>';
-						$i++;
+						$ref_rname = $ref[$i]["name"];
 					}
-					?>
+					echo '<tr><td class="dark" style="text-align:right;"><input class="textbox" type="hidden" name="reference_' . $i . '" value="' . $ref_rname . '" />
+					<input class="textbox" type="hidden" name="reference_' . $i . '_coordinates" value="' . $ref_coordinates . '" />
+					<strong>' . $ref_rname . '</strong></td><td class="dark">
+					<input class="textbox" type="text" id="ref_' . $i . '_dist" name="reference_' . $i . '_distance" value="' . $ref[$i]["distance"] . '" placeholder="1234.56" style="width:100px;" /></td></tr>';
+					$i++;
+				}
+				?>
 				<tr>
 					<td class="light" colspan="2">
 						<button id="submitc" onclick="update_data('calc_form', '/add/coord.php?do', true);tofront('null', true);return false;">Submit Query</button>

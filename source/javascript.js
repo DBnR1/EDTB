@@ -64,6 +64,24 @@ function getUrlVars()
     return vars;
 }
 
+/*
+*	update map_points.json
+*/
+
+function update_map()
+{
+	$.ajax(
+	{
+		url: "/get/getMapPoints.json.php",
+		cache: false,
+		dataType: 'html',
+		success: function()
+		{
+			//console.log('success')
+		}
+	});
+}
+
 var requestno = 0;
 // function to update current system and log every so often -->
 function get_data(override)
@@ -95,10 +113,15 @@ function get_data(override)
                 $('#systeminfo').html(result['system_info']);
                 $('#scrollable').html(result['log_data']);
                 $('#stations').html(result['station_data']);
-				$('#ref_1_dist').val('');
-				$('#ref_2_dist').val('');
-				$('#ref_3_dist').val('');
-				$('#ref_4_dist').val('');
+
+				// clear reference distances if we're in a new system
+				if (result['new_sys'] != "false")
+				{
+					$('#ref_1_dist').val('');
+					$('#ref_2_dist').val('');
+					$('#ref_3_dist').val('');
+					$('#ref_4_dist').val('');
+				}
 
 				// if we're on the system info page
                 if (document.getElementById('system_page'))
@@ -126,16 +149,7 @@ function get_data(override)
                 }
 				if (result['update_map'] != "false")
 				{
-					$.ajax(
-					{
-						url: "/get/getMapPoints.json.php",
-						cache: false,
-						dataType: 'html',
-						success: function()
-						{
-							//console.log('success')
-						}
-					});
+					update_map();
 				}
             }
             requestno = 1;
@@ -435,6 +449,7 @@ function confirmation(delid, what)
 						console.log(url);
 						window.location = url;
 					}
+					update_map();
                     //console.log(delid+' a thing was deleted');
                 }
             });
@@ -445,6 +460,28 @@ function confirmation(delid, what)
 		get_data(true);
 		tofront('null', true);
 	}
+}
+
+function toggle_log(logsystem)
+{
+	$('#log_form').trigger('reset');
+	$('#edit_id').val('');
+	if (logsystem == "")
+	{
+		get_cs('system_1', 'false', 'system_id');
+		$('.addstations').toggle();
+	}
+	else
+	{
+		this.document.getElementById('system_1').value=logsystem;
+	}
+	tofront('addlog');
+}
+
+function toggle_log_edit(log_id)
+{
+	tofront('addlog');
+	update_values('/get/getLogEditData.php?logid='+log_id, log_id);
 }
 
 // get info from clicking on a map point

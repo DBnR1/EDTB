@@ -41,7 +41,7 @@ $data = "";
 $data_start = '{"categories":{';
 if ($settings["galmap_show_visited_systems"] == "true")
 {
-	$data_start .= '"Allegiances":{"1":{"name":"Empire","color":"e7d884"},"2":{"name":"Federation","color":"FFF8E6"},"3":{"name":"Alliance","color":"09b4f4"},"21":{"name":"Independent","color":"34242F"},"99":{"name":"Rest","color":"8c8c8c"}},';
+	$data_start .= '"Visited Systems":{"1":{"name":"Empire","color":"e7d884"},"2":{"name":"Federation","color":"FFF8E6"},"3":{"name":"Alliance","color":"09b4f4"},"21":{"name":"Independent","color":"34242F"},"99":{"name":"Rest","color":"8c8c8c"}},';
 }
 $data_start .= '"Other":{"5":{"name":"Current location","color":"FF0000"},';
 
@@ -60,118 +60,6 @@ if ($settings["galmap_show_rares"] == "true")
 $data_start .= '"11":{"name":"Logged systems","color":"2938F8"}}}, "systems":[';
 
 $last_row = "";
-
-// fetch visited systems data for the map
-if ($settings["galmap_show_visited_systems"] == "true")
-{
-	$result = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT
-														user_visited_systems.system_name AS system_name, user_visited_systems.visit,
-														edtb_systems.x, edtb_systems.y, edtb_systems.z, edtb_systems.id AS sysid, edtb_systems.allegiance
-														FROM user_visited_systems
-														LEFT JOIN edtb_systems ON user_visited_systems.system_name = edtb_systems.name
-														GROUP BY user_visited_systems.system_name
-														ORDER BY user_visited_systems.visit ASC") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-
-	while ($row = mysqli_fetch_array($result))
-	{
-		$info = "";
-
-		$name = $row["system_name"];
-
-		if (strtolower($name) != strtolower($current_system))
-		{
-			$sysid = $row["sysid"];
-			// coordinates
-			$vs_coordx = $row["x"];
-			$vs_coordy = $row["y"];
-			$vs_coordz = $row["z"];
-
-			/*
-			*	if coords are not set, see if user has calculated them
-			*/
-
-			if (!valid_coordinates($vs_coordx, $vs_coordy, $vs_coordz))
-			{
-				$cb_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT x, y, z
-																	FROM user_systems_own
-																	WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $name) . "'
-																	LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-
-				$cb_arr = mysqli_fetch_assoc($cb_res);
-
-				$vs_coordx = $cb_arr["x"] == "" ? "" : $cb_arr["x"];
-				$vs_coordy = $cb_arr["y"] == "" ? "" : $cb_arr["y"];
-				$vs_coordz = $cb_arr["z"] == "" ? "" : $cb_arr["z"];
-			}
-
-			if (valid_coordinates($vs_coordx, $vs_coordy, $vs_coordz))
-			{
-				$allegiance = $row["allegiance"];
-				$visit = $row["visit"];
-				$visit_og = $row["visit"];
-
-				if ($allegiance == "Federation")
-				{
-					$cat = ',"cat": [2]';
-				}
-				else if ($allegiance == "Alliance")
-				{
-					$cat = ',"cat": [3]';
-				}
-				else if ($allegiance == "Empire")
-				{
-					$cat = ',"cat": [1]';
-				}
-				else if ($allegiance == "Independent")
-				{
-					$cat = ',"cat": [21]';
-				}
-				else
-				{
-					$cat = ',"cat": [99]';
-				}
-
-				$logged = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id
-																					FROM user_log
-																					WHERE system_id = '" . $sysid . "'
-																					LIMIT 1"));
-
-				if ($logged == 1 && strtolower($name) != strtolower($current_system))
-				{
-					$cat = ',"cat": [11]';
-				}
-
-				$info .= '<div class="map_info"><span class="map_info_title">Visited system</span><br />';
-
-				if (isset($visit))
-				{
-					$visit = date_create($visit);
-					$visit_date = date_modify($visit, "+1286 years");
-
-					$visit = date_format($visit_date, "d.m.Y, H:i");
-
-					$visit_unix = strtotime($visit_og);
-					$visit_ago = get_timeago($visit_unix, true);
-
-					$info .= '<strong>First visit</strong><br />' . $visit . ' (' . $visit_ago . ')<br />';
-				}
-
-				$info .= '</div>';
-
-				if (isset($name) && isset($vs_coordx) && isset($vs_coordy) && isset($vs_coordz))
-				{
-					$data = '{"name": "' . $name  . '"' . $cat . ',"coords": {"x": ' . $vs_coordx . ',"y": ' . $vs_coordy . ',"z": ' . $vs_coordz . '},"infos":' . json_encode($info) . '}' . $last_row . '';
-				}
-				else
-				{
-					$data = $last_row;
-				}
-
-				$last_row = "," . $data . "";
-			}
-		}
-	}
-}
 
 /*
 *	 fetch point of interest data for the map
@@ -358,6 +246,178 @@ if ($settings["galmap_show_rares"] == "true")
 			$data = '{"name": "' . $rare_disp_name  . '"' . $cat . ',"coords": {"x": ' . $rare_coordx . ',"y": ' . $rare_coordy . ',"z": ' . $rare_coordz . '},"infos":' . json_encode($info) . '}' . $last_row . '';
 
 			$last_row = "," . $data . "";
+		}
+	}
+}
+
+/*
+*	 fetch logged systems data for the map
+*/
+
+
+$log_result = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT user_log.id, user_log.stardate, user_log.log_entry, user_log.system_name,
+															edtb_systems.x, edtb_systems.y, edtb_systems.z
+															FROM user_log
+															LEFT JOIN edtb_systems ON user_log.system_name = edtb_systems.name
+															WHERE user_log.system_name != ''")
+															or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+
+while ($log_row = mysqli_fetch_array($log_result))
+{
+	$info = "";
+	$cat = "";
+	$log_system = $log_row["system_name"];
+
+	//if (strtolower($log_system) != strtolower($current_system))
+	//{
+		// coordinates
+		$log_coordx = $log_row["x"];
+		$log_coordy = $log_row["y"];
+		$log_coordz = $log_row["z"];
+
+		if (!valid_coordinates($log_coordx, $log_coordy, $log_coordz))
+		{
+			$lb_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT x, y, z
+																FROM user_systems_own
+																WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $log_system) . "'
+																LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+
+			$lb_arr = mysqli_fetch_assoc($lb_res);
+
+			$log_coordx = $lb_arr["x"] == "" ? "" : $lb_arr["x"];
+			$log_coordy = $lb_arr["y"] == "" ? "" : $lb_arr["y"];
+			$log_coordz = $lb_arr["z"] == "" ? "" : $lb_arr["z"];
+		}
+
+		if (valid_coordinates($log_coordx, $log_coordy, $log_coordz))
+		{
+			$log_date = $log_row["stardate"];
+			$date = date_create($log_date);
+			$log_added = date_modify($date, "+1286 years");
+			$text = $log_row["log_entry"];
+
+			if (mb_strlen($text) > 40)
+			{
+				$text = "" . substr($text, 0, 40) . "...";
+			}
+
+			$cat = ',"cat": [11]';
+
+			$info .= '<div class="map_info"><span class="map_info_title">Logged System</span><br />';
+			$info .= '<strong>Log entry</strong><br /><a href="/log.php?system=' . $log_system . '" style="color:inherit;font-weight:bold;" title="Click to view the log for this system">' . $text . ' </a><br /><br />';
+
+			$info .= '<strong>Last edited</strong><br />' . date_format($log_added, "j M Y, H:i") . '';
+
+			$info .= '</div>';
+
+			$data = '{"name": "' . $log_system  . '"' . $cat . ',"coords": {"x": ' . $log_coordx . ',"y": ' . $log_coordy . ',"z": ' . $log_coordz . '},"infos":' . json_encode($info) . '}' . $last_row . '';
+
+			$last_row = "," . $data . "";
+		}
+	//}
+}
+
+/*
+*	fetch visited systems data for the map
+*/
+
+if ($settings["galmap_show_visited_systems"] == "true")
+{
+	$result = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT
+														user_visited_systems.system_name AS system_name, user_visited_systems.visit,
+														edtb_systems.x, edtb_systems.y, edtb_systems.z, edtb_systems.id AS sysid, edtb_systems.allegiance
+														FROM user_visited_systems
+														LEFT JOIN edtb_systems ON user_visited_systems.system_name = edtb_systems.name
+														GROUP BY user_visited_systems.system_name
+														ORDER BY user_visited_systems.visit ASC") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+
+	while ($row = mysqli_fetch_array($result))
+	{
+		$info = "";
+
+		$name = $row["system_name"];
+
+		if (strtolower($name) != strtolower($current_system))
+		{
+			$sysid = $row["sysid"];
+			// coordinates
+			$vs_coordx = $row["x"];
+			$vs_coordy = $row["y"];
+			$vs_coordz = $row["z"];
+
+			/*
+			*	if coords are not set, see if user has calculated them
+			*/
+
+			if (!valid_coordinates($vs_coordx, $vs_coordy, $vs_coordz))
+			{
+				$cb_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT x, y, z
+																	FROM user_systems_own
+																	WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $name) . "'
+																	LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+
+				$cb_arr = mysqli_fetch_assoc($cb_res);
+
+				$vs_coordx = $cb_arr["x"] == "" ? "" : $cb_arr["x"];
+				$vs_coordy = $cb_arr["y"] == "" ? "" : $cb_arr["y"];
+				$vs_coordz = $cb_arr["z"] == "" ? "" : $cb_arr["z"];
+			}
+
+			if (valid_coordinates($vs_coordx, $vs_coordy, $vs_coordz))
+			{
+				$allegiance = $row["allegiance"];
+				$visit = $row["visit"];
+				$visit_og = $row["visit"];
+
+				if ($allegiance == "Federation")
+				{
+					$cat = ',"cat": [2]';
+				}
+				else if ($allegiance == "Alliance")
+				{
+					$cat = ',"cat": [3]';
+				}
+				else if ($allegiance == "Empire")
+				{
+					$cat = ',"cat": [1]';
+				}
+				else if ($allegiance == "Independent")
+				{
+					$cat = ',"cat": [21]';
+				}
+				else
+				{
+					$cat = ',"cat": [99]';
+				}
+
+				$info .= '<div class="map_info"><span class="map_info_title">Visited system</span><br />';
+
+				if (isset($visit))
+				{
+					$visit = date_create($visit);
+					$visit_date = date_modify($visit, "+1286 years");
+
+					$visit = date_format($visit_date, "d.m.Y, H:i");
+
+					$visit_unix = strtotime($visit_og);
+					$visit_ago = get_timeago($visit_unix, true);
+
+					$info .= '<strong>First visit</strong><br />' . $visit . ' (' . $visit_ago . ')<br />';
+				}
+
+				$info .= '</div>';
+
+				if (isset($name) && isset($vs_coordx) && isset($vs_coordy) && isset($vs_coordz))
+				{
+					$data = '{"name": "' . $name  . '"' . $cat . ',"coords": {"x": ' . $vs_coordx . ',"y": ' . $vs_coordy . ',"z": ' . $vs_coordz . '},"infos":' . json_encode($info) . '}' . $last_row . '';
+				}
+				else
+				{
+					$data = $last_row;
+				}
+
+				$last_row = "," . $data . "";
+			}
 		}
 	}
 }

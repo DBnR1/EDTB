@@ -144,7 +144,7 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 			</div>
 			<div class="rightpanel">
 				<div class="rightpanel-top">
-					<a href="javascript:void(0);" id="toggle" onclick="get_cs('system_1', 'false', 'system_id');tofront('addlog');$('.addstations').toggle();$('#log_form').trigger('reset');$('#edit_id').val('');" title="Add log entry">
+					<a href="javascript:void(0);" id="toggle" onclick="toggle_log('');" title="Add log entry">
 						<img src="/style/img/elite.png" alt="Add log" class="elite_emb" />
 					</a>
 

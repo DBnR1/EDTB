@@ -82,6 +82,12 @@ if ($newSystem !== FALSE || $request == 0)
 		$data['update_map'] = "true";
 	}
 
+	$data['new_sys'] = "false";
+	if ($newSystem !== FALSE)
+	{
+		$data['new_sys'] = "true";
+	}
+
 	$data['current_system_name'] = $current_system;
 	$data['current_coordinates'] = $current_coordinates;
 
@@ -145,7 +151,7 @@ if ($newSystem !== FALSE || $request == 0)
 	$data['system_title'] .= "<div class='leftpanel-title-text'><span id='ltitle'>";
 
 	$bookmarked = 0;
-	if ($current_id != "")
+	if ($current_id != "-1")
 	{
 		$bres = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id
 															FROM user_bookmarks
@@ -154,10 +160,18 @@ if ($newSystem !== FALSE || $request == 0)
 															LIMIT 1");
 		$bookmarked = mysqli_num_rows($bres);
 	}
+	else
+	{
+		$bres = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id
+															FROM user_bookmarks
+															WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $current_system) . "'
+															LIMIT 1");
+		$bookmarked = mysqli_num_rows($bres);
+	}
 
 	$pres = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id
 														FROM user_poi
-														WHERE system_name = '" . $current_system . "'
+														WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $current_system) . "'
 														AND system_name != ''
 														LIMIT 1");
 	$poid = mysqli_num_rows($pres);
@@ -870,7 +884,7 @@ if ($newSystem !== FALSE || $request == 0)
 					}
 
 					$logdata .= '<h3>
-									<a href="javascript:void(0);" onclick="tofront(\'addlog\');update_values(\'/get/getLogEditData.php?logid=' . $log_arr["id"] . '\',\'' . $log_arr["id"] . '\');" style="color:inherit;" title="Edit entry">';
+									<a href="javascript:void(0);" onclick="toggle_log_edit(\'' . $log_arr["id"] . '\');" style="color:inherit;" title="Edit entry">';
 					$logdata .= date_format($log_added, "j M Y, H:i");
 					if (!empty($log_station_name))
 					{

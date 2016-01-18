@@ -111,7 +111,7 @@ if ($count > 0)
 			$text = $logarr["text"];
 
 			echo '<br />
-					<a href="/user_log.php?system=' . $system . '&system_id=' . $system_id . '" style="color:inherit;font-weight:bold;" title="Click to view the log for this system">
+					<a href="/log.php?system=' . $system . '&system_id=' . $system_id . '" style="color:inherit;font-weight:bold;" title="Click to view the log for this system">
 						' . $text . ' ...
 					</a>';
 		}

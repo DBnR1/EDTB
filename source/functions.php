@@ -23,6 +23,7 @@
 
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
 require_once("" . $settings["install_path"] . "/data/server_config.inc.php");
+
 date_default_timezone_set('UTC');
 
 /*
@@ -820,7 +821,9 @@ function xml2array($url, $get_attributes = 1, $priority = 'tag')
 
 function get_timeago($ptime)
 {
-	$etime = time() - $ptime;
+	global $system_time;
+	$ptime = $ptime-($system_time*60*60);
+	$etime = time()-$ptime;
 
 	if( $etime < 1 )
 	{
@@ -1156,4 +1159,15 @@ function valid_coordinates($x, $y, $z)
 	{
 		return false;
 	}
+}
+
+/*
+*	normalize time
+*/
+
+function normalize($time)
+{
+	$normalized = str_replace(":", ".", $time);
+	$normalized = str_replace(" ", ".", $normalized);
+	return $normalized;
 }
