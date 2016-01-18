@@ -70,7 +70,7 @@ function makeitem($arr, $type, &$to_last, &$i)
 	*	if poi has coordinates, show them first
 	*/
 
-	if (is_numeric($item_coordx) && is_numeric($item_coordy) && is_numeric($item_coordz) || isset($arr["last"]))
+	if (valid_coordinates($item_coordx, $item_coordy, $item_coordz) || isset($arr["last"]))
 	{
 		if (!isset($arr["last"]))
 		{
@@ -87,6 +87,7 @@ function makeitem($arr, $type, &$to_last, &$i)
 																				FROM user_visited_systems
 																				WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $item_system_name) . "'
 																				LIMIT 1"));
+
 		if ($visited)
 		{
 			$style_override = ' style="border-left: 3px solid #3DA822;"';
@@ -101,8 +102,11 @@ function makeitem($arr, $type, &$to_last, &$i)
 			$tdclass = "light";
 		}
 
+		// check if system has screenshots
+		$screenshots = has_screenshots($item_system_name) ? '<a href="/gallery.php?spgmGal=' . urlencode($item_system_name) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;vertical-align:top;" /></a>' : "";
+
 		echo '<tr>
-				<td class="' . $tdclass . '" style="min-width:420px;max-width:500;">
+				<td class="' . $tdclass . '" style="min-width:420px;max-width:500px;">
 					<div class="poi"' . $style_override . '>
 						<a href="javascript:void(0);" onclick="update_values(\'/get/get' . $type . 'EditData.php?' . $type . '_id=' . $item_id . '\',\'' . $item_id . '\');tofront(\'add' . $type . '\');" style="color:inherit;" title="Click to edit entry">';
 
@@ -118,17 +122,18 @@ function makeitem($arr, $type, &$to_last, &$i)
 			$loglink = '&nbsp;[&nbsp;<a href="log.php?system=' . $item_system_name . '&system_id=' . $item_system_id . '" style="color:inherit;" title="Click to see log">Log entry</a>&nbsp;]&nbsp;';
 		}
 
+		echo '(' . $distance . ')';
 		if ($item_system_id != "" && $item_system_id != "0")
 		{
-			echo '(' . $distance . ')</a>&nbsp;<a title="System information" href="/system.php?system_id=' . $item_system_id . '" style="color:inherit;">';
+			echo '</a>&nbsp;<a title="System information" href="/system.php?system_id=' . $item_system_id . '" style="color:inherit;">';
 		}
 		else if ($item_system_name != "")
 		{
-			echo '(' . $distance . ')</a>&nbsp;<a title="System information" href="/system.php?system_name=' . urlencode($item_system_name) . '" style="color:inherit;">';
+			echo '</a>&nbsp;<a title="System information" href="/system.php?system_name=' . urlencode($item_system_name) . '" style="color:inherit;">';
 		}
 		else
 		{
-			echo '(' . $distance . ')</a>&nbsp;<a href="#" style="color:inherit;">';
+			echo '</a>&nbsp;<a href="#" style="color:inherit;">';
 		}
 
 		if (empty($item_name))
@@ -140,7 +145,7 @@ function makeitem($arr, $type, &$to_last, &$i)
 			echo $item_name;
 		}
 
-		echo '</a>' . $loglink  . '<span class="right" style="margin-left:5px;">' . $item_cat_name . '</span><br />';
+		echo '</a>' . $loglink  . '' . $screenshots . '<span class="right" style="margin-left:5px;">' . $item_cat_name . '</span><br />';
 
 		// make a link if text includes url
 		$reg_exUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";

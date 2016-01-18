@@ -933,7 +933,10 @@ function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
 	// make a link for systems with system name
 	else if ($key == "system_name" && $value != "0" || $key == "name" && $table == "edtb_systems")
 	{
-		$this_row .= '<td style="padding:10px;vertical-align:middle;"><a href="/system.php?system_name=' . urlencode($value) . '">' . $value . '</a></td>';
+		// check if system has screenshots
+		$screenshots = has_screenshots($value) ? '<a href="/gallery.php?spgmGal=' . urlencode($value) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;vertical-align:top;" /></a>' : "";
+
+		$this_row .= '<td style="padding:10px;vertical-align:middle;"><a href="/system.php?system_name=' . urlencode($value) . '">' . $value . '' . $screenshots . '</a></td>';
 	}
 	// number format some values
 	else if (strrpos($key, "price") !== false || strrpos($key, "ls") !== false || strrpos($key, "population") !== false || strrpos($key, "distance") !== false)
@@ -1162,12 +1165,24 @@ function valid_coordinates($x, $y, $z)
 }
 
 /*
-*	normalize time
+*	check if system has screenshots
 */
 
-function normalize($time)
+function has_screenshots($system_name)
 {
-	$normalized = str_replace(":", ".", $time);
-	$normalized = str_replace(" ", ".", $normalized);
-	return $normalized;
+	global $settings;
+
+	if (empty($system_name))
+	{
+		return false;
+	}
+
+	if (is_dir("" . $_SERVER["DOCUMENT_ROOT"] . "/screenshots/" . $system_name . ""))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }

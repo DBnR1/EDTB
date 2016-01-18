@@ -356,7 +356,7 @@ if ($newSystem !== FALSE || $request == 0)
 	*/
 
 	// get distance to system
-	if (is_numeric($coordx))
+	if (valid_coordinates($coordx, $coordz, $coordy))
 	{
 		$add3 = "";
 		$ud_coordx = $coordx;
@@ -486,6 +486,9 @@ if ($newSystem !== FALSE || $request == 0)
 
 	$data['si_name'] .= "</div>";
 
+	// check if system has screenshots
+	$si_screenshots = has_screenshots($si_system_name) ? '<a href="/gallery.php?spgmGal=' . urlencode($si_system_name) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;vertical-align:top;" /></a>' : "";
+
 	$num_visits = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id
 																			FROM user_visited_systems
 																			WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $si_system_name) . "'"));
@@ -495,7 +498,7 @@ if ($newSystem !== FALSE || $request == 0)
 		$rare_text = "&nbsp;&nbsp;<span onclick='$(\"#rares\").fadeToggle(\"fast\");'><a href='javascript:void(0);' title'Click for more info'>[ Rares within " . $settings["rare_range"] . " ly: " . $actual_num_res . " ]</a></span>";
 	}
 
-	$data['si_name'] .= "" . $si_system_display_name . " <span style='font-size:11px;text-transform:uppercase;vertical-align:middle;'>[ State: " . $si_system_state . " - Security: " . $si_system_security . " - Visits: " . $num_visits . " ]" . $rare_text . "" . $user_dists . "</span>";
+	$data['si_name'] .= "" . $si_system_display_name . "" . $si_screenshots . " <span style='font-size:11px;text-transform:uppercase;vertical-align:middle;'>[ State: " . $si_system_state . " - Security: " . $si_system_security . " - Visits: " . $num_visits . " ]" . $rare_text . "" . $user_dists . "</span>";
 
 	/*
 	*    station info for system.php

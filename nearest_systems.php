@@ -636,6 +636,9 @@ $count = mysqli_num_rows($res);
 
 								$station_name = $arr["station_name"];
 
+								// check if system has screenshots
+								$screenshots = has_screenshots($system) ? '<a href="/gallery.php?spgmGal=' . urlencode($system) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;vertical-align:top;" /></a>' : "";
+
 								$ss_coordx = $arr["coordx"];
 								$ss_coordy = $arr["coordy"];
 								$ss_coordz = $arr["coordz"];
@@ -659,7 +662,7 @@ $count = mysqli_num_rows($res);
 									echo number_format($distance,2);
 									echo ' ly' . $is_unknown . '</td>';
 
-									echo '<td class="transparent"><a href="system.php?system_id=' . $system_id . '">' . $system . '</a></td>';
+									echo '<td class="transparent"><a href="system.php?system_id=' . $system_id . '">' . $system . '</a>' . $screenshots . '</td>';
 									echo '<td class="transparent">' . $sys_population . '</td>';
 									echo '<td class="transparent">' . $sys_economy . '</td>';
 									echo '<td class="transparent">' . $sys_government . '</td>';
