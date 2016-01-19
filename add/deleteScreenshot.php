@@ -25,6 +25,14 @@ require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 
 $img = isset($_GET["img"]) ? $_GET["img"] : "";
 
+if (empty($img))
+{
+	write_log("Error: screenshot deletion failed, variable img not set", __FILE__, __LINE__);
+	$redir_url = "/gallery.php?removed=2";
+	echo $redir_url;
+	exit;
+}
+
 $pathinfo = pathinfo($img);
 $path = $pathinfo['dirname'];
 $file = $pathinfo['basename'];

@@ -49,13 +49,13 @@ db_connect($server, $user, $pwd, $db);
 *    get current system
 */
 
-if (is_dir($settings["log_dir"]))
+if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"]))
 {
     // select the newest  file
     if (!$files = scandir($settings["log_dir"], SCANDIR_SORT_DESCENDING))
 	{
 		$error = error_get_last();
-		write_log($error["message"], __FILE__, __LINE__);
+		write_log("Error: " . $error["message"] . "", __FILE__, __LINE__);
 	}
     $newest_file = $files[0];
 
@@ -63,7 +63,7 @@ if (is_dir($settings["log_dir"]))
     if (!$line = file("" . $settings["log_dir"] . "/" . $newest_file . ""))
 	{
 		$error = error_get_last();
-		write_log($error["message"], __FILE__, __LINE__);
+		write_log("Error: " . $error["message"] . "", __FILE__, __LINE__);
 	}
 	else
 	{
@@ -153,7 +153,7 @@ if (is_dir($settings["log_dir"]))
 				$p_arr = mysqli_fetch_assoc($p_res);
 				$prev_system = $p_arr["value"];
 
-				if ($prev_system != $cssystemname && $cssystemname != "")
+				if ($prev_system != $cssystemname && !empty($cssystemname))
 				{
 					// add system to user_visited_systems
 					$rows = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT system_name
@@ -164,7 +164,7 @@ if (is_dir($settings["log_dir"]))
 
 					$visited_on = "" . date("Y-m-d") . " " . $visited_time . "";
 
-					if ($vs_arr["system_name"] != $current_system && $current_system != "")
+					if ($vs_arr["system_name"] != $current_system && !empty($current_system))
 					{
 						mysqli_query($GLOBALS["___mysqli_ston"], "	INSERT INTO user_visited_systems (system_name, visit)
 																	VALUES
@@ -223,7 +223,7 @@ if (isset($settings["old_screendir"]) && is_dir($settings["old_screendir"]) && $
 	if (!$screenshots = scandir($settings["old_screendir"]))
 	{
 		$error = error_get_last();
-		write_log($error["message"], __FILE__, __LINE__);
+		write_log("Error: " . $error["message"] . "", __FILE__, __LINE__);
 	}
 	else
 	{

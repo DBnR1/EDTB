@@ -52,7 +52,7 @@ if ($ga_last_update < time())
 
 		// exclude stuff
 		$continue = true;
-		foreach ($settings["galnet_excludes"] AS $exclude)
+		foreach ($settings["galnet_excludes"] as $exclude)
 		{
 			$find = $exclude;
 			$pos = strpos($ga_title, $find);

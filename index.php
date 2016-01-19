@@ -56,7 +56,7 @@ if (file_exists("" . $_SERVER["DOCUMENT_ROOT"] . "/install.php"))
 		}
 
 		header('Location: /index.php?dones');
-		exit();
+		exit;
 	}
 
 	echo installer_header();
@@ -69,7 +69,7 @@ if (file_exists("" . $_SERVER["DOCUMENT_ROOT"] . "/install.php"))
 	{
 		echo notice("<strong>Nice!</strong><br />Now all you need to do is right click the ED ToolBox icon on your system tray and select \"Update system and station data\" to fetch the latest system and station data.<br />The update takes anything from a few seconds to a few minutes depending on your system.<br /><br />After you've done that, <a href='/index.php?doned'>click here to remove the installation files and finish the setup</a>.", "Install ED ToolBox 2/2");
 		echo installer_footer();
-		exit();
+		exit;
 	}
 
 	/*
@@ -93,7 +93,7 @@ if (file_exists("" . $_SERVER["DOCUMENT_ROOT"] . "/install.php"))
 	}
 
 	echo installer_footer();
-	exit();
+	exit;
 }
 
 $pagetitle = "ED ToolBox";
@@ -119,7 +119,7 @@ if (isset($_GET["import_done"]))
 	echo notice("Succesfully added " . number_format($_GET["num"]) . " visited systems to the database.", "Logs imported");
 	echo '</div></div>';
 	require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");
-	exit();
+	exit;
 }
 ?>
 <div class="entries">

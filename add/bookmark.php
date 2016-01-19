@@ -88,7 +88,7 @@ if (isset($_GET["do"]))
 					<select class="selectbox" name="bm_catid" id="bm_catid" style="width:140px;">
 						<option value="0">Category (optional)</option>
 						<?php
-						$cat_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id, name FROM user_bm_categories");
+						$cat_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id, name FROM user_bm_categories ORDER BY name");
 
 						while ($cat_arr = mysqli_fetch_assoc($cat_res))
 						{

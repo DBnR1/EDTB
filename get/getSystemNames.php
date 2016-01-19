@@ -24,7 +24,7 @@
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 $action = isset($_GET["action"]) ? $_GET["action"] : "";
 
-if (isset($_GET["q"]) && $_GET["q"] != "" && isset($_GET["divid"]))
+if (isset($_GET["q"]) && !empty($_GET["q"]) && isset($_GET["divid"]))
 {
 	$search = addslashes($_GET["q"]);
 	$divid = $_GET["divid"];
@@ -49,7 +49,7 @@ if (isset($_GET["q"]) && $_GET["q"] != "" && isset($_GET["divid"]))
 																id, x, y, z
 																FROM edtb_systems
 																WHERE name LIKE('%" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $search) . "%')
-																ORDER BY name = '" . $search . "' DESC,
+																ORDER BY name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $search) . "' DESC,
 																name
 																LIMIT 30") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 

@@ -35,19 +35,19 @@ if ($action == "onlycoordinates")
 {
 	echo $current_coordinates;
 	((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
-	exit();
+	exit;
 }
 else if ($action == "onlysystem")
 {
 	echo $current_system;
 	((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
-	exit();
+	exit;
 }
 else if ($action == "onlyid")
 {
 	echo $current_id;
 	((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
-	exit();
+	exit;
 }
 
 $data = array();
@@ -57,7 +57,7 @@ $data = array();
 */
 
 $data['now_playing'] = "";
-if (isset($settings["nowplaying_file"]) && $settings["nowplaying_file"] != "")
+if (isset($settings["nowplaying_file"]) && !empty($settings["nowplaying_file"]))
 {
 	$nowplaying = file_get_contents($settings["nowplaying_file"]);
 
@@ -101,10 +101,10 @@ if ($newSystem !== FALSE || $request == 0)
 														WHERE id = '" . $current_id . "'
 														LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 	$exists = mysqli_num_rows($res);
-	$arr = mysqli_fetch_assoc($res);
 
 	if ($exists > 0)
 	{
+		$arr = mysqli_fetch_assoc($res);
 		$population = $arr["population"];
 		$ruling_faction = $arr["ruling_faction"];
 		$government = $arr["government"];
@@ -133,8 +133,8 @@ if ($newSystem !== FALSE || $request == 0)
 	*/
 
 	$data['system_title'] .= '';
-	$pic = "system.png";
 
+	$pic = "system.png";
 	if (isset($allegiance))
 	{
 		$pic = $allegiance == "Empire" ? "empire.png" : $pic;
@@ -144,7 +144,7 @@ if ($newSystem !== FALSE || $request == 0)
 
 	$data['system_title'] = '	<div class="leftpanel-add-data">
 									<a href="javascript:void(0);" id="toggle" onclick="setbm(\'' . addslashes($current_system) . '\', \'' . $current_id . '\');tofront(\'addBm\');$(\'#bm_text\').focus();" title="Bookmark system">
-										<img src="/style/img/' . $pic . '" style="vertical-align:middle;margin-right:5px;" alt="' . $allegiance . '" />
+										<img src="/style/img/' . $pic . '" style="margin-right:5px;" alt="' . $allegiance . '" />
 									</a>
 								</div>';
 
@@ -188,7 +188,8 @@ if ($newSystem !== FALSE || $request == 0)
 	}
 
 	$data['system_title'] .= "<a class='" . $class . "' href='javascript:void(0);' onclick='tofront(\"distance\");get_cs(\"system_2\",\"coords_2\");$(\"#system_6\").focus();' onmouseover='slide();' onmouseout='slideout();' title='Calculate distances'>";
-	if (isset($current_system) && $current_system != "")
+
+	if (isset($current_system) && !empty($current_system))
 	{
 		$data['system_title'] .= htmlspecialchars($current_system);
 	}
@@ -206,7 +207,7 @@ if ($newSystem !== FALSE || $request == 0)
 
 	$data['system_info'] = "";
 
-	if ($allegiance != "")
+	if (!empty($allegiance))
 	{
 		$population_s = $arr["population"] == "0" ? "" : " - Population: " . number_format($arr["population"]);
 		$population_s = $arr["population"] == "None" ? "" : $population_s;
@@ -217,13 +218,13 @@ if ($newSystem !== FALSE || $request == 0)
 
 		if ($economy != "")
 		{
-			$data['system_info'] .= '<div class="text" id="t3">└ Economy: ' . $economy . '</div>';
+			$data['system_info'] .= '<div class="text" id="t3">&boxur; Economy: ' . $economy . '</div>';
 		}
 	}
 	else
 	{
 		$data['system_info'] .= '<div class="subtitle" id="t2">Welcome</div>';
-		$data['system_info'] .= '<div class="text" id="t3">└ CMDR ' . $settings["cmdr_name"] . '</div>';
+		$data['system_info'] .= '<div class="text" id="t3">&boxur; CMDR ' . $settings["cmdr_name"] . '</div>';
 	}
 
 	/*
@@ -234,10 +235,10 @@ if ($newSystem !== FALSE || $request == 0)
 																							FROM user_systems_own
 																							WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $current_system) . "'
 																							LIMIT 1"));
-	if ($system_user_calculated > 0 && $current_system != "")
+	if ($system_user_calculated > 0 && !empty($current_system))
 	{
 		$data['system_info'] .= '<span style="float:right;margin-right:10px;margin-top:12px;"><a href="javascript:void(0);" onclick="tofront(\'calculate\');get_cs(\'target_system\');" title="Review distances">';
-		$data['system_info'] .= '<img src="/style/img/calculator.png" style="vertical-align:middle;" />';
+		$data['system_info'] .= '<img src="/style/img/calculator.png" alt="Calc" />';
 		$data['system_info'] .= '</a></span>';
 	}
 
@@ -290,7 +291,7 @@ if ($newSystem !== FALSE || $request == 0)
 
 		if ($simbad_ref != "")
 		{
-			$si_system_display_name = '<a href="http://simbad.u-strasbg.fr/simbad/sim-id?Ident=' . urlencode($si_system_name) . '" target="_BLANK" title="View on Simbad">' . $si_system_name . '&nbsp;<img src="/style/img/external_link.png" style="vertical-align:middle;" alt="ext" /></a>';
+			$si_system_display_name = '<a href="http://simbad.u-strasbg.fr/simbad/sim-id?Ident=' . urlencode($si_system_name) . '" target="_BLANK" title="View on Simbad">' . $si_system_name . '&nbsp;<img src="/style/img/external_link.png" alt="ext" /></a>';
 		}
 
 		$si_system_id = $si_system_arr["id"];
@@ -322,7 +323,7 @@ if ($newSystem !== FALSE || $request == 0)
 			$dist1 = sqrt(pow(($last_coordx-($si_system_arr["si_system_coordx"])), 2)+pow(($last_coordy-($si_system_arr["si_system_coordy"])), 2)+pow(($last_coordz-($si_system_arr["si_system_coordz"])), 2));
 			$adds = " *";
 		}
-		$si_dist_add = "<a href='system.php?system_id=" . $current_id . "'>" . $current_system . "</a>: " . number_format($dist1, 1) . " ly" . $adds . " - ";
+		$si_dist_add = "<a href='system.php'>" . $current_system . "</a>: " . number_format($dist1, 1) . " ly" . $adds . " - ";
 
 		$coordx = $si_system_arr["si_system_coordx"];
 		$coordy = $si_system_arr["si_system_coordy"];
@@ -336,7 +337,7 @@ if ($newSystem !== FALSE || $request == 0)
 
 		if ($simbad_ref != "")
 		{
-			$si_system_display_name = '<a href="http://simbad.u-strasbg.fr/simbad/sim-id?Ident=' . urlencode($si_system_name) . '" target="_BLANK" title="View on Simbad">' . $si_system_name . '&nbsp;<img src="/style/img/external_link.png" style="vertical-align:middle;" alt="ext" /></a>';
+			$si_system_display_name = '<a href="http://simbad.u-strasbg.fr/simbad/sim-id?Ident=' . urlencode($si_system_name) . '" target="_BLANK" title="View on Simbad">' . $si_system_name . '&nbsp;<img src="/style/img/external_link.png" alt="ext" /></a>';
 		}
 
 		$si_system_id = $current_id;
@@ -363,7 +364,7 @@ if ($newSystem !== FALSE || $request == 0)
 		$ud_coordy = $coordy;
 		$ud_coordz = $coordz;
 
-		// get rares closeby
+		// get rares closeby, if set to -1 = disabled
 		if (isset($settings["rare_range"]) && $settings["rare_range"] == "-1")
 		{
 			$rares_closeby = 0;
@@ -412,7 +413,7 @@ if ($newSystem !== FALSE || $request == 0)
 	}
 
 	// get distances to user defined systems
-	$user_dists = "<span style=\"float:right;font-size:11px;\">" . $si_dist_add . "";
+	$user_dists = "<span class=\"right\" style=\"font-size:11px;\">" . $si_dist_add . "";
 	if (isset($settings["dist_systems"]))
 	{
 		$num_dists = count($settings["dist_systems"]);
@@ -444,7 +445,7 @@ if ($newSystem !== FALSE || $request == 0)
 	}
 	$user_dists .= "</span>";
 
-	$data['si_name'] = '<div class="stationinfo" id="rares" style="display:none;position:absolute;margin-top:20px;margin-left:690px;z-index:1000;max-height:630px;overflow:auto;white-space:nowrap;">';
+	/*$data['si_name'] = '<div class="raresinfo" id="rares">';
 
 	if ($rares_closeby > 0)
 	{
@@ -484,7 +485,48 @@ if ($newSystem !== FALSE || $request == 0)
 		$data['si_name'] .= "No rares nearby";
 	}
 
-	$data['si_name'] .= "</div>";
+	$data['si_name'] .= "</div>";*/
+	$c_rares_data = '<div class="raresinfo" id="rares">';
+
+	if ($rares_closeby > 0)
+	{
+		$actual_num_res = 0;
+		while ($rare_arr = mysqli_fetch_assoc($rare_res))
+		{
+			if ($rare_arr["distance"] <= $settings["rare_range"])
+			{
+				$c_rares_data .= "[";
+				$c_rares_data .= number_format($rare_arr["distance"], 1);
+				$c_rares_data .= "&nbsp;ly]&nbsp;";
+				$c_rares_data .= $rare_arr["item"];
+				$c_rares_data .= "&nbsp;(";
+				$c_rares_data .= number_format($rare_arr["price"]);
+				$c_rares_data .= "&nbsp;CR)";
+				$c_rares_data .= "<br /><span style='font-weight:normal;'>";
+				$c_rares_data .= "<a href='/system.php?system_name=" . urlencode($rare_arr["system_name"]) . "'>";
+				$c_rares_data .= $rare_arr["system_name"];
+				$c_rares_data .= "</a>&nbsp;(";
+				$c_rares_data .= $rare_arr["station"];
+				$c_rares_data .= ")&nbsp;-&nbsp;";
+				$c_rares_data .= number_format($rare_arr["ls_to_star"], 0);
+				$c_rares_data .= "&nbsp;ls&nbsp;";
+				$c_rares_data .= "(";
+				$c_rares_data .= $rare_arr["sc_est_mins"];
+				$c_rares_data .= "&nbsp;min)&nbsp;";
+				$c_rares_data .= $rare_arr["needs_permit"] = "1" ? "" : "&nbsp;-&nbsp;Permit needed";
+				$c_rares_data .= "-&nbsp;";
+				$c_rares_data .= $rare_arr["max_landing_pad_size"];
+				$c_rares_data .= "</span><br /><br />";
+				$actual_num_res++;
+			}
+		}
+	}
+	else
+	{
+		$c_rares_data .= "No rares nearby";
+	}
+
+	$c_rares_data .= "</div>";
 
 	// check if system has screenshots
 	$si_screenshots = has_screenshots($si_system_name) ? '<a href="/gallery.php?spgmGal=' . urlencode($si_system_name) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;vertical-align:top;" /></a>' : "";
@@ -493,9 +535,9 @@ if ($newSystem !== FALSE || $request == 0)
 																			FROM user_visited_systems
 																			WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $si_system_name) . "'"));
 
-	if ($actual_num_res > 0 && is_numeric($coordx))
+	if ($actual_num_res > 0 && valid_coordinates($coordx, $coordy, $coordz))
 	{
-		$rare_text = "&nbsp;&nbsp;<span onclick='$(\"#rares\").fadeToggle(\"fast\");'><a href='javascript:void(0);' title'Click for more info'>[ Rares within " . $settings["rare_range"] . " ly: " . $actual_num_res . " ]</a></span>";
+		$rare_text = "&nbsp;&nbsp;<span onclick='$(\"#rares\").fadeToggle(\"fast\");'><a href='javascript:void(0);' title'Click for more info'>[ Rares within " . $settings["rare_range"] . " ly: " . $actual_num_res . " ]</a>" . $c_rares_data . "</span>";
 	}
 
 	$data['si_name'] .= "" . $si_system_display_name . "" . $si_screenshots . " <span style='font-size:11px;text-transform:uppercase;vertical-align:middle;'>[ State: " . $si_system_state . " - Security: " . $si_system_security . " - Visits: " . $num_visits . " ]" . $rare_text . "" . $user_dists . "</span>";
@@ -533,7 +575,7 @@ if ($newSystem !== FALSE || $request == 0)
 
 			$s_faction = $sarr2["faction"] == "" ? "" : "<strong>Faction:</strong> " . $sarr2["faction"] . "";
 			$s_distance_from_star = $ls_from_star == 0 ? "" : "" . number_format($ls_from_star, 0) . " ls - ";
-			$s_information = "<span style='float:right;margin-right:8px;'>└&nbsp;" . $s_distance_from_star . "Landing pad: " . $max_landing_pad_size . "</span><br />";
+			$s_information = "<span style='float:right;margin-right:8px;'>&boxur;&nbsp;" . $s_distance_from_star . "Landing pad: " . $max_landing_pad_size . "</span><br />";
 			$s_government = $sarr2["government"] == "" ? "Government unknown" : "" . $sarr2["government"] . "";
 			$s_allegiance = $sarr2["allegiance"] == "" ? "Allegiance unknown" : "" . $sarr2["allegiance"] . "";
 
@@ -550,7 +592,7 @@ if ($newSystem !== FALSE || $request == 0)
 
 			$selling_modules = "";
 
-			if ($sarr2["selling_modules"] != "")
+			if (!empty($sarr2["selling_modules"]))
 			{
 				$modules = $sarr2["selling_modules"];
 
@@ -779,7 +821,7 @@ if ($newSystem !== FALSE || $request == 0)
 		{
 			$si_system_data = '' . $si_system_power . ' [' . $si_system_power_state . ']';
 		}
-		else if ($si_system_power == "" && $si_system_power_state != "")
+		else if (empty($si_system_power) && empty($si_system_power_state))
 		{
 			$si_system_data = $si_system_power_state;
 		}
@@ -787,8 +829,8 @@ if ($newSystem !== FALSE || $request == 0)
 		{
 			$si_system_data = "";
 		}
-		$data['si_detailed'] .= '<img src="/style/img/powers/' . str_replace(" ", "_", $si_system_power) . '.jpg" alt="' . $si_system_power . '" style="vertical-align:top;width:250px;height:419px;margin-bottom:6px; border: 1px solid #000;" /><br />';
-		$data['si_detailed'] .= '<span style="font-size: 13px; font-weight:bold;">' . $si_system_data . '</span><br /><br />';
+		$data['si_detailed'] .= '<img src="/style/img/powers/' . str_replace(" ", "_", $si_system_power) . '.jpg" alt="' . $si_system_power . '" style="vertical-align:top;width:250px;height:419px;margin-bottom:6px;border:1px solid #000;" /><br />';
+		$data['si_detailed'] .= '<span style="font-size:13px;font-weight:bold;">' . $si_system_data . '</span><br /><br />';
 		$data['si_detailed'] .= '<span>
 									<strong>Allegiance:</strong> ' . $si_system_allegiance . '<br />
 									<strong>Government:</strong> ' . $si_system_government . '<br />
@@ -802,7 +844,7 @@ if ($newSystem !== FALSE || $request == 0)
 	*    System log
 	*/
 
-	if ($current_system != "")
+	if (!empty($current_system))
 	{
 		if ($settings["log_range"] == 0 || !valid_coordinates($coordx, $coordy, $coordz))
 		{
@@ -869,7 +911,7 @@ if ($newSystem !== FALSE || $request == 0)
 					$log_text = $log_arr["log_entry"];
 					$date = date_create($log_arr["stardate"]);
 					$log_added = date_modify($date, "+1286 years");
-					$distance = $log_arr["distance"] == "" ? round($log_arr["distance2"]) : round($log_arr["distance"]);
+					$distance = $log_arr["distance"] == "" ? number_format($log_arr["distance2"], 1) : number_format($log_arr["distance"], 1);
 
 					if ($this_system != $system_name)
 					{
@@ -882,7 +924,10 @@ if ($newSystem !== FALSE || $request == 0)
 							$add = "";
 						}
 
-						$logdata .= '<h2><img src="/style/img/system_log.png" alt="pic" style="vertical-align:middle;" />&nbsp;&nbsp;System log for ' . $system_name . '' . $add . '</h2>';
+						// check if system has screenshots
+						$screenshots = has_screenshots($system_name) ? '<a href="/gallery.php?spgmGal=' . urlencode($system_name) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;margin-right:3px;vertical-align:top;" /></a>' : "";
+
+						$logdata .= '<h2><img src="/style/img/system_log.png" alt="pic" style="margin-right:6px;" />System log for <a href="/system.php?system_name=' . urlencode($system_name) . '">' . $system_name . '</a>' . $screenshots . '' . $add . '</h2>';
 						$logdata .= '<hr>';
 					}
 
@@ -921,7 +966,7 @@ if ($newSystem !== FALSE || $request == 0)
 
 	if ($gnum > 0)
 	{
-		$logdata .= '<h2><img src="/style/img/log.png" alt="pic" style="vertical-align:middle;" />&nbsp;&nbsp;Commander\'s Log</h2>';
+		$logdata .= '<h2><img src="/style/img/log.png" alt="pic" style="margin-right:6px;" />Commander\'s Log</h2>';
 		$logdata .= '<hr>';
 
 		while ($glog_arr = mysqli_fetch_assoc($glog_res))
@@ -998,7 +1043,7 @@ if ($newSystem !== FALSE || $request == 0)
 			$rearm = $arra["rearm"];
 			$is_planetary = $arra["is_planetary"];
 
-			$icon = get_station_icon($s_type, $is_planetary, "margin:3px;margin-left:0px;margin-right:6px;vertical-align:middle;");
+			$icon = get_station_icon($s_type, $is_planetary, "margin:3px;margin-left:0px;margin-right:6px;");
 
 			$includes = array(  "shipyard" => $shipyard,
 								"outfitting" => $outfitting,
@@ -1055,7 +1100,7 @@ if ($newSystem !== FALSE || $request == 0)
 	else
 	{
 		// link to calculate coordinates
-		if ($current_coordinates == "" && $current_system != "")
+		if (empty($current_coordinates) && !empty($current_system))
 		{
 			$station_data .= "<span style='margin-bottom:6px;height:40px;'><a href='javascript:void(0);' onclick='tofront(\"calculate\");get_cs(\"target_system\");' title='No coordinates found, click here to calculate'>";
 			$station_data .= "<img src='/style/img/calculator.png' style='vertical-align:middle;' />";

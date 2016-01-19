@@ -25,7 +25,11 @@ require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 
 $text = $_POST["logtext"];
 
-file_put_contents("" . $settings["install_path"] . "/data/sessionlog.txt", $text);
+if (!file_put_contents("" . $settings["install_path"] . "/data/sessionlog.txt", $text))
+{
+	$error = error_get_last();
+	write_log("Error: " . $error['message'] . "", __FILE__, __LINE__);
+}
 
 echo $text;
 

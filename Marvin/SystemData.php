@@ -50,7 +50,7 @@ if (isset($_GET["sys"]))
 
 	$va_text .= "No system data.";
 
-	if ($current_system != "")
+	if (!empty($current_system))
 	{
 		$va_system = str_replace(".", "", $current_system);
 
@@ -84,7 +84,7 @@ if (isset($_GET["sys"]))
 
 		$va_government = $current_government == "None" ? "" : " " . $current_government . "";
 
-		if ($current_power != "" && $current_power_state != "")
+		if (!empty($current_power) && !empty($current_power_state))
 		{
 			$va_power_text = array();
 			$va_power_text[] = $current_power;
@@ -199,16 +199,24 @@ if (isset($_GET["sys"]))
 		if ($count == 1)
 		{
 			if ($first_station_ls_from_star != 0)
+			{
 				$va_text .= " The systems' only spaceport is " . $first_station_name . " " . number_format(round($first_station_ls_from_star)) . " light seconds away.";
+			}
 			else
+			{
 				$va_text .= " The systems' only spaceport is " . $first_station_name . ".";
+			}
 		}
 		else if ($count > 1)
 		{
 			if ($first_station_ls_from_star != 0)
+			{
 				$va_text .= " It has " . $count . " spaceports, the nearest one is " . $first_station_name . " " . number_format(round($first_station_ls_from_star)) . " light seconds away.";
+			}
 			else
+			{
 				$va_text .= " It has " . $count . " spaceports.";
+			}
 		}
 
 		if ($num_visits == 1)
@@ -251,7 +259,7 @@ if (isset($_GET["sys"]))
 
 	((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
 
-	exit();
+	exit;
 }
 
 /*
@@ -260,7 +268,7 @@ if (isset($_GET["sys"]))
 
 if (isset($_GET["cs"]))
 {
-	if (is_numeric($coordx))
+	if (valid_coordinates($coordx, $coordy, $coordz))
 	{
 		$usex = $coordx;
 		$usey = $coordy;
@@ -398,10 +406,10 @@ if (isset($_GET["cs"]))
 		echo 'The nearest spaceport is in the ' . $cs_system . ' system, ' . number_format($cs_distance, 1) . ' light years away.';
 	}
 
-	echo ' ' . $cs_station_name . '';
+	echo ' ' . $cs_station_name;
 	if ($cs_type != "")
 	{
-		echo ' is ' . $article . ' ' . $cs_type . '';
+		echo ' is ' . $article . ' ' . $cs_type;
 	}
 	if ($cs_ls_from_star != 0)
 	{
@@ -414,7 +422,7 @@ if (isset($_GET["cs"]))
 
 	((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
 
-	exit();
+	exit;
 }
 
 /*
@@ -442,5 +450,5 @@ if (isset($_GET["rm"]))
 												or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 	((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
-	exit();
+	exit;
 }

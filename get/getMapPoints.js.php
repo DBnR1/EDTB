@@ -29,6 +29,10 @@ if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"]))
 	$settings["maxdistance"] = $_GET["maxdistance"];
 }
 
+/*
+*	if current coordinates aren't valid, use last known coordinates
+*/
+
 if (!valid_coordinates($coordx, $coordy, $coordz))
 {
 	// get last known coordinates
@@ -48,7 +52,10 @@ else
 $data = "";
 $last_row = "";
 
-// fetch point of interest data for the map
+/*
+*	fetch point of interest data for the map
+*/
+
 if ($settings["nmap_show_pois"] == "true")
 {
 	$result = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT poi_name, system_name, x, y, z
@@ -67,17 +74,14 @@ if ($settings["nmap_show_pois"] == "true")
 
 		$coord = "$poi_coordx,$poi_coordy,$poi_coordz";
 
+		$distance_from_current = "";
 		if (valid_coordinates($poi_coordx, $poi_coordy, $poi_coordz))
 		{
 			$distance_from_current = sqrt(pow(($poi_coordx-($coordx)), 2)+pow(($poi_coordy-($coordy)), 2)+pow(($poi_coordz-($coordz)), 2));
 		}
-		else
-		{
-			$distance_from_current = 0;
-		}
 
-		// only show systems if distance less than x ly
-		if ($distance_from_current <= $settings["maxdistance"])
+		// only show systems if distance is less than the limit set by the user
+		if ($distance_from_current != "" && $distance_from_current <= $settings["maxdistance"])
 		{
 			$visited = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id
 																					FROM user_visited_systems
@@ -105,7 +109,10 @@ if ($settings["nmap_show_pois"] == "true")
 	}
 }
 
-// fetch bookmark data for the map
+/*
+*	 fetch bookmark data for the map
+*/
+
 if ($settings["nmap_show_bookmarks"] == "true")
 {
 	$bm_result = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT user_bookmarks.comment, user_bookmarks.added_on,
@@ -114,7 +121,7 @@ if ($settings["nmap_show_bookmarks"] == "true")
 															FROM user_bookmarks
 															LEFT JOIN edtb_systems ON user_bookmarks.system_id = edtb_systems.id
 															LEFT JOIN user_bm_categories ON user_bookmarks.category_id = user_bm_categories.id
-															WHERE edtb_systems.x != ''")
+															WHERE edtb_systems.x != '' AND edtb_systems.y != '' AND edtb_systems.z != ''")
 															or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 	while ($bm_row = mysqli_fetch_array($bm_result))
@@ -130,17 +137,14 @@ if ($settings["nmap_show_bookmarks"] == "true")
 		$bm_coordz = $bm_row["z"];
 		$coord = "" . $bm_row["x"] . "," . $bm_row["y"] . "," . $bm_row["z"] . "";
 
+		$distance_from_current = "";
 		if (valid_coordinates($bm_coordx, $bm_coordy, $bm_coordz))
 		{
 			$distance_from_current = sqrt(pow(($bm_coordx-($coordx)), 2)+pow(($bm_coordy-($coordy)), 2)+pow(($bm_coordz-($coordz)), 2));
 		}
-		else
-		{
-			$distance_from_current = 0;
-		}
 
-		// only show systems if distance less than x ly
-		if ($distance_from_current <= $settings["maxdistance"])
+		// only show systems if distance is less than the limit set by the user
+		if ($distance_from_current != "" && $distance_from_current <= $settings["maxdistance"])
 		{
 			$marker = 'marker:{symbol:"url(/style/img/bm.png)"}';
 
@@ -151,7 +155,10 @@ if ($settings["nmap_show_bookmarks"] == "true")
 	}
 }
 
-// fetch rares data for the map
+/*
+*	 fetch rares data for the map
+*/
+
 if ($settings["nmap_show_rares"] == "true")
 {
 	$rare_result = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT
@@ -177,17 +184,14 @@ if ($settings["nmap_show_rares"] == "true")
 
 		$rare_coord = "" . $rare_coordx . "," . $rare_coordy . "," . $rare_coordz . "";
 
+		$rare_distance_from_current = "";
 		if (valid_coordinates($rare_coordx, $rare_coordy, $rare_coordz))
 		{
 			$rare_distance_from_current = sqrt(pow(($rare_coordx-($coordx)), 2)+pow(($rare_coordy-($coordy)), 2)+pow(($rare_coordz-($coordz)), 2));
 		}
-		else
-		{
-			$rare_distance_from_current = 0;
-		}
 
-		// only show systems if distance less than x ly
-		if ($rare_distance_from_current <= $settings["maxdistance"])
+		// only show systems if distance is less than the limit set by the user
+		if ($rare_distance_from_current != "" && $rare_distance_from_current <= $settings["maxdistance"])
 		{
 			$rare_marker = 'marker:{symbol:"url(/style/img/rare.png)"}';
 
@@ -198,7 +202,10 @@ if ($settings["nmap_show_rares"] == "true")
 	}
 }
 
-// fetch visited systems data for the map
+/*
+*	fetch visited systems data for the map
+*/
+
 if ($settings["nmap_show_visited_systems"] == "true")
 {
 	$result = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT
@@ -239,18 +246,19 @@ if ($settings["nmap_show_visited_systems"] == "true")
 			$vs_coordz = $cb_arr["z"] == "" ? "" : $cb_arr["z"];
 		}
 
+		$distance_from_current = "";
 		if (valid_coordinates($vs_coordx, $vs_coordy, $vs_coordz))
 		{
 			$coord = "" . $vs_coordx . "," . $vs_coordy . "," . $vs_coordz . "";
 
 			$distance_from_current = sqrt(pow(($vs_coordx-($coordx)), 2)+pow(($vs_coordy-($coordy)), 2)+pow(($vs_coordz-($coordz)), 2));
 
-			// only show systems if distance less than x ly
+			// only show systems if distance is less than the limit set by the user
 			if ($distance_from_current <= $settings["maxdistance"])
 			{
 				$logged = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id
 																						FROM user_log
-																						WHERE system_name = '" . $name . "'
+																						WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $name) . "'
 																						LIMIT 1"));
 				$allegiance = $row["allegiance"];
 
@@ -300,7 +308,7 @@ if ($settings["nmap_show_visited_systems"] == "true")
 }
 
 // get the max/min values for map display
-if ($coordx != "")
+if (valid_coordinates($coordx, $coordy, $coordz))
 {
 	$maxx = $coordx + $settings["maxdistance"];
 	$maxy = $coordy + $settings["maxdistance"];
