@@ -1127,7 +1127,7 @@ function usable_coords()
 
 	$usable = array();
 
-	if (is_numeric($coordx) && is_numeric($coordy) && is_numeric($coordz))
+	if (valid_coordinates($coordx, $coordy, $coordz))
 	{
 		$usable["x"] = $coordx;
 		$usable["y"] = $coordy;

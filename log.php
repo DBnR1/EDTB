@@ -38,7 +38,7 @@ require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 																edtb_stations.name AS station_name
 																FROM user_log
 																LEFT JOIN edtb_stations ON edtb_stations.id = user_log.station_id
-																WHERE user_log.system_id = '" . $logsystem_id . "' OR user_log.system_name = '" . $logsystem . "'
+																WHERE user_log.system_id = '" . $logsystem_id . "' OR user_log.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $logsystem) . "'
 																ORDER BY user_log.stardate DESC") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]));
 		$num = mysqli_num_rows($log_res);
 

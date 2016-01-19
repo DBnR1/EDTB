@@ -143,7 +143,7 @@ if ($newSystem !== FALSE || $request == 0)
 	}
 
 	$data['system_title'] = '	<div class="leftpanel-add-data">
-									<a href="javascript:void(0);" id="toggle" onclick="setbm(\'' . $current_system . '\', \'' . $current_id . '\');tofront(\'addBm\');$(\'#bm_text\').focus();" title="Bookmark system">
+									<a href="javascript:void(0);" id="toggle" onclick="setbm(\'' . addslashes($current_system) . '\', \'' . $current_id . '\');tofront(\'addBm\');$(\'#bm_text\').focus();" title="Bookmark system">
 										<img src="/style/img/' . $pic . '" style="vertical-align:middle;margin-right:5px;" alt="' . $allegiance . '" />
 									</a>
 								</div>';
@@ -814,7 +814,7 @@ if ($newSystem !== FALSE || $request == 0)
 																	FROM user_log
 																	LEFT JOIN edtb_systems ON user_log.system_id = edtb_systems.id
 																	LEFT JOIN edtb_stations ON user_log.station_id = edtb_stations.id
-																	WHERE user_log.system_name = '" . $current_system . "'
+																	WHERE user_log.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $current_system) . "'
 																	ORDER BY stardate DESC") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 		}
 		else
@@ -848,7 +848,7 @@ if ($newSystem !== FALSE || $request == 0)
 																	AND " . $coordy . "+" . $settings["log_range"] . " &&
 																	user_systems_own.z BETWEEN " . $coordz . "-" . $settings["log_range"] . "
 																	AND " . $coordz . "+" . $settings["log_range"] . "
-																	ORDER BY user_log.system_name = '" . $current_system . "' DESC,
+																	ORDER BY user_log.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $current_system) . "' DESC,
 																	distance ASC, distance2 ASC,
 																	user_log.stardate DESC
 																	LIMIT 10") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);

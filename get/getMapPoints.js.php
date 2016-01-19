@@ -29,7 +29,7 @@ if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"]))
 	$settings["maxdistance"] = $_GET["maxdistance"];
 }
 
-if (!is_numeric($coordx))
+if (!valid_coordinates($coordx, $coordy, $coordz))
 {
 	// get last known coordinates
 	$last_coords = last_known_system();
@@ -67,7 +67,7 @@ if ($settings["nmap_show_pois"] == "true")
 
 		$coord = "$poi_coordx,$poi_coordy,$poi_coordz";
 
-		if ($coordx != "")
+		if (valid_coordinates($poi_coordx, $poi_coordy, $poi_coordz))
 		{
 			$distance_from_current = sqrt(pow(($poi_coordx-($coordx)), 2)+pow(($poi_coordy-($coordy)), 2)+pow(($poi_coordz-($coordz)), 2));
 		}
@@ -130,7 +130,7 @@ if ($settings["nmap_show_bookmarks"] == "true")
 		$bm_coordz = $bm_row["z"];
 		$coord = "" . $bm_row["x"] . "," . $bm_row["y"] . "," . $bm_row["z"] . "";
 
-		if ($coordx != "")
+		if (valid_coordinates($bm_coordx, $bm_coordy, $bm_coordz))
 		{
 			$distance_from_current = sqrt(pow(($bm_coordx-($coordx)), 2)+pow(($bm_coordy-($coordy)), 2)+pow(($bm_coordz-($coordz)), 2));
 		}
@@ -177,7 +177,7 @@ if ($settings["nmap_show_rares"] == "true")
 
 		$rare_coord = "" . $rare_coordx . "," . $rare_coordy . "," . $rare_coordz . "";
 
-		if ($coordx != "")
+		if (valid_coordinates($rare_coordx, $rare_coordy, $rare_coordz))
 		{
 			$rare_distance_from_current = sqrt(pow(($rare_coordx-($coordx)), 2)+pow(($rare_coordy-($coordy)), 2)+pow(($rare_coordz-($coordz)), 2));
 		}
@@ -224,7 +224,7 @@ if ($settings["nmap_show_visited_systems"] == "true")
 		*	if coords are not set, see if user has calculated them
 		*/
 
-		if (!is_numeric($vs_coordx) && !is_numeric($vs_coordy) && !is_numeric($vs_coordz))
+		if (!valid_coordinates($vs_coordx, $vs_coordy, $vs_coordz))
 		{
 			$cb_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT x, y, z
 																	FROM user_systems_own
@@ -239,18 +239,12 @@ if ($settings["nmap_show_visited_systems"] == "true")
 			$vs_coordz = $cb_arr["z"] == "" ? "" : $cb_arr["z"];
 		}
 
-		if (is_numeric($vs_coordx) && is_numeric($vs_coordy) && is_numeric($vs_coordz))
+		if (valid_coordinates($vs_coordx, $vs_coordy, $vs_coordz))
 		{
 			$coord = "" . $vs_coordx . "," . $vs_coordy . "," . $vs_coordz . "";
 
-			if ($coordx != "")
-			{
-				$distance_from_current = sqrt(pow(($vs_coordx-($coordx)), 2)+pow(($vs_coordy-($coordy)), 2)+pow(($vs_coordz-($coordz)), 2));
-			}
-			else
-			{
-				$distance_from_current = 0;
-			}
+			$distance_from_current = sqrt(pow(($vs_coordx-($coordx)), 2)+pow(($vs_coordy-($coordy)), 2)+pow(($vs_coordz-($coordz)), 2));
+
 			// only show systems if distance less than x ly
 			if ($distance_from_current <= $settings["maxdistance"])
 			{

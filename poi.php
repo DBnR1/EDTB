@@ -51,7 +51,7 @@ function makeitem($arr, $type, &$to_last, &$i)
 	*	if coords are not set, see if user has calculated them
 	*/
 
-	if (!is_numeric($item_coordx) && !is_numeric($item_coordy) && !is_numeric($item_coordz))
+	if (!valid_coordinates($item_coordx, $item_coordy, $item_coordz))
 	{
 		$c_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT x, y, z
 															FROM user_systems_own

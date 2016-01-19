@@ -23,25 +23,25 @@
 
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 
-$system = mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $_GET["system"]);
+$system = $_GET["system"];
 $system_id = mysqli_fetch_row(mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id FROM edtb_systems WHERE name = '" . $system . "' LIMIT 1"));
 $system_id = $system_id[0];
 
 $ress = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT user_poi.text AS text, user_visited_systems.visit AS visit
 													FROM user_poi LEFT JOIN user_visited_systems ON user_visited_systems.system_name = user_poi.system_name
-													WHERE user_poi.system_name = '" . $system . "'
-													OR user_visited_systems.system_name = '" . $system . "'
+													WHERE user_poi.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system) . "'
+													OR user_visited_systems.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system) . "'
 													UNION SELECT user_poi.text AS text, user_visited_systems.visit AS visit
 													FROM user_poi RIGHT JOIN user_visited_systems ON user_visited_systems.system_name = user_poi.system_name
-													WHERE user_poi.system_name = '" . $system . "'
-													OR user_poi.poi_name = '" . $system . "'
-													OR user_visited_systems.system_name = '" . $system . "'
+													WHERE user_poi.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system) . "'
+													OR user_poi.poi_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system) . "'
+													OR user_visited_systems.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system) . "'
 													LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 $count = mysqli_num_rows($ress);
 
 $ress2 = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT user_bookmarks.comment, user_bookmarks.added_on
 													FROM user_bookmarks
-													WHERE user_bookmarks.system_name = '" . $system  . "'
+													WHERE user_bookmarks.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system) . "'
 													LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 $count2 = mysqli_num_rows($ress2);
 
@@ -74,7 +74,7 @@ if ($count > 0)
 	{
 		$logres = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id, LEFT(log_entry , 100) AS text
 																FROM user_log
-																WHERE system_name = '" . $system . "'
+																WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system) . "'
 																ORDER BY stardate
 																LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 		$logged = mysqli_num_rows($logres);
@@ -97,12 +97,12 @@ if ($count > 0)
 			$visits = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id FROM user_visited_systems WHERE system_name = '" . $system . "'"));
 			$visit_unix = strtotime($visit_og);
 			$visit_ago = get_timeago($visit_unix, true);
-			echo "<a href=\"system.php?system_id=" . $system_id . "\" style=\"color:inherit;\">" . $system . "</a>&nbsp;&nbsp;|&nbsp;
+			echo "<a href=\"system.php?system_name=" . urlencode($system) . "\" style=\"color:inherit;\">" . $system . "</a>&nbsp;&nbsp;|&nbsp;
 			Total visits: " . $visits . "&nbsp;&nbsp;|&nbsp;&nbsp;First visit: " . $visit . " (" . $visit_ago . ")";
 		}
 		else
 		{
-			echo "<a href=\"system.php?system_id=" . $system_id . "\" style=\"color:inherit;\">" . $system . "</a>";
+			echo "<a href=\"system.php?system_name=" . urlencode($system) . "\" style=\"color:inherit;\">" . $system . "</a>";
 		}
 
 		if ($logged > 0)
@@ -111,7 +111,7 @@ if ($count > 0)
 			$text = $logarr["text"];
 
 			echo '<br />
-					<a href="/log.php?system=' . $system . '&system_id=' . $system_id . '" style="color:inherit;font-weight:bold;" title="Click to view the log for this system">
+					<a href="/log.php?system=' . $system . '" style="color:inherit;font-weight:bold;" title="Click to view the log for this system">
 						' . $text . ' ...
 					</a>';
 		}
