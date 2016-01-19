@@ -112,14 +112,14 @@ function makeitem($arr, $type, &$to_last, &$i)
 
 		$logged = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT (1)
 																				FROM user_log
-																				WHERE system_id = '" . $item_system_id . "'
-																				AND system_id != '0'
+																				WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $item_system_name) . "'
+																				AND system_name != ''
 																				LIMIT 1"));
 
 		$loglink = "";
 		if ($logged > 0)
 		{
-			$loglink = '&nbsp;[&nbsp;<a href="log.php?system=' . $item_system_name . '&system_id=' . $item_system_id . '" style="color:inherit;" title="Click to see log">Log entry</a>&nbsp;]&nbsp;';
+			$loglink = '<a href="log.php?system=' . urlencode($item_system_name) . '" style="color:inherit;" title="System has log entries"><img src="/style/img/log.png" style="margin-left:5px;" /></a>';
 		}
 
 		echo '(' . $distance . ')';
