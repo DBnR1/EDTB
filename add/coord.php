@@ -77,7 +77,7 @@ if (isset($_GET["do"]))
 														'" . $newcoords_x . "',
 														'" . $newcoords_y . "',
 														'" . $newcoords_z . "',
-														'" . $reference_distances . "')") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+														'" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $reference_distances) . "')") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 		}
 		else
 		{
@@ -86,7 +86,7 @@ if (isset($_GET["do"]))
 															x = '" . $newcoords_x . "',
 															y = '" . $newcoords_y . "',
 															z = '" . $newcoords_z . "',
-															reference_distances = '" . $reference_distances . "'
+															reference_distances = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $reference_distances) . "'
 														WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $target_system) . "'
 														LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 		}
@@ -119,7 +119,7 @@ if (isset($_GET["do"]))
 		}
 		}';
 
-		$opts = array('http' => array('method' => 'POST', 'header' => "Content-type: json\r\n" ."Referer: http://www.edsm.net/api-v1/submit-distances\r\n", 'content' => $json_string ) );
+		$opts = array('http' => array('method' => 'POST', 'header' => "Content-type: json\r\n" ."Referer: http://www.edsm.net/api-v1/submit-distances\r\n", 'content' => $json_string));
 
 		$context = stream_context_create($opts);
 

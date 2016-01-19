@@ -25,7 +25,7 @@
 $pagetitle = "Galaxy Map&nbsp;&nbsp;&&nbsp;&nbsp;Neighborhood Map";
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 
-if (is_numeric($coordx))
+if (valid_coordinates($coordx, $coordy, $coordz))
 {
 	$ucoordx = $coordx;
 	$ucoordy = $coordy;
@@ -67,15 +67,15 @@ else
 
 	<!-- Launch ED3Dmap -->
 	<script type="text/javascript">
-	Ed3d.init({
-		basePath: '../source/ED3D-Galaxy-Map/',
-		container: 'edmap',
-		jsonPath: '/map_points.json',
-		withHudPanel: true,
-		startAnim: false,
-		effectScaleSystem: [15,50],
-		playerPos: [<?php echo $ucoordx;?>,<?php echo $ucoordy;?>,<?php echo $ucoordz;?>]
-	});
+		Ed3d.init({
+			basePath: '../source/ED3D-Galaxy-Map/',
+			container: 'edmap',
+			jsonPath: '/map_points.json',
+			withHudPanel: true,
+			startAnim: false,
+			effectScaleSystem: [15,50],
+			playerPos: [<?php echo $ucoordx;?>,<?php echo $ucoordy;?>,<?php echo $ucoordz;?>]
+		});
 	</script>
 
 </div>

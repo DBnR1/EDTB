@@ -26,7 +26,7 @@ require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 $url = isset($_GET["url"]) ? $_GET["url"] : "";
 $file = isset($_GET["file"]) ? $_GET["file"] : "";
 
-if ($file != "" && $url != "")
+if (!empty($file) && !empty($url))
 {
 	$path = "" . $_SERVER["DOCUMENT_ROOT"] . "/screenshots/Imgur";
 

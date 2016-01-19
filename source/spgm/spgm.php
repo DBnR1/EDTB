@@ -1604,13 +1604,13 @@ function spgm_DisplayPicture($strGalleryId, $iPictureId, $strFilterFlags) {
 	{
 		print '<tr>'."\n";
 		print '  <td class="'.CLASS_TD_PICTURE_FILENAME.'">'."\n";
-		echo '<span class="left"><a href="javascript:void(0);" onclick="confirmation(\'' . $strPictureURL . '\',\'screenshot\')" title="Delete screenshot"><div class="delete_button" style="position:relative;left:-6px;top:0px;"><img src="/style/img/delete.png" alt="Delete" /></div></a></span>'."\n";
+		echo '<span class="left"><a href="javascript:void(0);" onclick="confirmation(\'' . addslashes($strPictureURL) . '\',\'screenshot\')" title="Delete screenshot"><div class="delete_button" style="position:relative;left:-6px;top:0px;"><img src="/style/img/delete.png" alt="Delete" /></div></a></span>'."\n";
 		print $strPictureBasename.''.$_strFileExtension.'';
 
 		$imgurfile = "" . $_SERVER["DOCUMENT_ROOT"] . "/screenshots/Imgur/" . urldecode($strPictureBasename) . ".txt";
 		if (!file_exists($imgurfile))
 		{
-			print '<span id="uploaded" style="float:right;"><a href="javascript:void(0);" onclick="imgurUpload(\'' . $file . '\', \'' . $strPictureBasename . '\');"><img src="/style/img/upload.png" alt="upload" />&nbsp;Upload to Imgur</a></span><br />'."\n";
+			print '<span id="uploaded" style="float:right;"><a href="javascript:void(0);" onclick="imgurUpload(\'' . addslashes($file ). '\', \'' . addslashes($strPictureBasename) . '\');"><img src="/style/img/upload.png" alt="upload" />&nbsp;Upload to Imgur</a></span><br />'."\n";
 		}
 		else
 		{

@@ -47,7 +47,7 @@ if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"]))
 	</table>
 	<div class="entries_inner" style="overflow:hidden !important;">
 		<div id="container"></div>
-		<div id="report" onclick='$("#report").fadeToggle();'></div>
+		<div id="report" onclick='$("#report").fadeToggle("fast");'></div>
 		<div id="disclaimer" onclick='$("#disclaimer").fadeToggle("fast");'></div>
 		<div id="map_legend" onclick='$("#map_legend2").fadeToggle("fast");'>Legend</div>
 		<div id="map_legend2">
@@ -90,25 +90,25 @@ if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"]))
 				</tr>
 				<tr>
 					<td>
-						<img src="/style/img/goto-g.png" alt="POI Visited" style="vertical-align:middle;margin-bottom:4px;">
+						<img src="/style/img/goto-g.png" alt="POI Visited" style="margin-bottom:4px;">
 					</td>
 					<td>Visited Point of Interest</td>
 				</tr>
 				<tr>
 					<td>
-						<img src="/style/img/goto.png" alt="POI Unvisited" style="vertical-align:middle;margin-bottom:4px;">
+						<img src="/style/img/goto.png" alt="POI Unvisited" style="margin-bottom:4px;">
 					</td>
 					<td>Unvisited Point of Interest</td>
 				</tr>
 				<tr>
 					<td>
-						<img src="/style/img/rare.png" alt="Rare" style="vertical-align:middle;margin-bottom:4px;">
+						<img src="/style/img/rare.png" alt="Rare" style="margin-bottom:4px;">
 					</td>
 					<td>Rare Commodity</td>
 				</tr>
 				<tr>
 					<td>
-						<img src="/style/img/bm.png" alt="Rare" style="vertical-align:middle;margin-bottom:4px;">
+						<img src="/style/img/bm.png" alt="Rare" style="margin-bottom:4px;">
 					</td>
 					<td>Bookmarked System</td>
 				</tr>

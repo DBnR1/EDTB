@@ -30,7 +30,7 @@ $system = isset($_GET["system"]) ? $_GET["system"] : "";
 $text = "Nearest";
 
 //  determine what coordinates to use
-if ($system != "")
+if (!empty($system))
 {
 	$sys_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT name, id, x, y, z
 															FROM edtb_systems
@@ -49,7 +49,7 @@ if ($system != "")
 	$addtolink .= "&system=" . $system . "";
 	$addtolink2 .= "&system=" . $system . "";
 }
-else if (valid_coordinates($coordx, $coordy, $coordz) && $system == "")
+else if (valid_coordinates($coordx, $coordy, $coordz) && empty($system))
 {
 	$usex = $coordx;
 	$usey = $coordy;
@@ -362,7 +362,9 @@ if ($ship_name != "" && $ship_name != "0")
 }
 
 if ($text == "Nearest")
+{
 	$text = "Nearest stations";
+}
 
 /*
 *	replace all but the first occurance of "key" with "value"
@@ -408,10 +410,10 @@ $count = mysqli_num_rows($res);
 			<tr>
 				<!-- station allegiances -->
 				<td class="transparent" style="vertical-align:top;width:25%;white-space:nowrap;">
-					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?allegiance=Empire<?php echo $addtolink2;?>" title="Empire"><img src="style/img/empire.png" alt="Empire" style="vertical-align:middle;" /></a>&nbsp;
-					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?allegiance=Alliance<?php echo $addtolink2;?>" title="Alliance"><img src="style/img/alliance.png" alt="Alliance" style="vertical-align:middle;" /></a>&nbsp;
-					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?allegiance=Federation<?php echo $addtolink2;?>" title="Federation"><img src="style/img/federation.png" alt="Federation" style="vertical-align:middle;" /></a>&nbsp;
-					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?allegiance=Independent<?php echo $addtolink2;?>" title="Independent"><img src="style/img/system.png" alt="Independent" style="vertical-align:middle;" /></a>
+					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?allegiance=Empire<?php echo $addtolink2;?>" title="Empire"><img src="style/img/empire.png" alt="Empire" /></a>&nbsp;
+					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?allegiance=Alliance<?php echo $addtolink2;?>" title="Alliance"><img src="style/img/alliance.png" alt="Alliance" /></a>&nbsp;
+					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?allegiance=Federation<?php echo $addtolink2;?>" title="Federation"><img src="style/img/federation.png" alt="Federation" /></a>&nbsp;
+					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?allegiance=Independent<?php echo $addtolink2;?>" title="Independent"><img src="style/img/system.png" alt="Independent" /></a>
 					<!-- search systems and stations-->
 					<div style="text-align:left;">
 						<div style="width:180px;margin-top:35px;">
@@ -424,10 +426,10 @@ $count = mysqli_num_rows($res);
 				</td>
 				<!-- allegiances -->
 				<td class="transparent" style="vertical-align:top;width:25%;white-space:nowrap;">
-					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?system_allegiance=Empire<?php echo $addtolink2;?>" title="Empire"><img src="style/img/empire.png" alt="Empire" style="vertical-align:middle;" /></a>&nbsp;
-					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?system_allegiance=Alliance<?php echo $addtolink2;?>" title="Alliance"><img src="style/img/alliance.png" alt="Alliance" style="vertical-align:middle;" /></a>&nbsp;
-					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?system_allegiance=Federation<?php echo $addtolink2;?>" title="Federation"><img src="style/img/federation.png" alt="Federation" style="vertical-align:middle;" /></a>&nbsp;
-					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?system_allegiance=None<?php echo $addtolink2;?>" title="None allied"><img src="style/img/system.png" alt="None allied" style="vertical-align:middle;" /></a>
+					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?system_allegiance=Empire<?php echo $addtolink2;?>" title="Empire"><img src="style/img/empire.png" alt="Empire" /></a>&nbsp;
+					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?system_allegiance=Alliance<?php echo $addtolink2;?>" title="Alliance"><img src="style/img/alliance.png" alt="Alliance" /></a>&nbsp;
+					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?system_allegiance=Federation<?php echo $addtolink2;?>" title="Federation"><img src="style/img/federation.png" alt="Federation" /></a>&nbsp;
+					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?system_allegiance=None<?php echo $addtolink2;?>" title="None allied"><img src="style/img/system.png" alt="None allied" /></a>
 					<br /><br />
 				</td>
 				<!-- powers -->
@@ -656,7 +658,7 @@ $count = mysqli_num_rows($res);
 
 								if ($system != $last_system)
 								{
-									echo '<tr><td class="transparent" style="text-align:center;"><img src="style/img/' . $pic . '" alt="' . $allegiance . '" style="vertical-align:middle;" /></td>';
+									echo '<tr><td class="transparent" style="text-align:center;"><img src="style/img/' . $pic . '" alt="' . $allegiance . '" /></td>';
 
 									echo '<td class="transparent">';
 									echo number_format($distance,2);

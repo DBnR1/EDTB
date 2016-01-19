@@ -23,7 +23,7 @@
 
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 
-if (isset($_GET["group_id"]) && $_GET["group_id"] != "")
+if (isset($_GET["group_id"]) && !empty($_GET["group_id"]))
 {
 	$group_id = $_GET["group_id"];
 

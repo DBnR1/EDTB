@@ -488,6 +488,24 @@ a.poid:hover
 	z-index:11696;
 }
 
+.raresinfo
+{
+	display:none;
+	position:absolute;
+	top:40px;
+	left:600px;
+	line-height:1.5;
+	padding:8px;
+	background-color:#2A3C45;
+	border:1px solid #000;
+	color:#FFFFFA;
+	text-shadow:1px 1px 1px #000000;
+	z-index:1000;
+	max-height:630px;
+	overflow:auto;
+	white-space:nowrap;
+}
+
 /* container for the arrow image */
 .addstations
 {

@@ -24,9 +24,9 @@
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 $action = isset($_GET["action"]) ? $_GET["action"] : "";
 
-if (isset($_GET["q"]) && $_GET["q"] != "" && isset($_GET["divid"]))
+if (isset($_GET["q"]) && !empty($_GET["q"]) && isset($_GET["divid"]))
 {
-	$search = addslashes($_GET["q"]);
+	$search = $_GET["q"];
 	$divid = $_GET["divid"];
 
 	$addtl = "";
@@ -54,7 +54,7 @@ if (isset($_GET["q"]) && $_GET["q"] != "" && isset($_GET["divid"]))
 																FROM edtb_systems
 																LEFT JOIN edtb_stations ON edtb_stations.system_id = edtb_systems.id
 																WHERE edtb_stations.name LIKE('%" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $search) . "%')
-																ORDER BY edtb_stations.name = '" . $search . "',
+																ORDER BY edtb_stations.name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $search) . "',
 																edtb_stations.name
 																LIMIT 30") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
@@ -70,8 +70,8 @@ if (isset($_GET["q"]) && $_GET["q"] != "" && isset($_GET["divid"]))
 																	FROM edtb_systems
 																	LEFT JOIN edtb_stations ON edtb_stations.system_id = edtb_systems.id
 																	WHERE edtb_stations.name LIKE('%" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $search) . "%')
-																	AND edtb_systems.name = '" . $_GET["sysid"] . "'
-																	ORDER BY edtb_stations.name = '" . $search . "',
+																	AND edtb_systems.name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $_GET["sysid"]) . "'
+																	ORDER BY edtb_stations.name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $search) . "',
 																	edtb_stations.name
 																	LIMIT 30") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 	}
