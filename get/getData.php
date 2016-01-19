@@ -804,7 +804,7 @@ if ($newSystem !== FALSE || $request == 0)
 
 	if ($current_system != "")
 	{
-		if ($settings["log_range"] == 0 || $coordx == "" || $current_id != "-1")
+		if ($settings["log_range"] == 0 || !valid_coordinates($coordx, $coordy, $coordz))
 		{
 			$log_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT SQL_CACHE
 																	user_log.id, user_log.system_name AS log_system_name, user_log.station_id,
@@ -814,7 +814,7 @@ if ($newSystem !== FALSE || $request == 0)
 																	FROM user_log
 																	LEFT JOIN edtb_systems ON user_log.system_id = edtb_systems.id
 																	LEFT JOIN edtb_stations ON user_log.station_id = edtb_stations.id
-																	WHERE user_log.system_id = '" . $current_id . "'
+																	WHERE user_log.system_name = '" . $current_system . "'
 																	ORDER BY stardate DESC") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 		}
 		else
