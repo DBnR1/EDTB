@@ -2,7 +2,7 @@
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 
 // no direct access
-if(strtolower(basename($_SERVER['PHP_SELF'])) == strtolower(basename(__FILE__)))
+if (strtolower(basename($_SERVER['PHP_SELF'])) == strtolower(basename(__FILE__)))
 {
 	die('No access...');
 }
@@ -115,7 +115,7 @@ class MySQLtabledit
 		require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/MySQL_table_edit/lang/" . $this->language . ".php");
 
 		# No cache
-		if(!headers_sent())
+		if (!headers_sent())
 		{
 			header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 			header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
@@ -224,6 +224,7 @@ class MySQLtabledit
 		if (mysqli_num_rows($result)>0)
 		{
 			$result2 = mysqli_query($GLOBALS["___mysqli_ston"], "SHOW COLUMNS FROM `$this->table`") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+
 			while ($rij2 = mysqli_fetch_assoc($result2))
 			{
 				extract($rij2);
@@ -242,6 +243,7 @@ class MySQLtabledit
 				$dist = false;
 				$dist1 = false;
 				$exact = "";
+
 				if (array_key_exists("x", $rij) && array_key_exists("y", $rij) && array_key_exists("z", $rij) || array_key_exists("system_name", $rij) || array_key_exists("system_id", $rij))
 				{
 					$dist = true;
@@ -253,7 +255,7 @@ class MySQLtabledit
 						$d_y = $rij["y"];
 						$d_z = $rij["z"];
 					}
-					else if (isset($rij["system_id"]))
+					elseif (isset($rij["system_id"]))
 					{
 						$sys_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT x, y, z
 																				FROM edtb_systems
@@ -270,7 +272,7 @@ class MySQLtabledit
 							$d_z = $sys_arr["z"];
 						}
 					}
-					else if (isset($rij["system_name"]) || $found == 0)
+					elseif (isset($rij["system_name"]) || $found == 0)
 					{
 						$sys_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT x, y, z
 																				FROM edtb_systems
@@ -515,7 +517,7 @@ class MySQLtabledit
 		}
 
 		# Search form + Add Record button
-		foreach ($this->fields_in_list_view AS $option)
+		foreach ($this->fields_in_list_view as $option)
 		{
 
 			if
@@ -539,7 +541,7 @@ class MySQLtabledit
 		$in_search_value = htmlentities(trim(stripslashes($_GET['s'])), ENT_QUOTES);
 
 		$seach_form = "
-			<table style='margin-left:0px;padding-left:0px;border-collapse:collapse;border-spacing:0px;'>
+			<table style='margin-left:0;padding-left:0;border-collapse:collapse;border-spacing:0;'>
 				<tr>
 					<td style='white-space:nowrap;padding-bottom:20px;'>
 						<form method=get action='$this->url_script'>
@@ -554,7 +556,7 @@ class MySQLtabledit
 			if ($_GET['s'] && $_GET['f'])
 			{
 				if ($this->query_joomla_component) $add_joomla = '?option=' . $this->query_joomla_component;
-				$seach_form .= "<button class='button' style='margin-left:0px;margin-top:6px;' onclick='window.location=\"$this->url_script$add_joomla\"' style='margin: 0 0 10px 10px;'>{$this->text['Clear_search']}</button>";
+				$seach_form .= "<button class='button' style='margin-left:0;margin-top:6px;' onclick='window.location=\"$this->url_script$add_joomla\"' style='margin: 0 0 10px 10px;'>{$this->text['Clear_search']}</button>";
 			}
 
 			$seach_form .= "
@@ -750,11 +752,12 @@ class MySQLtabledit
 		$this->javascript = "
 			function submitform() {
 				var ok = 0;
-				for (f=1;f<=$count_required;f++) {
+				for (f = 1; f <= $count_required; f++)
+				{
 
 					var elem = document.getElementById('id_' + f);
 
-					if(elem.options) {
+					if (elem.options) {
 						if (elem.options[elem.selectedIndex].text!=null && elem.options[elem.selectedIndex].text!='') {
 							ok++;
 						}
@@ -765,12 +768,14 @@ class MySQLtabledit
 						}
 					}
 				}
-//	alert($count_required + ' ' + ok);
+				//	alert($count_required + ' ' + ok);
 
-				if (ok == $count_required) {
+				if (ok == $count_required)
+				{
 					return true;
 				}
-				else {
+				else
+				{
 					alert('{$this->text['Check_the_required_fields']}...')
 					return false;
 				}
@@ -817,7 +822,7 @@ class MySQLtabledit
 
 		$updates = '';
 
-		foreach($_POST AS $key => $value)
+		foreach($_POST as $key => $value)
 		{
 			if ($key == $this->primary_key)
 			{
@@ -865,8 +870,15 @@ class MySQLtabledit
 			{
 				$saved_id = $in_id;
 			}
-			if ($this->show_text[$this->primary_key]) {$show_primary_key = $this->show_text[$this->primary_key];}
-				else {$show_primary_key = $this->primary_key;}
+
+			if ($this->show_text[$this->primary_key])
+			{
+				$show_primary_key = $this->show_text[$this->primary_key];
+			}
+			else
+			{
+				$show_primary_key = $this->primary_key;
+			}
 
 			$_SESSION['content_saved'] = "
 				<div class='notify_success'>
@@ -891,7 +903,7 @@ class MySQLtabledit
 		{
 			$this->content = "
 				<div style='width: $this->width_editor'>
-					<div style='padding:2px 20px 20px 20px;margin: 0 0 20px 0; background: #DF0000; color: #fff;'><h3>Error</h3>" .
+					<div style='padding:2px 20px 20px 20px;margin:0 0 20px 0;background:#DF0000;color:#fff;'><h3>Error</h3>" .
 					((is_object($GLOBALS["___mysqli_ston"])) ? mysqli_error($GLOBALS["___mysqli_ston"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)) .
 					"</div><a href='{$_SESSION['hist_page']}'>{$this->text['Go_back']}...</a>
 				</div>";
@@ -910,7 +922,7 @@ class MySQLtabledit
 		if ($this->debug)
 		$this->debug_html = "
 			<div style='width: $this->width_editor'>
-				<div class='mte_mess' style='background: #DD0000'>$this->debug</div>
+				<div class='mte_mess' style='background:#DD0000'>$this->debug</div>
 			</div>";
 
 		# save page location
@@ -933,18 +945,6 @@ class MySQLtabledit
 		<script>
 			$this->javascript
 		</script>
-
-		<link href='$this->url_base/css/mte.css' rel='stylesheet' type='text/css'>
-
-		<style type='text/css'>
-			.mte_content input {
-				width: $this->width_input_fields;
-			}
-			.mte_content textarea {
-				width: $this->width_text_fields;
-				height: $this->height_text_fields;
-			}
-		</style>
 			<div class='mte_head_1' style='text-align:center;'><ul class='pagination'>";
 
 		$count = count($this->links_to_db);

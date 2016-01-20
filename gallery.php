@@ -24,12 +24,6 @@
 $pagetitle = "Screenshot Gallery";
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 ?>
-<!-- stuff for spgm pic gallery -->
-<script type="text/javascript" src="/source/spgm/spgm.js"></script>
-<script type="text/javascript" src="/source/spgm/contrib/overlib410/overlib.js"></script>
-<link rel="stylesheet" href="/source/spgm/css/style.css" />
-<link rel="stylesheet" href="/source/spgm/flavors/default/spgm_style.css" />
-
 <div class="entries">
 	<div class="entries_inner">
 		<?php

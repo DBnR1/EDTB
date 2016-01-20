@@ -66,7 +66,7 @@ if (isset($_GET["do"]))
 													WHERE id = '" . $l_id . "'
 													LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]));
 	}
-	else if (isset($_GET["deleteid"]))
+	elseif (isset($_GET["deleteid"]))
 	{
 		mysqli_query($GLOBALS["___mysqli_ston"], "	DELETE FROM user_log
 													WHERE id = '" . $_GET["deleteid"] . "'
@@ -99,7 +99,7 @@ if (isset($_GET["do"]))
 				<tr>
 					<td class="dark">
 						<input type="hidden" name="edit_id" id="edit_id" />
-						<input class="textbox" type="text" name="system_name" placeholder="System name (leave empty for general log entry)" id="system_1" style="width:96%;margin-left:0px;" oninput="showResult(this.value, '1');" />
+						<input class="textbox" type="text" name="system_name" placeholder="System name (leave empty for general log entry)" id="system_1" style="width:96%;margin-left:0;" oninput="showResult(this.value, '1');" />
 					</td>
 					<td class="dark">
 						<input class="textbox" type="text" name="station_name" placeholder="Station name (optional)" id="statname" style="width:96%;" oninput="showResult(this.value, '41', 'no', 'yes', 'no', document.getElementById('system_1').value);" /><br />

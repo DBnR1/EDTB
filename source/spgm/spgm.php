@@ -234,18 +234,18 @@ $spgm_cfg['global']['URLExtraParams'] = ''; // Contains the extra paramaters for
 ###### REPORTING FUNCTIONS #############################################
 
 function spgm_Error($strErrorMessage) {
-  print '<div style="color: #ff0000; font_family: helvetica, arial; font-size:12pt; font-weight: bold;">'.$strErrorMessage.'</div>'."\n";
+  print '<div style="color: #ff0000; font-family: helvetica, arial; font-size:12pt; font-weight: bold;">'.$strErrorMessage.'</div>'."\n";
 }
 
 function spgm_Warning($strWarningMessage) {
   if (MODE_WARNING) {
-	print '<div style="color: #0000ff; font_family: helvetica, arial; font-size:12pt; font-weight: bold;">'.$strWarningMessage.'</div>'."\n";
+	print '<div style="color: #0000ff; font-family: helvetica, arial; font-size:12pt; font-weight: bold;">'.$strWarningMessage.'</div>'."\n";
   }
 }
 
 function spgm_Trace($strTrace) {
   if (MODE_TRACE) {
-	print '<div style="color: #000000; font_family: verdana, helvetica, arial; font-size:12pt;">'.$strTrace.'</div>'."\n";
+	print '<div style="color: #000000; font-family: verdana, helvetica, arial; font-size:12pt;">'.$strTrace.'</div>'."\n";
   }
 }
 
@@ -295,7 +295,7 @@ function spgm_BuildLink($text, $cssClass, $anchor, $galId, $pageIdx, $picId, $fi
   if ($anchor != '') {
 	$url .= '#'.$anchor;
   }
-  else if ($spgm_cfg['conf']['stickySpgm'] == true) {
+  elseif ($spgm_cfg['conf']['stickySpgm'] == true) {
 	$url .= '#'.ANCHOR_SPGM;
   }
 
@@ -557,7 +557,7 @@ function spgm_LoadPictureCaptions($strGalleryId) {
 		if ($arrCaptions[$i][0] == CAPTION_KEEPER AND $strCurrentPicture != '') {
 		$spgm_cfg['captions'][$strCurrentPicture]
 			.= substr(trim($arrCaptions[$i]), strlen(CAPTION_KEEPER));
-		} else if (strpos($arrCaptions[$i], CAPTION_DELIMITER) !== false) {
+		} elseif (strpos($arrCaptions[$i], CAPTION_DELIMITER) !== false) {
 		list($strPictureFilename, $strCaption)
 			= explode(CAPTION_DELIMITER, $arrCaptions[$i]);
 		$strCurrentPicture = trim($strPictureFilename);
@@ -931,7 +931,7 @@ function spgm_CreateGalleryArray($strGalleryId, $bToBeDisplayed) {
 		if ($spgm_cfg['conf']['gallerySortType'] == SORTTYPE_NAME) {
 			if ($spgm_cfg['conf']['gallerySortOptions'] == SORT_DESCENDING) rsort($arrSubGalleries);
 			else sort($arrSubGalleries);
-		} else if ($spgm_cfg['conf']['gallerySortType'] == SORTTYPE_CREATION_DATE) {
+		} elseif ($spgm_cfg['conf']['gallerySortType'] == SORTTYPE_CREATION_DATE) {
 			$spgm_cfg['global']['tmpPathToPics'] = DIR_GAL.$strGalleryId;
 			usort($arrSubGalleries, 'spgm_CallbackCompareMTime'); // TODO: omit it ?
 			if ($spgm_cfg['conf']['gallerySortOptions'] == SORT_DESCENDING)
@@ -999,7 +999,7 @@ function spgm_CreatePictureArray($strGalleryId, $strFilterFlags, $bForDisplayPur
 		if ($spgm_cfg['conf']['pictureSortType'] == SORTTYPE_NAME) {
 			if ($spgm_cfg['conf']['pictureSortOptions'] == SORT_DESCENDING) rsort($arrPictureFilenames);
 			else sort($arrPictureFilenames);
-		} else if ($spgm_cfg['conf']['pictureSortType'] == SORTTYPE_CREATION_DATE) {
+		} elseif ($spgm_cfg['conf']['pictureSortType'] == SORTTYPE_CREATION_DATE) {
 			$spgm_cfg['global']['tmpPathToPics'] = $strPathToGallery;
 			usort($arrPictureFilenames, 'spgm_CallbackCompareMTime'); // TODO: omit it ?
 			if ($spgm_cfg['conf']['pictureSortOptions'] == SORT_DESCENDING)
@@ -1355,7 +1355,7 @@ function spgm_DisplayGalleryHierarchy($strGalleryId, $iGalleryDepth, $strFilterF
 		}
 
 		// display the link
-		if ($bNeedDropShadows == TRUE) {
+		if ($bNeedDropShadows == true) {
 		spgm_DropShadowsBeginWrap();
 		}
 		$filters = '';
@@ -1364,7 +1364,7 @@ function spgm_DisplayGalleryHierarchy($strGalleryId, $iGalleryDepth, $strFilterF
 		}
 		print '			 '.spgm_BuildLink($strHtmlIcon, CLASS_TD_GALITEM_TITLE, '', $strPathToSubGallery, -1, -1, $filters)."\n";
 
-		if ($bNeedDropShadows == TRUE) {
+		if ($bNeedDropShadows == true) {
 		spgm_DropShadowsEndWrap();
 		}
 
@@ -1397,7 +1397,7 @@ function spgm_DisplayGalleryHierarchy($strGalleryId, $iGalleryDepth, $strFilterF
 	if ($spgm_cfg['conf']['subGalleryLevel'] == 0) {
 		spgm_DisplayGalleryHierarchy($strPathToSubGallery, $iGalleryDepth+1,
 			$strFilterFlags);
-	} else if ($iGalleryDepth < $spgm_cfg['conf']['subGalleryLevel'] - 1) {
+	} elseif ($iGalleryDepth < $spgm_cfg['conf']['subGalleryLevel'] - 1) {
 		spgm_DisplayGalleryHierarchy($strPathToSubGallery, $iGalleryDepth+1,
 			$strFilterFlags);
 	}
@@ -1428,7 +1428,7 @@ function spgm_DisplayPicture($strGalleryId, $iPictureId, $strFilterFlags) {
   $strCaptionURL = $strPictureURL.EXT_PIC_CAPTION; // DEPRECATED
   $strGalleryName = str_replace('_', ' ', $strGalleryId);
   $strGalleryName = str_replace('/', ' &raquo; ', $strGalleryName);
-  $bSlideshowMode = strstr($strFilterFlags, PARAM_VALUE_FILTER_SLIDESHOW) != FALSE;
+  $bSlideshowMode = strstr($strFilterFlags, PARAM_VALUE_FILTER_SLIDESHOW) != false;
 
   if ($spgm_cfg['conf']['thumbnailsPerPage'] != 0) {
 	$iPageNumber = $iPictureNumber / $spgm_cfg['conf']['thumbnailsPerPage'];
@@ -1568,7 +1568,7 @@ function spgm_DisplayPicture($strGalleryId, $iPictureId, $strFilterFlags) {
 	if (!($iNextPictureId < $iPictureNumber)) $iNextPictureId = 0; // to link to the appropriate next pic
 	if (!$bSlideshowMode)
 	{
-		if ($spgm_cfg['conf']['popupOverFullPictures'] == TRUE)
+		if ($spgm_cfg['conf']['popupOverFullPictures'] == true)
 		{
 			$iPopupWidth = $spgm_cfg['conf']['popupWidth'];
 			$iPopupHeight = $spgm_cfg['conf']['popupHeight'];
@@ -1604,7 +1604,7 @@ function spgm_DisplayPicture($strGalleryId, $iPictureId, $strFilterFlags) {
 	{
 		print '<tr>'."\n";
 		print '  <td class="'.CLASS_TD_PICTURE_FILENAME.'">'."\n";
-		echo '<span class="left"><a href="javascript:void(0);" onclick="confirmation(\'' . addslashes($strPictureURL) . '\',\'screenshot\')" title="Delete screenshot"><div class="delete_button" style="position:relative;left:-6px;top:0px;"><img src="/style/img/delete.png" alt="Delete" /></div></a></span>'."\n";
+		echo '<span class="left"><a href="javascript:void(0);" onclick="confirmation(\'' . addslashes($strPictureURL) . '\',\'screenshot\')" title="Delete screenshot"><div class="delete_button" style="position:relative;left:-6px;top:0;"><img src="/style/img/delete.png" alt="Delete" /></div></a></span>'."\n";
 		print $strPictureBasename.''.$_strFileExtension.'';
 
 		$imgurfile = "" . $_SERVER["DOCUMENT_ROOT"] . "/screenshots/Imgur/" . urldecode($strPictureBasename) . ".txt";
@@ -1825,7 +1825,7 @@ function spgm_DisplayThumbnails($strGalleryId, $arrPictureFilenames, $iPictureId
 		print '		 <div class="'.CLASS_DIV_THUMBNAILS_CAPTION.'">';
 		print $spgm_cfg['captions'][PREF_THUMB.$strPictureFilename];
 		print '</div>'."\n";
-		} else if ($spgm_cfg['conf']['pictureCaptionedThumbnails']) {
+		} elseif ($spgm_cfg['conf']['pictureCaptionedThumbnails']) {
 		if (isset($spgm_cfg['captions'][$strPictureFilename])) {
 			print "\n".'	<div class="'.CLASS_DIV_THUMBNAILS_CAPTION.'">';
 			print $spgm_cfg['captions'][$strPictureFilename];

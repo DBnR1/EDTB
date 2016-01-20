@@ -57,7 +57,7 @@ if (isset($_GET["do"]))
 													category_id = '" . $category_id . "'" . $addc . "
 													WHERE id = '" . $p_id . "'") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 	}
-	else if (isset($_GET["deleteid"]))
+	elseif (isset($_GET["deleteid"]))
 	{
 		mysqli_query($GLOBALS["___mysqli_ston"], "	DELETE FROM user_poi
 													WHERE id = '" . $_GET["deleteid"] . "'

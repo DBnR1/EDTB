@@ -24,11 +24,12 @@
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 
 $system = $_GET["system"];
-$system_id = mysqli_fetch_row(mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id
-																			FROM edtb_systems
-																			WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system) . "'
-																			LIMIT 1"));
-$system_id = $system_id[0];
+
+/*
+/*	 check if system has screenshots
+*/
+
+$screenshots = has_screenshots($system) ? '<a href="/gallery.php?spgmGal=' . urlencode($system) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;vertical-align:top;" /></a>' : "";
 
 /*
 *	check if system is in the bookmarks
@@ -52,7 +53,7 @@ if ($count2 > 0)
 		echo 'Bookmark comment: ' . $comment . ' - ';
 	}
 
-	echo 'Bookmark added: ' . get_timeago($added_on) . '';
+	echo 'Bookmark added: ' . get_timeago($added_on, false) . '';
 	echo '<br />';
 }
 
@@ -82,7 +83,7 @@ if ($count > 0)
 
 	if (!$visit && !$text)
 	{
-		echo '<a href="system.php?system_id=' . $system_id . '" style="color:inherit;">' . $system . '</a><br />No additional information';
+		echo '<a href="system.php?system_name=' . urlencode($system) . '" style="color:inherit;">' . $system . '</a>' . $screenshots . '<br />No additional information';
 	}
 	else
 	{
@@ -112,8 +113,8 @@ if ($count > 0)
 																					FROM user_visited_systems
 																					WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system) . "'"));
 			$visit_unix = strtotime($visit_og);
-			$visit_ago = get_timeago($visit_unix, true);
-			echo "<a href=\"/system.php?system_name=" . urlencode($system) . "\" style=\"color:inherit;\">" . $system . "</a>&nbsp;&nbsp;|&nbsp;
+			$visit_ago = get_timeago($visit_unix);
+			echo "<a href=\"/system.php?system_name=" . urlencode($system) . "\" style=\"color:inherit;\">" . $system . "</a>" . $screenshots . "&nbsp;&nbsp;|&nbsp;
 			Total visits: " . $visits . "&nbsp;&nbsp;|&nbsp;&nbsp;First visit: " . $visit . " (" . $visit_ago . ")";
 		}
 		else

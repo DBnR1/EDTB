@@ -24,15 +24,15 @@
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 Header("content-type: application/json");
 
-$last_system_name = $current_system;
-if (!valid_coordinates($coordx, $coordy, $coordz))
+$last_system_name = $curSys["name"];
+if (!valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"]))
 {
 	// get last known coordinates
 	$last_coords = last_known_system();
 
-	$coordx = $last_coords["x"];
-	$coordy = $last_coords["y"];
-	$coordz = $last_coords["z"];
+	$curSys["x"] = $last_coords["x"];
+	$curSys["y"] = $last_coords["y"];
+	$curSys["z"] = $last_coords["z"];
 
 	$last_system_name = $last_coords["name"];
 }
@@ -83,7 +83,7 @@ if ($settings["galmap_show_visited_systems"] == "true")
 
 		$name = $row["system_name"];
 
-		if (strtolower($name) != strtolower($current_system))
+		if (strtolower($name) != strtolower($curSys["name"]))
 		{
 			$sysid = $row["sysid"];
 			// coordinates
@@ -119,15 +119,15 @@ if ($settings["galmap_show_visited_systems"] == "true")
 				{
 					$cat = ',"cat": [2]';
 				}
-				else if ($allegiance == "Alliance")
+				elseif ($allegiance == "Alliance")
 				{
 					$cat = ',"cat": [3]';
 				}
-				else if ($allegiance == "Empire")
+				elseif ($allegiance == "Empire")
 				{
 					$cat = ',"cat": [1]';
 				}
-				else if ($allegiance == "Independent")
+				elseif ($allegiance == "Independent")
 				{
 					$cat = ',"cat": [21]';
 				}
@@ -146,7 +146,7 @@ if ($settings["galmap_show_visited_systems"] == "true")
 					$visit = date_format($visit_date, "d.m.Y, H:i");
 
 					$visit_unix = strtotime($visit_og);
-					$visit_ago = get_timeago($visit_unix, true);
+					$visit_ago = get_timeago($visit_unix);
 
 					$info .= '<strong>First visit</strong><br />' . $visit . ' (' . $visit_ago . ')<br />';
 				}
@@ -188,7 +188,7 @@ if ($settings["galmap_show_pois"] == "true")
 		$cat = "";
 		$name = $row["system_name"];
 
-		if (strtolower($name) != strtolower($current_system))
+		if (strtolower($name) != strtolower($curSys["name"]))
 		{
 			$disp_name = $row["system_name"];
 			$poi_name = $row["poi_name"];
@@ -235,7 +235,7 @@ if ($settings["galmap_show_pois"] == "true")
 					$visit = date_format($visit_date, "d.m.Y, H:i");
 
 					$visit_unix = strtotime($visit_og);
-					$visit_ago = get_timeago($visit_unix, true);
+					$visit_ago = get_timeago($visit_unix);
 
 					$info .= '<strong>First visit</strong><br />' . $visit . ' (' . $visit_ago . ')<br /><br />';
 				}
@@ -296,7 +296,7 @@ if ($settings["galmap_show_bookmarks"] == "true")
 
 		if (valid_coordinates($bm_coordx, $bm_coordy, $bm_coordz))
 		{
-			if (strtolower($bm_system_name) != strtolower($current_system))
+			if (strtolower($bm_system_name) != strtolower($curSys["name"]))
 			{
 				$bm_comment = $bm_row["comment"];
 				$bm_added_on = $bm_row["added_on"];
@@ -315,7 +315,7 @@ if ($settings["galmap_show_bookmarks"] == "true")
 
 					$bm_added_on = date_format($bm_added_on_date, "d.m.Y, H:i");
 
-					$bm_added_on_ago = get_timeago($bm_added_on_og, true);
+					$bm_added_on_ago = get_timeago($bm_added_on_og);
 
 					$info .= '<strong>Bookmarked on</strong><br />' . $bm_added_on . ' (' . $bm_added_on_ago . ')<br /><br />';
 				}
@@ -356,7 +356,7 @@ if ($settings["galmap_show_rares"] == "true")
 		$rare_coordy = $rare_row["y"];
 		$rare_coordz = $rare_row["z"];
 
-		if (strtolower($rare_system) != strtolower($current_system) && valid_coordinates($rare_coordx, $rare_coordy, $rare_coordz))
+		if (strtolower($rare_system) != strtolower($curSys["name"]) && valid_coordinates($rare_coordx, $rare_coordy, $rare_coordz))
 		{
 			$rare_item = $rare_row["item"];
 			$rare_station = $rare_row["station"];
@@ -446,9 +446,9 @@ while ($log_row = mysqli_fetch_array($log_result))
 //$info = '</div>';
 $cur_sys_data = "";
 
-if (strtolower($last_system_name) == strtolower($current_system) && valid_coordinates($coordx, $coordy, $coordz))
+if (strtolower($last_system_name) == strtolower($curSys["name"]) && valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"]))
 {
-	$cur_sys_data = ',{"name": "' . $current_system  . '","cat": [5],"coords": {"x": ' . $coordx . ',"y": ' . $coordy . ',"z": ' . $coordz . '}}';
+	$cur_sys_data = ',{"name": "' . $curSys["name"]  . '","cat": [5],"coords": {"x": ' . $curSys["x"] . ',"y": ' . $curSys["y"] . ',"z": ' . $curSys["z"] . '}}';
 }
 
 $data = "" . $data_start . "" . $data . "" . $cur_sys_data . "]}";

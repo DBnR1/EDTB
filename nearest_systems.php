@@ -49,11 +49,11 @@ if (!empty($system))
 	$addtolink .= "&system=" . $system . "";
 	$addtolink2 .= "&system=" . $system . "";
 }
-else if (valid_coordinates($coordx, $coordy, $coordz) && empty($system))
+elseif (valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"]) && empty($system))
 {
-	$usex = $coordx;
-	$usey = $coordy;
-	$usez = $coordz;
+	$usex = $curSys["x"];
+	$usey = $curSys["y"];
+	$usez = $curSys["z"];
 }
 else
 {
@@ -106,7 +106,7 @@ if ($only != "")
 	{
 		$text .= " systems with " . $only . " controlled stations";
 	}
-	else if ($only == "Independent")
+	elseif ($only == "Independent")
 	{
 		$text .= " systems with Independent stations";
 	}
@@ -150,6 +150,7 @@ if ($facility != "" && $facility != "0")
 	{
 		$article = "a";
 	}
+
 	$text .= " stations with " . $article . " " . $f_name . " facility";
 	$hidden_inputs .= '<input type="hidden" name="facility" value="' . $facility . '" />';
 	$addtolink .= "&facility=" . $facility . "";
@@ -241,19 +242,21 @@ if ($group_id != "" && $group_id != "0")
 	$group_name = $gnarr["group_name"];
 	$group_name = substr($group_name, -1) == "s" ? $group_name : "" . $group_name . "s";
 
-	if ($rating != "" && $rating != "0")
+	if (!empty($rating))
 	{
 		$ratings = " " . $_GET["rating"] . " rated ";
 		$hidden_inputs .= '<input type="hidden" name="rating" value="' . $rating . '" />';
 		$addtolink .= "&rating=" . $rating . "";
 	}
-	if ($class != "" && $class != "0")
+
+	if (!empty($class))
 	{
 		$classes = " class " . $_GET["class"] . " ";
 		$hidden_inputs .= '<input type="hidden" name="class" value="' . $class . '" />';
 		$addtolink .= "&class=" . $class . "";
 	}
-	if ($class != "" && $class != "0" && $rating != "" && $rating != "0")
+
+	if (!empty($class) && !empty($rating))
 	{
 		$pres = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT price
 															FROM edtb_modules
@@ -265,6 +268,7 @@ if ($group_id != "" && $group_id != "0")
 		$modules_price = number_format($parr["price"]);
 		$price = " (normal price " . $modules_price . " CR) ";
 	}
+
 	$text .= " stations selling " . $ratings . "" . $classes . "" . $group_name . "" . $price . "";
 	$hidden_inputs .= '<input type="hidden" name="group_id" value="' . $group_id . '" />';
 	$addtolink .= "&group_id=" . $group_id . "";
@@ -354,6 +358,7 @@ if ($ship_name != "" && $ship_name != "0")
 	{
 		$s_price = " (normal price " . $ship_price . " CR)";
 	}
+
 	$stations = true;
 	$text .= " stations selling the " . $ship_name . "" . $s_price . "";
 	$hidden_inputs .= '<input type="hidden" name="ship_name" value="' . $ship_name . '" />';
@@ -419,8 +424,8 @@ $count = mysqli_num_rows($res);
 						<div style="width:180px;margin-top:35px;">
 							<input class="textbox" type="text" name="system_name" placeholder="System (optional)" id="system_21" style="width:180px;" oninput="showResult(this.value, '11', 'no', 'no', 'yes')" /><br />
 							<input class="textbox" type="text" name="station_name" placeholder="Station (optional)" id="station_21" style="width:180px;" oninput="showResult(this.value, '12', 'no', 'yes', 'yes')" />
-							<div class="suggestions" id="suggestions_11" style="margin-left:0px;margin-top:-36px;min-width:168px;"></div>
-							<div class="suggestions" id="suggestions_12" style="margin-left:0px;min-width:168px;"></div>
+							<div class="suggestions" id="suggestions_11" style="margin-left:0;margin-top:-36px;min-width:168px;"></div>
+							<div class="suggestions" id="suggestions_12" style="margin-left:0;min-width:168px;"></div>
 						</div>
 					</div>
 				</td>
@@ -481,6 +486,7 @@ $count = mysqli_num_rows($res);
 									{
 										echo '</optgroup><optgroup label="' . $cat_name . '">';
 									}
+
 									$selected = $_GET["group_id"] == $mod_arr["group_id"] ? " selected='selected'" : "";
 									echo '<option value="' . $mod_arr["group_id"] . '"' . $selected . '>' . $mod_arr["group_name"] . '</option>';
 

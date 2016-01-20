@@ -68,22 +68,22 @@ if (isset($_GET["q"]) && !empty($_GET["q"]) && isset($_GET["divid"]))
 			if ($_GET["link"] == "yes")
 			{
 				?>
-				<a href="system.php?system_id=<?php echo $suggest['id']?>">
+				<a href="/system.php?system_id=<?php echo $suggest['id']?>">
 					<?php echo $suggest['name']; ?>
 				</a><br />
 				<?php
 			}
 			// nearest systems
-			else if ($_GET["idlink"] == "yes")
+			elseif ($_GET["idlink"] == "yes")
 			{
 				?>
-				<a href="nearest_systems.php?system=<?php echo $suggest['id']?><?php echo $addtl?>">
+				<a href="/nearest_systems.php?system=<?php echo $suggest['id']?><?php echo $addtl?>">
 					<?php echo $suggest['name']; ?>
 				</a><br />
 				<?php
 			}
 			// bookmarks
-			else if ($_GET["sysid"] == "yes")
+			elseif ($_GET["sysid"] == "yes")
 			{
 				?>
 				<a href="javascript:void(0);" onclick='setbm("<?php echo addslashes($suggest['name']);?>", "<?php echo $suggest['id'];?>");'>
@@ -92,7 +92,7 @@ if (isset($_GET["q"]) && !empty($_GET["q"]) && isset($_GET["divid"]))
 				<?php
 			}
 			// data point
-			else if ($_GET["dp"] == "yes")
+			elseif ($_GET["dp"] == "yes")
 			{
 				?>
 				<a href="javascript:void(0);" onclick='setdp("<?php echo addslashes($suggest['name']);?>", "<?php echo $suggest_coords; ?>", "<?php echo $suggest['id'];?>");'>
