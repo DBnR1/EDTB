@@ -23,18 +23,6 @@
 
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 
-$replaces = array(	"1" => " one ",
-					"2" => " two ",
-					"3" => " three ",
-					"4" => " four ",
-					"5" => " five ",
-					"6" => " six ",
-					"7" => " seven ",
-					"8" => " eight ",
-					"9" => " nine ",
-					"0" => " zero ",
-					" - " => " dash ");
-
 $va_text = array();
 
 /*
@@ -46,7 +34,7 @@ if (isset($_GET["sys"]))
 	$num_visits = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id
 																				FROM user_visited_systems
 																				WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'"))
-																				or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+	or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 	$va_text .= "No system data.";
 
@@ -54,11 +42,7 @@ if (isset($_GET["sys"]))
 	{
 		$va_system = str_replace(".", "", $curSys["name"]);
 
-		foreach ($replaces AS $find => $replace)
-		{
-			$va_system = str_replace($find, $replace, $va_system);
-		}
-		$va_text = "The " . $va_system . " system.\n\r";
+		$va_text = "The " . tts_override($va_system) . " system.\n\r";
 
 		$va_allegiance = $curSys["allegiance"] == "None" ? "No additional data available. " : $curSys["allegiance"];
 		$va_allegiance = $va_allegiance == "" ? "No additional data available. " : $va_allegiance;
@@ -174,7 +158,7 @@ if (isset($_GET["sys"]))
 															FROM edtb_stations
 															WHERE system_id = '" . $curSys["id"] . "'
 															ORDER BY -ls_from_star DESC, name")
-															or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+		or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 		$count = mysqli_num_rows($ress);
 
@@ -316,13 +300,7 @@ if (isset($_GET["cs"]))
 
 	$cs_arr = mysqli_fetch_assoc($cs_res);
 
-	$cs_system = $cs_arr["system_name"];
-
-	foreach ($replaces AS $find => $replace)
-	{
-		$cs_system = str_replace($find, $replace, $cs_system);
-	}
-
+	$cs_system = tts_override($cs_arr["system_name"]);
 	$cs_allegiance = $cs_arr["allegiance"];
 
 	$ss_coordx = $cs_arr["coordx"];
@@ -344,12 +322,12 @@ if (isset($_GET["cs"]))
 	$cs_rearm = $cs_arr["rearm"];
 
 	$cs_facilities = array(	"a shipyard" => $cs_shipyard,
-							"outfitting" => $cs_outfitting,
-							"a commodities market" => $cs_commodities_market,
-							"a black market" => $cs_black_market,
-							"refuel" => $cs_refuel,
-							"repair" => $cs_repair,
-							"rearm" => $cs_rearm);
+		"outfitting" => $cs_outfitting,
+		"a commodities market" => $cs_commodities_market,
+		"a black market" => $cs_black_market,
+		"refuel" => $cs_refuel,
+		"repair" => $cs_repair,
+		"rearm" => $cs_rearm);
 
 	$count = 0;
 	foreach ($cs_facilities as $cs_name => $cs_included)
@@ -380,7 +358,7 @@ if (isset($_GET["cs"]))
 			}
 
 			$cs_services .= $cs_name;
-		$i++;
+			$i++;
 		}
 	}
 
@@ -436,7 +414,7 @@ if (isset($_GET["rm"]))
 														WHERE used = '0'
 														ORDER BY rand()
 														LIMIT 1")
-														or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+	or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 	$arr = mysqli_fetch_assoc($res);
 
 	$rm_id = $arr["id"];
@@ -447,7 +425,7 @@ if (isset($_GET["rm"]))
 												SET used = '1'
 												WHERE id = '" . $rm_id . "'
 												LIMIT 1")
-												or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+	or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 	((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
 	exit;
