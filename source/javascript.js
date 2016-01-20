@@ -133,7 +133,7 @@ function get_data(override)
 
                 if (document.getElementById('container'))
                 {
-                    var chart = $('#container').highcharts()
+                    var chart = $('#container').highcharts();
 
                     if (chart)
                     {
@@ -199,8 +199,7 @@ function get_cs(formid, coordformid, onlyid)
         cache: false,
         success: function(result)
         {
-            var returnedvalue = result;
-            $('#'+formid).val(returnedvalue);
+            $('#'+formid).val(result);
         }
     });
     if (coordformid !== false)
@@ -232,8 +231,7 @@ function get_cs(formid, coordformid, onlyid)
             cache: false,
             success: function(results)
             {
-                var returnedvalues = results;
-                $('#'+onlyid).val(returnedvalues);
+                $('#'+onlyid).val(results);
             }
         });
     }
@@ -344,7 +342,7 @@ function update_data(formid, file, update_map)
         }
     }
     //console.log(data_to_send);
-    var st = JSON.stringify(data_to_send)
+    var st = JSON.stringify(data_to_send);
     $.ajax({
         type: "POST",
         url: file,
@@ -412,7 +410,7 @@ function startTime()
 
 function checkTime(i)
 {
-    if (i<10) {i = "0" + i};  // add zero in front of numbers < 10
+    if (i<10) {i = "0" + i}  // add zero in front of numbers < 10
     return i;
 }
 /*  */
@@ -500,8 +498,7 @@ function get_mi(system)
         cache: false,
         success: function(result)
         {
-            var returnedvalue = result;
-            $('#report').html(returnedvalue);
+            $('#report').html(result);
         }
         });
     }
@@ -567,8 +564,7 @@ function showResult(str, divid, link, station, idlink, sysid, dp)
 function setResult(result, coordinates, divid)
 {
     $('#system_'+divid).val(result);
-	var str = coordinates;
-	var res = str.split(",");
+	var res = coordinates.split(",");
 	var x = res[0];
 	var y = res[1];
 	var z = res[2];
@@ -597,8 +593,7 @@ function setdp(name, coordinates, systemid)
 {
     $('#system_name').val(name);
 	$('#system_id').val(systemid);
-	var str = coordinates;
-	var res = str.split(",");
+	var res = coordinates.split(",");
 	var x = res[0];
 	var y = res[1];
 	var z = res[2];
@@ -898,11 +893,11 @@ function imgurUpload(file, fileurl)
 				success: function(re)
 				{
 					//console.log(re);
-				},
-			});
+				}
+            });
 			//console.log(result);
-		},
-	});
+		}
+    });
 }
 
 /*
@@ -941,9 +936,7 @@ function get_wikipedia(search, id)
 			dataType: 'html',
 			success: function(result)
 			{
-				var returnedvalue = result;
-
-				$("#wpsearch_"+id).html(returnedvalue);
+				$("#wpsearch_"+id).html(result);
 				//console.log(returnedvalue)
 			}
 		});

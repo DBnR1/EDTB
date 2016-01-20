@@ -73,9 +73,6 @@ $tabledit->url_base = '/source/MySQL_table_edit/';
 $tabledit->show_text = $showt;
 
 $tabledit->width_editor = '100%';
-$tabledit->width_input_fields = '500px';
-$tabledit->width_text_fields = '498px';
-$tabledit->height_text_fields = '200px';
 
 # warning no .htacces ('on' or 'off')
 $tabledit->no_htaccess_warning = 'off';

@@ -33,19 +33,19 @@ $request = isset($_GET["request"]) ? $_GET["request"] : 0;
 
 if ($action == "onlycoordinates")
 {
-	echo $current_coordinates;
+	echo $curSys["coordinates"];
 	((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
 	exit;
 }
-else if ($action == "onlysystem")
+elseif ($action == "onlysystem")
 {
-	echo $current_system;
+	echo $curSys["name"];
 	((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
 	exit;
 }
-else if ($action == "onlyid")
+elseif ($action == "onlyid")
 {
-	echo $current_id;
+	echo $curSys["id"];
 	((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
 	exit;
 }
@@ -70,63 +70,26 @@ if (isset($settings["nowplaying_file"]) && !empty($settings["nowplaying_file"]))
 * 	are requesting page for the first time
 */
 
-if ($newSystem !== FALSE || $request == 0)
+if ($newSystem !== false || $request == 0)
 {
 	/*
 	*	update galmap json if system is new or file doesn't exist
 	*/
 
 	$data['update_map'] = "false";
-	if ($newSystem !== FALSE || !file_exists("" . $_SERVER["DOCUMENT_ROOT"] . "/map_points.json"))
+	if ($newSystem !== false || !file_exists("" . $_SERVER["DOCUMENT_ROOT"] . "/map_points.json"))
 	{
 		$data['update_map'] = "true";
 	}
 
 	$data['new_sys'] = "false";
-	if ($newSystem !== FALSE)
+	if ($newSystem !== false)
 	{
 		$data['new_sys'] = "true";
 	}
 
-	$data['current_system_name'] = $current_system;
-	$data['current_coordinates'] = $current_coordinates;
-
-	/*
-	* 	Check if the system is in our database
-	*/
-
-	$res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT SQL_CACHE
-														population, allegiance, economy, government, ruling_faction, state, security, power, power_state, simbad_ref
-														FROM edtb_systems
-														WHERE id = '" . $current_id . "'
-														LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-	$exists = mysqli_num_rows($res);
-
-	if ($exists > 0)
-	{
-		$arr = mysqli_fetch_assoc($res);
-		$population = $arr["population"];
-		$ruling_faction = $arr["ruling_faction"];
-		$government = $arr["government"];
-		$allegiance = $arr["allegiance"];
-		$state = $arr["state"];
-		$security = $arr["security"];
-		$power = $arr["power"];
-		$power_state = $arr["power_state"];
-		$simbad_ref = $arr["simbad_ref"];
-	}
-	else
-	{
-		$population = "";
-		$ruling_faction = "";
-		$government = "";
-		$allegiance = "";
-		$state = "unknown";
-		$security = "unknown";
-		$power = "";
-		$power_state = "";
-		$simbad_ref = "";
-	}
+	$data['current_system_name'] = $curSys["name"];
+	$data['current_coordinates'] = $curSys["coordinates"];
 
 	/*
 	*	System title for the left column
@@ -135,27 +98,27 @@ if ($newSystem !== FALSE || $request == 0)
 	$data['system_title'] .= '';
 
 	$pic = "system.png";
-	if (isset($allegiance))
+	if (isset($curSys["allegiance"]))
 	{
-		$pic = $allegiance == "Empire" ? "empire.png" : $pic;
-		$pic = $allegiance == "Alliance" ? "alliance.png" : $pic;
-		$pic = $allegiance == "Federation" ? "federation.png" : $pic;
+		$pic = $curSys["allegiance"] == "Empire" ? "empire.png" : $pic;
+		$pic = $curSys["allegiance"] == "Alliance" ? "alliance.png" : $pic;
+		$pic = $curSys["allegiance"] == "Federation" ? "federation.png" : $pic;
 	}
 
 	$data['system_title'] = '	<div class="leftpanel-add-data">
-									<a href="javascript:void(0);" id="toggle" onclick="setbm(\'' . addslashes($current_system) . '\', \'' . $current_id . '\');tofront(\'addBm\');$(\'#bm_text\').focus();" title="Bookmark system">
-										<img src="/style/img/' . $pic . '" style="margin-right:5px;" alt="' . $allegiance . '" />
+									<a href="javascript:void(0);" id="toggle" onclick="setbm(\'' . addslashes($curSys["name"]) . '\', \'' . $curSys["id"] . '\');tofront(\'addBm\');$(\'#bm_text\').focus();" title="Bookmark system">
+										<img src="/style/img/' . $pic . '" style="margin-right:5px;" alt="' . $curSys["allegiance"] . '" />
 									</a>
 								</div>';
 
 	$data['system_title'] .= "<div class='leftpanel-title-text'><span id='ltitle'>";
 
 	$bookmarked = 0;
-	if ($current_id != "-1")
+	if ($curSys["id"] != "-1")
 	{
 		$bres = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id
 															FROM user_bookmarks
-															WHERE system_id = '" . $current_id . "'
+															WHERE system_id = '" . $curSys["id"] . "'
 															AND system_id != ''
 															LIMIT 1");
 		$bookmarked = mysqli_num_rows($bres);
@@ -164,14 +127,14 @@ if ($newSystem !== FALSE || $request == 0)
 	{
 		$bres = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id
 															FROM user_bookmarks
-															WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $current_system) . "'
+															WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'
 															LIMIT 1");
 		$bookmarked = mysqli_num_rows($bres);
 	}
 
 	$pres = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id
 														FROM user_poi
-														WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $current_system) . "'
+														WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'
 														AND system_name != ''
 														LIMIT 1");
 	$poid = mysqli_num_rows($pres);
@@ -189,9 +152,9 @@ if ($newSystem !== FALSE || $request == 0)
 
 	$data['system_title'] .= "<a class='" . $class . "' href='javascript:void(0);' onclick='tofront(\"distance\");get_cs(\"system_2\",\"coords_2\");$(\"#system_6\").focus();' onmouseover='slide();' onmouseout='slideout();' title='Calculate distances'>";
 
-	if (isset($current_system) && !empty($current_system))
+	if (isset($curSys["name"]) && !empty($curSys["name"]))
 	{
-		$data['system_title'] .= htmlspecialchars($current_system);
+		$data['system_title'] .= htmlspecialchars($curSys["name"]);
 	}
 	else
 	{
@@ -207,18 +170,17 @@ if ($newSystem !== FALSE || $request == 0)
 
 	$data['system_info'] = "";
 
-	if (!empty($allegiance))
+	if (!empty($curSys["allegiance"]))
 	{
-		$population_s = $arr["population"] == "0" ? "" : " - Population: " . number_format($arr["population"]);
-		$population_s = $arr["population"] == "None" ? "" : $population_s;
-		$government_s = $arr["government"] == "" ? "" : " - " . $arr["government"];
-		$economy = $arr["economy"];
+		$population_s = $curSys["population"] == "0" ? "" : " - Population: " . number_format($curSys["population"]);
+		$population_s = $curSys["population"] == "None" ? "" : $curSys["population"];
+		$population_s = $curSys["government"] == "" ? "" : " - " . $curSys["government"];
 
-		$data['system_info'] .= '<div class="subtitle" id="t2">' . $allegiance . '' . $government_s . '' . $population_s . '</div>';
+		$data['system_info'] .= '<div class="subtitle" id="t2">' . $curSys["allegiance"] . '' . $government_s . '' . $population_s . '</div>';
 
-		if ($economy != "")
+		if (!empty($curSys["economy"]))
 		{
-			$data['system_info'] .= '<div class="text" id="t3">&boxur; Economy: ' . $economy . '</div>';
+			$data['system_info'] .= '<div class="text" id="t3">&boxur; Economy: ' . $curSys["economy"] . '</div>';
 		}
 	}
 	else
@@ -233,9 +195,9 @@ if ($newSystem !== FALSE || $request == 0)
 
 	$system_user_calculated = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id
 																							FROM user_systems_own
-																							WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $current_system) . "'
+																							WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'
 																							LIMIT 1"));
-	if ($system_user_calculated > 0 && !empty($current_system))
+	if ($system_user_calculated > 0 && !empty($curSys["name"]))
 	{
 		$data['system_info'] .= '<span style="float:right;margin-right:10px;margin-top:12px;"><a href="javascript:void(0);" onclick="tofront(\'calculate\');get_cs(\'target_system\');" title="Review distances">';
 		$data['system_info'] .= '<img src="/style/img/calculator.png" alt="Calc" />';
@@ -287,9 +249,9 @@ if ($newSystem !== FALSE || $request == 0)
 		$si_system_name = $si_system_arr["name"];
 
 		$si_system_display_name = $si_system_name;
-		$simbad_ref = $si_system_arr["simbad_ref"];
+		$curSys["simbad_ref"] = $si_system_arr["simbad_ref"];
 
-		if ($simbad_ref != "")
+		if ($curSys["simbad_ref"] != "")
 		{
 			$si_system_display_name = '<a href="http://simbad.u-strasbg.fr/simbad/sim-id?Ident=' . urlencode($si_system_name) . '" target="_BLANK" title="View on Simbad">' . $si_system_name . '&nbsp;<img src="/style/img/external_link.png" alt="ext" /></a>';
 		}
@@ -306,10 +268,10 @@ if ($newSystem !== FALSE || $request == 0)
 		$si_system_power_state = $si_system_arr["power_state"] == "" ? "None" : $si_system_arr["power_state"];
 
 		// get distance to current system
-		if (valid_coordinates($coordx, $coordy, $coordz))
+		if (valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"]))
 		{
 			$adds = "";
-			$dist1 = sqrt(pow(($coordx-($si_system_arr["si_system_coordx"])), 2)+pow(($coordy-($si_system_arr["si_system_coordy"])), 2)+pow(($coordz-($si_system_arr["si_system_coordz"])), 2));
+			$dist1 = sqrt(pow(($curSys["x"]-($si_system_arr["si_system_coordx"])), 2)+pow(($curSys["y"]-($si_system_arr["si_system_coordy"])), 2)+pow(($curSys["z"]-($si_system_arr["si_system_coordz"])), 2));
 		}
 		else
 		{
@@ -323,33 +285,33 @@ if ($newSystem !== FALSE || $request == 0)
 			$dist1 = sqrt(pow(($last_coordx-($si_system_arr["si_system_coordx"])), 2)+pow(($last_coordy-($si_system_arr["si_system_coordy"])), 2)+pow(($last_coordz-($si_system_arr["si_system_coordz"])), 2));
 			$adds = " *";
 		}
-		$si_dist_add = "<a href='system.php'>" . $current_system . "</a>: " . number_format($dist1, 1) . " ly" . $adds . " - ";
+		$si_dist_add = "<a href='/system.php'>" . $curSys["name"] . "</a>: " . number_format($dist1, 1) . " ly" . $adds . " - ";
 
-		$coordx = $si_system_arr["si_system_coordx"];
-		$coordy = $si_system_arr["si_system_coordy"];
-		$coordz = $si_system_arr["si_system_coordz"];
+		$curSys["x"] = $si_system_arr["si_system_coordx"];
+		$curSys["y"] = $si_system_arr["si_system_coordy"];
+		$curSys["z"] = $si_system_arr["si_system_coordz"];
 	}
 	// if system_id not set, show info about current system
 	else
 	{
-		$si_system_name = $current_system;
+		$si_system_name = $curSys["name"];
 		$si_system_display_name = $si_system_name;
 
-		if ($simbad_ref != "")
+		if ($curSys["simbad_ref"] != "")
 		{
 			$si_system_display_name = '<a href="http://simbad.u-strasbg.fr/simbad/sim-id?Ident=' . urlencode($si_system_name) . '" target="_BLANK" title="View on Simbad">' . $si_system_name . '&nbsp;<img src="/style/img/external_link.png" alt="ext" /></a>';
 		}
 
-		$si_system_id = $current_id;
-		$si_system_population = $population == "" ? "None" : $population;
-		$si_system_allegiance = $allegiance == "" ? "None" : $allegiance;
-		$si_system_economy = $economy == "" ? "None" : $economy;
-		$si_system_government = $government == "" ? "None" : $government;
-		$si_system_ruling_faction = $ruling_faction == "" ? "None" : $ruling_faction;
-		$si_system_state = $state == "" ? "None" : $state;
-		$si_system_power = $power == "" ? "None" : $power;
-		$si_system_security = $security == "" ? "None" : $security;
-		$si_system_power_state = $power_state == "" ? "None" : $power_state;
+		$si_system_id = $curSys["id"];
+		$si_system_population = $curSys["population"] == "" ? "None" : $curSys["population"];
+		$si_system_allegiance = $curSys["allegiance"] == "" ? "None" : $curSys["allegiance"];
+		$si_system_economy = $curSys["economy"] == "" ? "None" : $curSys["economy"];
+		$si_system_government = $curSys["government"] == "" ? "None" : $curSys["government"];
+		$si_system_ruling_faction = $curSys["ruling_faction"] == "" ? "None" : $curSys["ruling_faction"];
+		$si_system_state = $curSys["state"] == "" ? "None" : $curSys["state"];
+		$si_system_power = $curSys["power"] == "" ? "None" : $curSys["power"];
+		$si_system_security = $curSys["security"] == "" ? "None" : $curSys["security"];
+		$si_system_power_state = $curSys["power_state"] == "" ? "None" : $curSys["power_state"];
 	}
 
 	/*
@@ -357,12 +319,12 @@ if ($newSystem !== FALSE || $request == 0)
 	*/
 
 	// get distance to system
-	if (valid_coordinates($coordx, $coordz, $coordy))
+	if (valid_coordinates($curSys["x"], $curSys["z"], $curSys["y"]))
 	{
 		$add3 = "";
-		$ud_coordx = $coordx;
-		$ud_coordy = $coordy;
-		$ud_coordz = $coordz;
+		$ud_coordx = $curSys["x"];
+		$ud_coordy = $curSys["y"];
+		$ud_coordz = $curSys["z"];
 
 		// get rares closeby, if set to -1 = disabled
 		if (isset($settings["rare_range"]) && $settings["rare_range"] == "-1")
@@ -372,7 +334,7 @@ if ($newSystem !== FALSE || $request == 0)
 		else
 		{
 			$rare_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT SQL_CACHE
-																	sqrt(pow((edtb_systems.x-(" . $coordx . ")),2)+pow((edtb_systems.y-(" . $coordy . ")),2)+pow((edtb_systems.z-(" . $coordz . ")),2)) AS distance,
+																	sqrt(pow((edtb_systems.x-(" . $curSys["x"] . ")),2)+pow((edtb_systems.y-(" . $curSys["y"] . ")),2)+pow((edtb_systems.z-(" . $curSys["z"] . ")),2)) AS distance,
 																	edtb_rares.item, edtb_rares.system_name, edtb_rares.station, edtb_rares.price,
 																	edtb_rares.sc_est_mins, edtb_rares.ls_to_star,
 																	edtb_rares.needs_permit, edtb_rares.max_landing_pad_size,
@@ -380,12 +342,12 @@ if ($newSystem !== FALSE || $request == 0)
 																	FROM edtb_rares
 																	LEFT JOIN edtb_systems ON edtb_rares.system_name = edtb_systems.name
 																	WHERE
-																	edtb_systems.x BETWEEN " . $coordx . "-" . $settings["rare_range"] . "
-																	AND " . $coordx . "+" . $settings["rare_range"] . " &&
-																	edtb_systems.y BETWEEN " . $coordy . "-" . $settings["rare_range"] . "
-																	AND " . $coordy . "+" . $settings["rare_range"] . " &&
-																	edtb_systems.z BETWEEN " . $coordz . "-" . $settings["rare_range"] . "
-																	AND " . $coordz . "+" . $settings["rare_range"] . "
+																	edtb_systems.x BETWEEN " . $curSys["x"] . "-" . $settings["rare_range"] . "
+																	AND " . $curSys["x"] . "+" . $settings["rare_range"] . " &&
+																	edtb_systems.y BETWEEN " . $curSys["y"] . "-" . $settings["rare_range"] . "
+																	AND " . $curSys["y"] . "+" . $settings["rare_range"] . " &&
+																	edtb_systems.z BETWEEN " . $curSys["z"] . "-" . $settings["rare_range"] . "
+																	AND " . $curSys["z"] . "+" . $settings["rare_range"] . "
 																	ORDER BY
 																	edtb_rares.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $si_system_name) . "' DESC,
 																	distance ASC
@@ -535,7 +497,7 @@ if ($newSystem !== FALSE || $request == 0)
 																			FROM user_visited_systems
 																			WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $si_system_name) . "'"));
 
-	if ($actual_num_res > 0 && valid_coordinates($coordx, $coordy, $coordz))
+	if ($actual_num_res > 0 && valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"]))
 	{
 		$rare_text = "&nbsp;&nbsp;<span onclick='$(\"#rares\").fadeToggle(\"fast\");'><a href='javascript:void(0);' title'Click for more info'>[ Rares within " . $settings["rare_range"] . " ly: " . $actual_num_res . " ]</a>" . $c_rares_data . "</span>";
 	}
@@ -563,12 +525,28 @@ if ($newSystem !== FALSE || $request == 0)
 			$s_name = $sarr2["name"];
 			$s_explode = explode(" ", $s_name);
 
-			$firsts = explode("'s", $s_explode[0]);
-			$first = $firsts[0];
-			$rest = str_replace($s_explode[0], "", $s_name);
+			$count = count($s_explode);
+
+			$first = "";
+			$last = "";
+			if ($count > 1)
+			{
+				$lastn = $count - 1;
+				$last = $s_explode[$lastn];
+
+				$first = str_replace($last, "", $s_name);
+			}
+			else
+			{
+				$first = $s_name;
+				$last = "";
+			}
+			$firsts = explode("'s", $first);
+			$first_url = $firsts[0];
+
 			$station_id = $sarr2["id"];
 
-			$s_name = "<span class='wp' onclick='get_wikipedia(\"" . urlencode($first) . "\", \"" . $station_id . "\");'><a href='javascript:void(0);' title='Ask Wikipedia about " . $first . "' style='font-weight:inherit;'>" . $s_explode[0] . "</a></span> " . $rest . "";
+			$s_name = "<span class='wp' onclick='get_wikipedia(\"" . urlencode($first_url) . "\", \"" . $station_id . "\");'><a href='javascript:void(0);' title='Ask Wikipedia about " . $first_url . "' style='font-weight:inherit;'>" . trim($first) . "</a></span> " . $last . "";
 
 			$ls_from_star = $sarr2["ls_from_star"];
 			$max_landing_pad_size = $sarr2["max_landing_pad_size"];
@@ -684,7 +662,7 @@ if ($newSystem !== FALSE || $request == 0)
 				$modules_t .= "</tr></table>";
 
 				$selling_modules = "<br /><br />
-									<div onclick=\"$('#modules_" . $station_id . "').fadeToggle('fast');\"><a href='javascript:void(0);'><img src=\"/style/img/plus.png\" alt=\"plus\" style=\"margin-right:6px\" \>Selling modules</a></div>
+									<div onclick=\"$('#modules_" . $station_id . "').fadeToggle('fast');\"><a href='javascript:void(0);'><img src=\"/style/img/plus.png\" alt=\"plus\" style=\"margin-right:6px\" \\>Selling modules</a></div>
 									<div id='modules_" . $station_id . "' style='display:none;'>" . $modules_t . "</div>";
 			}
 
@@ -821,7 +799,7 @@ if ($newSystem !== FALSE || $request == 0)
 		{
 			$si_system_data = '' . $si_system_power . ' [' . $si_system_power_state . ']';
 		}
-		else if (empty($si_system_power) && empty($si_system_power_state))
+		elseif (empty($si_system_power) && empty($si_system_power_state))
 		{
 			$si_system_data = $si_system_power_state;
 		}
@@ -844,9 +822,9 @@ if ($newSystem !== FALSE || $request == 0)
 	*    System log
 	*/
 
-	if (!empty($current_system))
+	if (!empty($curSys["name"]))
 	{
-		if ($settings["log_range"] == 0 || !valid_coordinates($coordx, $coordy, $coordz))
+		if ($settings["log_range"] == 0 || !valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"]))
 		{
 			$log_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT SQL_CACHE
 																	user_log.id, user_log.system_name AS log_system_name, user_log.station_id,
@@ -856,7 +834,7 @@ if ($newSystem !== FALSE || $request == 0)
 																	FROM user_log
 																	LEFT JOIN edtb_systems ON user_log.system_id = edtb_systems.id
 																	LEFT JOIN edtb_stations ON user_log.station_id = edtb_stations.id
-																	WHERE user_log.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $current_system) . "'
+																	WHERE user_log.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'
 																	ORDER BY stardate DESC") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 		}
 		else
@@ -864,12 +842,12 @@ if ($newSystem !== FALSE || $request == 0)
 			$log_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT SQL_CACHE
 																	user_log.id, user_log.system_id, user_log.system_name AS log_system_name,
 																	user_log.station_id, user_log.log_entry, user_log.stardate,
-																	sqrt(pow((edtb_systems.x-(" . $coordx . ")),2)
-																	+pow((edtb_systems.y-(" . $coordy . ")),2)
-																	+pow((edtb_systems.z-(" . $coordz . ")),2)) AS distance,
-																	sqrt(pow((user_systems_own.x-(" . $coordx . ")),2)
-																	+pow((user_systems_own.y-(" . $coordy . ")),2)
-																	+pow((user_systems_own.z-(" . $coordz . ")),2)) AS distance2,
+																	sqrt(pow((edtb_systems.x-(" . $curSys["x"] . ")),2)
+																	+pow((edtb_systems.y-(" . $curSys["y"] . ")),2)
+																	+pow((edtb_systems.z-(" . $curSys["z"] . ")),2)) AS distance,
+																	sqrt(pow((user_systems_own.x-(" . $curSys["x"] . ")),2)
+																	+pow((user_systems_own.y-(" . $curSys["y"] . ")),2)
+																	+pow((user_systems_own.z-(" . $curSys["z"] . ")),2)) AS distance2,
 																	edtb_systems.name AS system_name,
 																	edtb_stations.name AS station_name
 																	FROM user_log
@@ -877,20 +855,20 @@ if ($newSystem !== FALSE || $request == 0)
 																	LEFT JOIN edtb_stations ON user_log.station_id = edtb_stations.id
 																	LEFT JOIN user_systems_own ON user_log.system_name = user_systems_own.name
 																	WHERE
-																	edtb_systems.x BETWEEN " . $coordx . "-" . $settings["log_range"] . "
-																	AND " . $coordx . "+" . $settings["log_range"] . " &&
-																	edtb_systems.y BETWEEN " . $coordy . "-" . $settings["log_range"] . "
-																	AND " . $coordy . "+" . $settings["log_range"] . " &&
-																	edtb_systems.z BETWEEN " . $coordz . "-" . $settings["log_range"] . "
-																	AND " . $coordz . "+" . $settings["log_range"] . "
+																	edtb_systems.x BETWEEN " . $curSys["x"] . "-" . $settings["log_range"] . "
+																	AND " . $curSys["x"] . "+" . $settings["log_range"] . " &&
+																	edtb_systems.y BETWEEN " . $curSys["y"] . "-" . $settings["log_range"] . "
+																	AND " . $curSys["y"] . "+" . $settings["log_range"] . " &&
+																	edtb_systems.z BETWEEN " . $curSys["z"] . "-" . $settings["log_range"] . "
+																	AND " . $curSys["z"] . "+" . $settings["log_range"] . "
 																	OR
-																	user_systems_own.x BETWEEN " . $coordx . "-" . $settings["log_range"] . "
-																	AND " . $coordx . "+" . $settings["log_range"] . " &&
-																	user_systems_own.y BETWEEN " . $coordy . "-" . $settings["log_range"] . "
-																	AND " . $coordy . "+" . $settings["log_range"] . " &&
-																	user_systems_own.z BETWEEN " . $coordz . "-" . $settings["log_range"] . "
-																	AND " . $coordz . "+" . $settings["log_range"] . "
-																	ORDER BY user_log.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $current_system) . "' DESC,
+																	user_systems_own.x BETWEEN " . $curSys["x"] . "-" . $settings["log_range"] . "
+																	AND " . $curSys["x"] . "+" . $settings["log_range"] . " &&
+																	user_systems_own.y BETWEEN " . $curSys["y"] . "-" . $settings["log_range"] . "
+																	AND " . $curSys["y"] . "+" . $settings["log_range"] . " &&
+																	user_systems_own.z BETWEEN " . $curSys["z"] . "-" . $settings["log_range"] . "
+																	AND " . $curSys["z"] . "+" . $settings["log_range"] . "
+																	ORDER BY user_log.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "' DESC,
 																	distance ASC, distance2 ASC,
 																	user_log.stardate DESC
 																	LIMIT 10") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
@@ -997,7 +975,7 @@ if ($newSystem !== FALSE || $request == 0)
 														prohibited_commodities, economies, selling_ships, shipyard,
 														outfitting, commodities_market, black_market, refuel, repair, rearm, is_planetary
 														FROM edtb_stations
-														WHERE system_id = '" . $current_id . "'
+														WHERE system_id = '" . $curSys["id"] . "'
 														ORDER BY -ls_from_star DESC, name
 														LIMIT 5") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 	$count = mysqli_num_rows($ress);
@@ -1020,10 +998,10 @@ if ($newSystem !== FALSE || $request == 0)
 			$station_id = $arra["id"];
 
 			$faction = $arra["faction"] == "" ? "" : "<strong>Faction:</strong> " . $arra["faction"] . "<br />";
-			$government = $arra["government"] == "" ? "" : "<strong>Government:</strong> " . $arra["government"] . "<br />";
-			$allegiance = $arra["allegiance"] == "" ? "" : "<strong>Allegiance:</strong> " . $arra["allegiance"] . "<br />";
+			$curSys["government"] = $arra["government"] == "" ? "" : "<strong>Government:</strong> " . $arra["government"] . "<br />";
+			$curSys["allegiance"] = $arra["allegiance"] == "" ? "" : "<strong>Allegiance:</strong> " . $arra["allegiance"] . "<br />";
 
-			$state = $arra["state"] == "" ? "" : "<strong>State:</strong> " . $arra["state"] . "<br />";
+			$curSys["state"] = $arra["state"] == "" ? "" : "<strong>State:</strong> " . $arra["state"] . "<br />";
 			$s_type = $arra["type"];
 			$type = $arra["type"] == "" ? "" : "<strong>Type:</strong> " . $arra["type"] . "<br />";
 			$economies = $arra["economies"] == "" ? "" : "<strong>Economies:</strong> " . $arra["economies"] . "<br />";
@@ -1074,7 +1052,7 @@ if ($newSystem !== FALSE || $request == 0)
 			}
 			$services .= "<br />";
 
-			$info = $type.$max_landing_pad_size.$faction.$government.$allegiance.$state.$economies.$services.$import_commodities.$export_commodities.$prohibited_commodities.$selling_ships;
+			$info = $type.$max_landing_pad_size.$faction.$curSys["government"].$curSys["allegiance"].$curSys["state"].$economies.$services.$import_commodities.$export_commodities.$prohibited_commodities.$selling_ships;
 
 			$info = str_replace("['", "", $info);
 			$info = str_replace("']", "", $info);
@@ -1100,7 +1078,7 @@ if ($newSystem !== FALSE || $request == 0)
 	else
 	{
 		// link to calculate coordinates
-		if (empty($current_coordinates) && !empty($current_system))
+		if (empty($curSys["coordinates"]) && !empty($curSys["name"]))
 		{
 			$station_data .= "<span style='margin-bottom:6px;height:40px;'><a href='javascript:void(0);' onclick='tofront(\"calculate\");get_cs(\"target_system\");' title='No coordinates found, click here to calculate'>";
 			$station_data .= "<img src='/style/img/calculator.png' style='vertical-align:middle;' />";

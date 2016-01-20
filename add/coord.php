@@ -140,7 +140,7 @@ if (isset($_GET["do"]))
 
 $system_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id, reference_distances
 															FROM user_systems_own
-															WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $current_system) . "'
+															WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'
 															LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 $system_exists = mysqli_num_rows($system_res);
@@ -184,7 +184,7 @@ else
 				</tr>
 				<tr>
 					<td class="dark" colspan="2">
-						<input class="textbox" type="text" name="target_system" value="<?php echo $current_system?>" id="target_system" placeholder="Target system" style="width:300px;" />
+						<input class="textbox" type="text" name="target_system" value="<?php echo $curSys["name"]?>" id="target_system" placeholder="Target system" style="width:300px;" />
 					</td>
 				</tr>
 				<tr>
