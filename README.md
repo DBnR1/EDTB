@@ -25,15 +25,12 @@ Requirements
 
 - Latest version of Google Chrome browser recommended for optimal experience. Latest versions of Mozilla Firefox and Microsoft Edge also work but to a limited degree.
 - VerboseLogging needs to be on. To do this, locate your AppConfig.xml file.
-	- In Elite Dangerous: Horizons the file is located in the **elite-dangerous-64** folder, which is located in one of the following folders, depending on your install:
+	- In **Elite Dangerous: Horizons** the file is located in the ```elite-dangerous-64``` folder, which is located in one of the following folders, depending on your install:
 		- C:\Users\%USERNAME%\AppData\Local\Frontier_Developments\Products
 		- C:\Program Files (x86)\Frontier\EDLaunch\Products
 		- C:\Program Files (x86)\Steam\steamapps\common\Elite Dangerous Horizons\Products
 		- C:\Program Files (x86)\Frontier\Products
-	- In **Elite Dangerous 1.5** it's located in the folder named FORC-FDEV-D-XX which will be located in one of the above locations, once again depending on your install.
-  * **C:\Users\%USERNAME%\AppData\Local\Frontier_Developments\Products\elite-dangerous-64\Logs**
-  * On E:D 1.5 it's located in:
-  * **C:\Users\%USERNAME%\AppData\Local\Frontier_Developments\Products\FORC-FDEV-D-XX**
+	- In **Elite Dangerous 1.5** it's located in the folder named ```FORC-FDEV-D-XX``` which will be located in one of the above locations, once again depending on your install.
   * Open the file in a text editor and scroll to the bottom. Replace this part:
 
 
