@@ -6,14 +6,14 @@ ED ToolBox is a companion web app for [Elite Dangerous] that runs on the user's 
 Key features
 ------------
 
-- Real time system and station data based on your in-game location (data downloaded to the user's system from EDTB server, which in turn gets its data from EDDB)
+- Real time system and station data based on your in-game location (data downloaded to the user's system from ED ToolBox server, which in turn gets its data from EDDB)
 - General & System specifig captains log
-- Two maps: galaxy map and a dynamically updating "Neighborhood Map", both showing your visited systems, points of interest and bookmarked systems + some other stuff.
+- Two maps: Galaxy Map and a dynamically updating "Neighborhood Map", both showing your visited systems, points of interest and bookmarked systems + some other stuff.
 - Add Points of Interest
 - Bookmark systems
 - Find nearest system/station by allegiance, power, or what modules or ships they are selling
 - Read latest GalNet news
-- Screenshot gallery: screenshots automatically converted to jpg and categorized by the system they were taken in. Option to upload to imgur straight from EDTB
+- Screenshot gallery: screenshots automatically converted to jpg and categorized by the system they were taken in. Option to upload to imgur straight from ED ToolBox
 - VoiceAttack module: Meet "Marvin", the foul mouthed ship computer; get information about current system, closest station or latest GalNet articles with voice commands. Marvin really hates the Federation, so don't have any little kids or stuck up adults around when you're in Federation space.
 - A notepad for taking some quick notes
 - Show currently playing song from Foobar2000 or any player that can store the current song in a text file
@@ -23,13 +23,14 @@ Requirements
 
 - [Visual C++ Redistributable for Visual Studio 2015] - **32 bit version**
 
-- The automated data update script requires PowerShell 2.0 or higher, included by default since Windows 7, otherwise download from microsoft.com
-- Latest version of Google Chrome browser recommended for optimal experience. Latest versions of Mozilla Firefox and Internet Explorer also work but to a limited degree.
+- Latest version of Google Chrome browser recommended for optimal experience. Latest versions of Mozilla Firefox and Microsoft Edge also work but to a limited degree.
 - VerboseLogging needs to be on. To do this, locate your AppConfig.xml file.
-  On Horizons the file is located in:
-  * **C:\Users\%USERNAME%\AppData\Local\Frontier_Developments\Products\elite-dangerous-64\Logs**
-  * On E:D 1.5 it's located in:
-  * **C:\Users\%USERNAME%\AppData\Local\Frontier_Developments\Products\FORC-FDEV-D-XX**
+	- In **Elite Dangerous: Horizons** the file is located in the ```elite-dangerous-64``` folder, which is located in one of the following folders, depending on your install:
+		- C:\Users\%USERNAME%\AppData\Local\Frontier_Developments\Products
+		- C:\Program Files (x86)\Frontier\EDLaunch\Products
+		- C:\Program Files (x86)\Steam\steamapps\common\Elite Dangerous Horizons\Products
+		- C:\Program Files (x86)\Frontier\Products
+	- In **Elite Dangerous 1.5** it's located in the folder named ```FORC-FDEV-D-XX``` which will be located in one of the above locations, once again depending on your install.
   * Open the file in a text editor and scroll to the bottom. Replace this part:
 
 
@@ -60,13 +61,13 @@ How do I start using it?
 
 I've already had VerboseLogging on for a while. Can I import that data to EDTB?
 ------------------------------------------------------------------------------------
-- Yes. Once you've installed EDTB, open http://localhost:3001/admin/import.php in your web browser to import old data.
+- Yes. Once you've installed ED ToolBox, open http://localhost:3001/admin/import.php in your web browser to import old data.
 
-What exactly happens when I install EDTB?
+What exactly happens when I install ED ToolBox?
 ------------------------------------------------
-- The EDTB installer sets up a basic web server (Apache, MySQL and PHP) on the user's computer and installs a simple manager to easily control the server. EDTB will be accessed trough the user's web browser. The web server is only accessible from the local network for security reasons.
+- The ED ToolBox installer sets up a basic web server (Apache, MySQL and PHP) on the user's computer and installs a simple manager to easily control the server. ED ToolBox will be accessed trough the user's web browser. The web server is only accessible from the local network for security reasons.
 
-- The best way to enjoy EDTB is to run Elite Dangerous in borderless window mode and have a second monitor for EDTB so you can see information at a glance and interact with EDTB easily. Run EDTB in full screen mode (press F11) for maximum coolness. You can even access EDTB from a secondary device such as your smart phone or tablet as long as it's in the same local network.
+- The best way to enjoy ED ToolBox is to run Elite Dangerous in borderless window mode and have a second monitor for EDTB so you can see information at a glance and interact with EDTB easily. Run EDTB in full screen mode (press F11) for maximum coolness. You can even access ED ToolBox from a secondary device such as your smart phone or tablet as long as it's in the same local network.
 
 How do I access the VoiceAttack module?
 ---------------------------------------

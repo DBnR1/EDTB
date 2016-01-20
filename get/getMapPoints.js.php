@@ -33,14 +33,14 @@ if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"]))
 *	if current coordinates aren't valid, use last known coordinates
 */
 
-if (!valid_coordinates($coordx, $coordy, $coordz))
+if (!valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"]))
 {
 	// get last known coordinates
 	$last_coords = last_known_system();
 
-	$coordx = $last_coords["x"];
-	$coordy = $last_coords["y"];
-	$coordz = $last_coords["z"];
+	$curSys["x"] = $last_coords["x"];
+	$curSys["y"] = $last_coords["y"];
+	$curSys["z"] = $last_coords["z"];
 
 	$disclaimer = "<p><strong>No coordinates for current location, last known location used</strong></p>";
 }
@@ -77,7 +77,7 @@ if ($settings["nmap_show_pois"] == "true")
 		$distance_from_current = "";
 		if (valid_coordinates($poi_coordx, $poi_coordy, $poi_coordz))
 		{
-			$distance_from_current = sqrt(pow(($poi_coordx-($coordx)), 2)+pow(($poi_coordy-($coordy)), 2)+pow(($poi_coordz-($coordz)), 2));
+			$distance_from_current = sqrt(pow(($poi_coordx-($curSys["x"])), 2)+pow(($poi_coordy-($curSys["y"])), 2)+pow(($poi_coordz-($curSys["z"])), 2));
 		}
 
 		// only show systems if distance is less than the limit set by the user
@@ -93,7 +93,7 @@ if ($settings["nmap_show_pois"] == "true")
 			{
 				$marker = 'marker:{symbol:"circle",radius:3,fillColor:"#37bf1c"}';
 			}
-			else if ($visited > 0)
+			elseif ($visited > 0)
 			{
 				$marker = 'marker:{symbol:"url(/style/img/goto-g.png)"}';
 			}
@@ -140,7 +140,7 @@ if ($settings["nmap_show_bookmarks"] == "true")
 		$distance_from_current = "";
 		if (valid_coordinates($bm_coordx, $bm_coordy, $bm_coordz))
 		{
-			$distance_from_current = sqrt(pow(($bm_coordx-($coordx)), 2)+pow(($bm_coordy-($coordy)), 2)+pow(($bm_coordz-($coordz)), 2));
+			$distance_from_current = sqrt(pow(($bm_coordx-($curSys["x"])), 2)+pow(($bm_coordy-($curSys["y"])), 2)+pow(($bm_coordz-($curSys["z"])), 2));
 		}
 
 		// only show systems if distance is less than the limit set by the user
@@ -187,7 +187,7 @@ if ($settings["nmap_show_rares"] == "true")
 		$rare_distance_from_current = "";
 		if (valid_coordinates($rare_coordx, $rare_coordy, $rare_coordz))
 		{
-			$rare_distance_from_current = sqrt(pow(($rare_coordx-($coordx)), 2)+pow(($rare_coordy-($coordy)), 2)+pow(($rare_coordz-($coordz)), 2));
+			$rare_distance_from_current = sqrt(pow(($rare_coordx-($curSys["x"])), 2)+pow(($rare_coordy-($curSys["y"])), 2)+pow(($rare_coordz-($curSys["z"])), 2));
 		}
 
 		// only show systems if distance is less than the limit set by the user
@@ -251,7 +251,7 @@ if ($settings["nmap_show_visited_systems"] == "true")
 		{
 			$coord = "" . $vs_coordx . "," . $vs_coordy . "," . $vs_coordz . "";
 
-			$distance_from_current = sqrt(pow(($vs_coordx-($coordx)), 2)+pow(($vs_coordy-($coordy)), 2)+pow(($vs_coordz-($coordz)), 2));
+			$distance_from_current = sqrt(pow(($vs_coordx-($curSys["x"])), 2)+pow(($vs_coordy-($curSys["y"])), 2)+pow(($vs_coordz-($curSys["z"])), 2));
 
 			// only show systems if distance is less than the limit set by the user
 			if ($distance_from_current <= $settings["maxdistance"])
@@ -266,11 +266,11 @@ if ($settings["nmap_show_visited_systems"] == "true")
 				{
 					$color = 'rgba(140, 140, 140, 0.7)';
 				}
-				else if ($allegiance == "Alliance")
+				elseif ($allegiance == "Alliance")
 				{
 					$color = 'rgba(9, 180, 244, 0.7)';
 				}
-				else if ($allegiance == "Empire")
+				elseif ($allegiance == "Empire")
 				{
 					$color = 'rgba(231, 216, 132, 0.7)';
 				}
@@ -279,11 +279,11 @@ if ($settings["nmap_show_visited_systems"] == "true")
 					$color = 'rgba(255, 255, 255, 0.8)';
 				}
 
-				if ($logged > 0 && strtolower($name) != strtolower($current_system))
+				if ($logged > 0 && strtolower($name) != strtolower($curSys["name"]))
 				{
 					$marker = 'marker:{symbol:"circle",radius:3,fillColor:"' . $color . '",lineWidth:"2",lineColor:"#2e92e7"}';
 				}
-				else if (strtolower($name) == strtolower($current_system))
+				elseif (strtolower($name) == strtolower($curSys["name"]))
 				{
 					$marker = 'marker:{symbol:"circle",radius:4,fillColor:"' . $color . '",lineWidth:"2",lineColor:"#f44b09"}';
 				}
@@ -308,14 +308,14 @@ if ($settings["nmap_show_visited_systems"] == "true")
 }
 
 // get the max/min values for map display
-if (valid_coordinates($coordx, $coordy, $coordz))
+if (valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"]))
 {
-	$maxx = $coordx + $settings["maxdistance"];
-	$maxy = $coordy + $settings["maxdistance"];
-	$maxz = $coordz + $settings["maxdistance"];
-	$minx = $coordx - $settings["maxdistance"];
-	$miny = $coordy - $settings["maxdistance"];
-	$minz = $coordz - $settings["maxdistance"];
+	$maxx = $curSys["x"] + $settings["maxdistance"];
+	$maxy = $curSys["y"] + $settings["maxdistance"];
+	$maxz = $curSys["z"] + $settings["maxdistance"];
+	$minx = $curSys["x"] - $settings["maxdistance"];
+	$miny = $curSys["y"] - $settings["maxdistance"];
+	$minz = $curSys["z"] - $settings["maxdistance"];
 }
 else
 {
@@ -360,7 +360,7 @@ else
 	?>
 	/* custom tooltip format */
 	function tooltipFormatter() {
-		return ""+this.series.name.toUpperCase()+" is "+Math.round(Math.sqrt(Math.pow((this.x-(<?php echo $coordx ?>)),2)+Math.pow((this.y-(<?php echo $coordy ?>)),2)+Math.pow((this.point.z-(<?php echo $coordz ?>)),2)))+" ly away";
+		return ""+this.series.name.toUpperCase()+" is "+Math.round(Math.sqrt(Math.pow((this.x-(<?php echo $curSys["x"] ?>)),2)+Math.pow((this.y-(<?php echo $curSys["y"] ?>)),2)+Math.pow((this.point.z-(<?php echo $curSys["z"] ?>)),2)))+" ly away";
 	}
 	<?php
 	$threed = "true";
@@ -464,7 +464,8 @@ $(function ()
 				marker:
 				{
 					lineColor: '#333'
-				}
+				},
+				enableMouseTracking: true,
 			},
 			boxplot:
 			{
@@ -486,11 +487,19 @@ $(function ()
 	// Set up the chart
 	var chart = new Highcharts.Chart(
 	{
+		loading:
+		{
+            labelStyle:
+			{
+                fontStyle: 'italic'
+            }
+        },
 		chart:
 		{
 			renderTo: 'container',
-			margin: 80,
+			margin: 90,
 			type: 'scatter',
+			stickyTracking: false,
 			<?php echo $zoomtype?>
 			panning: <?php echo $panning?>,
 			<?php echo $pankey?>
@@ -499,24 +508,23 @@ $(function ()
 				enabled: <?php echo $threed?>,
 				alpha: 20,
 				beta: 30,
-				//viewDistance: 1230,
 				depth: 120,
 				frame:
 				{
 					back:
 					{
-						color: "#1E2021",
+						color: "#1E2021"
 					},
 					side:
 					{
-						color: "#1E2021",
+						color: "#1E2021"
 					},
 					bottom:
 					{
-						color: "#1E2021",
+						color: "#1E2021"
 					}
-				},
-			},
+				}
+			}
 		},
 		title:
 		{
@@ -547,7 +555,7 @@ $(function ()
 							get_mi(this.series.name);
 						}
 					}
-				},
+				}
 			}
 		},
 		tooltip:
@@ -570,11 +578,11 @@ $(function ()
 		zAxis:
 		{
 			min: <?php echo round($minz)?>,
-			max: <?php echo round($maxz)?>,
+			max: <?php echo round($maxz)?>
 		},
 		credits:
 		{
-			enabled: false
+			enabled: true
 		},
 		legend:
 		{
@@ -582,8 +590,8 @@ $(function ()
 		},
 		exporting:
 		{
-			enabled: false
-		},
+            enabled: false
+        },
 		series: [<?php echo $data ?>]
 	});
 

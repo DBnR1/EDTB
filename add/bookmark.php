@@ -41,7 +41,7 @@ if (isset($_GET["do"]))
 													category_id = '" . $bm_catid . "'
 													WHERE id = '" . $bm_id . "' LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 	}
-	else if (isset($_GET["deleteid"]))
+	elseif (isset($_GET["deleteid"]))
 	{
 		mysqli_query($GLOBALS["___mysqli_ston"], "	DELETE FROM user_bookmarks
 													WHERE id = '" . $_GET["deleteid"] . "'

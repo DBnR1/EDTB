@@ -89,20 +89,20 @@ if (isset($_GET["q"]) && !empty($_GET["q"]) && isset($_GET["divid"]))
 		if ($_GET["link"] == "yes")
 		{
 			?>
-			<a href="system.php?system_id=<?php echo $suggest['system_id']?>">
+			<a href="/system.php?system_id=<?php echo $suggest['system_id']?>">
 				<?php echo $suggest['station_name']?>&nbsp;&nbsp;(<?php echo $suggest['system_name']?>)
 			</a><br />
 			<?php
 		}
-		else if ($_GET["idlink"] == "yes")
+		elseif ($_GET["idlink"] == "yes")
 		{
 			?>
-			<a href="nearest_systems.php?system=<?php echo $suggest['system_id']?><?php echo $addtl?>">
+			<a href="/nearest_systems.php?system=<?php echo $suggest['system_id']?><?php echo $addtl?>">
 				<?php echo $suggest['station_name']?>&nbsp;&nbsp;(<?php echo $suggest['system_name']?>)
 			</a><br />
 			<?php
 		}
-		else if ($_GET["sysid"] != "no")
+		elseif ($_GET["sysid"] != "no")
 		{
 			?>
 			<a href="javascript:void(0);" onclick="setl('<?php echo $suggest['station_name']?>','<?php echo $suggest['station_id']?>');">

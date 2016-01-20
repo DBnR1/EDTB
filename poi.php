@@ -48,26 +48,7 @@ function makeitem($arr, $type, &$to_last, &$i)
 	$usez = $usable["z"];
 
 	/*
-	*	if coords are not set, see if user has calculated them
-	*/
-
-	if (!valid_coordinates($item_coordx, $item_coordy, $item_coordz))
-	{
-		$c_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT x, y, z
-															FROM user_systems_own
-															WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $item_system_name) . "'
-															LIMIT 1")
-															or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-
-		$c_arr = mysqli_fetch_assoc($c_res);
-
-		$item_coordx = $c_arr["x"] == "" ? "" : $c_arr["x"];
-		$item_coordy = $c_arr["y"] == "" ? "" : $c_arr["y"];
-		$item_coordz = $c_arr["z"] == "" ? "" : $c_arr["z"];
-	}
-
-	/*
-	*	if poi has coordinates, show them first
+	*	if item has coordinates, show them first
 	*/
 
 	if (valid_coordinates($item_coordx, $item_coordy, $item_coordz) || isset($arr["last"]))
@@ -123,11 +104,12 @@ function makeitem($arr, $type, &$to_last, &$i)
 		}
 
 		echo '(' . $distance . ')';
+
 		if ($item_system_id != "" && $item_system_id != "0")
 		{
 			echo '</a>&nbsp;<a title="System information" href="/system.php?system_id=' . $item_system_id . '" style="color:inherit;">';
 		}
-		else if ($item_system_name != "")
+		elseif ($item_system_name != "")
 		{
 			echo '</a>&nbsp;<a title="System information" href="/system.php?system_name=' . urlencode($item_system_name) . '" style="color:inherit;">';
 		}
@@ -149,6 +131,7 @@ function makeitem($arr, $type, &$to_last, &$i)
 
 		// make a link if text includes url
 		$reg_exUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
+
 		if (preg_match($reg_exUrl, $item_text, $url))
 		{
 			if (mb_strlen($item_text) >= 60)
@@ -157,10 +140,11 @@ function makeitem($arr, $type, &$to_last, &$i)
 			}
 			else
 			{
-				$urli = $poi_text;
+				$urli = $item_text;
 			}
 			$item_text = preg_replace($reg_exUrl, "<a href='" . $url[0] . "' target='_BLANK'>" . $urli . "</a> ", $item_text);
 		}
+
 		echo nl2br($item_text);
 		echo '</div></td></tr>';
 		$i++;
@@ -182,9 +166,9 @@ function makeitem($arr, $type, &$to_last, &$i)
 *	make item table
 */
 
-function maketable($res, $type, &$to_last)
+function maketable($res, $type)
 {
-	global $coordx, $coordy, $coordz;
+	global $curSys;
 
 	$num = mysqli_num_rows($res);
 
@@ -192,9 +176,9 @@ function maketable($res, $type, &$to_last)
 
 	if ($num > 0)
 	{
-		if (!valid_coordinates($coordx, $coordy, $coordz))
+		if (!valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"]))
 		{
-			echo "<tr><td class='dark' style='min-width:420px;max-width:500;'><p><strong>No coordinates for current location, last known location used.</strong></p></td></tr>";
+			echo "<tr><td class='dark' style='min-width:420px;max-width:500px;'><p><strong>No coordinates for current location, last known location used.</strong></p></td></tr>";
 		}
 
 		$i = 0;
@@ -217,11 +201,11 @@ function maketable($res, $type, &$to_last)
 	{
 		if ($type == "Poi")
 		{
-			echo '<tr><td class="dark" style="min-width:420px;max-width:500;"><strong>No points of interest.<br />Click the "Points of Interest" text to add one.</strong></td></tr>';
+			echo '<tr><td class="dark" style="min-width:420px;max-width:500px;"><strong>No points of interest.<br />Click the "Points of Interest" text to add one.</strong></td></tr>';
 		}
 		else
 		{
-			echo '<tr><td class="dark" style="min-width:420px;max-width:500;"><strong>No bookmarks.<br />Click the allegiance icon on the top left corner to add one.</strong></td></tr>';
+			echo '<tr><td class="dark" style="min-width:420px;max-width:500px;"><strong>No bookmarks.<br />Click the allegiance icon on the top left corner to add one.</strong></td></tr>';
 		}
 	}
 
@@ -236,7 +220,7 @@ function maketable($res, $type, &$to_last)
 				<td class="heading" style="min-width:400px;">Bookmarks</td>
 			</tr>
 			<tr>
-				<td style="vertical-align:top;padding:0px;">
+				<td style="vertical-align:top;padding:0;">
 					<?php
 					$usable = usable_coords();
 					$usex = $usable["x"];
@@ -245,29 +229,33 @@ function maketable($res, $type, &$to_last)
 
 					// get poi in correct order
 					$poi_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT user_poi.id, user_poi.poi_name AS item_name, user_poi.system_name, user_poi.text,
-																			user_poi.x AS item_coordx, user_poi.y AS item_coordy, user_poi.z AS item_coordz,
+																			IFNULL(user_poi.x, user_systems_own.x) AS item_coordx,
+																			IFNULL(user_poi.y, user_systems_own.y) AS item_coordy,
+																			IFNULL(user_poi.z, user_systems_own.z) AS item_coordz,
 																			edtb_systems.id AS system_id,
 																			user_poi_categories.name AS catname
 																			FROM user_poi
 																			LEFT JOIN edtb_systems ON user_poi.system_name = edtb_systems.name
 																			LEFT JOIN user_poi_categories ON user_poi_categories.id = user_poi.category_id
+																			LEFT JOIN user_systems_own ON user_poi.system_name = user_systems_own.name
 																			ORDER BY sqrt(pow((item_coordx-(" . $usex . ")),2)+pow((item_coordy-(" . $usey . ")),2)+pow((item_coordz-(" . $usez . ")),2)), poi_name, system_name")
 																			or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 					echo maketable($poi_res, "Poi");
 					?>
 				</td>
-				<td style="vertical-align:top;padding:0px;">
+				<td style="vertical-align:top;padding:0;">
 					<?php
 					// get bookmarks
 					$bm_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT user_bookmarks.id, user_bookmarks.system_id, user_bookmarks.system_name,
 																			user_bookmarks.comment as text, user_bookmarks.added_on,
-																			edtb_systems.x AS item_coordx,
-																			edtb_systems.y AS item_coordy,
-																			edtb_systems.z AS item_coordz,
+                                                                            IFNULL(edtb_systems.x, user_systems_own.x) AS item_coordx,
+                                                                            IFNULL(edtb_systems.y, user_systems_own.y) AS item_coordy,
+                                                                            IFNULL(edtb_systems.z, user_systems_own.z) AS item_coordz,
 																			user_bm_categories.name AS catname
 																			FROM user_bookmarks
 																			LEFT JOIN edtb_systems ON user_bookmarks.system_name = edtb_systems.name
 																			LEFT JOIN user_bm_categories ON user_bookmarks.category_id = user_bm_categories.id
+                                                                            LEFT JOIN user_systems_own ON user_bookmarks.system_name = user_systems_own.name
 																			ORDER BY sqrt(pow((item_coordx-(" . $usex . ")),2)+pow((item_coordy-(" . $usey . ")),2)+pow((item_coordz-(" . $usez . ")),2)), system_name")
 																			or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 					$i = 0;

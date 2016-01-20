@@ -61,7 +61,7 @@ if (is_dir($settings["log_dir"]))
 			$text = 'Located ' . $num . ' netLog files totaling ' . FileSizeConvert($total_size) . '. Due to the size of the logs, they need to be imported in batches of ' . FileSizeConvert($batch_limit) . '.<br />Do you want to import them?<br /><br /><div id="text" style="text-align:center;"><a href="import.php?import&num=' . $numss . '" onclick="document.getElementById(\'loadin\').style.display=\'block\';document.getElementById(\'text\').style.display=\'none\';">Import logs, last batch</a></div><div id="loadin" style="text-align:center;display:none;"><img src="/style/img/loading.gif" alt="Loading" \></div>';
 			echo notice($text, "Import Logs");
 		}
-		else if ($batches_left == "")
+		elseif ($batches_left == "")
 		{
 			$text = 'Located ' . $num . ' netLog files totaling ' . FileSizeConvert($total_size) . '. Due to the size of the logs, they need to be imported in batches of ' . FileSizeConvert($batch_limit) . '.<br />Do you want to import them?<br /><br /><div id="text" style="text-align:center;"><a href="import.php?import&batches_left=' . $batches . '&num=' . $numss . '"  onclick="document.getElementById(\'loadin\').style.display=\'block\';document.getElementById(\'text\').style.display=\'none\';">Import logs, patch 1 of ' . $batches . '</a></div><div id="loadin" style="text-align:center;display:none;"><img src="/style/img/loading.gif" alt="Loading" \></div>';
 			echo notice($text, "Import Logs");

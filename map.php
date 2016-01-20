@@ -29,9 +29,6 @@ if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"]))
 	$settings["maxdistance"] = $_GET["maxdistance"];
 }
 ?>
-<!-- stuff for highcharts (map) -->
-<script type="text/javascript" src="/source/highcharts/js/highcharts.js"></script>
-<script type="text/javascript" src="/source/highcharts/js/highcharts-3d.js"></script>
 <div class="entries">
 	<table style="margin-left:370px;">
 		<tbody>

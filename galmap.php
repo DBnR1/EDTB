@@ -25,11 +25,11 @@
 $pagetitle = "Galaxy Map&nbsp;&nbsp;&&nbsp;&nbsp;Neighborhood Map";
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 
-if (valid_coordinates($coordx, $coordy, $coordz))
+if (valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"]))
 {
-	$ucoordx = $coordx;
-	$ucoordy = $coordy;
-	$ucoordz = -$coordz;
+	$ucoordx = $curSys["x"];
+	$ucoordy = $curSys["y"];
+	$ucoordz = -$curSys["z"];
 }
 else
 {
@@ -50,7 +50,7 @@ else
 <div style="display:none;" id="rcury"><?php echo round($ucoordy)?></div>
 <div style="display:none;" id="rcurz"><?php echo round($ucoordz)?></div>
 
-<div class="entries" style="position:absolute;bottom:0px;top:0px;height:auto;">
+<div class="entries" style="position:absolute;bottom:0;top:0;height:auto;">
 	<table style="margin-left:370px;">
 		<tbody>
 			<tr>
@@ -63,7 +63,7 @@ else
 			</tr>
 		</tbody>
 	</table>
-	<div id="edmap" style="position:absolute;left:353px;right:0px;top:0px;bottom:0px;width:auto;height:auto;z-index:5;"></div>
+	<div id="edmap" style="position:absolute;left:353px;right:0;top:0;bottom:0;width:auto;height:auto;z-index:5;"></div>
 
 	<!-- Launch ED3Dmap -->
 	<script type="text/javascript">
