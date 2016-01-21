@@ -1207,3 +1207,21 @@ function has_screenshots($system_name)
 		return false;
 	}
 }
+
+/*
+ *	Replace output text for text-to-speech overrides
+ *  Mappings configured in ini:
+ *  tts_override["find"] = "replace"
+*/
+
+function tts_override($text) {
+
+	global $settings;
+
+	foreach ($settings["tts_override"] AS $find => $replace)
+	{
+		$text = str_replace($find, $replace, $text);
+	}
+
+	return $text;
+}
