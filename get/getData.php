@@ -57,9 +57,38 @@ $data = array();
 */
 
 $data['now_playing'] = "";
-if (isset($settings["nowplaying_file"]) && !empty($settings["nowplaying_file"]))
+
+if ((isset($settings["nowplaying_file"]) && !empty($settings["nowplaying_file"])) or (isset($settings["nowplaying_vlc_password"]) && !empty($settings["nowplaying_vlc_password"])))
 {
-	$nowplaying = file_get_contents($settings["nowplaying_file"]);
+
+	$nowplaying = "";
+
+	if (isset($settings["nowplaying_file"]) && !empty($settings["nowplaying_file"]))
+	{
+		$nowplaying .= file_get_contents($settings["nowplaying_file"]);
+	}
+
+	if (isset($settings["nowplaying_vlc_password"]) && !empty($settings["nowplaying_vlc_password"]))
+	{
+
+		$username = "";
+		$password = $settings["nowplaying_vlc_password"];
+		$url = $settings["nowplaying_vlc_url"];
+
+		$opts = array(
+			'http'=>array(
+				'method'=>"GET",
+				'header' => "Authorization: Basic " . base64_encode("$username:$password")
+			)
+		);
+
+		$context = stream_context_create($opts);
+		$result = file_get_contents($url, false, $context);
+
+		$json_data = json_decode($result, true);
+
+		$nowplaying .= $json_data["information"]["category"]["meta"]["now_playing"];
+	}
 
 	$data['now_playing'] = '<img src="/style/img/music.png" style="vertical-align:middle;margin-right:6px;" alt="Now playing" />';
 	$data['now_playing'] .= $nowplaying;
