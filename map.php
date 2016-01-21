@@ -42,37 +42,37 @@ if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"]))
 			</tr>
 		</tbody>
 	</table>
-	<div class="entries_inner" style="overflow:hidden !important;">
+	<div class="entries_inner" style="overflow:hidden !important">
 		<div id="container"></div>
-		<div id="report" onclick='$("#report").fadeToggle("fast");'></div>
-		<div id="disclaimer" onclick='$("#disclaimer").fadeToggle("fast");'></div>
-		<div id="map_legend" onclick='$("#map_legend2").fadeToggle("fast");'>Legend</div>
+		<div id="report" onclick='$("#report").fadeToggle("fast")'></div>
+		<div id="disclaimer" onclick='$("#disclaimer").fadeToggle("fast")'></div>
+		<div id="map_legend" onclick='$("#map_legend2").fadeToggle("fast")'>Legend</div>
 		<div id="map_legend2">
 			<table style="padding:5px;">
 				<tr>
-					<td><div style="background-color:rgba(231, 216, 132, 0.7);width:7px;height:7px;border-radius:50%;vertical-align:middle;"></div></td>
+					<td><div style="background-color:rgba(231, 216, 132, 0.7);width:7px;height:7px;border-radius:50%;vertical-align:middle"></div></td>
 					<td>Empire</td>
 				</tr>
 				<tr>
-					<td><div style="background-color:rgba(9, 180, 244, 0.7);width:7px;height:7px;border-radius:50%;vertical-align:middle;"></div></td>
+					<td><div style="background-color:rgba(9, 180, 244, 0.7);width:7px;height:7px;border-radius:50%;vertical-align:middle"></div></td>
 					<td>Alliance</td>
 				</tr>
 				<tr>
-					<td><div style="background-color:rgba(140, 140, 140, 0.7);width:7px;height:7px;border-radius:50%;vertical-align:middle;"></div></td>
+					<td><div style="background-color:rgba(140, 140, 140, 0.7);width:7px;height:7px;border-radius:50%;vertical-align:middle"></div></td>
 					<td>Federation</td>
 				</tr>
 				<tr>
-					<td><div style="background-color:rgba(255, 255, 255, 0.8);width:7px;height:7px;border-radius:50%;vertical-align:middle;"></div></td>
+					<td><div style="background-color:rgba(255, 255, 255, 0.8);width:7px;height:7px;border-radius:50%;vertical-align:middle"></div></td>
 					<td>Other</td>
 				</tr>
 				<tr>
-					<td><div style="background-color:#37bf1c;width:7px;height:7px;border-radius:50%;vertical-align:middle;"></div></td>
+					<td><div style="background-color:#37bf1c;width:7px;height:7px;border-radius:50%;vertical-align:middle"></div></td>
 					<td>Sol</td>
 				</tr>
 				<tr>
 					<td style="text-align:center;vertical-align:middle;">
 						<div style="background-color:#f00;width:8px;height:8px;border-radius:50%;">
-							<div style="position:relative;left:2px;top:2px;background-color:#ccc;width:4px;height:4px;border-radius:50%;"></div>
+							<div style="position:relative;left:2px;top:2px;background-color:#ccc;width:4px;height:4px;border-radius:50%"></div>
 						</div>
 					</td>
 					<td>Current Location</td>
@@ -80,32 +80,32 @@ if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"]))
 				<tr>
 					<td style="text-align:center;vertical-align:middle;">
 						<div style="background-color:#2e92e7;width:8px;height:8px;border-radius:50%;">
-							<div style="position:relative;left:2px;top:2px;background-color:#ccc;width:4px;height:4px;border-radius:50%;"></div>
+							<div style="position:relative;left:2px;top:2px;background-color:#ccc;width:4px;height:4px;border-radius:50%"></div>
 						</div>
 					</td>
 					<td>System With a Log Entry</td>
 				</tr>
 				<tr>
 					<td>
-						<img src="/style/img/goto-g.png" alt="POI Visited" style="margin-bottom:4px;">
+						<img src="/style/img/goto-g.png" alt="POI Visited" style="margin-bottom:4px">
 					</td>
 					<td>Visited Point of Interest</td>
 				</tr>
 				<tr>
 					<td>
-						<img src="/style/img/goto.png" alt="POI Unvisited" style="margin-bottom:4px;">
+						<img src="/style/img/goto.png" alt="POI Unvisited" style="margin-bottom:4px">
 					</td>
 					<td>Unvisited Point of Interest</td>
 				</tr>
 				<tr>
 					<td>
-						<img src="/style/img/rare.png" alt="Rare" style="margin-bottom:4px;">
+						<img src="/style/img/rare.png" alt="Rare" style="margin-bottom:4px">
 					</td>
 					<td>Rare Commodity</td>
 				</tr>
 				<tr>
 					<td>
-						<img src="/style/img/bm.png" alt="Rare" style="margin-bottom:4px;">
+						<img src="/style/img/bm.png" alt="Rare" style="margin-bottom:4px">
 					</td>
 					<td>Bookmarked System</td>
 				</tr>
@@ -126,7 +126,7 @@ if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"]))
 				$mode = "3d";
 			}
 			?>
-			<a href="<?php echo $linkto?>" style="margin-left: 4px;"><?php echo $linkname?></a><br />
+			<a href="<?php echo $linkto?>" style="margin-left:4px"><?php echo $linkname?></a><br />
 			<form method="GET" action="map.php">
 				<input type="hidden" name="mode" value="<?php echo $mode?>">
 				<select class="distance" name="maxdistance" onchange="this.form.submit()">

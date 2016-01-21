@@ -45,7 +45,7 @@ require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 
 		if ($num > 0)
 		{
-			echo "<h2>System log for <a href='system.php?system_id=" . $logsystem_id . "'>" . $logsystem . "</a></h2>";
+			echo "<h2>System log for <a href='system.php?system_name=" . urlencode($logsystem) . "'>" . $logsystem . "</a></h2>";
 			echo '<hr>';
 
 			while ($log_arr = mysqli_fetch_assoc($log_res))
