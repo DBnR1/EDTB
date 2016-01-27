@@ -18,7 +18,7 @@ Key features
 - Screenshot gallery: screenshots automatically converted to jpg and categorized by the system they were taken in. Option to upload to imgur straight from ED ToolBox
 - VoiceAttack module: Meet "Marvin", the foul mouthed ship computer; get information about current system, closest station, latest GalNet articles + more with voice commands. Marvin really hates the Federation, so don't have any little kids or stuck up adults around when you're in Federation space.
 - A notepad for taking some quick notes (mission directives, kill orders, etc.)
-- Show currently playing song from Foobar2000 or any player that can store the current song in a text file
+- Show currently playing song from Foobar2000 or any player that can store the current song in a text file, or from VLC Media Player using the web interface.
 
 Requirements
 ------------
