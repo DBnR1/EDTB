@@ -25,7 +25,6 @@ require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 
 if (isset($_GET["nowplaying"]))
 {
-	
 	// VLC contents supercedes file contents if enabled.
 
 	$nowplaying = "";
@@ -37,28 +36,36 @@ if (isset($_GET["nowplaying"]))
 
 	if (isset($settings["nowplaying_vlc_password"]) && $settings["nowplaying_vlc_password"] != "")
 	{
-
 		$username = "";
 		$password = $settings["nowplaying_vlc_password"];
 		$url = $settings["nowplaying_vlc_url"];
 
 		$opts = array(
-		  'http'=>array(
-			'method'=>"GET",
-			'header' => "Authorization: Basic " . base64_encode("$username:$password")                 
+		  'http' => array(
+			'method' => "GET",
+			'header' => "Authorization: Basic " . base64_encode("$username:$password")
 		  )
 		);
-		
+
 		$context = stream_context_create($opts);
-		$result = file_get_contents($url, false, $context);
-		
+
+		if (!$result = file_get_contents($url, false, $context))
+		{
+			$error = error_get_last();
+			write_log("Error: " . $error['message'] . "", __FILE__, __LINE__);
+		}
+
 		$json_data = json_decode($result, true);
-		
+
 		$nowplaying = $json_data["information"]["category"]["meta"]["now_playing"];
 	}
-	
+
+	if (empty($nowplaying))
+	{
+		$nowplaying = "Not playing";
+	}
+
 	echo tts_override($nowplaying);
-	
+
 	exit();
 }
-
