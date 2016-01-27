@@ -8,7 +8,7 @@ For instructions and downloads visit [edtb.xyz].
 Key features
 ------------
 
-- Real time system and station data based on your in-game location (data downloaded to the user's system from ED ToolBox server, which in turn gets its data from EDDB)
+- Real time system and station data based on your in-game location (data downloaded to the user's system from ED ToolBox server, which in turn gets its data from [EDDB])
 - General & System specific captains log
 - Two maps: Galaxy Map and a dynamically updating "Neighborhood Map", both showing your visited systems, points of interest and bookmarked systems + some other stuff.
 - Add Points of Interest
@@ -59,7 +59,7 @@ Requirements
 
 
 [Visual C++ Redistributable for Visual Studio 2015]: <https://www.microsoft.com/en-us/download/details.aspx?id=48145>
-[edtb]: <https://github.com/joemccann/dillinger.git>
+[EDDB]: <http://eddb.io>
 [VoiceAttack]: <http://www.voiceattack.com/>
 [Elite Dangerous]: <http://www.elitedangerous.com>
 [edtb.xyz]: <http://edtb.xyz>
