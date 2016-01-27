@@ -12,6 +12,7 @@ var Grid = {
 
   'visible' : true,
 
+  'fixed' : false,
   /**
    * Create 2 base grid scaled on Elite: Dangerous grid
    */
@@ -28,6 +29,68 @@ var Grid = {
 
     this.obj.customUpdateCallback = this.addCoords;
 
+   return this;
+  },
+
+  /**
+   * Create 2 base grid scaled on Elite: Dangerous grid
+   */
+
+  'infos' : function(step, color, minDistView) {
+
+    var size = 50000;
+    if(step== undefined) step = 10000;
+    this.fixed = true;
+
+    //-- Add global grid
+
+    var geometry = new THREE.Geometry();
+    var material = new THREE.LineBasicMaterial( {
+      color: 0x555555,
+      transparent: true,
+      opacity: 0.2,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    } );
+
+    for ( var i = - size; i <= size; i += step ) {
+
+        geometry.vertices.push( new THREE.Vector3( - size, 0, i ) );
+        geometry.vertices.push( new THREE.Vector3(   size, 0, i ) );
+
+        geometry.vertices.push( new THREE.Vector3( i, 0, - size ) );
+        geometry.vertices.push( new THREE.Vector3( i, 0,   size ) );
+
+    }
+
+    this.obj = new THREE.Line( geometry, material, THREE.LinePieces );
+    this.obj.position.set(0,0,-20000);
+
+    //-- Add quadrant
+
+    var quadrant = new THREE.Geometry();
+    var material = new THREE.LineBasicMaterial( {
+      color: 0x888888,
+      transparent: true,
+      opacity: 0.5,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    } );
+
+    quadrant.vertices.push( new THREE.Vector3( - size, 0, 20000 ) );
+    quadrant.vertices.push( new THREE.Vector3(   size, 0, 20000 ) );
+
+    quadrant.vertices.push( new THREE.Vector3( 0, 0, - size ) );
+    quadrant.vertices.push( new THREE.Vector3( 0, 0,   size ) );
+    var quadrantL = new THREE.Line( quadrant, material, THREE.LinePieces );
+
+
+    this.obj.add(quadrantL);
+
+
+    //-- Add grid to the scene
+
+    scene.add(this.obj);
     return this;
   },
 

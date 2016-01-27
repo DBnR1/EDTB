@@ -43,18 +43,18 @@ else
 	$is_unknown = " *";
 }
 ?>
-<div style="display:none;" id="curx"><?php echo $ucoordx?></div>
-<div style="display:none;" id="cury"><?php echo $ucoordy?></div>
-<div style="display:none;" id="curz"><?php echo $ucoordz?></div>
-<div style="display:none;" id="rcurx"><?php echo round($ucoordx)?></div>
-<div style="display:none;" id="rcury"><?php echo round($ucoordy)?></div>
-<div style="display:none;" id="rcurz"><?php echo round($ucoordz)?></div>
+<div style="display:none" id="curx"><?php echo $ucoordx?></div>
+<div style="display:none" id="cury"><?php echo $ucoordy?></div>
+<div style="display:none" id="curz"><?php echo $ucoordz?></div>
+<div style="display:none" id="rcurx"><?php echo round($ucoordx)?></div>
+<div style="display:none" id="rcury"><?php echo round($ucoordy)?></div>
+<div style="display:none" id="rcurz"><?php echo round($ucoordz)?></div>
 
-<div class="entries" style="position:absolute;bottom:0;top:0;height:auto;">
-	<table style="margin-left:370px;">
+<div class="entries" style="position:absolute;bottom:0;top:0;height:auto">
+	<table style="margin-left:370px">
 		<tbody>
 			<tr>
-				<th style="text-align: center;">
+				<th style="text-align: center">
 					<ul class="pagination">
 						<li class="actives"><a href="/galmap.php">Galaxy Map</a></li>
 						<li><a href="/map.php">Neighborhood Map</a></li>
@@ -63,8 +63,7 @@ else
 			</tr>
 		</tbody>
 	</table>
-	<div id="edmap" style="position:absolute;left:353px;right:0;top:0;bottom:0;width:auto;height:auto;z-index:5;"></div>
-
+	<div id="edmap" style="position:absolute;left:353px;right:0;top:0;bottom:0;width:auto;height:auto;z-index:5"></div>
 	<!-- Launch ED3Dmap -->
 	<script type="text/javascript">
 		Ed3d.init({
@@ -77,7 +76,6 @@ else
 			playerPos: [<?php echo $ucoordx;?>,<?php echo $ucoordy;?>,<?php echo $ucoordz;?>]
 		});
 	</script>
-
 </div>
 <?php
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");

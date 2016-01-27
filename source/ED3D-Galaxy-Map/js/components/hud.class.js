@@ -17,6 +17,7 @@ var HUD = {
    */
   'create' : function(container) {
 
+    this.container = container;
     if(!Ed3d.withHudPanel) return;
 
     this.container = container;
@@ -47,6 +48,7 @@ var HUD = {
 	  '    <div id="options" style="display:none;"></div>'+
       '    <a href="#" data-view="3d" class="view selected">3D</a>'+
       '    <a href="#" data-view="top" class="view">2D</a>'+
+	  '    <a href="#" data-view="infos" class="'+(Ed3d.showGalaxyInfos ? 'selected' : '')+'">i</a>'+
       '    <a href="#" data-view="options"><img src="/style/img/map_settings.png" alt="settings" style="vertical-align:middle;margin-bottom:3px;" /></a>'+
       '  </div>'
     );
@@ -68,6 +70,7 @@ var HUD = {
         var state = Galaxy.milkyway[0].visible;
         Galaxy.milkyway[0].visible = !state;
         Galaxy.milkyway[1].visible = !state;
+		Galaxy.milkyway2D.visible  = !state;
         $(this).toggleClass('opt_active');
       })
       .appendTo( "#options" );
@@ -121,6 +124,16 @@ var HUD = {
           HUD.moveCamera(moveFrom,moveCoords);
           break;
 
+        case 'infos':
+          if(!Ed3d.showGalaxyInfos) {
+            Ed3d.showGalaxyInfos = true;
+            Galaxy.infosShow();
+          } else {
+            Ed3d.showGalaxyInfos = false;
+            Galaxy.infosHide();
+          }
+          $(this).toggleClass('selected');
+          break;
 
         case 'options':
           $('#options').toggle();

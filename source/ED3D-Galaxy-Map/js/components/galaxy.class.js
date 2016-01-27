@@ -3,7 +3,10 @@ var Galaxy = {
 
 
   'obj' : null,
+  'infos' : null,
   'milkyway' : [],
+  'milkyway2D' : null,
+  'backActive' : true,
   'colors' : [],
 
   'x' : 25,
@@ -26,6 +29,7 @@ var Galaxy = {
     this.obj.add(sprite); /// this centers the glow at the mesh
 
     this.createParticles();
+	this.add2DPlane();
 
 
   },
@@ -50,12 +54,186 @@ var Galaxy = {
       Ed3d.showScene();
 
     };
-    // load img source
+
+    //-- load img source
     img.src = Ed3d.basePath + "textures/heightmap7.jpg";
 
+    //-- Add optional infos
+    this.showGalaxyInfos();
 
   },
 
+  /**
+   * Add 2D image plane
+   */
+
+  'showGalaxyInfos' : function() {
+
+    if(!Ed3d.showGalaxyInfos) return;
+
+    this.infos = new THREE.Object3D();
+
+    $.getJSON(Ed3d.basePath + "data/milkyway.json", function(data) {
+
+      $.each(data.quadrants, function(key, val) {
+
+        Galaxy.addText(key,val.x,-100,val.z,val.rotate);
+
+      });
+
+      $.each(data.arms, function(key, val) {
+
+        $.each(val, function(keyCh, valCh) {
+          Galaxy.addText(key,valCh.x,0,valCh.z,valCh.rotate,300,true);
+        });
+
+      });
+
+      $.each(data.gaps, function(key, val) {
+
+        $.each(val, function(keyCh, valCh) {
+          Galaxy.addText(key,valCh.x,0,valCh.z,valCh.rotate,160,true);
+        });
+
+      });
+
+      $.each(data.others, function(key, val) {
+
+        $.each(val, function(keyCh, valCh) {
+          Galaxy.addText(key,valCh.x,0,valCh.z,valCh.rotate,160,true);
+        });
+
+      });
+
+
+    }).done(function() {
+
+      scene.add(Galaxy.infos);
+
+    });
+
+  },
+
+  /**
+   * Show additional galaxy infos
+   */
+  'infosShow' : function() {
+    if(Galaxy.infos == null) this.showGalaxyInfos();
+    if(Galaxy.infos !== null)  Galaxy.infos.visible = Ed3d.showGalaxyInfos;
+  },
+
+  /**
+   * Show additional galaxy infos
+   */
+  'infosHide' : function() {
+    if(Galaxy.infos !== null)  Galaxy.infos.visible = false;
+  },
+
+  /**
+   * Appli opacity for Milky Way info based on distance
+   */
+
+  'infosUpdateCallback' : function(scale) {
+
+    if(!Ed3d.showGalaxyInfos || this.infos == null) return;
+
+    scale -= 70;
+
+    var opacity = Math.round(scale/10)/10;
+    if(opacity<0) opacity = 0;
+    if(opacity>0.8) opacity = 0.8;
+    if(Galaxy.infos.previousOpacity == opacity) return;
+
+    var opacityMiddle = 1.1-opacity;
+    if(opacityMiddle<=0.4) opacityMiddle = 0.2;
+
+    for( var i = 0; i < Galaxy.infos.children.length; i++ ) {
+      var txt = Galaxy.infos.children[ i ];
+      txt.material.opacity = (!txt.revert) ? opacity : opacityMiddle;
+    }
+
+    Galaxy.infos.previousOpacity = opacity;
+
+  },
+
+  /**
+   * Add 2D image plane
+   */
+
+  'add2DPlane' : function() {
+
+    var texloader = new THREE.TextureLoader();
+
+    //-- Load textures
+    var back2D = texloader.load(Ed3d.basePath + "textures/heightmap7.jpg");
+
+
+    var floorMaterial = new THREE.MeshBasicMaterial( {
+      map: back2D,
+      transparent: true,
+      opacity: 0.4,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      side: THREE.DoubleSide
+    } );
+
+    var floorGeometry = new THREE.PlaneGeometry(104000, 104000, 1, 1);
+    this.milkyway2D = new THREE.Mesh(floorGeometry, floorMaterial);
+    this.milkyway2D.position.set(this.x, this.y, -this.z);
+    this.milkyway2D.rotation.x = -Math.PI / 2;
+    this.milkyway2D.showCoord = true;
+
+    scene.add(this.milkyway2D);
+
+  },
+
+  /**
+   * Add Shape text
+   */
+
+  'addText' : function(textShow, x, y, z, rot, size, revert) {
+
+    if(revert==undefined) revert = false;
+    if(size==undefined) size = 450;
+    textShow = textShow.toUpperCase();
+
+    var textShapes = THREE.FontUtils.generateShapes(textShow, {
+      'font': 'helvetiker',
+      'weight': 'normal',
+      'style': 'normal',
+      'size': size,
+      'curveSegments': 12
+    });
+
+    var textGeo = new THREE.ShapeGeometry(textShapes);
+
+    var textMesh = new THREE.Mesh(textGeo, new THREE.MeshBasicMaterial({
+      color: 0x999999,
+      transparent: true,
+      opacity: 0.7,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    }));
+
+    textMesh.geometry = textGeo;
+    textMesh.geometry.needsUpdate = true;
+
+    //x -= Math.round(textShow.length*400/2);
+    var middleTxt = Math.round(size/2);
+    z -= middleTxt;
+
+    textMesh.rotation.x = -Math.PI / 2;
+    textMesh.geometry.applyMatrix( new THREE.Matrix4().makeTranslation(-Math.round(textShow.length*size/2), 0, -middleTxt) );
+    if(rot != 0) {
+      textMesh.rotateOnAxis (new THREE.Vector3( 0, 0, 1 ), Math.PI * (rot) / 180);
+    }
+    textMesh.position.set(x, y, -z);
+
+    textMesh.revert = revert;
+
+    Galaxy.infos.add(textMesh);
+
+  },
   /**
    * Create a particle cloud milkyway from an image
    *
@@ -88,12 +266,15 @@ var Galaxy = {
     var nb = 0;
     var maxDensity = 15;
 
-    var scaleImg = 16.4;
+    //var scaleImg = 16.4;
+	var scaleImg = 21;
 
     var colorsBig = [];
     var nbBig = 0;
 
-    for (var i = 0; i<pix.length; i += 12) {
+    for (var i = 0; i<pix.length; i += 20) {
+
+		if(Math.random() > 0.5) i += 8;
 
       var all = pix[i]+pix[i+1]+pix[i+2];
 
@@ -111,9 +292,9 @@ var Galaxy = {
         for (var y = -density; y < density; y = y+add) {
 
           var particle = new THREE.Vector3(
-            x+(Math.random() * 25),
-            (y*10)+(Math.random() * 50),
-            z+(Math.random() * 25)
+			x+((Math.random()-0.5) * 25),
+            (y*10)+((Math.random()-0.5) * 50),
+            z+((Math.random()-0.5) * 25)
           );
 
           //-- Particle color from pixel
