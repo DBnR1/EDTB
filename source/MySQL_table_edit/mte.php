@@ -88,8 +88,6 @@ class MySQLtabledit
 	###########################
 	function database_connect()
 	{
-	###########################
-
 		if (!($GLOBALS["___mysqli_ston"] = mysqli_connect($this->host,  $this->user,  $this->pass)))
 		{
 			die('Could not connect: ' . ((is_object($GLOBALS["___mysqli_ston"])) ? mysqli_error($GLOBALS["___mysqli_ston"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)));
@@ -100,7 +98,6 @@ class MySQLtabledit
 	##############################
 	function database_disconnect()
 	{
-	##############################
 		((is_null($___mysqli_res = mysqli_close($GLOBALS["___mysqli_ston"]))) ? false : $___mysqli_res);
 	}
 
@@ -108,8 +105,6 @@ class MySQLtabledit
 	################
 	function do_it()
 	{
-	################
-
 		// Sorry: in Joomla, remove the next two lines and place the language vars instead
 		require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/MySQL_table_edit/lang/en.php");
 		require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/MySQL_table_edit/lang/" . $this->language . ".php");
@@ -158,8 +153,6 @@ class MySQLtabledit
 	####################
 	function show_list()
 	{
-	####################
-
 		# message after add or edit
 		$this->content_saved = $_SESSION['content_saved'];
 		$_SESSION['content_saved'] = '';
@@ -167,7 +160,7 @@ class MySQLtabledit
 		# default sort (a = ascending)
 		$ad = 'a';
 
-		if ($_GET['sort'] && in_array($_GET['sort'],$this->fields_in_list_view))
+		if ($_GET['sort'] && in_array($_GET['sort'], $this->fields_in_list_view))
 		{
 			if ($_GET['ad'] == 'a') $asc_des = 'ASC';
 			if ($_GET['ad'] == 'd') $asc_des = 'DESC';
@@ -213,6 +206,85 @@ class MySQLtabledit
 
 		# select
 		$sql = "SELECT * FROM `$this->table` $where_search $order_by";
+
+		/*
+		*	if sorting by distance
+		*/
+		/*
+		 IFNULL(edtb_systems.x, user_systems_own.x) AS item_coordx,
+                                                                            IFNULL(edtb_systems.y, user_systems_own.y) AS item_coordy,
+                                                                            IFNULL(edtb_systems.z, user_systems_own.z) AS item_coordz,
+																			user_bm_categories.name AS catname
+																			FROM user_bookmarks
+																			LEFT JOIN edtb_systems ON user_bookmarks.system_name = edtb_systems.name
+																			LEFT JOIN user_bm_categories ON user_bookmarks.category_id = user_bm_categories.id
+                                                                            LEFT JOIN user_systems_own ON user_bookmarks.system_name = user_systems_own.name
+																			ORDER BY sqrt(pow((item_coordx-(" . $usex . ")),2)+pow((item_coordy-(" . $usey . ")),2)+pow((item_coordz-(" . $usez . ")),2)), system_name")
+		*/
+
+		if ($_GET['sort'] && $_GET['sort'] == "distance")
+		{
+			if ($_GET['ad'] == 'a') $asc_des = 'DESC';
+			if ($_GET['ad'] == 'd') $asc_des = 'ASC';
+
+			// figure out what coords to calculate from
+			$usable_coords = usable_coords();
+			$rusex = $usable_coords["x"];
+			$rusey = $usable_coords["y"];
+			$rusez = $usable_coords["z"];
+
+			$res2 = mysqli_query($GLOBALS["___mysqli_ston"], "	SHOW COLUMNS
+																FROM `$this->table`")
+																or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+
+			while ($rij3 = mysqli_fetch_assoc($res2))
+			{
+				$fields[] = $this->table . '.' . $rij3["Field"];
+			}
+
+			$fieldss = join(",", $fields);
+
+			if ($asc_des == "DESC")
+			{
+				$order_by = "ORDER BY -(sqrt(pow((ritem_coordx-(" . $rusex . ")),2)+pow((ritem_coordy-(" . $rusey . ")),2)+pow((ritem_coordz-(" . $rusez . ")),2)))" . $asc_des;
+			}
+			else
+			{
+				$order_by = "ORDER BY sqrt(pow((ritem_coordx-(" . $rusex . ")),2)+pow((ritem_coordy-(" . $rusey . ")),2)+pow((ritem_coordz-(" . $rusez . ")),2)) DESC";
+			}
+
+			if ($this->table == "edtb_systems")
+			{
+				$sql = "SELECT " . $fieldss . ",edtb_systems.x AS ritem_coordx,
+												edtb_systems.y AS ritem_coordy,
+												edtb_systems.z AS ritem_coordz
+												FROM $this->table
+												$order_by";
+
+			}
+			elseif ($this->table == "edtb_stations")
+			{
+				$sql = "SELECT " . $fieldss . ",edtb_systems.x AS ritem_coordx,
+												edtb_systems.y AS ritem_coordy,
+												edtb_systems.z AS ritem_coordz
+												FROM $this->table
+												LEFT JOIN edtb_systems ON $this->table.system_id = edtb_systems.id
+												$order_by";
+
+			}
+			else
+			{
+				$sql = "SELECT " . $fieldss . ",IFNULL(edtb_systems.x, user_systems_own.x) AS ritem_coordx,
+												IFNULL(edtb_systems.y, user_systems_own.y) AS ritem_coordy,
+												IFNULL(edtb_systems.z, user_systems_own.z) AS ritem_coordz
+												FROM $this->table
+												LEFT JOIN edtb_systems ON $this->table.system_name = edtb_systems.name
+												LEFT JOIN user_systems_own ON $this->table.system_name = user_systems_own.name
+												$order_by";
+			}
+			//write_log($sql);
+		}
+
 		$result = mysqli_query($GLOBALS["___mysqli_ston"], $sql);
 
 		# navigation 2/3
@@ -221,7 +293,7 @@ class MySQLtabledit
 		$sql .= " LIMIT $start, $this->num_rows_list_view";
 		$result = mysqli_query($GLOBALS["___mysqli_ston"], $sql) or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
-		if (mysqli_num_rows($result)>0)
+		if (mysqli_num_rows($result) > 0)
 		{
 			$result2 = mysqli_query($GLOBALS["___mysqli_ston"], "SHOW COLUMNS FROM `$this->table`") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
@@ -237,12 +309,21 @@ class MySQLtabledit
 				$count++;
 				$this_row = '';
 
-				if ($background == '#38484F') {$background='#273238';}
-					else {$background='#38484F';}
+				if ($background == '#38484F')
+				{
+					$background='#273238';
+				}
+				else
+				{
+					$background='#38484F';
+				}
 
 				$dist = false;
 				$dist1 = false;
 				$exact = "";
+				$d_x = "";
+				$d_y = "";
+				$d_z = "";
 
 				if (array_key_exists("x", $rij) && array_key_exists("y", $rij) && array_key_exists("z", $rij) || array_key_exists("system_name", $rij) || array_key_exists("system_id", $rij))
 				{
@@ -274,7 +355,19 @@ class MySQLtabledit
 					}
 					elseif (isset($rij["system_name"]) || $found == 0)
 					{
-						$sys_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT x, y, z
+						if (valid_coordinates($rij["ritem_coordx"], $rij["ritem_coordy"], $rij["ritem_coordz"]))
+						{
+							$d_x = $rij["ritem_coordx"];
+							$d_y = $rij["ritem_coordy"];
+							$d_z = $rij["ritem_coordz"];
+						}
+						else
+						{
+							$d_x = "";
+							$d_y = "";
+							$d_z = "";
+						}
+						/*$sys_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT x, y, z
 																				FROM edtb_systems
 																				WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $rij["system_name"]) . "'
 																				LIMIT 1");
@@ -310,7 +403,7 @@ class MySQLtabledit
 								$d_y = "";
 								$d_z = "";
 							}
-						}
+						}*/
 					}
 					else
 					{
@@ -352,19 +445,19 @@ class MySQLtabledit
 							// sorting
 							if ($_GET['sort'] == $key && $_GET['ad'] == 'a')
 							{
-								$sort_image = "<img src='$this->url_base/images/sort_a.png' style='width:9px;height:8px;border:none;' alt=''>";
+								$sort_image = "<img src='/style/img/sort_a.png' style='width:9px;height:8px;border:none' alt=''>";
 								$ad = 'd';
 							}
 							if ($_GET['sort'] == $key && $_GET['ad'] == 'd')
 							{
-								$sort_image = "<img src='$this->url_base/images/sort_d.png' style='width:9px;height:8px;border:none;' alt=''>";
+								$sort_image = "<img src='/style/img/sort_d.png' style='width:9px;height:8px;border:none' alt=''>";
 								$ad = 'a';
 							}
 
 							// remove sort  and ad and add new ones
 							$query_sort = preg_replace('/&(sort|ad)=[^&]*/','', $query_string) . "&sort=$key&ad=$ad";
+							//
 
-							//print_r ($this->skip);
 							if (isset($this->skip))
 							{
 								if (!in_array($key, $this->skip))
@@ -380,7 +473,20 @@ class MySQLtabledit
 							// add distance if x,y,z are defined
 							if ($dist1 !== false)
 							{
-								$head .= "<td style='white-space:nowrap;padding:10px;'>Distance</td>";
+								if ($_GET['sort'] == "distance" && $_GET['ad'] == 'a')
+								{
+									$sort_image = "<img src='/style/img/sort_a.png' style='width:9px;height:8px;border:none' alt=''>";
+									$ad = 'd';
+								}
+								if ($_GET['sort'] == "distance" && $_GET['ad'] == 'd')
+								{
+									$sort_image = "<img src='/style/img/sort_d.png' style='width:9px;height:8px;border:none' alt=''>";
+									$ad = 'a';
+								}
+
+								$query_sort_d = preg_replace('/&(sort|ad)=[^&]*/','', $query_string) . "&sort=distance&ad=$ad";
+
+								$head .= "<td style='white-space:nowrap;padding:10px'><a data-replace='true' data-target='.rightpanel' href='$this->url_script?$query_sort_d' class='mte_head'>Distance</a> $sort_image</td>";
 								$dist1 = false;
 							}
 
@@ -389,20 +495,20 @@ class MySQLtabledit
 						{
 							if (substr($this->table, 0, 4) == "edtb")
 							{
-								$buttons = "<td style='width:1%;white-space:nowrap;padding:10px;vertical-align:middle;'></td>";
+								$buttons = "<td style='width:1%;white-space:nowrap;padding:10px;vertical-align:middle'></td>";
 							}
 							else
 							{
-								$buttons = "<td style='width:1%;white-space:nowrap;padding:10px;vertical-align:middle;'><a href='javascript:void(0)' onclick='del_confirm($value)' title='Delete {$this->show_text[$key]} $value'><img src='$this->url_base/images/del.png' style='width:16px;height:16px;border:none;' alt=''></a>&nbsp;<a href='?$query_string&mte_a=edit&id=$value' title='Edit {$this->show_text[$key]} $value'><img src='$this->url_base/images/edit.png' style='width:16px;height:16px;border:none;' alt=''></a></td>";
+								$buttons = "<td style='width:1%;white-space:nowrap;padding:10px;vertical-align:middle'><a href='javascript:void(0)' onclick='del_confirm($value)' title='Delete {$this->show_text[$key]} $value'><img src='/style/img/del.png' style='width:16px;height:16px;border:none' alt=''></a>&nbsp;<a href='?$query_string&mte_a=edit&id=$value' title='Edit {$this->show_text[$key]} $value'><img src='/style/img/edit.png' style='width:16px;height:16px;border:none' alt='Edit'></a></td>";
 							}
 
 							if ($key == "id" && $this->table == "edtb_systems")
 							{
-								$this_row .= "<td style='width:1%;padding:10px;vertical-align:middle;'><a href='/system.php?system_id=" . $value . "'>" . $value . "</a></td>";
+								$this_row .= "<td style='width:1%;padding:10px;vertical-align:middle'><a href='/system.php?system_id=" . $value . "'>" . $value . "</a></td>";
 							}
 							else
 							{
-								$this_row .= "<td style='width:1%;padding:10px;vertical-align:middle;'>$value</td>";
+								$this_row .= "<td style='width:1%;padding:10px;vertical-align:middle'>$value</td>";
 							}
 						}
 						else
@@ -464,11 +570,11 @@ class MySQLtabledit
 
 			if ($f == $this_page)
 			{
-				$navigation .= "<td class='mte_nav' style='color:#fffffa;background-color:#808080;font-weight:bold;'>$f</td> ";
+				$navigation .= "<td class='mte_nav' style='color:#fffffa;background-color:#808080;font-weight:bold'>$f</td> ";
 			}
 			else
 			{
-				$navigation .= "<td class='mte_nav' style='background-color:#0e0e11;'><a data-replace='true' data-target='.rightpanel' class='mtelink' href='$this->url_script?$query_nav&start=$nav_toon'>$f</a></td>";
+				$navigation .= "<td class='mte_nav' style='background-color:#0e0e11'><a data-replace='true' data-target='.rightpanel' class='mtelink' href='$this->url_script?$query_nav&start=$nav_toon'>$f</a></td>";
 			}
 		}
 		if ($hits_total<$this->num_rows_list_view) { $navigation = '';}
@@ -487,31 +593,32 @@ class MySQLtabledit
 			$next_page_html =  "<a data-replace='true' data-target='.rightpanel' href='$this->url_script?$query_nav&start=$next' class='mte_nav_prev_next'>{$this->text['Next']}</a>";
 		}
 
+
+		$this->nav_bottom = '<span class="right" style="padding-top:6px">Number of entries: ';
+		$this->nav_bottom .= number_format($hits_total);
+		$this->nav_bottom .= '</span>';
+
 		if ($navigation)
 		{
 			$nav_table = "
-				<table style='border-collapse:separate;border-spacing:5px;'>
+				<table style='border-collapse:separate;border-spacing:5px;margin-left:35%;margin-right:auto'>
 					<tr>
-						<td style='padding-right:6px;vertical-align:middle;'>$last_page_html</td>
+						<td style='padding-right:6px;vertical-align:middle'>$last_page_html</td>
 						$navigation
-						<td style='padding-left:6px;vertical-align:middle;'>$next_page_html</td>
+						<td style='padding-left:6px;vertical-align:middle'>$next_page_html</td>
 					</tr>
 				</table>
 			";
 
 			$this->nav_top = "
 				<div style='margin-bottom:5px;margin-top:-20px;width:$this->width_editor'>
-					<center>
 						$nav_table
-					</center>
 				</div>
 			";
 
-			$this->nav_bottom = "
-				<div style='margin-top:20px;width:$this->width_editor'>
-					<center>
+			$this->nav_bottom .= "
+				<div style='margin-top:20px;width:100%;text-align:center'>
 						$nav_table
-					</center>
 				</div>
 			";
 		}
@@ -519,7 +626,6 @@ class MySQLtabledit
 		# Search form + Add Record button
 		foreach ($this->fields_in_list_view as $option)
 		{
-
 			if
 			(
 				$this->show_text[$option]) {$show_option = $this->show_text[$option];
@@ -538,17 +644,18 @@ class MySQLtabledit
 				$options .= "<option value='$option'>$show_option</option>";
 			}
 		}
+
 		$in_search_value = htmlentities(trim(stripslashes($_GET['s'])), ENT_QUOTES);
 
 		$seach_form = "
-			<table style='margin-left:0;padding-left:0;border-collapse:collapse;border-spacing:0;'>
+			<table style='margin-left:0;padding-left:0;border-collapse:collapse;border-spacing:0'>
 				<tr>
-					<td style='white-space:nowrap;padding-bottom:20px;'>
+					<td style='white-space:nowrap;padding-bottom:20px'>
 						<form method=get action='$this->url_script'>
 							<input type='hidden' name='table' value='" . $_GET["table"] . "'>
 							<select class='selectbox' name='f'>$options</select>
-							<input class='textbox' type='text' name='s' value='$in_search_value' style='width:220px;'>
-							<input class='button' type='submit' value='{$this->text['Search']}' style='width:80px;'>
+							<input class='textbox' type='text' name='s' value='$in_search_value' style='width:220px'>
+							<input class='button' type='submit' value='{$this->text['Search']}' style='width:80px'>
 				";
 			if ($this->query_joomla_component) $seach_form .= "<input type='hidden' value='$this->query_joomla_component' name='option'>";
 			$seach_form .= "</form>";
@@ -556,7 +663,7 @@ class MySQLtabledit
 			if ($_GET['s'] && $_GET['f'])
 			{
 				if ($this->query_joomla_component) $add_joomla = '?option=' . $this->query_joomla_component;
-				$seach_form .= "<button class='button' style='margin-left:0;margin-top:6px;' onclick='window.location=\"$this->url_script$add_joomla\"' style='margin: 0 0 10px 10px;'>{$this->text['Clear_search']}</button>";
+				$seach_form .= "<button class='button' style='margin-left:0;margin-top:6px' onclick='window.location=\"$this->url_script$add_joomla\"' style='margin: 0 0 10px 10px'>{$this->text['Clear_search']}</button>";
 			}
 
 			$seach_form .= "
@@ -565,7 +672,7 @@ class MySQLtabledit
 					<td style='text-align:right;width:$this->width_editor'>";
 					if (substr($this->table, 0, 4) != "edtb")
 					{
-						$seach_form .= "<button class='button' onclick='window.location=\"$this->url_script?$query_string&mte_a=new\"' style='margin: 0 0 10px 10px;'>{$this->text['Add_Record']}</button>";
+						$seach_form .= "<button class='button' onclick='window.location=\"$this->url_script?$query_string&mte_a=new\"' style='margin: 0 0 10px 10px'>{$this->text['Add_Record']}</button>";
 					}
 					else
 					{
@@ -593,8 +700,8 @@ class MySQLtabledit
 		";
 		# page content
 		$this->content = "
-			<div style='width: $this->width_editor;background:transparent;margin:0;border:none;'>$seach_form</div>
-			<table style='text-align:left;margin:0;border-collapse:collapse;border-spacing:0;width:$this->width_editor;'>
+			<div style='width: $this->width_editor;background:transparent;margin:0;border:none'>$seach_form</div>
+			<table style='text-align:left;margin:0;border-collapse:collapse;border-spacing:0;width:$this->width_editor'>
 				<tr style='background:#0e0e11; color: #fff'><td></td>$head</tr>
 				$rows
 			</table>
@@ -623,7 +730,7 @@ class MySQLtabledit
 		{
 			$this->content = "
 			</div>
-				<div style='padding:2px 20px 20px 20px;margin: 0 0 20px 0; background: #DF0000; color: #fff;'><h3>Error</h3>" .
+				<div style='padding:2px 20px 20px 20px;margin: 0 0 20px 0; background: #DF0000; color: #fff'><h3>Error</h3>" .
 				((is_object($GLOBALS["___mysqli_ston"])) ? mysqli_error($GLOBALS["___mysqli_ston"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)).
 				"</div><a href='$this->url_script'>List records...</a>
 			</div>";
@@ -746,7 +853,7 @@ class MySQLtabledit
 				else {$background='#273238';}
 			if ($this->show_text[$key]) {$show_key = $this->show_text[$key];}
 				else {$show_key = $key;}
-			$rows .= "\n\n<tr style='border-bottom:1px solid #000;background:$background'>\n<td style='vertical-align:middle;padding:8px;'><strong>$show_key</strong></td>\n<td style='padding:8px;'>$field</td></tr>";
+			$rows .= "\n\n<tr style='border-bottom:1px solid #000;background:$background'>\n<td style='vertical-align:middle;padding:8px'><strong>$show_key</strong></td>\n<td style='padding:8px'>$field</td></tr>";
 		}
 
 		$this->javascript = "
@@ -783,12 +890,12 @@ class MySQLtabledit
 		";
 
 		$this->content = "
-				<div style='width: $this->width_editor;background:transparent;'>
+				<div style='width: $this->width_editor;background:transparent'>
 
-					<table style='border-collapse:collapse;border-spacing:0;'>
+					<table style='border-collapse:collapse;border-spacing:0'>
 						<tr>
 						<td>
-							<button onclick='window.location=\"{$_SESSION['hist_page']}\";' style='margin: 20px 15px 25px 15px;'>{$this->text['Go_back']}</button></td>
+							<button onclick='window.location=\"{$_SESSION['hist_page']}\"' style='margin: 20px 15px 25px 15px'>{$this->text['Go_back']}</button></td>
 						<td>
 							<form method=post action='/datapoint.php?table=" . $_GET["table"] . "' onsubmit='return submitform()'>
 							<input class='button' type='submit' value='{$this->text['Save']}' style='width: 80px;margin: 20px 0 25px 0'></td>
@@ -798,7 +905,7 @@ class MySQLtabledit
 				</div>
 
 				<div style='width: $this->width_editor'>
-					<table style='margin-bottom:20px;border-collapse:collapse;border-spacing:0;'>
+					<table style='margin-bottom:20px;border-collapse:collapse;border-spacing:0'>
 						$rows
 					</table>
 				</div>
@@ -903,7 +1010,7 @@ class MySQLtabledit
 		{
 			$this->content = "
 				<div style='width: $this->width_editor'>
-					<div style='padding:2px 20px 20px 20px;margin:0 0 20px 0;background:#DF0000;color:#fff;'><h3>Error</h3>" .
+					<div style='padding:2px 20px 20px 20px;margin:0 0 20px 0;background:#DF0000;color:#fff'><h3>Error</h3>" .
 					((is_object($GLOBALS["___mysqli_ston"])) ? mysqli_error($GLOBALS["___mysqli_ston"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)) .
 					"</div><a href='{$_SESSION['hist_page']}'>{$this->text['Go_back']}...</a>
 				</div>";
@@ -945,7 +1052,7 @@ class MySQLtabledit
 		<script>
 			$this->javascript
 		</script>
-			<div class='mte_head_1' style='text-align:center;'><ul class='pagination'>";
+			<div class='mte_head_1' style='text-align:center'><ul class='pagination'>";
 
 		$count = count($this->links_to_db);
 		$i = 0;
@@ -962,7 +1069,7 @@ class MySQLtabledit
 
 			if (($i % 7) == 0)
 			{
-				echo "</ul><br /><ul class='pagination' style='margin-top:-26px;'>";
+				echo "</ul><br /><ul class='pagination' style='margin-top:-26px'>";
 			}
 
 			echo '<li' . $active . '><a data-replace="true" data-target=".rightpanel" class="mtelink" href="/datapoint.php?table=' . $link_h . '">' . $link_t . '</a></li>';
@@ -975,7 +1082,6 @@ class MySQLtabledit
 			$this->content_deleted
 			$this->content
 		</div>
-
 		";
 	}
 }
