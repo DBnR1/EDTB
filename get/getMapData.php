@@ -29,7 +29,7 @@ $system = $_GET["system"];
 /*	 check if system has screenshots
 */
 
-$screenshots = has_screenshots($system) ? '<a href="/gallery.php?spgmGal=' . urlencode($system) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;vertical-align:top;" /></a>' : "";
+$screenshots = has_screenshots($system) ? '<a href="/gallery.php?spgmGal=' . urlencode($system) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;vertical-align:top" /></a>' : "";
 
 /*
 *	check if system is in the bookmarks
@@ -83,7 +83,7 @@ if ($count > 0)
 
 	if (!$visit && !$text)
 	{
-		echo '<a href="system.php?system_name=' . urlencode($system) . '" style="color:inherit;">' . $system . '</a>' . $screenshots . '<br />No additional information';
+		echo '<a href="system.php?system_name=' . urlencode($system) . '" style="color:inherit">' . $system . '</a>' . $screenshots . '<br />No additional information';
 	}
 	else
 	{
@@ -128,7 +128,7 @@ if ($count > 0)
 			$text = $logarr["text"];
 
 			echo '<br />
-					<a href="/log.php?system=' . urlencode($system) . '" style="color:inherit;font-weight:bold;" title="View the log for this system">
+					<a href="/log.php?system=' . urlencode($system) . '" style="color:inherit;font-weight:bold" title="View the log for this system">
 						' . $text . ' ...
 					</a>';
 		}

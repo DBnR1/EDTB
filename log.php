@@ -55,7 +55,7 @@ require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 				$date = date_create($log_arr["stardate"]);
 				$log_added = date_modify($date, "+1286 years");
 
-				echo '<h3><a href="javascript:void();" onclick="toggle_log_edit(\'' . $log_arr["id"] . '\');" style="color:inherit;" title="Edit entry">';
+				echo '<h3><a href="javascript:void()" onclick="toggle_log_edit(\'' . $log_arr["id"] . '\')" style="color:inherit" title="Edit entry">';
 				echo date_format($log_added, "j M Y, H:i");
 				if (!empty($log_station_name))
 				{

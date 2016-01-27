@@ -75,24 +75,30 @@ if (isset($_GET["do"]))
 
 	((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
 
-	exit();
+	exit;
 }
 
 if ($_SERVER['PHP_SELF'] == "/poi.php")
 {
 ?>
-    <div class="input" id="addPoi" style="text-align:center;">
+    <div class="input" id="addPoi" style="text-align:center">
 		<form method="post" id="poi_form" action="poi.php">
 			<div class="input-inner">
-				<div class="suggestions" id="suggestions_33" style="margin-top:115px;margin-left:10px;"></div>
+				<div class="suggestions" id="suggestions_33" style="margin-top:115px;margin-left:10px"></div>
 				<table>
 					<tr>
-						<td class="heading" colspan="2">Add/edit Point of Interest<span class="right"><a href="javascript:void(0);" onclick="tofront('addPoi');" title="Close form"><img src="/style/img/close.png" alt="close" /></a></span></td>
+						<td class="heading" colspan="2">Add/edit Point of Interest
+							<span class="right">
+								<a href="javascript:void(0)" onclick="tofront('addPoi')" title="Close form">
+									<img src="/style/img/close.png" alt="X" style="width:16px;height:16px" />
+								</a>
+							</span>
+						</td>
 					</tr>
 					<tr>
-						<td class="dark" style="width:90%;">
+						<td class="dark" style="width:90%">
 							<input type="hidden" name="poi_edit_id" id="poi_edit_id">
-							<input class="textbox" type="text" name="poi_system_name" placeholder="System name" id="system_33" style="width:95%;" oninput="showResult(this.value, '33')" />
+							<input class="textbox" type="text" name="poi_system_name" placeholder="System name" id="system_33" style="width:95%" oninput="showResult(this.value, '33')" />
 						</td>
 						<td class="dark">
 							<input class="textbox" type="text" name="poi_coordx" placeholder="x.x" id="coordsx_33" />
@@ -102,10 +108,10 @@ if ($_SERVER['PHP_SELF'] == "/poi.php")
 					</tr>
 					<tr>
 						<td class="dark">
-							<input class="textbox" type="text" name="poi_name" id="poi_name" placeholder="POI name (optional)" style="width:95%;" />
+							<input class="textbox" type="text" name="poi_name" id="poi_name" placeholder="POI name (optional)" style="width:95%" />
 						</td>
 						<td class="dark">
-							<select class="selectbox" name="category_id" id="category_id" style="width:auto;">
+							<select class="selectbox" name="category_id" id="category_id" style="width:auto">
 								<option value="0">Category (optional)</option>
 								<?php
 								$pcat_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id, name FROM user_poi_categories");
@@ -120,12 +126,14 @@ if ($_SERVER['PHP_SELF'] == "/poi.php")
 					</tr>
 					<tr>
 						<td class="dark" colspan="2">
-							<input class="textbox" type="text" name="poi_text" id="poi_text" placeholder="Text (optional)" style="width:95%;" />
+							<input class="textbox" type="text" name="poi_text" id="poi_text" placeholder="Text (optional)" style="width:95%" />
 						</td>
 					</tr>
 					<tr>
 						<td class="dark" colspan="2">
-							<a href="/poi.php" data-replace="true" data-target=".entries"><div class="button" onclick="update_data('poi_form', '/add/poi.php?do', true);tofront('null', true);">Submit Point of Interest</div></a>
+							<a href="/poi.php" data-replace="true" data-target=".entries">
+								<div class="button" onclick="update_data('poi_form', '/add/poi.php?do', true);tofront('null', true)">Submit Point of Interest</div>
+							</a>
 							<span id="delete_poi"></span>
 						</td>
 					</tr>

@@ -35,7 +35,7 @@ if ($html == null)
 	?>
 	<div class="entries">
 		<div class="entries_inner">
-		<h2><img src="/style/img/galnet.png" alt="GalNet" style="margin-right:6px;" />Latest Galnet News</h2><hr>
+		<h2><img src="/style/img/galnet.png" alt="GalNet" style="margin-right:6px" />Latest Galnet News</h2><hr>
 		<?php
 		$xml = xml2array($galnet_feed) or die("Error: Cannot create object");
 
@@ -48,7 +48,7 @@ if ($html == null)
 
 			// exclude stuff
 			$continue = true;
-			foreach ($settings["galnet_excludes"] AS $exclude)
+			foreach ($settings["galnet_excludes"] as $exclude)
 			{
 				$find = $exclude;
 				$pos = strpos($title, $find);
@@ -62,10 +62,10 @@ if ($html == null)
 
 			if ($continue !== false)
 			{
-				echo '<h3><a href="#" onclick="$(\'#'.$i.'\').fadeToggle();"><img src="/style/img/plus.png" width="16" height="16" alt="expand" style="vertical-align:middle;margin-right:5px;padding-bottom:3px;" />' . $title . '</a></h3>';
-				echo '<p id="' . $i . '" style="display:none;padding-left:22px;max-width:800px;">';
+				echo '<h3><a href="#" onclick="$(\'#'.$i.'\').fadeToggle()"><img src="/style/img/plus.png" alt="expand" style="width:16px;height:16px;margin-right:5px;padding-bottom:3px" />' . $title . '</a></h3>';
+				echo '<p id="' . $i . '" style="display:none;padding-left:22px;max-width:800px">';
 				echo str_replace('<p><sub><i>-- Delivered by <a href="http://feed43.com/">Feed43</a> service</i></sub></p>', "", $text);
-				echo '<br /><br /><br /><span style="margin-bottom:15px;"><a href="' . $link . '" target="_BLANK">Read on elitedangerous.com&nbsp;<img src="style/img/external_link.png" style="vertical-align:middle;margin-bottom:3px;" alt="ext" /></a></span>';
+				echo '<br /><br /><br /><span style="margin-bottom:15px"><a href="' . $link . '" target="_BLANK">Read on elitedangerous.com</a><img src="style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" /></span>';
 				echo '</p>';
 
 				$i++;

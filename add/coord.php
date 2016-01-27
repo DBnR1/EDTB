@@ -135,7 +135,7 @@ if (isset($_GET["do"]))
 
 	((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
 
-	exit();
+	exit;
 }
 
 $system_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id, reference_distances
@@ -172,24 +172,45 @@ else
 	$ref[4]["distance"] = "";
 }
 ?>
-<div class="input" id="calculate" style="text-align:center;">
+<script>
+	var clipboard = new Clipboard('.btn');
+
+	clipboard.on('success', function(e) {
+		console.log(e);
+	});
+
+	clipboard.on('error', function(e) {
+		console.log(e);
+	});
+</script>
+<div class="input" id="calculate" style="text-align:center">
 	<form method="post" id="calc_form" action="coorddata.php">
 		<div class="input-inner">
 			<table>
 				<tr>
-					<td class="heading" colspan="2">Calculate Coordinates<span class="right"><a href="javascript:void(0);" onclick="tofront('calculate');" title="Close form"><img src="/style/img/close.png" alt="close" /></a></span></td>
-				</tr>
-				<tr>
-					<td class="light" colspan="2" style="text-align:left;"><strong>Target System</strong></td>
-				</tr>
-				<tr>
-					<td class="dark" colspan="2">
-						<input class="textbox" type="text" name="target_system" value="<?php echo $curSys["name"]?>" id="target_system" placeholder="Target system" style="width:300px;" />
+					<td class="heading" colspan="2">Calculate Coordinates
+						<span class="right">
+							<a href="javascript:void(0)" onclick="tofront('calculate')" title="Close form">
+								<img src="/style/img/close.png" alt="X" style="width:16px;height:16px" />
+							</a>
+						</span>
 					</td>
 				</tr>
 				<tr>
-					<td class="light" style="text-align:right;"><strong>Reference system</strong></td>
-					<td class="light"><strong>Distance (ly)</strong><button id="clear" style="width:80px;white-space:nowrap;margin-left:10px;" onclick="$('#ref_1_dist').val('');$('#ref_2_dist').val('');$('#ref_3_dist').val('');$('#ref_4_dist').val('');return false;">Clear All</button></td>
+					<td class="light" colspan="2" style="text-align:left"><strong>Target System</strong></td>
+				</tr>
+				<tr>
+					<td class="dark" colspan="2">
+						<input class="textbox" type="text" name="target_system" value="<?php echo $curSys["name"]?>" id="target_system" placeholder="Target system" readonly="readonly" style="width:300px" />
+					</td>
+				</tr>
+				<tr>
+					<td class="light" style="text-align:right"><strong>Reference system</strong></td>
+					<td class="light">
+						<strong>Distance (ly)</strong>
+						<div class="button" id="clear" style="width:80px;white-space:nowrap;margin-top:3px" onclick="$('#ref_1_dist').val('');$('#ref_2_dist').val('');$('#ref_3_dist').val('');$('#ref_4_dist').val('');return false">Clear All
+						</div>
+					</td>
 				</tr>
 				<?php
 				$i = 1;
@@ -200,16 +221,16 @@ else
 					{
 						$ref_rname = $ref[$i]["name"];
 					}
-					echo '<tr><td class="dark" style="text-align:right;"><input class="textbox" type="hidden" name="reference_' . $i . '" value="' . $ref_rname . '" />
-					<input class="textbox" type="hidden" name="reference_' . $i . '_coordinates" value="' . $ref_coordinates . '" />
+					echo '<tr><td class="dark" style="text-align:right"><input class="textbox" type="hidden" id="' . $i . '" name="reference_' . $i . '" value="' . $ref_rname . '" />
+					<input class="textbox" type="hidden" name="reference_' . $i . '_coordinates" value="' . $ref_coordinates . '" /><a href="javascript:void(0)" title="Copy to clipboard"><img class="btn" src="/style/img/clipboard.png" alt="Copy" data-clipboard-text="' . $ref_rname . '" /></a>
 					<strong>' . $ref_rname . '</strong></td><td class="dark">
-					<input class="textbox" type="text" id="ref_' . $i . '_dist" name="reference_' . $i . '_distance" value="' . $ref[$i]["distance"] . '" placeholder="1234.56" style="width:100px;" /></td></tr>';
+					<input class="textbox" type="text" id="ref_' . $i . '_dist" name="reference_' . $i . '_distance" value="' . $ref[$i]["distance"] . '" placeholder="1234.56" style="width:100px" /><br /><span class="settings_info" style="font-size:11px">No commas or spaces</span></td></tr>';
 					$i++;
 				}
 				?>
 				<tr>
 					<td class="light" colspan="2">
-						<button id="submitc" onclick="update_data('calc_form', '/add/coord.php?do', true);tofront('null', true);return false;">Submit Query</button>
+						<button id="submitc" onclick="update_data('calc_form', '/add/coord.php?do', true);tofront('null', true);return false">Submit Query</button>
 					</td>
 				</tr>
 			</table>

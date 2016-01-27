@@ -38,7 +38,7 @@ require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 				echo "<div class='notify_deleted'>Screenshot deletion failed.</div>";
 			}
 		}
-		if (is_dir($settings['old_screendir']) && $settings['old_screendir'] != "C:\Users")
+		if (is_dir($settings['old_screendir']) && $settings['old_screendir'] != "C:\Users" && $settings['old_screendir'] != "C:\Users\\")
 		{
 			?>
 			<table id="wrapper">
@@ -52,7 +52,7 @@ require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 		}
 		else
 		{
-			echo notice('Your screenshot directory is empty or gallery is disabled.<br />Set the variable "old_screendir" in the <a href="/admin/ini_editor.php">Customize ED ToolBox</a> page to enable gallery.');
+			echo notice('Your screenshot directory is empty or gallery is disabled.<br />Set the variable "old_screendir" in the <a href="/admin/ini_editor.php">INI-editor</a> to enable gallery.');
 		}
 		?>
 	</div>

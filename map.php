@@ -30,10 +30,10 @@ if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"]))
 }
 ?>
 <div class="entries">
-	<table style="margin-left:370px;">
+	<table style="margin-left:370px">
 		<tbody>
 			<tr>
-				<th style="text-align: center;">
+				<th style="text-align: center">
 					<ul class="pagination">
 						<li><a href="/galmap.php">Galaxy Map</a></li>
 						<li class="actives"><a href="/map.php">Neighborhood Map</a></li>
@@ -48,7 +48,7 @@ if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"]))
 		<div id="disclaimer" onclick='$("#disclaimer").fadeToggle("fast")'></div>
 		<div id="map_legend" onclick='$("#map_legend2").fadeToggle("fast")'>Legend</div>
 		<div id="map_legend2">
-			<table style="padding:5px;">
+			<table style="padding:5px">
 				<tr>
 					<td><div style="background-color:rgba(231, 216, 132, 0.7);width:7px;height:7px;border-radius:50%;vertical-align:middle"></div></td>
 					<td>Empire</td>
@@ -70,16 +70,16 @@ if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"]))
 					<td>Sol</td>
 				</tr>
 				<tr>
-					<td style="text-align:center;vertical-align:middle;">
-						<div style="background-color:#f00;width:8px;height:8px;border-radius:50%;">
+					<td style="text-align:center;vertical-align:middle">
+						<div style="background-color:#f00;width:8px;height:8px;border-radius:50%">
 							<div style="position:relative;left:2px;top:2px;background-color:#ccc;width:4px;height:4px;border-radius:50%"></div>
 						</div>
 					</td>
 					<td>Current Location</td>
 				</tr>
 				<tr>
-					<td style="text-align:center;vertical-align:middle;">
-						<div style="background-color:#2e92e7;width:8px;height:8px;border-radius:50%;">
+					<td style="text-align:center;vertical-align:middle">
+						<div style="background-color:#2e92e7;width:8px;height:8px;border-radius:50%">
 							<div style="position:relative;left:2px;top:2px;background-color:#ccc;width:4px;height:4px;border-radius:50%"></div>
 						</div>
 					</td>

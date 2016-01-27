@@ -83,26 +83,32 @@ if (isset($_GET["do"]))
 	}
 
 	((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
-	exit();
+	exit;
 }
 
 ?>
 <div class="input" id="addlog">
 	<form method="post" id="log_form" action="log.php">
 		<div class="input-inner">
-			<div class="suggestions" id="suggestions_41" style="margin-left:400px;margin-top:79px;"></div>
-			<div class="suggestions" id="suggestions_1" style="margin-left:10px;margin-top:79px;"></div>
+			<div class="suggestions" id="suggestions_41" style="margin-left:400px;margin-top:79px"></div>
+			<div class="suggestions" id="suggestions_1" style="margin-left:10px;margin-top:79px"></div>
 			<table>
 				<tr>
-					<td class="heading" colspan="2">Add/Edit Log Entry<span class="right"><a href="javascript:void(0);" onclick="tofront('addlog');$('.addstations').toggle();" title="Close form"><img src="/style/img/close.png" alt="close" /></a></span></td>
+					<td class="heading" colspan="2">Add/Edit Log Entry
+						<span class="right">
+							<a href="javascript:void(0)" onclick="tofront('addlog');$('.addstations').toggle()" title="Close form">
+								<img src="/style/img/close.png" alt="X" style="width:16px;height:16px" />
+							</a>
+						</span>
+					</td>
 				</tr>
 				<tr>
 					<td class="dark">
 						<input type="hidden" name="edit_id" id="edit_id" />
-						<input class="textbox" type="text" name="system_name" placeholder="System name (leave empty for general log entry)" id="system_1" style="width:96%;margin-left:0;" oninput="showResult(this.value, '1');" />
+						<input class="textbox" type="text" name="system_name" placeholder="System name (leave empty for general log entry)" id="system_1" style="width:96%;margin-left:0" oninput="showResult(this.value, '1')" />
 					</td>
 					<td class="dark">
-						<input class="textbox" type="text" name="station_name" placeholder="Station name (optional)" id="statname" style="width:96%;" oninput="showResult(this.value, '41', 'no', 'yes', 'no', document.getElementById('system_1').value);" /><br />
+						<input class="textbox" type="text" name="station_name" placeholder="Station name (optional)" id="statname" style="width:96%" oninput="showResult(this.value, '41', 'no', 'yes', 'no', document.getElementById('system_1').value)" />
 					</td>
 				</tr>
 				<tr>
@@ -112,8 +118,8 @@ if (isset($_GET["do"]))
 				</tr>
 				<tr>
 					<td class="dark" colspan="2">
-						<a href="javascript:void(0);">
-							<div class="button" onclick="update_data('log_form', '/add/log.php?do', true);tofront('null', true);$('#log_form').trigger('reset');return false;">Submit log entry</div>
+						<a href="javascript:void(0)">
+							<div class="button" onclick="update_data('log_form', '/add/log.php?do', true);tofront('null', true);$('#log_form').trigger('reset');return false">Submit log entry</div>
 						</a>
 						<span id="delete"></span>
 					</td>
