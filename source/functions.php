@@ -46,307 +46,113 @@ function db_connect($server, $user, $pwd, $db)
 db_connect($server, $user, $pwd, $db);
 
 /*
+*	expand the settings variable with stuff from the db
+*/
+
+$settings_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT SQL_CACHE user_settings.variable, user_settings.value, edtb_settings_info.type
+															FROM user_settings
+															LEFT JOIN edtb_settings_info ON edtb_settings_info.variable = user_settings.variable")
+															or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+
+while ($settings_arr = mysqli_fetch_assoc($settings_res))
+{
+	$variable = $settings_arr["variable"];
+	$value = $settings_arr["value"];
+
+	if ($settings_arr["type"] == "array")
+	{
+		// split by new line
+		$values = preg_split("/\r\n|\r|\n|" . PHP_EOL . "/", $value);
+
+		foreach ($values as $arvalue)
+		{
+			if (!empty($arvalue))
+			{
+				$count = 0;
+				$parts = explode(">>", $arvalue);
+
+				$var = $parts[0];
+				$val = $parts[1];
+
+				$values_s = explode(",", $val);
+				$count = count($values_s);
+
+				if ($count > 1)
+				{
+					$i = 0;
+					foreach	($values_s as $val_f)
+					{
+						$settings[$variable][$var][$i] = $val_f;
+						$i++;
+					}
+				}
+				else
+				{
+					$settings[$variable][$var] = $val;
+				}
+			}
+		}
+	}
+	elseif ($settings_arr["type"] == "csl")
+	{
+		$values = explode(",", $value);
+
+		$i = 0;
+		foreach ($values as $arvalue)
+		{
+			$settings[$variable][$i] = trim($arvalue);
+			$i++;
+		}
+	}
+	else
+	{
+		$settings[$variable] = $value;
+	}
+}
+
+$maplink = $settings["default_map"] == "galaxy_map" ? "/galmap.php" : "/map.php";
+$dropdown = $settings["dropdown"];
+array_push($dropdown, $settings["maxdistance"]);
+
+global $settings;
+
+/*
+*	 links for the navigation panel
+*/
+
+$links = array( "ED ToolBox--log.png--true" => "/",
+				"System Information--info.png--true" => "/system.php",
+				"Galaxy Map&nbsp;&nbsp;&&nbsp;&nbsp;Neighborhood Map--grid.png--true" => $maplink,
+				"Points of Interest&nbsp;&nbsp;&&nbsp;&nbsp;Bookmarks--poi.png--false" => "/poi.php",
+				"Nearest Systems&nbsp;&nbsp;&&nbsp;&nbsp;Stations--find.png--false" => "/nearest_systems.php",
+				"Data Point--dataview.png--false" => "/datapoint.php",
+				"Galnet News--news.png--false" => "/galnet.php",
+				"Screenshot Gallery--gallery.png--false" => "/gallery.php",
+				"System Log--log.png--true" => "/");
+
+/*
 *    get current system
 */
 
-$curSys = array();
-if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"]))
-{
-    // select the newest  file
-    if (!$files = scandir($settings["log_dir"], SCANDIR_SORT_DESCENDING))
-	{
-		$error = error_get_last();
-		write_log("Error: " . $error["message"] . "", __FILE__, __LINE__);
-	}
-    $newest_file = $files[0];
-
-    // read file to an array
-    if (!$line = file("" . $settings["log_dir"] . "/" . $newest_file . ""))
-	{
-		$error = error_get_last();
-		write_log("Error: " . $error["message"] . "", __FILE__, __LINE__);
-	}
-	else
-	{
-		//  reverse array
-		$lines = array_reverse($line);
-
-		foreach ($lines as $line_num => $line)
-		{
-			$pos = strrpos($line, "System:");
-			if ($pos !== false)
-			{
-				preg_match_all("/\((.*?)\) B/", $line, $matches);
-				$cssystemname = $matches[1][0];
-				$curSys["name"] = $cssystemname;
-
-				preg_match_all("/\{(.*?)\} System:/", $line, $matches2);
-				$visited_time = $matches2[1][0];
-
-				$curSys["name"] = isset($curSys["name"]) ? $curSys["name"] : "";
-
-				// define defaults
-				$curSys["coordinates"] = "";
-				$curSys["x"] = "";
-				$curSys["y"] = "";
-				$curSys["z"] = "";
-				$curSys["id"] = -1;
-				$curSys["population"] = "";
-				$curSys["allegiance"] = "";
-				$curSys["economy"] = "";
-				$curSys["government"] = "";
-				$curSys["ruling_faction"] = "";
-				$curSys["state"] = "unknown";
-				$curSys["security"] = "unknown";
-				$curSys["power"] = "";
-				$curSys["power_state"] = "";
-				$curSys["needs_permit"] = "";
-				$curSys["updated_at"] = "";
-				$curSys["simbad_ref"] = "";
-
-				$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT 	id, x, y, z, ruling_faction, population, government, allegiance, state,
-																			security, economy, power, power_state, needs_permit, updated_at, simbad_ref
-																	FROM edtb_systems
-																	WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'
-																	LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-				$exists = mysqli_num_rows($res);
-
-				if ($exists > 0)
-				{
-					$arr = mysqli_fetch_assoc($res);
-
-					$curSys["coordinates"] = "" . $arr['x'] . "," . $arr['y'] . "," . $arr['z'] . "";
-					$curSys["id"] = $arr["id"];
-					$curSys["population"] = $arr["population"];
-					$curSys["allegiance"] = $arr["allegiance"];
-					$curSys["economy"] = $arr["economy"];
-					$curSys["government"] = $arr["government"];
-					$curSys["ruling_faction"] = $arr["ruling_faction"];
-					$curSys["state"] = $arr["state"];
-					$curSys["security"] = $arr["security"];
-					$curSys["power"] = $arr["power"];
-					$curSys["power_state"] = $arr["power_state"];
-					$curSys["needs_permit"] = $arr["needs_permit"];
-					$curSys["updated_at"] = $arr["updated_at"];
-					$curSys["simbad_ref"] = $arr["simbad_ref"];
-
-					$curSys["x"] = $arr["x"];
-					$curSys["y"] = $arr["y"];
-					$curSys["z"] = $arr["z"];
-				}
-				else
-				{
-					$cres = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT x, y, z
-																		FROM user_systems_own
-																		WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'
-																		LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-
-					$oexists = mysqli_num_rows($cres);
-
-					if ($oexists > 0)
-					{
-						$carr = mysqli_fetch_assoc($cres);
-
-						$curSys["x"] = $carr["x"] == "" ? "" : $carr["x"];
-						$curSys["y"] = $carr["y"] == "" ? "" : $carr["y"];
-						$curSys["z"] = $carr["z"] == "" ? "" : $carr["z"];
-						$curSys["coordinates"] = "" . $curSys["x"] . "," . $curSys["y"] . "," . $curSys["z"] . "";
-					}
-					else
-					{
-						$curSys["coordinates"] = "";
-						$curSys["x"] = "";
-						$curSys["y"] = "";
-						$curSys["z"] = "";
-					}
-				}
-
-				// fetch previous system
-				$p_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT value
-																	FROM edtb_common
-																	WHERE id = '1'
-																	LIMIT 1")
-																	or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-				$p_arr = mysqli_fetch_assoc($p_res);
-				$prev_system = $p_arr["value"];
-
-				if ($prev_system != $cssystemname && !empty($cssystemname))
-				{
-					// add system to user_visited_systems
-					$rows = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT system_name
-																		FROM user_visited_systems
-																		ORDER BY id
-																		DESC LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-					$vs_arr = mysqli_fetch_assoc($rows);
-
-					$visited_on = "" . date("Y-m-d") . " " . $visited_time . "";
-
-					if ($vs_arr["system_name"] != $curSys["name"] && !empty($curSys["name"]))
-					{
-						mysqli_query($GLOBALS["___mysqli_ston"], "	INSERT INTO user_visited_systems (system_name, visit)
-																	VALUES
-																	('" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "',
-																	'" . $visited_on . "')") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-
-						// export to edsm
-						if ($settings["edsm_api_key"] != "" && $settings["edsm_export"] == "true" && $settings["edsm_cmdr_name"] != "")
-						{
-							$visited_on_utc = date("Y-m-d H:i:s");
-							$export = file_get_contents("http://www.edsm.net/api-logs-v1/set-log?commanderName=" . urlencode($settings["edsm_cmdr_name"]) . "&apiKey=" . $settings["edsm_api_key"] . "&systemName=" . urlencode($curSys["name"]) . "&dateVisited=" . urlencode($visited_on_utc) . "");
-
-							$exports = json_decode($export, true);
-
-							if ($exports["msgnum"] != "100")
-							{
-								write_log($export, __FILE__, __LINE__);
-							}
-						}
-
-						$newSystem = true;
-					}
-
-					// update latest system
-					mysqli_query($GLOBALS["___mysqli_ston"], "	UPDATE edtb_common
-																SET value = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'
-																WHERE id = '1'
-																LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-
-					$newSystem = true;
-				}
-				else
-				{
-					$newSystem = false;
-				}
-
-				GLOBAL $curSys, $newSystem;
-
-				break;
-			}
-		}
-	}
-}
-else
-{
-	write_log("Error: " . $settings["log_dir"] . " is not a directory", __FILE__, __LINE__);
-}
+require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/curSys.php");
 
 /*
-*	 screenshots
+*	update companion api data
 */
 
-if (isset($settings["old_screendir"]) && is_dir($settings["old_screendir"]) && $settings["old_screendir"] != "C:\Users" && $settings["old_screendir"] != "C:\Users\\")
-{
-	// move screenshots
-	if (!$screenshots = scandir($settings["old_screendir"]))
-	{
-		$error = error_get_last();
-		write_log("Error: " . $error["message"] . "", __FILE__, __LINE__);
-	}
-	else
-	{
-		$newscreendir = "" . $settings["new_screendir"] . "/" . $prev_system . "";
+require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/get/getAPIdata.php");
 
-		$added = 0;
-		foreach ($screenshots as $file)
-		{
-			if (substr($file, -3) == "bmp")
-			{
-				if (!is_dir($newscreendir))
-				{
-					if (!mkdir($newscreendir, 0775, true))
-					{
-						$error = error_get_last();
-						write_log("Error: " . $error['message'] . " - Could not create new screendir", __FILE__, __LINE__);
-						break;
-					}
-				}
-				$old_file_bmp = "" . $settings["old_screendir"] . "/" . $file . "";
-				$old_file_og = "" . $settings["old_screendir"] . "/originals/" . $file . "";
-				$edited = "" . date ("Y-m-d_H-i-s", filemtime($old_file_bmp)) . "";
-				$new_filename = "" . $edited . "-" . $prev_system . ".jpg";
-				$new_file_jpg = "" . $settings["old_screendir"] . "/" . $new_filename . "";
-				$new_screenshot = "" . $newscreendir . "/" . $new_filename . "";
+/*
+*	screenshots
+*/
 
-				// convert from bmp to jpg
-				exec("\"" . $settings["install_path"] . "/bin/ImageMagick/convert\" \"" . $old_file_bmp . "\" \"" . $new_file_jpg . "\"", $out);
+require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/makeScreenshots.php");
 
-				if (!empty($out))
-				{
-					$error = json_encode($out);
-					write_log("Error #8: " . $error . "", __FILE__, __LINE__);
-				}
+/*
+*	FD mappings
+*/
 
-				if ($settings["keep_og"] == "false")
-				{
-					if (!unlink($old_file_bmp))
-					{
-						$error = error_get_last();
-						write_log("Error: " . $error['message'] . " - Could not remove " . $old_file_bmp . "", __FILE__, __LINE__);
-					}
-				}
-				else
-				{
-					if (!is_dir("" . $settings["old_screendir"] . "/originals"))
-					{
-						if (!mkdir("" . $settings["old_screendir"] . "/originals", 0775, true))
-						{
-							$error = error_get_last();
-							write_log("Error: " . $error['message'] . " - Could not create directory " . $settings["old_screendir"] . "/originals", __FILE__, __LINE__);
-							break;
-						}
-					}
-					if (!rename("" . $old_file_bmp . "", "" . $old_file_og . ""))
-					{
-						$error = error_get_last();
-						write_log("Error: " . $error['message'] . " - Could not rename " . $old_file_bmp . " to " . $old_file_og . "", __FILE__, __LINE__);
-					}
-				}
-				// move to new screenshot folder
-				if (!rename("" . $new_file_jpg . "", "" . $new_screenshot . ""))
-				{
-					$error = error_get_last();
-					write_log("Error: " . $error['message'] . " - Could not rename " . $new_file_jpg . " to " . $new_screenshot . "", __FILE__, __LINE__);
-				}
-				$added++;
-
-				/*
-				*	add no more than 10 at a time
-				*/
-
-				if ($added > 10)
-				{
-					break;
-				}
-			}
-		}
-	}
-	// make thumbnails for the gallery
-	if ($added > 0)
-	{
-		$thumbdir = "" . $newscreendir . "/thumbs";
-
-		if (!is_dir($thumbdir))
-		{
-			if (!mkdir("" . $thumbdir . "", 0775, true))
-			{
-				$error = error_get_last();
-				write_log("Error: " . $error['message'] . " - Could not create directory " . $thumbdir . "", __FILE__, __LINE__);
-				//break;
-			}
-		}
-		exec("\"" . $settings["install_path"] . "/bin/ImageMagick/mogrify\" -resize " . $settings["thumbnail_size"] . " -background #333333 -gravity center -extent " . $settings["thumbnail_size"] . " -format jpg -quality 95 -path \"" . $thumbdir . "\" \"" . $newscreendir . "/\"*.jpg", $out3);
-
-		if (!empty($out3))
-		{
-			$error = json_encode($out3);
-			write_log("Error #5: ". $error . "", __FILE__, __LINE__);
-		}
-	}
-}
-else
-{
-	write_log("Error #11", __FILE__, __LINE__);
-}
+require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/FDMaps.php");
 
 /*
 *	 return last known system and coords
@@ -402,7 +208,7 @@ function last_known_system()
 function notice($msg, $title = "Notice")
 {
 	$notice = '<div class="notice">';
-	$notice .= '<div class="notice_title"><img src="/style/img/notice_b.png" alt="Notice" style="vertical-align:middle;" />&nbsp;' . $title . '</div>';
+	$notice .= '<div class="notice_title"><img src="/style/img/notice_b.png" alt="Notice" style="vertical-align:middle" />&nbsp;' . $title . '</div>';
 	$notice .= '<div class="notice_text">' . $msg . '</div>';
 	$notice .= '</div>';
 	return $notice;
@@ -417,6 +223,7 @@ $u_agent = $_SERVER['HTTP_USER_AGENT'];
 function getBrowser()
 {
     global $u_agent;
+
     $bname = 'Unknown';
     $platform = 'Unknown';
     $version= "";
@@ -836,9 +643,11 @@ function xml2array($url, $get_attributes = 1, $priority = 'tag')
 *	 http://stackoverflow.com/questions/27330650/how-to-display-time-in-x-days-ago-in-php
 */
 
-function get_timeago($ptime, $diff = true)
+function get_timeago($ptime, $diff = true, $format = false)
 {
 	global $system_time;
+
+	$ptime_og = $ptime;
 
 	if ($diff === true)
 	{
@@ -846,7 +655,7 @@ function get_timeago($ptime, $diff = true)
 	}
 	$etime = time()-$ptime;
 
-	if( $etime < 1 )
+	if ($etime < 1)
 	{
 		return 'less than '.$etime.' second ago';
 	}
@@ -859,15 +668,57 @@ function get_timeago($ptime, $diff = true)
 				1                   	=>  'second'
 	);
 
-	foreach( $a as $secs => $str )
+	foreach ($a as $secs => $str)
 	{
 		$d = $etime / $secs;
 
-		if( $d >= 1 )
+		if ($d >= 1)
 		{
-			$r = round( $d );
-			return '' . $r . ' ' . $str . ( $r > 1 ? 's' : '' ) . ' ago';
+			$r = round($d);
+			if ($format !== true)
+			{
+				return '' . $r . ' ' . $str . ($r > 1 ? 's' : '') . ' ago';
+			}
+			else
+			{
+
+
+				if (data_is_old($ptime_og))
+				{
+					return '<span class="old_data">' . $r . ' ' . $str . ($r > 1 ? 's' : '') . ' ago</span>';
+				}
+				else
+				{
+					return '' . $r . ' ' . $str . ($r > 1 ? 's' : '') . ' ago';
+				}
+			}
 		}
+	}
+}
+
+/*
+*	check if data is old
+*/
+
+function data_is_old($time)
+{
+	global $settings;
+
+	$old = $settings["data_notify_age"]*24*60*60;
+	$since = time()-$old;
+
+	if (empty($time))
+	{
+		return false;
+	}
+
+	if ($time < $since)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
 	}
 }
 
@@ -917,6 +768,10 @@ function is_dir_empty($dir)
 function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
 {
 	global $curSys;
+
+	$distance = "";
+	$this_row = "";
+
 	// Regular Expression filter for links
 	$reg_exUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
 
@@ -937,11 +792,11 @@ function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
 		if (valid_coordinates($d_x, $d_y, $d_z))
 		{
 			$distance = number_format(sqrt(pow(($d_x-($usex)), 2)+pow(($d_y-($usey)), 2)+pow(($d_z-($usez)), 2)), 2);
-			$this_row .= '<td style="padding:10px;white-space:nowrap;vertical-align:middle;">' . $distance . ' ' . $exact . '</td>';
+			$this_row .= '<td style="padding:10px;white-space:nowrap;vertical-align:middle">' . $distance . ' ' . $exact . '</td>';
 		}
 		else
 		{
-			$this_row .= '<td style="padding:10px;vertical-align:middle;">n/a' . $d_x . '</td>';
+			$this_row .= '<td style="padding:10px;vertical-align:middle">n/a</td>';
 		}
 
 		$dist = false;
@@ -949,26 +804,29 @@ function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
 	// make a link for systems with an id
 	if ($key == "system_id" && $value != "0")
 	{
-		$this_row .= '<td style="padding:10px;vertical-align:middle;"><a href="/system.php?system_id=' . $value . '">' . $value . '</a></td>';
+		$this_row .= '<td style="padding:10px;vertical-align:middle"><a href="/system.php?system_id=' . $value . '">' . $value . '</a></td>';
 	}
 	// make a link for systems with system name
-	elseif ($key == "system_name" && $value != "0" || $key == "name" && $table == "edtb_systems")
+	elseif (strpos($key, "system_name") !== false && $value != "0" || $key == "name" && $table == "edtb_systems")
 	{
 		// check if system has screenshots
-		$screenshots = has_screenshots($value) ? '<a href="/gallery.php?spgmGal=' . urlencode($value) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;vertical-align:top;" /></a>' : "";
+		$screenshots = has_screenshots($value) ? '<a href="/gallery.php?spgmGal=' . urlencode($value) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;vertical-align:top" /></a>' : "";
 
-		$this_row .= '<td style="padding:10px;vertical-align:middle;"><a href="/system.php?system_name=' . urlencode($value) . '">' . $value . '' . $screenshots . '</a></td>';
+		// check if system is logged
+		$loglink = is_logged($value) ? '<a href="log.php?system=' . urlencode($value) . '" style="color:inherit" title="System has log entries"><img src="/style/img/log.png" style="margin-left:5px;vertical-align:top" /></a>' : "";
+
+		$this_row .= '<td style="padding:10px;vertical-align:middle"><a href="/system.php?system_name=' . urlencode($value) . '">' . $value . '' . $loglink.$screenshots . '</a></td>';
 	}
 	// number format some values
-	elseif (strrpos($key, "price") !== false || strrpos($key, "ls") !== false || strrpos($key, "population") !== false || strrpos($key, "distance") !== false)
+	elseif (strpos($key, "price") !== false || strpos($key, "ls") !== false || strpos($key, "population") !== false || strpos($key, "distance") !== false)
 	{
 		if (is_numeric($value) && $value != null)
 		{
-			$this_row .= '<td style="padding:10px;vertical-align:middle;">' . number_format($value) . '</td>';
+			$this_row .= '<td style="padding:10px;vertical-align:middle">' . number_format($value) . '</td>';
 		}
 		else
 		{
-			$this_row .= '<td style="padding:10px;vertical-align:middle;">n/a</td>';
+			$this_row .= '<td style="padding:10px;vertical-align:middle">n/a</td>';
 		}
 	}
 	// make links
@@ -982,7 +840,7 @@ function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
 		{
 			$urli = $value;
 		}
-		$this_row .= '<td style="padding:10px;vertical-align:middle;">' . preg_replace($reg_exUrl, "<a href='" . $url[0] . "' target='_BLANK'>" . $urli . "</a> ", $value) . '</td>';
+		$this_row .= '<td style="padding:10px;vertical-align:middle">' . preg_replace($reg_exUrl, "<a href='" . $url[0] . "' target='_BLANK'>" . $urli . "</a> ", $value) . '</td>';
 	}
 	// make 0,1 human readable
 	elseif ($enum !== false)
@@ -998,11 +856,11 @@ function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
 			$real_value = "<span class='enum_yes'>&#10003;</span>";
 		}
 
-		$this_row .= '<td style="padding:10px;text-align:center;vertical-align:middle;">' .  $real_value . '</td>';
+		$this_row .= '<td style="padding:10px;text-align:center;vertical-align:middle">' .  $real_value . '</td>';
 	}
 	else
 	{
-		$this_row .= '<td style="padding:10px;vertical-align:middle;">' . substr(strip_tags($value), 0, 100) . '</td>';
+		$this_row .= '<td style="padding:10px;vertical-align:middle">' . substr(strip_tags($value), 0, 100) . '</td>';
 	}
 
 	// parse log entries
@@ -1010,11 +868,11 @@ function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
 	{
 		if (mb_strlen($value) >= 100)
 		{
-			$this_row = '<td style="padding:10px;vertical-align:middle;">' . substr(strip_tags($value), 0, 100) . '...</td>';
+			$this_row = '<td style="padding:10px;vertical-align:middle">' . substr(strip_tags($value), 0, 100) . '...</td>';
 		}
 		else
 		{
-			$this_row = '<td style="padding:10px;vertical-align:middle;">' . $value . '</td>';
+			$this_row = '<td style="padding:10px;vertical-align:middle">' . $value . '</td>';
 		}
 	}
 
@@ -1032,28 +890,28 @@ function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
 function FileSizeConvert($bytes)
 {
     $bytes = floatval($bytes);
-        $arBytes = array(
-            0 => array(
-                "UNIT" => "TB",
-                "VALUE" => pow(1024, 4)
-            ),
-            1 => array(
-                "UNIT" => "GB",
-                "VALUE" => pow(1024, 3)
-            ),
-            2 => array(
-                "UNIT" => "MB",
-                "VALUE" => pow(1024, 2)
-            ),
-            3 => array(
-                "UNIT" => "KB",
-                "VALUE" => 1024
-            ),
-            4 => array(
-                "UNIT" => "B",
-                "VALUE" => 0
-            ),
-        );
+	$arBytes = array(
+		0 => array(
+			"UNIT" => "TB",
+			"VALUE" => pow(1024, 4)
+		),
+		1 => array(
+			"UNIT" => "GB",
+			"VALUE" => pow(1024, 3)
+		),
+		2 => array(
+			"UNIT" => "MB",
+			"VALUE" => pow(1024, 2)
+		),
+		3 => array(
+			"UNIT" => "KB",
+			"VALUE" => 1024
+		),
+		4 => array(
+			"UNIT" => "B",
+			"VALUE" => 0
+		),
+	);
 
     foreach ($arBytes as $arItem)
     {
@@ -1071,7 +929,7 @@ function FileSizeConvert($bytes)
 *	return the correct starport icon
 */
 
-function get_station_icon($type, $planetary = "0", $style = "margin-right:6px;")
+function get_station_icon($type, $planetary = "0", $style = "margin-right:6px")
 {
 	$icon = $planetary == "1" ? '<img src="/style/img/spaceports/planetary.png" alt="Planetary" style="' . $style . '" />' : '<img src="/style/img/spaceports/spaceport.png" alt="Starport" style="' . $style . '" />';
 
@@ -1096,12 +954,31 @@ function get_station_icon($type, $planetary = "0", $style = "margin-right:6px;")
 }
 
 /*
+*	return the correct allegiance icon
+*/
+
+function get_allegiance_icon($allegiance)
+{
+	$pic = "system.png";
+
+	if (!empty($allegiance))
+	{
+		$pic = $allegiance == "Empire" ? "empire.png" : $pic;
+		$pic = $allegiance == "Alliance" ? "alliance.png" : $pic;
+		$pic = $allegiance == "Federation" ? "federation.png" : $pic;
+	}
+
+	return $pic;
+}
+
+/*
 *	simple log
 */
 
 function write_log($msg, $file = "", $line = "", $debug_override = false)
 {
 	global $settings;
+
 	if (isset($settings["debug"]) && $settings["debug"] == "true" || $debug_override !== false)
 	{
 		// write user info file if not exists
@@ -1209,19 +1086,224 @@ function has_screenshots($system_name)
 }
 
 /*
+*	check if system is logged
+*/
+
+function is_logged($system, $is_id = false)
+{
+	global $settings;
+
+	if (empty($system))
+	{
+		return false;
+	}
+
+	if ($is_id !== false)
+	{
+		$logged = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id
+																				FROM user_log
+																				WHERE system_id = '" . $system . "'
+																				AND system_id != ''
+																				LIMIT 1"));
+	}
+	else
+	{
+		$logged = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id
+																				FROM user_log
+																				WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system) . "'
+																				AND system_name != ''
+																				LIMIT 1"));
+	}
+
+	if ($logged > 0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+/*
  *	Replace output text for text-to-speech overrides
  *  Mappings configured in ini:
  *  tts_override["find"] = "replace"
 */
 
-function tts_override($text) {
-
+function tts_override($text)
+{
 	global $settings;
 
-	foreach ($settings["tts_override"] AS $find => $replace)
+	foreach ($settings["tts_override"] as $find => $replace)
 	{
-		$text = str_replace($find, $replace, $text);
+		$text = str_ireplace($find, $replace, $text);
 	}
 
 	return $text;
 }
+
+/*
+*	checks if a system exists in our database
+*/
+
+function system_exists($system_name)
+{
+	$count = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT
+																		id
+																		FROM edtb_systems
+																		WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system_name) . "'
+																		LIMIT 1"));
+	if ($count == 0)
+	{
+		$count = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT
+																			id
+																			FROM user_systems_own
+																			WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system_name) . "'
+																			LIMIT 1"));
+	}
+
+	if ($count > 0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+/*
+*	fetches data from edtb_common
+*/
+
+function edtb_common($name, $field, $update = false, $value = "")
+{
+	if ($update !== true)
+	{
+		$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT " . $field . "
+															FROM edtb_common
+															WHERE name = '" . $name . "'
+															LIMIT 1")
+															or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+
+		$arr = mysqli_fetch_assoc($res);
+
+		$value = $arr[$field];
+
+		return $value;
+	}
+	else
+	{
+		$res = mysqli_query($GLOBALS["___mysqli_ston"], "	UPDATE edtb_common
+															SET " . $field . " = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $value) . "'
+															WHERE name = '" . $name . "'
+															LIMIT 1")
+															or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+	}
+}
+
+/*
+*	updates last access time
+*/
+
+function update_last_access()
+{
+	if (!mysqli_query($GLOBALS["___mysqli_ston"], "UPDATE edtb_common SET unixtime = UNIX_TIMESTAMP() WHERE name = 'last_access' LIMIT 1"))
+	{
+		 write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+		 return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
+/*
+*	returns rank icon/name
+*/
+
+function get_rank($type, $rank, $icon = true)
+{
+	global $ranks;
+
+	if ($icon !== false)
+	{
+		return "/style/img/ranks/" . $type . "/rank-" . $rank . ".png";
+	}
+	else
+	{
+		return $ranks[$type][$rank];
+	}
+}
+
+/*
+*	returns proper ship name
+*/
+
+function ship_name($name)
+{
+	global $ships;
+
+	if (array_key_exists(strtolower($name), $ships))
+	{
+		$ship_name = $ships[strtolower($name)];
+	}
+	else
+	{
+		$ship_name = $name;
+	}
+
+	return $ship_name;
+}
+
+/*
+*	returns distance from current to $system
+*/
+
+function get_distance($system, $is_id = false)
+{
+	// fetch target coordinates
+	$res = mysqli_query($GLOBALS["___mysqli_ston"], "	(SELECT
+														edtb_systems.x AS target_x,
+														edtb_systems.y AS target_y,
+														edtb_systems.z AS target_z
+														FROM edtb_systems
+														WHERE edtb_systems.name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system) . "')
+														UNION
+														(SELECT
+														user_systems_own.x AS target_x,
+														user_systems_own.y AS target_y,
+														user_systems_own.z AS target_z
+														FROM user_systems_own
+														WHERE user_systems_own.name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system) . "')
+														LIMIT 1")
+														or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+
+	$arr = mysqli_fetch_assoc($res);
+
+	$target_x = $arr["target_x"];
+	$target_y = $arr["target_y"];
+	$target_z = $arr["target_z"];
+
+	// figure out what coords to calculate from
+	$usable_coords = usable_coords();
+	$usex = $usable_coords["x"];
+	$usey = $usable_coords["y"];
+	$usez = $usable_coords["z"];
+	$exact = $usable_coords["current"] === true ? "" : " *";
+
+	if (valid_coordinates($target_x, $target_y, $target_z))
+	{
+		$dist = number_format(sqrt(pow(($target_x-($usex)), 2)+pow(($target_y-($usey)), 2)+pow(($target_z-($usez)), 2)), 2);
+		$distance = $dist . ' ly ' . $exact;
+	}
+	else
+	{
+		$distance = '';
+	}
+
+	return $distance;
+}
+

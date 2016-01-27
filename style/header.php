@@ -33,12 +33,13 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 			<!-- icon, styles and custom fonts -->
             <link type="image/png" href="/style/img/icon.png" rel="icon" />
             <link type="text/css" href="/style/style.css" rel="stylesheet" />
-			<link href="/source/ED3D-Galaxy-Map/css/styles.css" rel="stylesheet" type="text/css" />
 
 			<!-- jquery -->
             <script type="text/javascript" src="/source/jquery-2.2.0.min.js"></script>
 			<!-- wiselinks -->
 			<script type="text/javascript" src="/source/wiselinks-1.2.2.min.js"></script>
+			<!-- clipboard -->
+			<script type="text/javascript" src="/source/clipboard.min.js"></script>
 
 			<?php
 			if ($_SERVER["PHP_SELF"] == "/galmap.php")
@@ -47,6 +48,7 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 				<!-- Three.js -->
 				<script src="/source/three.min.js"></script>
 				<!-- ED3D-Galaxy-Map -->
+				<link href="/source/ED3D-Galaxy-Map/css/styles.css" rel="stylesheet" type="text/css" />
 				<script src="/source/ED3D-Galaxy-Map/js/ed3dmap.js"></script>
 			<?php
 			}
@@ -61,8 +63,8 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 			{
 			?>
 				<!-- highcharts (map)-->
-				<script type="text/javascript" src="/source/Highcharts-4.2.1/js/highcharts.js"></script>
-				<script type="text/javascript" src="/source/Highcharts-4.2.1/js/highcharts-3d.js"></script>
+				<script type="text/javascript" src="/source/Highcharts/js/highcharts.js"></script>
+				<script type="text/javascript" src="/source/Highcharts/js/highcharts-3d.js"></script>
 			<?php
 			}
 			if ($_SERVER["PHP_SELF"] == "/gallery.php")
@@ -80,14 +82,14 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 
             <title>CMDR <?php echo $settings["cmdr_name"]; ?>'s ToolBox</title>
         </head>
-        <body onload="startTime();">
+        <body onload="startTime()">
 			<div class="se-pre-con" id="loading"><svg width="100" height="100" viewbox="0 0 40 40"><path d="m5,8l5,8l5,-8z" class="l1 d1" /><path d="m5,8l5,-8l5,8z"   class="l1 d2" /><path d="m10,0l5,8l5,-8z"  class="l1 d3" /><path d="m15,8l5,-8l5,8z"  class="l1 d4" /><path d="m20,0l5,8l5,-8z"  class="l1 d5" /><path d="m25,8l5,-8l5,8z"  class="l1 d6" /><path d="m25,8l5,8l5,-8z"  class="l1 d7" /><path d="m30,16l5,-8l5,8z" class="l1 d8" /><path d="m30,16l5,8l5,-8z" class="l1 d9" /><path d="m25,24l5,-8l5,8z" class="l1 d10" /><path d="m25,24l5,8l5,-8z" class="l1 d11" /><path d="m20,32l5,-8l5,8z" class="l1 d13" /><path d="m15,24l5,8l5,-8z" class="l1 d14" /><path d="m10,32l5,-8l5,8z" class="l1 d15" /><path d="m5,24l5,8l5,-8z"  class="l1 d16" /><path d="m5,24l5,-8l5,8z"  class="l1 d17" /><path d="m0,16l5,8l5,-8z"  class="l1 d18" /><path d="m0,16l5,-8l5,8z"  class="l1 d19" /><path d="m10,16l5,-8l5,8z" class="l2 d0" /><path d="m15,8l5,8l5,-8z"  class="l2 d3" /><path d="m20,16l5,-8l5,8z" class="l2 d6"  /><path d="m20,16l5,8l5,-8z" class="l2 d9" /><path d="m15,24l5,-8l5,8z" class="l2 d12" /><path d="m10,16l5,8l5,-8z" class="l2 d15" /></svg></div>
 			<div class="leftpanel">
 				<div class="leftpanel-top">
 					<!-- current system name will be rendered here -->
 					<div class="leftpanel-title" id="t1"></div>
 					<!-- date and clock will be rendered here -->
-					<div id="datetime" onclick="$('#ext_links').fadeToggle('fast');">
+					<div id="datetime" onclick="$('#ext_links').fadeToggle('fast')">
 						<div class="leftpanel-clock" id="hrs"></div><br />
 						<div class="leftpanel-date" id="date"></div>
 					</div>
@@ -97,14 +99,24 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 						// links
 						foreach ($settings["ext_links"] as $name => $link_href)
 						{
-							echo '<a href="' .  $link_href . '" target="_BLANK" onclick="$(\'#ext_links\').fadeToggle(\'fast\');"><div class="leftpanel-ext_links_link">' . $name . '</div></a>';
+							echo '<a href="' .  $link_href . '" target="_BLANK" onclick="$(\'#ext_links\').fadeToggle(\'fast\')"><div class="leftpanel-ext_links_link">' . $name . '</div></a>';
 						}
 						?>
 					</div>
 				</div>
 				<div class="leftpanel-systeminfo">
 					<!-- system info will be rendered here -->
-					<!-- <div id="systeminfo" onclick="update_values('/get/getSystemEditData.php');tofront('editsystem');"></div> -->
+					<!-- <div id="systeminfo" onclick="update_values('/get/getSystemEditData.php');tofront('editsystem')"></div> -->
+					<?php
+					/*
+					*	show user status
+					*/
+
+					if (isset($api["commander"]) && $settings["show_cmdr_status"] == "true")
+					{
+						echo '<span class="right"><div class="status" onclick="$(\'#cmdr_status_mi\').fadeToggle(\'fast\')"><span id="cmdr_status"></span></div></span>';
+					}
+					?>
 					<div id="systeminfo"></div>
 				</div>
 				<!-- stations for the current system will be rendered here -->
@@ -150,7 +162,7 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 
 							if ($name != "System Log")
 							{
-								echo '<a' . $aclass . '' . $onclick . ' href="' .  $link_href . '"><div id="link_' . $i . '" class="' . $class . '"><img src="/style/img/' . $pic . '" alt="pic" style="margin-right:5px;" />' . $name . '</div></a>';
+								echo '<a' . $aclass . '' . $onclick . ' href="' .  $link_href . '"><div id="link_' . $i . '" class="' . $class . '"><img src="/style/img/' . $pic . '" alt="pic" style="margin-right:5px" />' . $name . '</div></a>';
 							}
 							$i++;
 						}
@@ -175,96 +187,103 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 					<div id="nowplaying"></div>
 				</div>
 			</div>
-			<div class="rightpanel">
-				<div class="rightpanel-top">
-					<a href="javascript:void(0);" id="toggle" onclick="toggle_log('');" title="Add log entry">
-						<img src="/style/img/elite.png" alt="Add log" class="elite_emb" />
+			<div class="rightpanel-top">
+				<!-- elite emblem and add logs -->
+				<a href="javascript:void(0)" id="toggle" onclick="toggle_log('')" title="Add log entry">
+					<img src="/style/img/elite.png" alt="Add log" class="elite_emb" />
+				</a>
+
+				<!-- page title and search systems & stations -->
+				<span class="rightpanel-pagetitle">
+					<a href="javascript:void(0)" onclick="tofront('search_system');$('#system_22').focus()" title="Search for a system">
+						<?php echo str_replace("&nbsp;&nbsp", "&nbsp", $pagetitle)?>
 					</a>
+				</span>
+				<!-- icons & ships status -->
+				<span class="right" style="margin-right:10px;margin-top:15px">
+					<?php
+					/*
+					*	show ship status
+					*/
 
-					<span class="rightpanel-pagetitle">
-						<a href="javascript:void(0);" onclick="tofront('search_system');$('#system_22').focus();" title="Search for a system"><?php echo str_replace("&nbsp;&nbsp;", "&nbsp;", $pagetitle)?></a>
-					</span>
-					<span style="float:right;margin-right:10px;margin-top:15px;">
-						<?php
-						/*
-						*	Display notification if user hasn't updated data in a while
-						*/
+					if (isset($api["ship"]) && $settings["show_ship_status"] == "true")
+					{
+						echo '<span class="status_ship" onclick="$(\'#ship_status_mi\').fadeToggle(\'fast\')" id="ship_status"></span>';
+					}
+					?>
+					<span id="notifications"></span>
+					<?php
+					/*
+					*	show refresh button
+					*/
 
-						$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT unixtime
-																			FROM edtb_common
-																			WHERE name = 'last_data_update'
-																			LIMIT 1")
-																			or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-						$arr = mysqli_fetch_assoc($res);
-						$last_update = $arr["unixtime"];
-						$now = time()-(7*24*60*60); // 7 days
+					if (isset($api["commander"]) || isset($api["ship"]))
+					{
+						echo '<a id="api_refresh" href="javascript:void(0)" onclick="refresh_api()" title="Refresh API data"><img src="/style/img/refresh_24.png" alt="Refresh" style="height:24px;width:24px" /></a>';
+					}
+					?>
+					<a href="javascript:void(0)" title="About ED ToolBox" onclick="$('#about').fadeToggle('fast')"><img src="/style/img/about.png" style="height:26px;width:26px" alt="About" /></a>
+					<a href="javascript:void(0)" title="Settings Panel" onclick="$('#settings').fadeToggle('fast')"><img src="/style/img/settings.png" style="height:26px;width:26px" alt="Settings" /></a>
+				</span>
 
-						if ($now > $last_update)
-						{
-							?>
-							<a href="javascript:void(0);" title="Notice" onclick="$('#notice').fadeToggle('fast')"><img src="/style/img/notice.png" style="height:26px;width:26px;" alt="Notice" /></a>
-							<?php
-						}
-						?>
-						<a href="javascript:void(0);" title="About ED ToolBox" onclick="$('#about').fadeToggle('fast')"><img src="/style/img/about.png" style="height:26px;width:26px;" alt="About" /></a>
-						<a href="javascript:void(0);" title="Settings Panel" onclick="$('#settings').fadeToggle('fast')"><img src="/style/img/settings.png" style="height:26px;width:26px;" alt="Settings" /></a>
-					</span>
-
-					<div class="settings_panel" id="notice">
-						It has been a while since you last update system and station data.<br />As a result, any data you see here may be outdated.<br /><br />
-						Right-click the EDTB manager icon on your system tray and select<br />"Update system and station data".
-					</div>
-
-					<div class="settings_panel" id="settings">
-						<a href="/admin/ini_editor.php" title="Variable editor"><div class="link" style="width:190px;"><img src="/style/img/vareditor.png" alt="ve" style="margin-right:5px;" />Customize ED ToolBox</div></a>
-						<a href="/admin" title="Database manager (Adminer)" target="_BLANK"><div class="link" style="width:190px;"><img src="/style/img/dataview.png" alt="db" style="margin-right:5px;" />Database Management</div></a>
-						<a href="/admin/import.php" title="Import flight logs"><div class="link" style="width:190px;"><img src="/style/img/import.png" alt="import" style="margin-right:5px;" />Import Flight Logs</div></a>
-					</div>
-					<div class="settings_panel" id="about">
-						<table>
-							<tr>
-								<td colspan="3" class="light">What is ED ToolBox?</td>
-							</tr>
-							<tr>
-								<td class="info_td" colspan="3" style="padding-bottom:5px;padding-top:5px;">ED ToolBox is a companion tool for the <a href="http://www.frontier.co.uk/" target="_BLANK">Frontier Developments&nbsp;<img src="/style/img/external_link.png" style="margin-bottom:3px;" alt="ext" /></a> game <a href="http://www.elitedangerous.com" target="_BLANK">Elite: Dangerous&nbsp;<img src="/style/img/external_link.png" style="margin-bottom:3px;" alt="ext" /></a>.<br />ED ToolBox is an unofficial tool and is in no way affiliated with Frontier Developments.</td>
-							</tr>
-							<tr>
-								<td colspan="3" class="light">Acknowledgements</td>
-							</tr>
-							<tr>
-								<td class="info_td" colspan="3" style="padding-bottom:10px;padding-top:5px;">This tool and its usage rely heavily on open source resources. Here's a list of (hopefully) all of them:</td>
-							</tr>
-							<tr>
-								<td class="info_td"><a href="http://eddb.io" target="_BLANK">EDDB.io&nbsp;<img src="/style/img/external_link.png" style="margin-bottom:3px;" alt="ext" /></a> (system and station data)</td>
-								<td class="info_td"><a href="http://markitup.jaysalvat.com/home/" target="_BLANK">markItUp!&nbsp;<img src="/style/img/external_link.png" style="margin-bottom:3px;" alt="ext" /></a> (log editor)</td>
-								<td class="info_td"><a href="http://sourceforge.net/projects/sql-edit-table/" target="_BLANK">MySQL Edit Table&nbsp;<img src="/style/img/external_link.png" style="margin-bottom:3px;" alt="ext" /></a> (database editor)</td>
-							</tr>
-							<tr>
-								<td class="info_td"><a href="http://www.phpfastcache.com/" target="_BLANK">phpFastCache&nbsp;<img src="/style/img/external_link.png" style="margin-bottom:3px;" alt="ext" /></a> (page caching)</td>
-								<td class="info_td"><a href="https://codemirror.net/" target="_BLANK">CodeMirror&nbsp;<img src="/style/img/external_link.png" style="margin-bottom:3px;" alt="ext" /></a> (ini-file editor)</td>
-								<td class="info_td"><a href="http://spgm.sourceforge.net/" target="_BLANK">SPGM&nbsp;<img src="/style/img/external_link.png" style="margin-bottom:3px;" alt="ext" /></a> (screenshot gallery)</td>
-							</tr>
-							<tr>
-								<td class="info_td"><a href="https://jquery.com/" target="_BLANK">jQuery&nbsp;<img src="/style/img/external_link.png" style="margin-bottom:3px;" alt="ext" /></a> (js library)</td>
-								<td class="info_td"><a href="http://feed43.com/" target="_BLANK">Feed43&nbsp;<img src="/style/img/external_link.png" style="margin-bottom:3px;" alt="ext" /></a> (GalNet feed)</td>
-								<td class="info_td"><a href="http://www.highcharts.com/" target="_BLANK">Highcharts&nbsp;<img src="/style/img/external_link.png" style="margin-bottom:3px;" alt="ext" /></a> (neighborhood map)</td>
-							</tr>
-							<tr>
-								<td class="info_td"><a href="https://github.com/gbiobob/ED3D-Galaxy-Map" target="_BLANK">ED3D Galaxy Map&nbsp;<img src="/style/img/external_link.png" style="margin-bottom:3px;" alt="ext" /></a> (galaxy map)</td>
-								<td class="info_td"><a href="http://threejs.org/" target="_BLANK">Three.js&nbsp;<img src="/style/img/external_link.png" style="margin-bottom:3px;" alt="ext" /></a> (js library)</td>
-								<td class="info_td"><a href="http://www.imagemagick.org" target="_BLANK">ImageMagick®&nbsp;<img src="/style/img/external_link.png" style="margin-bottom:3px;" alt="ext" /></a> (screenshot tools)</td>
-							</tr>
-							<tr>
-								<td class="info_td" colspan="3">Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik&nbsp;<img src="/style/img/external_link.png" style="margin-bottom:3px;" alt="ext" /></a>, <a href="http://www.flaticon.com/authors/designmodo" title="Designmodo">Designmodo&nbsp;<img src="/style/img/external_link.png" style="margin-bottom:3px;" alt="ext" /></a>, and <a href="http://www.flaticon.com/authors/dave-gandy" title="Dave Gandy">Dave Gandy&nbsp;<img src="/style/img/external_link.png" style="margin-bottom:3px;" alt="ext" /></a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com&nbsp;<img src="/style/img/external_link.png" style="margin-bottom:3px;" alt="ext" /></a> are licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC BY 3.0&nbsp;<img src="/style/img/external_link.png" style="margin-bottom:3px;" alt="ext" /></a>
-								</td>
-							</tr>
-							<tr>
-								<td class="info_td" colspan="3">
-								ED ToolBox was created using assets and imagery from Elite Dangerous, with the permission of Frontier Developments plc, <br />
-								for non-commercial purposes. It is not endorsed by nor reflects the views or opinions of Frontier Developments and no <br />
-								employee of Frontier Developments was involved in the making of it.
-								</td>
-							</tr>
-						</table>
-					</div>
+				<div class="settings_panel" id="notice">
+					It has been a while since you last update system and station data.<br />As a result, any data you see here may be outdated.<br /><br />
+					Right-click the EDTB manager icon on your system tray and select<br />"Update system and station data".
 				</div>
+				<div class="settings_panel" id="notice_new"></div>
+
+				<div class="settings_panel" id="settings" style="width:227px">
+					<a href="/admin/settings.php" title="Settings editor"><div class="link" style="width:90%"><img src="/style/img/vareditor.png" alt="ve" style="margin-right:5px" />Customize ED ToolBox</div></a>
+					<a href="/admin" title="Database manager (Adminer)" target="_BLANK"><div class="link" style="width:90%"><img src="/style/img/dataview.png" alt="db" style="margin-right:5px" />Database Management</div></a>
+					<a href="/admin/import.php" title="Import flight logs"><div class="link" style="width:90%"><img src="/style/img/import.png" alt="import" style="margin-right:5px" />Import Flight Logs</div></a>
+					<a href="/admin/api_login.php" title="Connect Companion API"><div class="link" style="width:90%"><img src="/style/img/api.png" alt="API" style="margin-right:5px" />Connect Companion API</div></a>
+				</div>
+				<div class="settings_panel" id="about">
+					<table>
+						<tr>
+							<td colspan="3" class="light">What is ED ToolBox?</td>
+						</tr>
+						<tr>
+							<td class="info_td" colspan="3" style="padding-bottom:5px;padding-top:5px">ED ToolBox is a companion tool for the <a href="http://www.frontier.co.uk/" target="_BLANK">Frontier Developments</a><img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" /> game <a href="http://www.elitedangerous.com" target="_BLANK">Elite: Dangerous</a><img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" />.<br />ED ToolBox is an unofficial tool and is in no way affiliated with Frontier Developments.</td>
+						</tr>
+						<tr>
+							<td colspan="3" class="light">Acknowledgements</td>
+						</tr>
+						<tr>
+							<td class="info_td" colspan="3" style="padding-bottom:10px;padding-top:5px">This tool and its usage rely heavily on open source resources. Here's a list of (hopefully) all of them:</td>
+						</tr>
+						<tr>
+							<td class="info_td"><a href="http://eddb.io" target="_BLANK">EDDB.io</a><img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" /> (system and station data)</td>
+							<td class="info_td"><a href="http://markitup.jaysalvat.com/home/" target="_BLANK">markItUp!</a><img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" /> (log editor)</td>
+							<td class="info_td"><a href="http://sourceforge.net/projects/sql-edit-table/" target="_BLANK">MySQL Edit Table</a><img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" /> (database editor)</td>
+						</tr>
+						<tr>
+							<td class="info_td"><a href="http://www.phpfastcache.com/" target="_BLANK">phpFastCache</a><img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" /> (page caching)</td>
+							<td class="info_td"><a href="https://codemirror.net/" target="_BLANK">CodeMirror</a><img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" /> (ini-file editor)</td>
+							<td class="info_td"><a href="http://spgm.sourceforge.net/" target="_BLANK">SPGM</a><img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" /> (screenshot gallery)</td>
+						</tr>
+						<tr>
+							<td class="info_td"><a href="https://jquery.com/" target="_BLANK">jQuery</a><img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" /> (js library)</td>
+							<td class="info_td"><a href="http://feed43.com/" target="_BLANK">Feed43</a><img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" /> (GalNet feed)</td>
+							<td class="info_td"><a href="http://www.highcharts.com/" target="_BLANK">Highcharts</a><img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" /> (neighborhood map)</td>
+						</tr>
+						<tr>
+							<td class="info_td"><a href="https://github.com/gbiobob/ED3D-Galaxy-Map" target="_BLANK">ED3D Galaxy Map</a><img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" /> (galaxy map)</td>
+							<td class="info_td"><a href="http://threejs.org/" target="_BLANK">Three.js</a><img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" /> (js library)</td>
+							<td class="info_td"><a href="http://www.imagemagick.org" target="_BLANK">ImageMagick®</a><img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" /> (screenshot tools)</td>
+						</tr>
+						<tr>
+							<td class="info_td" colspan="3">Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a><img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" />, <a href="http://www.flaticon.com/authors/designmodo" title="Designmodo">Designmodo</a><img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" />, and <a href="http://www.flaticon.com/authors/dave-gandy" title="Dave Gandy">Dave Gandy</a><img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" /> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a><img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" /> are licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC BY 3.0</a><img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" />
+							</td>
+						</tr>
+						<tr>
+							<td class="info_td" colspan="3">
+							ED ToolBox was created using assets and imagery from Elite Dangerous, with the permission of Frontier Developments plc, <br />
+							for non-commercial purposes. It is not endorsed by nor reflects the views or opinions of Frontier Developments and no <br />
+							employee of Frontier Developments was involved in the making of it.
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="rightpanel">

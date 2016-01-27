@@ -48,17 +48,17 @@
 					$('#html').markItUp(mySettings);
 				</script>
 				<!-- calculate distances -->
-				<div class="input" id="distance" style="text-align:center;">
+				<div class="input" id="distance" style="text-align:center">
 					<div class="input-inner">
-						<div class="suggestions" id="suggestions_2" style="margin-left:8px;margin-top:115px;"></div>
-						<div class="suggestions" id="suggestions_6" style="margin-left:8px;margin-top:237px;"></div>
+						<div class="suggestions" id="suggestions_2" style="margin-left:8px;margin-top:115px"></div>
+						<div class="suggestions" id="suggestions_6" style="margin-left:8px;margin-top:237px"></div>
 						<table>
 							<tr>
-								<td class="heading" colspan="2">Calculate Distances<span class="right"><a href="javascript:void(0);" onclick="tofront('distance');"><img src="/style/img/close.png" alt="close" /></a></span></td>
+								<td class="heading" colspan="2">Calculate Distances<span class="right"><a href="javascript:void(0)" onclick="tofront('distance')"><img src="/style/img/close.png" alt="X" style="width:16px;height:16px" /></a></span></td>
 							</tr>
 							<tr>
-								<td class="dark" style="width:99%;">
-									<input class="textbox" type="text" name="from_system_name" placeholder="From system" id="system_2" style="width:97%;" oninput="showResult(this.value, '2')" />
+								<td class="dark" style="width:99%">
+									<input class="textbox" type="text" name="from_system_name" placeholder="From system" id="system_2" style="width:97%" oninput="showResult(this.value, '2')" />
 								</td>
 								<td class="dark">
 									<input class="textbox" type="text" name="from_coor[]" placeholder="From x.x" id="coordsx_2" />
@@ -68,7 +68,7 @@
 							</tr>
 							<tr>
 								<td class="dark">
-									<input class="textbox" type="text" name="to_system_name" placeholder="To system" id="system_6" style="width:97%;" oninput="showResult(this.value, '6')" />
+									<input class="textbox" type="text" name="to_system_name" placeholder="To system" id="system_6" style="width:97%" oninput="showResult(this.value, '6')" />
 								</td>
 								<td class="dark">
 									<input class="textbox" type="text" name="to_coor[]" placeholder="To x.x" id="coordsx_6" />
@@ -78,7 +78,7 @@
 							</tr>
 							<tr>
 								<td colspan="2" class="dark">
-									<input class="textbox" type="text" name="displ" placeholder="Select two systems to calculate the distance between them" id="dist_display" style="width:98%;text-align:center;" readonly="readonly" />
+									<input class="textbox" type="text" name="displ" placeholder="Select two systems to calculate the distance between them" id="dist_display" style="width:98%;text-align:center" readonly="readonly" />
 								</td>
 							</tr>
 							<tr>
@@ -90,20 +90,20 @@
 					</div>
 				</div>
 				<!-- search systems and stations-->
-				<div class="input" id="search_system" style="text-align:center;">
+				<div class="input" id="search_system" style="text-align:center">
 					<div class="input-inner">
-						<div class="suggestions" id="suggestions_8" style="margin-left:8px;margin-top:79px;"></div>
-						<div class="suggestions" id="suggestions_9" style="margin-left:223px;margin-top:79px;"></div>
+						<div class="suggestions" id="suggestions_8" style="margin-left:8px;margin-top:79px"></div>
+						<div class="suggestions" id="suggestions_9" style="margin-left:223px;margin-top:79px"></div>
 						<table>
 							<tr>
-								<td class="heading" colspan="2">Search Systems and Stations<span class="right"><a href="javascript:void(0);" onclick="tofront('search_system');" title="Close form"><img src="/style/img/close.png" alt="close" /></a></span></td>
+								<td class="heading" colspan="2">Search Systems and Stations<span class="right"><a href="javascript:void(0)" onclick="tofront('search_system')" title="Close form"><img src="/style/img/close.png" alt="X" style="width:16px;height:16px" /></a></span></td>
 							</tr>
 							<tr>
-								<td class="dark" style="width:200px;">
-									<input class="textbox" type="text" name="system_name" placeholder="System" id="system_22" style="width:96%;" oninput="showResult(this.value, '8', 'yes')" />
+								<td class="dark" style="width:200px">
+									<input class="textbox" type="text" name="system_name" placeholder="System" id="system_22" style="width:96%" oninput="showResult(this.value, '8', 'yes')" />
 								</td>
-								<td class="dark" style="width:200px;">
-									<input class="textbox" type="text" name="station_name" placeholder="Station" id="station_1" style="width:96%;" oninput="showResult(this.value, '9', 'yes', 'yes')" />
+								<td class="dark" style="width:200px">
+									<input class="textbox" type="text" name="station_name" placeholder="Station" id="station_1" style="width:96%" oninput="showResult(this.value, '9', 'yes', 'yes')" />
 								</td>
 							</tr>
 						</table>
@@ -112,23 +112,23 @@
 			</div>
 		</div>
 		<!-- tooltips -->
-		<div class="tooltip" id="help_addlog" style="position:fixed;top:70px;left:370px;">
-			<img class="callout" alt="co" src="style/img/callout_black.gif" style="top:-14px;left:8px;" />Click the Elite emblem to add log entries
+		<div class="tooltip" id="help_addlog" style="position:fixed;top:70px;left:370px">
+			<img class="callout" alt="co" src="/style/img/callout_black.gif" style="top:-14px;left:8px" />Click the Elite emblem to add log entries
 		</div>
-		<div class="tooltip" id="help_edit" style="position:fixed;top:150px;left:370px;">
-			<img class="callout" alt="co" src="style/img/callout_black.gif" style="top:-14px;left:20px;" />Click the date to open editing window
+		<div class="tooltip" id="help_edit" style="position:fixed;top:150px;left:370px">
+			<img class="callout" alt="co" src="/style/img/callout_black.gif" style="top:-14px;left:20px" />Click the date to open editing window
 		</div>
-		<div class="tooltip" id="help_search" style="position:fixed;top:70px;left:440px;">
-			<img class="callout" alt="co" src="style/img/callout_black.gif" style="top:-14px;left:20px;" />Click the page title text to open a search dialog for systems and stations
+		<div class="tooltip" id="help_search" style="position:fixed;top:70px;left:440px">
+			<img class="callout" alt="co" src="/style/img/callout_black.gif" style="top:-14px;left:20px" />Click the page title text to open a search dialog for systems and stations
 		</div>
-		<div class="tooltip" id="help_bm" style="position:fixed;top:70px;left:6px;">
-			<img class="callout" alt="co" src="style/img/callout_black.gif" style="top:-14px;left:5px;" />Click the allegiance icon to bookmark system
+		<div class="tooltip" id="help_bm" style="position:fixed;top:70px;left:6px">
+			<img class="callout" alt="co" src="/style/img/callout_black.gif" style="top:-14px;left:5px" />Click the allegiance icon to bookmark system
 		</div>
-		<div class="tooltip" id="help_calc" style="position:fixed;top:70px;left:50px;">
-			<img class="callout" alt="co" src="style/img/callout_black.gif" style="top:-14px;left:20px;" />Click the system name to calculate distances
+		<div class="tooltip" id="help_calc" style="position:fixed;top:70px;left:50px">
+			<img class="callout" alt="co" src="/style/img/callout_black.gif" style="top:-14px;left:20px" />Click the system name to calculate distances
 		</div>
-		<div class="tooltip" id="help_links" style="position:fixed;top:70px;left:250px;">
-			<img class="callout" alt="co" src="style/img/callout_black.gif" style="top:-14px;left:20px;" />Click the date and time to open external links
+		<div class="tooltip" id="help_links" style="position:fixed;top:70px;left:250px">
+			<img class="callout" alt="co" src="/style/img/callout_black.gif" style="top:-14px;left:20px" />Click the date and time to open external links<br />You can edit these from the <a href="/admin/settings.php?cat_id=5">settings</a>
 		</div>
 		<!-- -->
 		<script>
@@ -149,9 +149,9 @@
 				});
 			});
 		</script>
-		<!-- update data every 10000 ms -->
+		<!-- update data every 12000 ms -->
 		<script type="text/javascript">
-			var int=self.setInterval(get_data, 10000);
+			var int=self.setInterval(get_data, 12000);
 		</script>
 
 		<script type="text/javascript">
