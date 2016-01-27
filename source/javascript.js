@@ -95,10 +95,14 @@ function get_data(override)
 
 	system_id = getUrlVars()["system_id"];
 	system_name = getUrlVars()["system_name"];
+
+	slog_sort = getUrlVars()["slog_sort"];
+	glog_sort = getUrlVars()["glog_sort"];
+
     // get system info and log
     $.ajax(
     {
-        url: "/get/getData.php?request="+requestno+"&system_id="+system_id+"&system_name="+system_name,
+        url: "/get/getData.php?request="+requestno+"&system_id="+system_id+"&system_name="+system_name+"&slog_sort="+slog_sort+"&glog_sort="+glog_sort,
         cache: false,
         dataType: 'json',
         success: function(result)
@@ -113,6 +117,25 @@ function get_data(override)
                 $('#systeminfo').html(result['system_info']);
                 $('#scrollable').html(result['log_data']);
                 $('#stations').html(result['station_data']);
+
+				if (result['cmdr_status'] != "false")
+				{
+					$('#cmdr_status').html(result['cmdr_status']);
+				}
+
+				if (result['ship_status'] != "false")
+				{
+					$('#ship_status').html(result['ship_status']);
+				}
+
+				if (result['notifications'] != "false")
+				{
+					$('#notifications').html(result['notifications']);
+					if (result['notifications_data'] != "false")
+					{
+						$('#notice_new').html(result['notifications_data']);
+					}
+				}
 
 				// clear reference distances if we're in a new system
 				if (result['new_sys'] != "false")
@@ -532,7 +555,7 @@ function showResult(str, divid, link, station, idlink, sysid, dp)
         if (xmlhttp.readyState==4 && xmlhttp.status==200) {
             document.getElementById("suggestions_"+divid).innerHTML=xmlhttp.responseText;
         }
-    }
+    };
 
 	allegiance = getUrlVars()["allegiance"];
 	system_allegiance = getUrlVars()["system_allegiance"];
@@ -977,4 +1000,48 @@ function escapeRegExp(str)
 function replaceAll(str, find, replace)
 {
   return str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
+}
+
+/*
+*	refresh api data
+*/
+
+function refresh_api()
+{
+	$.ajax({
+	url: "/get/getAPIdata.php?override",
+	cache: false,
+    dataType: 'json',
+	success: function(result)
+	{
+		get_data(true);
+	}
+	});
+
+	document.getElementById('api_refresh').innerHTML = '<img src="/style/img/check_24.png" style="height:24px;width:24px">';
+
+	setTimeout(function()
+	{
+		document.getElementById('api_refresh').innerHTML = '<img src="/style/img/refresh_24.png" alt="Refresh" style="height:24px;width:24px" />';
+	}, 15000);
+}
+
+/*
+*	ignore version update
+*/
+
+function ignore_version(version)
+{
+	$.ajax({
+	url: "/admin/setData.php?ignore_version="+version,
+	cache: false,
+    dataType: 'json',
+	success: function(result)
+	{
+		//
+	}
+	});
+
+	$("#notice_new").fadeToggle("fast");
+	$("#notifications").fadeToggle("fast");
 }

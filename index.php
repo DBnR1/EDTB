@@ -80,16 +80,16 @@ if (file_exists("" . $_SERVER["DOCUMENT_ROOT"] . "/install.php"))
 	{
 		echo notice("Removal of installation files was unsuccesfull.<br />Please delete install.php and install.sql from the EDTB folder.", "Install ED ToolBox");
 		echo installer_footer();
-		exit();
+		exit;
 	}
 
 	if (!isset($pwd))
 	{
-		echo notice("Looks like this is your first time running ED Toolbox.<br />Congratulations on your excellent choice!<br /><br />To get you set up, you need to run a script that creates the necessary database tables. The script may take a while to run.<br /><br /><div id='text' style='text-align:center;'><a href='install.php?install' onclick='document.getElementById(\"loadin\").style.display=\"block\";document.getElementById(\"text\").style.display=\"none\";'>Click here when you're ready to go.</a></div><div id='loadin' style='text-align:center;display:none;'><img src='/style/img/loading.gif' alt='Loading' \\></div>", "Install ED ToolBox 1/2");
+		echo notice("Looks like this is your first time running ED Toolbox.<br />Congratulations on your excellent choice!<br /><br />To get you set up, you need to run a script that creates the necessary database tables. The script may take a while to run.<br /><br /><div id='text' style='text-align:center'><a href='install.php?install' onclick='document.getElementById(\"loadin\").style.display=\"block\";document.getElementById(\"text\").style.display=\"none\"'>Click here when you're ready to go.</a></div><div id='loadin' style='text-align:center;display:none'><img src='/style/img/loading.gif' alt='Loading' \\></div>", "Install ED ToolBox 1/2");
 	}
 	else
 	{
-		echo notice("Looks like you've recently updated ED ToolBox to a new version.<br /><br />To get everything set up, you need to run a script that makes any necessary changes to the database. The script may take a while to run.<br /><br /><div id='text' style='text-align:center;'><a href='install.php?upgrade' onclick='document.getElementById(\"loadin\").style.display=\"block\";document.getElementById(\"text\").style.display=\"none\";'>Click here when you're ready to go.</a></div><div id='loadin' style='text-align:center;display:none;'><img src='/style/img/loading.gif' alt='Loading' \\></div>", "Upgrade ED ToolBox 1/2");
+		echo notice("Looks like you've recently updated ED ToolBox to a new version.<br /><br />To get everything set up, you need to run a script that makes any necessary changes to the database. The script may take a while to run.<br /><br /><div id='text' style='text-align:center'><a href='install.php?upgrade' onclick='document.getElementById(\"loadin\").style.display=\"block\";document.getElementById(\"text\").style.display=\"none\"'>Click here when you're ready to go.</a></div><div id='loadin' style='text-align:center;display:none'><img src='/style/img/loading.gif' alt='Loading' \\></div>", "Upgrade ED ToolBox 1/2");
 	}
 
 	echo installer_footer();

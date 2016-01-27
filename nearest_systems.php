@@ -29,6 +29,9 @@ $addtolink2 = "";
 $system = isset($_GET["system"]) ? $_GET["system"] : "";
 $text = "Nearest";
 
+$add = "";
+$hidden_inputs = "";
+
 //  determine what coordinates to use
 if (!empty($system))
 {
@@ -48,6 +51,7 @@ if (!empty($system))
 	$text .= " (to <a href='system.php?system_id=" . $sys_id . "'>" . $sys_name . "</a>) ";
 	$addtolink .= "&system=" . $system . "";
 	$addtolink2 .= "&system=" . $system . "";
+	$hidden_inputs .= '<input type="hidden" name="system" value="' . $sys_id . '" />';
 }
 elseif (valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"]) && empty($system))
 {
@@ -75,9 +79,7 @@ $group_id = isset($_GET["group_id"]) ? $_GET["group_id"] : "";
 $power = isset($_GET["power"]) ? $_GET["power"] : "";
 $pad = isset($_GET["pad"]) ? $_GET["pad"] : "";
 $stations = true;
-$hidden_inputs = "";
 
-$add = "";
 if ($power != "")
 {
 	$stations = false;
@@ -130,7 +132,7 @@ if ($system_allegiance != "")
 }
 
 // if we're searching facilities
-if ($facility != "" && $facility != "0")
+if (!empty($facility))
 {
 	$stations = true;
 
@@ -181,7 +183,8 @@ if ($stations !== false)
 														edtb_stations.refuel, edtb_stations.repair, edtb_stations.rearm,
 														edtb_stations.outfitting, edtb_stations.shipyard,
 														edtb_stations.import_commodities, edtb_stations.export_commodities,
-														edtb_stations.prohibited_commodities, edtb_stations.economies, edtb_stations.selling_ships,
+														edtb_stations.prohibited_commodities, edtb_stations.economies, edtb_stations.shipyard_updated_at,
+														edtb_stations.outfitting_updated_at, edtb_stations.selling_ships,
 														edtb_systems.allegiance AS allegiance,
 														edtb_systems.name AS system,
 														edtb_systems.x AS coordx,
@@ -216,7 +219,7 @@ else
 }
 
 // if we're searching modules
-if ($group_id != "" && $group_id != "0")
+if (!empty($group_id))
 {
 	$class = isset($_GET["class"]) ? $_GET["class"] : "";
 	$rating = isset($_GET["rating"]) ? $_GET["rating"] : "";
@@ -294,7 +297,8 @@ if ($group_id != "" && $group_id != "0")
 															edtb_stations.refuel, edtb_stations.repair, edtb_stations.rearm,
 															edtb_stations.outfitting, edtb_stations.shipyard,
 															edtb_stations.import_commodities, edtb_stations.export_commodities,
-															edtb_stations.prohibited_commodities, edtb_stations.economies, edtb_stations.selling_ships,
+															edtb_stations.prohibited_commodities, edtb_stations.economies, edtb_stations.shipyard_updated_at,
+															edtb_stations.outfitting_updated_at, edtb_stations.selling_ships,
 															edtb_systems.allegiance AS allegiance,
 															edtb_systems.name AS system,
 															edtb_systems.x AS coordx,
@@ -310,6 +314,7 @@ if ($group_id != "" && $group_id != "0")
 															AND edtb_stations.selling_modules LIKE '-%" . $modules_id . "%-'" . $add . "
 															ORDER BY sqrt(pow((coordx-(" . $usex . ")),2)+pow((coordy-(" . $usey . ")),2)+pow((coordz-(" . $usez . ")),2))
 															LIMIT 10") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+
 		$stations = true;
 	}
 	else
@@ -319,7 +324,7 @@ if ($group_id != "" && $group_id != "0")
 }
 
 // if we're searching ships
-if ($ship_name != "" && $ship_name != "0")
+if (!empty($ship_name))
 {
 	$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT edtb_stations.system_id AS system_id, edtb_stations.name AS station_name,
 														edtb_stations.ls_from_star, edtb_stations.max_landing_pad_size,
@@ -330,7 +335,8 @@ if ($ship_name != "" && $ship_name != "0")
 														edtb_stations.refuel, edtb_stations.repair, edtb_stations.rearm,
 														edtb_stations.outfitting, edtb_stations.shipyard,
 														edtb_stations.import_commodities, edtb_stations.export_commodities,
-														edtb_stations.prohibited_commodities, edtb_stations.economies, edtb_stations.selling_ships,
+														edtb_stations.prohibited_commodities, edtb_stations.economies, edtb_stations.shipyard_updated_at,
+														edtb_stations.outfitting_updated_at, edtb_stations.selling_ships,
 														edtb_systems.allegiance AS allegiance,
 														edtb_systems.name AS system,
 														edtb_systems.x AS coordx,
@@ -346,6 +352,7 @@ if ($ship_name != "" && $ship_name != "0")
 														AND edtb_stations.selling_ships LIKE '%\'" . $ship_name . "\'%'" . $add . "
 														ORDER BY sqrt(pow((coordx-(" . $usex . ")),2)+pow((coordy-(" . $usey . ")),2)+pow((coordz-(" . $usez . ")),2))
 														LIMIT 10") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+
 
 	$p_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT price
 														FROM edtb_ships
@@ -369,6 +376,11 @@ if ($ship_name != "" && $ship_name != "0")
 if ($text == "Nearest")
 {
 	$text = "Nearest stations";
+}
+
+if (substr($text, 0, 11) == "Nearest (to" && $stations === true)
+{
+	$text = str_replace("Nearest ", "Nearest stations ", $text);
 }
 
 /*
@@ -406,31 +418,31 @@ $count = mysqli_num_rows($res);
 	<div class="entries_inner">
 		<table id="nscontent" style="margin-top:16px;width:100%">
 			<tr>
-				<td class="heading" style="width:25%;white-space:nowrap;">Nearest stations</td>
-				<td class="heading" style="width:25%;white-space:nowrap;">Nearest Allegiances</td>
-				<td class="heading" style="width:25%;white-space:nowrap;">Nearest Powers</td>
-				<td class="heading" style="width:25%;white-space:nowrap;">Selling Modules</td>
-				<td class="heading" style="width:25%;white-space:nowrap;">Ships & Facilities</td>
+				<td class="heading" style="width:25%;white-space:nowrap">Nearest stations</td>
+				<td class="heading" style="width:25%;white-space:nowrap">Nearest Allegiances</td>
+				<td class="heading" style="width:25%;white-space:nowrap">Nearest Powers</td>
+				<td class="heading" style="width:25%;white-space:nowrap">Selling Modules</td>
+				<td class="heading" style="width:25%;white-space:nowrap">Ships & Facilities</td>
 			</tr>
 			<tr>
 				<!-- station allegiances -->
-				<td class="transparent" style="vertical-align:top;width:25%;white-space:nowrap;">
+				<td class="transparent" style="vertical-align:top;width:25%;white-space:nowrap">
 					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?allegiance=Empire<?php echo $addtolink2;?>" title="Empire"><img src="style/img/empire.png" alt="Empire" /></a>&nbsp;
 					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?allegiance=Alliance<?php echo $addtolink2;?>" title="Alliance"><img src="style/img/alliance.png" alt="Alliance" /></a>&nbsp;
 					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?allegiance=Federation<?php echo $addtolink2;?>" title="Federation"><img src="style/img/federation.png" alt="Federation" /></a>&nbsp;
 					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?allegiance=Independent<?php echo $addtolink2;?>" title="Independent"><img src="style/img/system.png" alt="Independent" /></a>
 					<!-- search systems and stations-->
-					<div style="text-align:left;">
-						<div style="width:180px;margin-top:35px;">
-							<input class="textbox" type="text" name="system_name" placeholder="System (optional)" id="system_21" style="width:180px;" oninput="showResult(this.value, '11', 'no', 'no', 'yes')" /><br />
-							<input class="textbox" type="text" name="station_name" placeholder="Station (optional)" id="station_21" style="width:180px;" oninput="showResult(this.value, '12', 'no', 'yes', 'yes')" />
-							<div class="suggestions" id="suggestions_11" style="margin-left:0;margin-top:-36px;min-width:168px;"></div>
-							<div class="suggestions" id="suggestions_12" style="margin-left:0;min-width:168px;"></div>
+					<div style="text-align:left">
+						<div style="width:180px;margin-top:35px">
+							<input class="textbox" type="text" name="system_name" placeholder="System (optional)" id="system_21" style="width:180px" oninput="showResult(this.value, '11', 'no', 'no', 'yes')" /><br />
+							<input class="textbox" type="text" name="station_name" placeholder="Station (optional)" id="station_21" style="width:180px" oninput="showResult(this.value, '12', 'no', 'yes', 'yes')" />
+							<div class="suggestions" id="suggestions_11" style="margin-left:0;margin-top:-36px;min-width:168px"></div>
+							<div class="suggestions" id="suggestions_12" style="margin-left:0;min-width:168px"></div>
 						</div>
 					</div>
 				</td>
 				<!-- allegiances -->
-				<td class="transparent" style="vertical-align:top;width:25%;white-space:nowrap;">
+				<td class="transparent" style="vertical-align:top;width:25%;white-space:nowrap">
 					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?system_allegiance=Empire<?php echo $addtolink2;?>" title="Empire"><img src="style/img/empire.png" alt="Empire" /></a>&nbsp;
 					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?system_allegiance=Alliance<?php echo $addtolink2;?>" title="Alliance"><img src="style/img/alliance.png" alt="Alliance" /></a>&nbsp;
 					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?system_allegiance=Federation<?php echo $addtolink2;?>" title="Federation"><img src="style/img/federation.png" alt="Federation" /></a>&nbsp;
@@ -438,7 +450,7 @@ $count = mysqli_num_rows($res);
 					<br /><br />
 				</td>
 				<!-- powers -->
-				<td class="transparent" style="vertical-align:top;width:25%;white-space:nowrap;">
+				<td class="transparent" style="vertical-align:top;width:25%;white-space:nowrap">
 					<?php
 					$p_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT name
 																		FROM edtb_powers
@@ -460,7 +472,7 @@ $count = mysqli_num_rows($res);
 					?>
 				</td>
 				<!-- modules -->
-				<td class="transparent" style="vertical-align:top;width:25%;white-space:nowrap;">
+				<td class="transparent" style="vertical-align:top;width:25%;white-space:nowrap">
 					<form method="get" action="<?php echo $_SERVER['PHP_SELF'];?>" name="go" data-push="true" data-target="#nscontent" data-include-blank-url-params="true" data-optimize-url-params="false">
 						<?php
 						echo $hidden_inputs;
@@ -469,7 +481,7 @@ $count = mysqli_num_rows($res);
 							$modi = " AND group_id = '" . $group_id . "'";
 						}
 						?>
-						<select class="selectbox" name="group_id" style="width:222px;" onchange="getCR($('select[name=group_id]').val(),'');">
+						<select class="selectbox" name="group_id" style="width:222px" onchange="getCR($('select[name=group_id]').val(),'')">
 								<optgroup label="Module"><option value="0">Module</option>
 								<?php
 								$mod_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT DISTINCT group_id, group_name, category_name
@@ -494,7 +506,7 @@ $count = mysqli_num_rows($res);
 								}
 								?>
 						</select><br />
-						<select class="selectbox" name="class" style="width:222px;" id="class" onchange="getCR($('select[name=group_id]').val(),$('select[name=class]').val());">
+						<select class="selectbox" name="class" style="width:222px" id="class" onchange="getCR($('select[name=group_id]').val(),$('select[name=class]').val())">
 								<option value="0">Class</option>
 								<?php
 								$mod_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT DISTINCT class
@@ -509,7 +521,7 @@ $count = mysqli_num_rows($res);
 								}
 								?>
 						</select><br />
-						<select class="selectbox" name="rating" style="width:222px;" id="rating">
+						<select class="selectbox" name="rating" style="width:222px" id="rating">
 								<option value="0">Rating</option>
 								<?php
 								$mod_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT DISTINCT rating
@@ -525,17 +537,17 @@ $count = mysqli_num_rows($res);
 								}
 								?>
 						</select><br />
-						<input class="button" type="submit" value="Search" style="width:222px;margin-top:5px;" />
+						<input class="button" type="submit" value="Search" style="width:222px;margin-top:5px" />
 					</form>
 				</td>
 				<!-- ships & facilities -->
-				<td class="transparent" style="vertical-align:top;width:25%;white-space:nowrap;">
+				<td class="transparent" style="vertical-align:top;width:25%;white-space:nowrap">
 					<!-- ships -->
 					<form method="get" action="<?php echo $_SERVER['PHP_SELF'];?>" name="go" id="ships" data-push="true" data-target="#nscontent" data-include-blank-url-params="true" data-optimize-url-params="false">
 						<?php
 						echo $hidden_inputs;
 						?>
-						<select class="selectbox" name="ship_name" style="width:180px;" onchange="$('.se-pre-con').show();this.form.submit();">
+						<select class="selectbox" name="ship_name" style="width:180px" onchange="$('.se-pre-con').show();this.form.submit()">
 								<option value="0">Sells Ships</option>
 								<?php
 
@@ -551,14 +563,14 @@ $count = mysqli_num_rows($res);
 								}
 								?>
 						</select><br />
-						<!--<input id="ship_submit" class="button" type="submit" value="Search" style="width:180px;" />-->
+						<!--<input id="ship_submit" class="button" type="submit" value="Search" style="width:180px" />-->
 					</form>
 					<!-- facilities -->
 					<form method="get" action="<?php echo $_SERVER['PHP_SELF'];?>" name="go" id="facilities" data-push="true" data-target="#nscontent" data-include-blank-url-params="true" data-optimize-url-params="false">
 						<?php
 						echo $hidden_inputs;
 						?>
-						<select class="selectbox" name="facility" style="width:180px;" onchange="$('.se-pre-con').show();this.form.submit();">
+						<select class="selectbox" name="facility" style="width:180px" onchange="$('.se-pre-con').show();this.form.submit()">
 								<option value="0">Has Facilities</option>
 								<?php
 								$facility_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT name, code
@@ -579,7 +591,7 @@ $count = mysqli_num_rows($res);
 						<?php
 						echo $hidden_inputs;
 						?>
-						<select class="selectbox" name="pad" style="width:180px;" onchange="$('.se-pre-con').show();this.form.submit();">
+						<select class="selectbox" name="pad" style="width:180px" onchange="$('.se-pre-con').show();this.form.submit()">
 							<?php
 							$selectedL = $_GET["pad"] == "L" ? " selected='selected'" : "";
 							$selectedM = $_GET["pad"] == "M" ? " selected='selected'" : "";
@@ -645,7 +657,10 @@ $count = mysqli_num_rows($res);
 								$station_name = $arr["station_name"];
 
 								// check if system has screenshots
-								$screenshots = has_screenshots($system) ? '<a href="/gallery.php?spgmGal=' . urlencode($system) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;vertical-align:top;" /></a>' : "";
+								$screenshots = has_screenshots($system) ? '<a href="/gallery.php?spgmGal=' . urlencode($system) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;vertical-align:top" /></a>' : "";
+
+								// check if system is logged
+								$loglink = is_logged($system_id, true) ? '<a href="log.php?system=' . urlencode($system) . '" style="color:inherit" title="System has log entries"><img src="/style/img/log.png" style="margin-left:5px" /></a>' : "";
 
 								$ss_coordx = $arr["coordx"];
 								$ss_coordy = $arr["coordy"];
@@ -653,24 +668,18 @@ $count = mysqli_num_rows($res);
 
 								$distance = sqrt(pow(($ss_coordx-($usex)), 2)+pow(($ss_coordy-($usey)), 2)+pow(($ss_coordz-($usez)), 2));
 
-								$pic = "system.png";
-
-								if ($allegiance != "")
-								{
-									$pic = $allegiance == "Empire" ? "empire.png" : $pic;
-									$pic = $allegiance == "Alliance" ? "alliance.png" : $pic;
-									$pic = $allegiance == "Federation" ? "federation.png" : $pic;
-								}
+								// get allegiance icon
+								$pic = get_allegiance_icon($allegiance);
 
 								if ($system != $last_system)
 								{
-									echo '<tr><td class="transparent" style="text-align:center;"><img src="style/img/' . $pic . '" alt="' . $allegiance . '" /></td>';
+									echo '<tr><td class="transparent" style="text-align:center"><img src="style/img/' . $pic . '" alt="' . $allegiance . '" /></td>';
 
 									echo '<td class="transparent">';
 									echo number_format($distance,2);
 									echo ' ly' . $is_unknown . '</td>';
 
-									echo '<td class="transparent"><a href="system.php?system_id=' . $system_id . '">' . $system . '</a>' . $screenshots . '</td>';
+									echo '<td class="transparent"><a href="system.php?system_id=' . $system_id . '">' . $system . '</a>' . $loglink.$screenshots . '</td>';
 									echo '<td class="transparent">' . $sys_population . '</td>';
 									echo '<td class="transparent">' . $sys_economy . '</td>';
 									echo '<td class="transparent">' . $sys_government . '</td>';
@@ -678,10 +687,10 @@ $count = mysqli_num_rows($res);
 								}
 								else
 								{
-									echo '<tr><td class="transparent" colspan="7" style="height:45px;">&nbsp;</td>';
+									echo '<tr><td class="transparent" colspan="7" style="height:45px">&nbsp;</td>';
 								}
 
-								if ($station_name != "")
+								if (!empty($station_name))
 								{
 									$station_ls_from_star = $arr["ls_from_star"] == 0 ? "n/a" : number_format($arr["ls_from_star"]);
 									$station_max_landing_pad_size = $arr["max_landing_pad_size"];
@@ -742,13 +751,35 @@ $count = mysqli_num_rows($res);
 									}
 									$station_services .= "<br />";
 
-									$info = $station_type_d.$station_faction.$station_government.$station_allegiance.$station_state.$station_economies.$station_services.$station_import_commodities.$station_export_commodities.$station_prohibited_commodities.$station_selling_ships;
+									$outfitting_updated_at = $arr["outfitting_updated_at"] == "0" ? "" : "<br /><strong>Outfitting last updated:</strong> " . get_timeago($arr["outfitting_updated_at"], true, true) . "<br />";
+
+									$shipyard_updated_at = $arr["shipyard_updated_at"] == "0" ? "" : "<strong>Shipyard last updated:</strong> " . get_timeago($arr["shipyard_updated_at"], true, true) . "<br />";
+
+									$info = $station_type_d.$station_faction.$station_government.$station_allegiance.$station_state.$station_economies.$station_services.$station_import_commodities.$station_export_commodities.$station_prohibited_commodities.$outfitting_updated_at.$shipyard_updated_at.$station_selling_ships;
 
 									$info = str_replace("['", "", $info);
 									$info = str_replace("']", "", $info);
 									$info = str_replace("', '", ", ", $info);
 
-									echo '<td class="transparent">' . $icon . '<a href="javascript:void(0);" onclick="$(\'#si_statinfo_' . $station_id . '\').fadeToggle(\'fast\');" title="Additional information">' . $station_name . '<div class="stationinfo_ns" id="si_statinfo_' . $station_id . '">' . $info . '</div></td>';
+									// get allegiance icon
+									$station_allegiance_icon = get_allegiance_icon($arr["station_allegiance"]);
+									$station_allegiance_icon = '<img src="/style/img/' . $station_allegiance_icon . '" alt="' . $arr["station_allegiance"] . '" style="width:19px;height:19px;margin-right:5px" />';
+
+									/*
+									*	notify user if data is old
+									*/
+
+									$station_disp_name = $station_name;
+
+									if (!empty($group_id) || !empty($ship_name))
+									{
+										if (data_is_old($arr["outfitting_updated_at"]) || data_is_old($arr["shipyard_updated_at"]))
+										{
+											$station_disp_name = '<span class="old_data">' . $station_name . '</span>';
+										}
+									}
+
+									echo '<td class="transparent">' . $station_allegiance_icon.$icon . '<a href="javascript:void(0)" onclick="$(\'#si_statinfo_' . $station_id . '\').fadeToggle(\'fast\')" title="Additional information">' . $station_disp_name . '<div class="stationinfo_ns" id="si_statinfo_' . $station_id . '">' . $info . '</div></td>';
 									echo '<td class="transparent">' . $station_ls_from_star . '</td>';
 									echo '<td class="transparent">' . $station_max_landing_pad_size . '</td>';
 								}
