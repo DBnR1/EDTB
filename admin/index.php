@@ -1,5 +1,6 @@
 <?php
-function adminer_object() {
+function adminer_object()
+{
     // required to run any plugin
     include_once "plugin.php";
 

@@ -1,24 +1,30 @@
 <?php
 /*
-*    ED ToolBox, a companion web app for the video game Elite Dangerous
-*    (C) 1984 - 2015 Frontier Developments Plc.
-*    ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+*  ED ToolBox, a companion web app for the video game Elite Dangerous
+*  (C) 1984 - 2016 Frontier Developments Plc.
+*  ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
 *
-*    Copyright (C) 2016 Mauri Kujala (contact@edtb.xyz)
+*  This program is free software; you can redistribute it and/or
+*  modify it under the terms of the GNU General Public License
+*  as published by the Free Software Foundation; either version 2
+*  of the License, or (at your option) any later version.
 *
-*    This program is free software; you can redistribute it and/or
-*    modify it under the terms of the GNU General Public License
-*    as published by the Free Software Foundation; either version 2
-*    of the License, or (at your option) any later version.
+*  This program is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
 *
-*    This program is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU General Public License for more details.
-*
-*    You should have received a copy of the GNU General Public License
-*    along with this program; if not, write to the Free Software
-*    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+*  You should have received a copy of the GNU General Public License
+*  along with this program; if not, write to the Free Software
+*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+*/
+
+/**
+ * Header file
+ *
+ * @author Mauri Kujala <contact@edtb.xyz>
+ * @copyright Copyright (C) 2016, Mauri Kujala
+ * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
 */
 
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
@@ -35,44 +41,44 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
             <link type="text/css" href="/style/style.css" rel="stylesheet" />
 
 			<!-- jquery -->
-            <script type="text/javascript" src="/source/jquery-2.2.0.min.js"></script>
+            <script type="text/javascript" src="/source/Vendor/jquery-2.2.0.min.js"></script>
 			<!-- wiselinks -->
-			<script type="text/javascript" src="/source/wiselinks-1.2.2.min.js"></script>
+			<script type="text/javascript" src="/source/Vendor/wiselinks-1.2.2.min.js"></script>
 			<!-- clipboard -->
-			<script type="text/javascript" src="/source/clipboard.min.js"></script>
+			<script type="text/javascript" src="/source/Vendor/clipboard.min.js"></script>
 
 			<?php
 			if ($_SERVER["PHP_SELF"] == "/galmap.php")
 			{
 			?>
 				<!-- Three.js -->
-				<script src="/source/three.min.js"></script>
+				<script src="/source/Vendor/three.min.js"></script>
 				<!-- ED3D-Galaxy-Map -->
-				<link href="/source/ED3D-Galaxy-Map/css/styles.css" rel="stylesheet" type="text/css" />
-				<script src="/source/ED3D-Galaxy-Map/js/ed3dmap.js"></script>
+				<link href="/source/Vendor/ED3D-Galaxy-Map/css/styles.css" rel="stylesheet" type="text/css" />
+				<script src="/source/Vendor/ED3D-Galaxy-Map/js/ed3dmap.js"></script>
 			<?php
 			}
 			?>
 
 			<!-- markitup -->
-			<script type="text/javascript" src="/source/markitup/sets/html/set.js"></script>
-			<script type="text/javascript" src="/source/markitup/jquery.markitup.js"></script>
+			<script type="text/javascript" src="/source/Vendor/markitup/sets/html/set.js"></script>
+			<script type="text/javascript" src="/source/Vendor/markitup/jquery.markitup.js"></script>
 
 			<?php
 			if ($_SERVER["PHP_SELF"] == "/map.php")
 			{
 			?>
 				<!-- highcharts (map)-->
-				<script type="text/javascript" src="/source/Highcharts/js/highcharts.js"></script>
-				<script type="text/javascript" src="/source/Highcharts/js/highcharts-3d.js"></script>
+				<script type="text/javascript" src="/source/Vendor/Highcharts/js/highcharts.js"></script>
+				<script type="text/javascript" src="/source/Vendor/Highcharts/js/highcharts-3d.js"></script>
 			<?php
 			}
 			if ($_SERVER["PHP_SELF"] == "/gallery.php")
 			{
 			?>
 				<!-- spgm pic gallery -->
-				<script type="text/javascript" src="/source/spgm/spgm.js"></script>
-				<script type="text/javascript" src="/source/spgm/contrib/overlib410/overlib.js"></script>
+				<script type="text/javascript" src="/source/Vendor/spgm/spgm.js"></script>
+				<script type="text/javascript" src="/source/Vendor/spgm/contrib/overlib410/overlib.js"></script>
 			<?php
 			}
 			?>
@@ -114,7 +120,15 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 
 					if (isset($api["commander"]) && $settings["show_cmdr_status"] == "true")
 					{
-						echo '<span class="right"><div class="status" onclick="$(\'#cmdr_status_mi\').fadeToggle(\'fast\')"><span id="cmdr_status"></span></div></span>';
+						if (file_exists("" . $_SERVER["DOCUMENT_ROOT"] . "/cache/cmdr_status.html"))
+						{
+							$cache = file_get_contents("" . $_SERVER["DOCUMENT_ROOT"] . "/cache/cmdr_status.html");
+						}
+						else
+						{
+							$cache = "";
+						}
+						echo '<span class="right"><div class="status" onclick="$(\'#cmdr_status_mi\').fadeToggle(\'fast\')"><span id="cmdr_status">' . $cache . '</span></div></span>';
 					}
 					?>
 					<div id="systeminfo"></div>
@@ -195,8 +209,9 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 
 				<!-- page title and search systems & stations -->
 				<span class="rightpanel-pagetitle">
-					<a href="javascript:void(0)" onclick="tofront('search_system');$('#system_22').focus()" title="Search for a system">
-						<?php echo str_replace("&nbsp;&nbsp", "&nbsp", $pagetitle)?>
+					<a href="javascript:void(0)" onclick="tofront('search_system');$('#system_22').focus()" title="Search for a system" id="pagetitle">
+						<?php //echo str_replace("&nbsp;&nbsp", "&nbsp", $pagetitle)?>
+						ED ToolBox
 					</a>
 				</span>
 				<!-- icons & ships status -->
@@ -208,7 +223,15 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 
 					if (isset($api["ship"]) && $settings["show_ship_status"] == "true")
 					{
-						echo '<span class="status_ship" onclick="$(\'#ship_status_mi\').fadeToggle(\'fast\')" id="ship_status"></span>';
+						if (file_exists("" . $_SERVER["DOCUMENT_ROOT"] . "/cache/ship_status.html"))
+						{
+							$ship_cache = file_get_contents("" . $_SERVER["DOCUMENT_ROOT"] . "/cache/ship_status.html");
+						}
+						else
+						{
+							$ship_cache = "";
+						}
+						echo '<span class="status_ship" onclick="$(\'#ship_status_mi\').fadeToggle(\'fast\')" id="ship_status">' . $ship_cache . '</span>';
 					}
 					?>
 					<span id="notifications"></span>
