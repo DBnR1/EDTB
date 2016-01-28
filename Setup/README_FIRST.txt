@@ -17,32 +17,5 @@ INSTALLATION:
   will quide you trough the rest of the process.
 
 
-USAGE:
------
-
-How do I start using it?
-
-- VerboseLogging needs to be on for the app to know your in-game location.
-  Instructions on how to enable VerboseLogging: http://edtb.xyz/?q=download
-
-I've already had VerboseLogging on for a while. Can I import that data to EDTB?
-
-- Yes. Once you've installed EDTB, open http://localhost:3001/admin/import.php in your web browser
-  to import old data.
-
-How do I access the VoiceAttack module?
-
-- In VoiceAttack, set the following urls as variables:
-	- Information about current system: http://localhost:3001/Marvin/SystemData.php?sys
-	- Nearest station: http://localhost:3001/Marvin/SystemData.php?cs
-	- Random quote/thought: http://localhost:3001/Marvin/SystemData.php?rm
-	- Check for new GalNet articles: http://localhost:3001/Marvin/GalnetData.php
-	- Four latest GalNet articles are in:
-		- http://localhost:3001/Marvin/galnet1.txt
-		- http://localhost:3001/Marvin/galnet2.txt
-		- http://localhost:3001/Marvin/galnet3.txt
-		- http://localhost:3001/Marvin/galnet4.txt
-
-
 FOR MORE INFORMATION VISIT HTTP://EDTB.XYZ
 ------------------------------------------
