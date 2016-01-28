@@ -106,8 +106,8 @@ class MySQLtabledit
 	function do_it()
 	{
 		// Sorry: in Joomla, remove the next two lines and place the language vars instead
-		require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/MySQL_table_edit/lang/en.php");
-		require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/MySQL_table_edit/lang/" . $this->language . ".php");
+		require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/Vendor/MySQL_table_edit/lang/en.php");
+		require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/Vendor/MySQL_table_edit/lang/" . $this->language . ".php");
 
 		# No cache
 		if (!headers_sent())
@@ -209,17 +209,6 @@ class MySQLtabledit
 
 		/*
 		*	if sorting by distance
-		*/
-		/*
-		 IFNULL(edtb_systems.x, user_systems_own.x) AS item_coordx,
-                                                                            IFNULL(edtb_systems.y, user_systems_own.y) AS item_coordy,
-                                                                            IFNULL(edtb_systems.z, user_systems_own.z) AS item_coordz,
-																			user_bm_categories.name AS catname
-																			FROM user_bookmarks
-																			LEFT JOIN edtb_systems ON user_bookmarks.system_name = edtb_systems.name
-																			LEFT JOIN user_bm_categories ON user_bookmarks.category_id = user_bm_categories.id
-                                                                            LEFT JOIN user_systems_own ON user_bookmarks.system_name = user_systems_own.name
-																			ORDER BY sqrt(pow((item_coordx-(" . $usex . ")),2)+pow((item_coordy-(" . $usey . ")),2)+pow((item_coordz-(" . $usez . ")),2)), system_name")
 		*/
 
 		if ($_GET['sort'] && $_GET['sort'] == "distance")
@@ -363,47 +352,44 @@ class MySQLtabledit
 						}
 						else
 						{
-							$d_x = "";
-							$d_y = "";
-							$d_z = "";
-						}
-						/*$sys_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT x, y, z
-																				FROM edtb_systems
-																				WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $rij["system_name"]) . "'
-																				LIMIT 1");
+							$sys_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT x, y, z
+																					FROM edtb_systems
+																					WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $rij["system_name"]) . "'
+																					LIMIT 1");
 
-						$found = mysqli_num_rows($sys_res);
+							$found = mysqli_num_rows($sys_res);
 
-						if ($found > 0)
-						{
-							$sys_arr = mysqli_fetch_assoc($sys_res);
-
-							$d_x = $sys_arr["x"];
-							$d_y = $sys_arr["y"];
-							$d_z = $sys_arr["z"];
-						}
-						else
-						{
-							$sys_own_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT x, y, z
-																						FROM user_systems_own
-																						WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $rij["system_name"]) . "'
-																						LIMIT 1");
-							$own_found = mysqli_num_rows($sys_own_res);
-							if ($own_found > 0)
+							if ($found > 0)
 							{
-								$sys_own_arr = mysqli_fetch_assoc($sys_own_res);
+								$sys_arr = mysqli_fetch_assoc($sys_res);
 
-								$d_x = $sys_own_arr["x"];
-								$d_y = $sys_own_arr["y"];
-								$d_z = $sys_own_arr["z"];
+								$d_x = $sys_arr["x"];
+								$d_y = $sys_arr["y"];
+								$d_z = $sys_arr["z"];
 							}
 							else
 							{
-								$d_x = "";
-								$d_y = "";
-								$d_z = "";
+								$sys_own_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT x, y, z
+																							FROM user_systems_own
+																							WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $rij["system_name"]) . "'
+																							LIMIT 1");
+								$own_found = mysqli_num_rows($sys_own_res);
+								if ($own_found > 0)
+								{
+									$sys_own_arr = mysqli_fetch_assoc($sys_own_res);
+
+									$d_x = $sys_own_arr["x"];
+									$d_y = $sys_own_arr["y"];
+									$d_z = $sys_own_arr["z"];
+								}
+								else
+								{
+									$d_x = "";
+									$d_y = "";
+									$d_z = "";
+								}
 							}
-						}*/
+						}
 					}
 					else
 					{

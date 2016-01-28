@@ -1,25 +1,31 @@
 <?php
 /*
-*    ED ToolBox, a companion web app for the video game Elite Dangerous
-*    (C) 1984 - 2015 Frontier Developments Plc.
-*    ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+*  ED ToolBox, a companion web app for the video game Elite Dangerous
+*  (C) 1984 - 2016 Frontier Developments Plc.
+*  ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
 *
-*    Copyright (C) 2016 Mauri Kujala (contact@edtb.xyz)
+*  This program is free software; you can redistribute it and/or
+*  modify it under the terms of the GNU General Public License
+*  as published by the Free Software Foundation; either version 2
+*  of the License, or (at your option) any later version.
 *
-*    This program is free software; you can redistribute it and/or
-*    modify it under the terms of the GNU General Public License
-*    as published by the Free Software Foundation; either version 2
-*    of the License, or (at your option) any later version.
+*  This program is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
 *
-*    This program is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU General Public License for more details.
-*
-*    You should have received a copy of the GNU General Public License
-*    along with this program; if not, write to the Free Software
-*    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+*  You should have received a copy of the GNU General Public License
+*  along with this program; if not, write to the Free Software
+*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 */
+
+/**
+ * DB Migration class
+ *
+ * @author Mauri Kujala <contact@edtb.xyz>
+ * @copyright Copyright (C) 2016, Mauri Kujala
+ * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
+ */
 
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/installer_style.php");
 
@@ -27,6 +33,11 @@ class db_create
 {
     private $link;
 
+	/**
+	 * Start DB connection
+	 *
+	 * @author Mauri Kujala <contact@edtb.xyz>
+	 */
     public function __construct()
 	{
 		$ini_dir = str_replace("/EDTB", "", $_SERVER['DOCUMENT_ROOT']);
@@ -43,10 +54,13 @@ class db_create
         }
     }
 
-	/*
-	*	create database
-	*/
-
+	/**
+	 * Create database
+	 *
+	 * @param string $db
+	 * @return string|null
+	 * @author Mauri Kujala <contact@edtb.xyz>
+	 */
     function db($db)
 	{
 		//$return = "";
@@ -57,10 +71,19 @@ class db_create
 		//return $return;
 	}
 
-	/*
-	*	create table
-	*/
 
+	/**
+	 * Create table
+	 *
+	 * @param string $table
+	 * @param string $sql
+	 * @param string $modify
+	 * @param string $file
+	 * @param string $line
+	 * @param string $database
+	 * @return string|null
+	 * @author Mauri Kujala <contact@edtb.xyz>
+	 */
     function table($table, $sql, $modify, $file, $line, $database = "elite_log")
 	{
 		/*
@@ -156,16 +179,24 @@ class db_create
 		//return $return;
     }
 
-	/*
-	*	run a query
-	*/
-
+	/**
+	 * Run a SQL query
+	 *
+	 * @param string $sql
+	 * @param string $file
+	 * @param string $line
+	 * @author Mauri Kujala <contact@edtb.xyz>
+	 */
 	function run_sql($sql, $file, $line)
 	{
 		$this->link->query($sql) or write_log(mysqli_error($this->link), $file, $line);
 	}
 
-    // Close connection
+	/**
+	 * Close DB connection
+	 *
+	 * @author Mauri Kujala <contact@edtb.xyz>
+	 */
     public function __destruct()
 	{
         $this->link->close();

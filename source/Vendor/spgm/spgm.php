@@ -27,9 +27,9 @@ define('DIR_GAL', 'screenshots/'); // galleries base directory (relative path fr
 // spgm.php or the file requiring it if there's one)
 define('BASE_DIR', $base_dir); // galleries base directory (relative path from
 // spgm.php or the file requiring it if there's one)
-define('DIR_LANG', 'source/spgm/lang/'); // language packs (relative path from spgm.php or
+define('DIR_LANG', 'source/Vendor/spgm/lang/'); // language packs (relative path from spgm.php or
 // the file requiring it if there's one)
-define('DIR_THEMES', 'source/spgm/flavors/'); // themes base directory (relative path from
+define('DIR_THEMES', 'source/Vendor/spgm/flavors/'); // themes base directory (relative path from
 // spgm.php or the file requiring it
 // if there's one)
 define('DIR_THUMBS', 'thumbs/'); // if defined, points to the directory
