@@ -1,25 +1,33 @@
 <?php
 /*
-*    ED ToolBox, a companion web app for the video game Elite Dangerous
-*    (C) 1984 - 2015 Frontier Developments Plc.
-*    ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+*  ED ToolBox, a companion web app for the video game Elite Dangerous
+*  (C) 1984 - 2016 Frontier Developments Plc.
+*  ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
 *
-*    Copyright (C) 2016 Mauri Kujala (contact@edtb.xyz)
+*  This program is free software; you can redistribute it and/or
+*  modify it under the terms of the GNU General Public License
+*  as published by the Free Software Foundation; either version 2
+*  of the License, or (at your option) any later version.
 *
-*    This program is free software; you can redistribute it and/or
-*    modify it under the terms of the GNU General Public License
-*    as published by the Free Software Foundation; either version 2
-*    of the License, or (at your option) any later version.
+*  This program is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
 *
-*    This program is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU General Public License for more details.
-*
-*    You should have received a copy of the GNU General Public License
-*    along with this program; if not, write to the Free Software
-*    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+*  You should have received a copy of the GNU General Public License
+*  along with this program; if not, write to the Free Software
+*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 */
+
+/**
+ * Ajax backend file to fetch profile data
+ *
+ * @author Mauri Kujala <contact@edtb.xyz>
+ * @copyright Copyright (C) 2016, Mauri Kujala
+ * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
+ */
+
+require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 
 /*
 *	show user status
@@ -89,6 +97,8 @@ if (isset($api["ship"]) && $settings["show_ship_status"] == "true")
 	*/
 
 	$ship_value = number_format($api["ship"]["value"]["total"]);
+	$ship_hull_value = number_format($api["ship"]["value"]["hull"]);
+	$ship_modules_value = number_format($api["ship"]["value"]["modules"]);
 
 	if (isset($api["stored_ships"]))
 	{
@@ -108,7 +118,25 @@ if (isset($api["ship"]) && $settings["show_ship_status"] == "true")
 		}
 	}
 
-	$additional = '<div id="ship_status_mi" style="display:none"><strong>Ship value:</strong> ' . $ship_value .' CR' . $stored_ships . '</div>';
+	$additional = '<div id="ship_status_mi" style="display:none"><strong>Ship value:</strong> ' . $ship_value .' CR<br />Hull: ' . $ship_hull_value . ' CR<br />Modules: ' . $ship_modules_value . ' CR' . $stored_ships . '</div>';
 
 	$data['ship_status'] = '<img src="/style/img/ship.png" style="margin-right:6px" alt="Ship hull" />' . $ship_health . ' %<img src="/style/img/fuel.png" style="margin-right:6px;margin-left:6px;margin-bottom:4px" alt="Ship fuel" />' . $ship_fuel . ' %<img src="/style/img/cargo.png" style="margin-right:6px;margin-left:6px" alt="Ship cargo" />' . $ship_cargo_used . '/' . $ship_cargo_cap . '' . $additional . '';
 }
+
+/*
+*	write to cache
+*/
+
+if (!file_put_contents("" . $_SERVER["DOCUMENT_ROOT"] . "/cache/cmdr_status.html", $data["cmdr_status"]))
+{
+	$error = error_get_last();
+	write_log("Error: " . $error['message'] . "", __FILE__, __LINE__);
+}
+
+if (!file_put_contents("" . $_SERVER["DOCUMENT_ROOT"] . "/cache/ship_status.html", $data["ship_status"]))
+{
+	$error = error_get_last();
+	write_log("Error: " . $error['message'] . "", __FILE__, __LINE__);
+}
+
+echo json_encode($data);
