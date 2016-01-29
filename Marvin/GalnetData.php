@@ -74,7 +74,7 @@ if ($ga_last_update < time())
 			// write articles into txt files for VoiceAttack
 			$to_write = "" . $ga_title . "\n\r" . $text . "";
 
-			if ($in <= 4)
+			if ($in <= $settings["galnet_articles"])
 			{
 				/*
 				*	write four of the latest articles to .txt files
@@ -106,10 +106,7 @@ if ($ga_last_update < time())
 
 				if ($new_file != $old_file)
 				{
-					mysqli_query($GLOBALS["___mysqli_ston"], "	UPDATE edtb_common
-																SET unixtime = UNIX_TIMESTAMP()
-																WHERE name = 'last_galnet_new'
-																LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+					edtb_common("last_galnet_new", "unixtime", true, time());
 				}
 			}
 			$in++;
@@ -120,10 +117,7 @@ if ($ga_last_update < time())
 	*	update last_update time
 	*/
 
-	mysqli_query($GLOBALS["___mysqli_ston"], "	UPDATE edtb_common
-												SET unixtime = UNIX_TIMESTAMP()
-												WHERE name = 'last_galnet_update'
-												LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+	edtb_common("last_galnet_update", "unixtime", true, time());
 }
 
 /*
@@ -146,9 +140,6 @@ else
 *	 update last check time
 */
 
-mysqli_query($GLOBALS["___mysqli_ston"], "	UPDATE edtb_common
-											SET unixtime = UNIX_TIMESTAMP()
-											WHERE name = 'last_galnet_check'
-											LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+edtb_common("last_galnet_check", "unixtime", true, time());
 
 ((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
