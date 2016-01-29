@@ -173,7 +173,7 @@ if ($newSystem !== false || $request == 0)
 	require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/get/getData_leftColumn.php");
 
 	/*
-	*	Stuff specifically for system.php
+	*	Stuff specifically for System.php
 	*/
 
 	require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/get/getData_systemInfo.php");

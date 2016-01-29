@@ -34,7 +34,7 @@
 $pagetitle = "Points of Interest&nbsp;&nbsp;&&nbsp;&nbsp;Bookmarks";
 
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
-require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/add/poi.php");
+require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/add/Poi.php");
 
 /*
 *	show item
@@ -100,7 +100,7 @@ function makeitem($arr, $type, &$i)
 	}
 
 	// check if system has screenshots
-	$screenshots = has_screenshots($item_system_name) ? '<a href="/gallery.php?spgmGal=' . urlencode($item_system_name) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;vertical-align:top" /></a>' : "";
+	$screenshots = has_screenshots($item_system_name) ? '<a href="/Gallery.php?spgmGal=' . urlencode($item_system_name) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;vertical-align:top" /></a>' : "";
 
 	// check if system is logged
 	$loglink = is_logged($item_system_name) ? '<a href="log.php?system=' . urlencode($item_system_name) . '" style="color:inherit" title="System has log entries"><img src="/style/img/log.png" style="margin-left:5px;vertical-align:top" /></a>' : "";
@@ -114,11 +114,11 @@ function makeitem($arr, $type, &$i)
 
 	if (!empty($item_system_id))
 	{
-		echo '</a>&nbsp;<a title="System information" href="/system.php?system_id=' . $item_system_id . '" style="color:inherit">';
+		echo '</a>&nbsp;<a title="System information" href="/System.php?system_id=' . $item_system_id . '" style="color:inherit">';
 	}
 	elseif ($item_system_name != "")
 	{
-		echo '</a>&nbsp;<a title="System information" href="/system.php?system_name=' . urlencode($item_system_name) . '" style="color:inherit">';
+		echo '</a>&nbsp;<a title="System information" href="/System.php?system_name=' . urlencode($item_system_name) . '" style="color:inherit">';
 	}
 	else
 	{

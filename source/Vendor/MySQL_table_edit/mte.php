@@ -490,7 +490,7 @@ class MySQLtabledit
 
 							if ($key == "id" && $this->table == "edtb_systems")
 							{
-								$this_row .= "<td style='width:1%;padding:10px;vertical-align:middle'><a href='/system.php?system_id=" . $value . "'>" . $value . "</a></td>";
+								$this_row .= "<td style='width:1%;padding:10px;vertical-align:middle'><a href='/System.php?system_id=" . $value . "'>" . $value . "</a></td>";
 							}
 							else
 							{
@@ -883,7 +883,7 @@ class MySQLtabledit
 						<td>
 							<button onclick='window.location=\"{$_SESSION['hist_page']}\"' style='margin: 20px 15px 25px 15px'>{$this->text['Go_back']}</button></td>
 						<td>
-							<form method=post action='/datapoint.php?table=" . $_GET["table"] . "' onsubmit='return submitform()'>
+							<form method=post action='/DataPoint.php?table=" . $_GET["table"] . "' onsubmit='return submitform()'>
 							<input class='button' type='submit' value='{$this->text['Save']}' style='width: 80px;margin: 20px 0 25px 0'></td>
 						</tr>
 					</table>
@@ -1058,7 +1058,7 @@ class MySQLtabledit
 				echo "</ul><br /><ul class='pagination' style='margin-top:-26px'>";
 			}
 
-			echo '<li' . $active . '><a data-replace="true" data-target=".rightpanel" class="mtelink" href="/datapoint.php?table=' . $link_h . '">' . $link_t . '</a></li>';
+			echo '<li' . $active . '><a data-replace="true" data-target=".rightpanel" class="mtelink" href="/DataPoint.php?table=' . $link_h . '">' . $link_t . '</a></li>';
 			$i++;
 		}
 		echo "</ul></div>

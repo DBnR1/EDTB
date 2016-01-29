@@ -117,7 +117,7 @@ if (isset($api["ship"]) && $settings["show_ship_status"] == "true")
 
 				$distance = get_distance($docked_at_system);
 
-				$stored_ships .= '' . $ship_name . ' (' . $distance . ')<br />' . $docked_at_station . ' at <a href="/system.php?system_name=' . urlencode($docked_at_system ) . '">' . $docked_at_system . '</a><br /><br />';
+				$stored_ships .= '' . $ship_name . ' (' . $distance . ')<br />' . $docked_at_station . ' at <a href="/System.php?system_name=' . urlencode($docked_at_system ) . '">' . $docked_at_system . '</a><br /><br />';
 			}
 		}
 	}

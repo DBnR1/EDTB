@@ -117,7 +117,7 @@ if (isset($_GET["do"]))
 				</tr>
 				<tr>
 					<td colspan="2" class="dark">
-						<a href="/poi.php" data-replace="true" data-target=".entries"><div class="button" onclick="update_data('bm_form', '/add/bookmark.php?do', true);tofront('null', true)">Add Bookmark</div></a>
+						<a href="/Poi.php" data-replace="true" data-target=".entries"><div class="button" onclick="update_data('bm_form', '/add/bookmark.php?do', true);tofront('null', true)">Add Bookmark</div></a>
 						<span id="delete_bm"></span>
 					</td>
 				</tr>

@@ -88,11 +88,11 @@ if (isset($_GET["do"]))
 	exit;
 }
 
-if ($_SERVER['PHP_SELF'] == "/poi.php")
+if ($_SERVER['PHP_SELF'] == "/Poi.php")
 {
 ?>
     <div class="input" id="addPoi" style="text-align:center">
-		<form method="post" id="poi_form" action="poi.php">
+		<form method="post" id="poi_form" action="Poi.php">
 			<div class="input-inner">
 				<div class="suggestions" id="suggestions_33" style="margin-top:115px;margin-left:10px"></div>
 				<table>
@@ -142,8 +142,8 @@ if ($_SERVER['PHP_SELF'] == "/poi.php")
 					</tr>
 					<tr>
 						<td class="dark" colspan="2">
-							<a href="/poi.php" data-replace="true" data-target=".entries">
-								<div class="button" onclick="update_data('poi_form', '/add/poi.php?do', true);tofront('null', true)">Submit Point of Interest</div>
+							<a href="/Poi.php" data-replace="true" data-target=".entries">
+								<div class="button" onclick="update_data('poi_form', '/add/Poi.php?do', true);tofront('null', true)">Submit Point of Interest</div>
 							</a>
 							<span id="delete_poi"></span>
 						</td>

@@ -59,7 +59,7 @@ if (!empty($system))
 	$usey = $sys_arr["y"];
 	$usez = $sys_arr["z"];
 
-	$text .= " (to <a href='system.php?system_id=" . $sys_id . "'>" . $sys_name . "</a>) ";
+	$text .= " (to <a href='System.php?system_id=" . $sys_id . "'>" . $sys_name . "</a>) ";
 	$addtolink .= "&system=" . $system . "";
 	$addtolink2 .= "&system=" . $system . "";
 	$hidden_inputs .= '<input type="hidden" name="system" value="' . $sys_id . '" />';
@@ -471,16 +471,16 @@ $count = mysqli_num_rows($res);
 			<tr>
 				<!-- station allegiances -->
 				<td class="transparent" style="vertical-align:top;width:25%;white-space:nowrap">
-					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?allegiance=Empire<?php echo $addtolink2;?>" title="Empire">
+					<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?allegiance=Empire<?php echo $addtolink2;?>" title="Empire">
 						<img src="style/img/empire.png" alt="Empire" />
 					</a>&nbsp;
-					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?allegiance=Alliance<?php echo $addtolink2;?>" title="Alliance">
+					<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?allegiance=Alliance<?php echo $addtolink2;?>" title="Alliance">
 						<img src="style/img/alliance.png" alt="Alliance" />
 					</a>&nbsp;
-					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?allegiance=Federation<?php echo $addtolink2;?>" title="Federation">
+					<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?allegiance=Federation<?php echo $addtolink2;?>" title="Federation">
 						<img src="style/img/federation.png" alt="Federation" />
 					</a>&nbsp;
-						<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?allegiance=Independent<?php echo $addtolink2;?>" title="Independent">
+						<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?allegiance=Independent<?php echo $addtolink2;?>" title="Independent">
 					<img src="style/img/system.png" alt="Independent" />
 					</a>
 					<!-- search systems and stations-->
@@ -495,16 +495,16 @@ $count = mysqli_num_rows($res);
 				</td>
 				<!-- allegiances -->
 				<td class="transparent" style="vertical-align:top;width:25%;white-space:nowrap">
-					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?system_allegiance=Empire<?php echo $addtolink2;?>" title="Empire">
+					<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?system_allegiance=Empire<?php echo $addtolink2;?>" title="Empire">
 						<img src="style/img/empire.png" alt="Empire" />
 					</a>&nbsp;
-					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?system_allegiance=Alliance<?php echo $addtolink2;?>" title="Alliance">
+					<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?system_allegiance=Alliance<?php echo $addtolink2;?>" title="Alliance">
 						<img src="style/img/alliance.png" alt="Alliance" />
 					</a>&nbsp;
-					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?system_allegiance=Federation<?php echo $addtolink2;?>" title="Federation">
+					<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?system_allegiance=Federation<?php echo $addtolink2;?>" title="Federation">
 						<img src="style/img/federation.png" alt="Federation" />
 					</a>&nbsp;
-					<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?system_allegiance=None<?php echo $addtolink2;?>" title="None allied">
+					<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?system_allegiance=None<?php echo $addtolink2;?>" title="None allied">
 						<img src="style/img/system.png" alt="None allied" />
 					</a>
 					<br /><br />
@@ -527,7 +527,7 @@ $count = mysqli_num_rows($res);
 							$addtolink = str_replace("?power=", "", $addtolink);
 							$addtolink = str_replace(urlencode($power), "", $addtolink);
 						}
-						echo '<a data-replace="true" data-target="#nscontent" href="/nearest_systems.php?power=' . urlencode($power_name). '' . $addtolink . '" title="' . $power_name . '">' . $power_name . '</a><br />';
+						echo '<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?power=' . urlencode($power_name). '' . $addtolink . '" title="' . $power_name . '">' . $power_name . '</a><br />';
 					}
 					?>
 				</td>
@@ -717,7 +717,7 @@ $count = mysqli_num_rows($res);
 								$station_name = $arr["station_name"];
 
 								// check if system has screenshots
-								$screenshots = has_screenshots($system) ? '<a href="/gallery.php?spgmGal=' . urlencode($system) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;vertical-align:top" /></a>' : "";
+								$screenshots = has_screenshots($system) ? '<a href="/Gallery.php?spgmGal=' . urlencode($system) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;vertical-align:top" /></a>' : "";
 
 								// check if system is logged
 								$loglink = is_logged($system_id, true) ? '<a href="log.php?system=' . urlencode($system) . '" style="color:inherit" title="System has log entries"><img src="/style/img/log.png" style="margin-left:5px" /></a>' : "";
@@ -739,7 +739,7 @@ $count = mysqli_num_rows($res);
 									echo number_format($distance,2);
 									echo ' ly' . $is_unknown . '</td>';
 
-									echo '<td class="transparent"><a href="system.php?system_id=' . $system_id . '">' . $system . '</a>' . $loglink.$screenshots . '</td>';
+									echo '<td class="transparent"><a href="System.php?system_id=' . $system_id . '">' . $system . '</a>' . $loglink.$screenshots . '</td>';
 									echo '<td class="transparent">' . $sys_population . '</td>';
 									echo '<td class="transparent">' . $sys_economy . '</td>';
 									echo '<td class="transparent">' . $sys_government . '</td>';

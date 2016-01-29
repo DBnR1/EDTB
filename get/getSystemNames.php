@@ -104,7 +104,7 @@ if (isset($_GET["q"]) && !empty($_GET["q"]) && isset($_GET["divid"]))
 				if (isset($suggest['id']))
 				{
 					?>
-					<a href="/system.php?system_id=<?php echo $suggest['id']?>">
+					<a href="/System.php?system_id=<?php echo $suggest['id']?>">
 						<?php echo $suggest['name']; ?>
 					</a><br />
 					<?php
@@ -112,7 +112,7 @@ if (isset($_GET["q"]) && !empty($_GET["q"]) && isset($_GET["divid"]))
 				else
 				{
 					?>
-					<a href="/system.php?system_name=<?php echo urlencode($suggest['name'])?>">
+					<a href="/System.php?system_name=<?php echo urlencode($suggest['name'])?>">
 						<?php echo $suggest['name']; ?>
 					</a><br />
 					<?php
@@ -122,7 +122,7 @@ if (isset($_GET["q"]) && !empty($_GET["q"]) && isset($_GET["divid"]))
 			elseif ($_GET["idlink"] == "yes")
 			{
 				?>
-				<a href="/nearest_systems.php?system=<?php echo $suggest['id']?><?php echo $addtl?>">
+				<a href="/NearestSystems.php?system=<?php echo $suggest['id']?><?php echo $addtl?>">
 					<?php echo $suggest['name']; ?>
 				</a><br />
 				<?php

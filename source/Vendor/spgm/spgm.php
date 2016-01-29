@@ -1235,7 +1235,7 @@ function spgm_DisplayGalleryNavibar($strGalleryId, $strFilterFlags, $mixPictureI
 		$loglink = is_logged($arrExplodedPathToGallery[$i]) ? '<a href="log.php?system=' . urlencode($arrExplodedPathToGallery[$i]) . '" style="color:inherit" title="System has log entries"><img src="/style/img/log.png" alt="Log" style="margin-left:5px" /></a>' : "";
 
 		// show link if system exists
-		$sysinfo_link = system_exists($arrExplodedPathToGallery[$i]) ? '<a href="system.php?system_name=' . urlencode($arrExplodedPathToGallery[$i]) . '" style="color:inherit" title="System info"><img src="/style/img/info.png" alt="Info" style="margin-left:5px" /></a>' : "";
+		$sysinfo_link = system_exists($arrExplodedPathToGallery[$i]) ? '<a href="System.php?system_name=' . urlencode($arrExplodedPathToGallery[$i]) . '" style="color:inherit" title="System info"><img src="/style/img/info.png" alt="Info" style="margin-left:5px" /></a>' : "";
 
         if ($i < ($_max - 1))
         {

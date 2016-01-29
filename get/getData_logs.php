@@ -165,9 +165,9 @@ if (!empty($curSys["name"]))
 					}
 
 					// check if system has screenshots
-					$screenshots = has_screenshots($system_name) ? '<a href="/gallery.php?spgmGal=' . urlencode($system_name) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;margin-right:3px;vertical-align:top" /></a>' : "";
+					$screenshots = has_screenshots($system_name) ? '<a href="/Gallery.php?spgmGal=' . urlencode($system_name) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;margin-right:3px;vertical-align:top" /></a>' : "";
 
-					$logdata .= '<h2><img src="/style/img/system_log.png" alt="log" style="margin-right:6px" />System log for <a href="/system.php?system_name=' . urlencode($system_name) . '">' . $system_name . '</a>' . $screenshots . '' . $add . '' . $sortable . '</h2>';
+					$logdata .= '<h2><img src="/style/img/system_log.png" alt="log" style="margin-right:6px" />System log for <a href="/System.php?system_name=' . urlencode($system_name) . '">' . $system_name . '</a>' . $screenshots . '' . $add . '' . $sortable . '</h2>';
 					$logdata .= '<hr>';
 				}
 

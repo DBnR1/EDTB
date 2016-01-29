@@ -1,6 +1,6 @@
 <?php
 /**
- * Ajax backend file to fetch system data for system.php
+ * Ajax backend file to fetch system data for System.php
  *
  * No description
  *
@@ -108,7 +108,7 @@ if ($_GET["system_id"] != "undefined" || $_GET["system_name"] != "undefined")
 		$dist1 = sqrt(pow(($last_coordx-($si_system_arr["si_system_coordx"])), 2)+pow(($last_coordy-($si_system_arr["si_system_coordy"])), 2)+pow(($last_coordz-($si_system_arr["si_system_coordz"])), 2));
 		$adds = " *";
 	}
-	$si_dist_add = "<a href='/system.php'>" . $curSys["name"] . "</a>: " . number_format($dist1, 1) . " ly" . $adds . " - ";
+	$si_dist_add = "<a href='/System.php'>" . $curSys["name"] . "</a>: " . number_format($dist1, 1) . " ly" . $adds . " - ";
 
 	$curSys["x"] = $si_system_arr["si_system_coordx"];
 	$curSys["y"] = $si_system_arr["si_system_coordy"];
@@ -223,7 +223,7 @@ if (isset($settings["dist_systems"]))
 		$dist_sys_coordz = $user_dist_a["z"];
 
 		$user_dist = sqrt(pow(($ud_coordx-($dist_sys_coordx)), 2)+pow(($ud_coordy-($dist_sys_coordy)), 2)+pow(($ud_coordz-($dist_sys_coordz)), 2));
-		$user_dists .= "<a href='system.php?system_id=" . $dist_sys_id . "'>" . $dist_sys_display_name . "</a>: " . number_format($user_dist, 1) . " ly" . $add3 . "";
+		$user_dists .= "<a href='System.php?system_id=" . $dist_sys_id . "'>" . $dist_sys_display_name . "</a>: " . number_format($user_dist, 1) . " ly" . $add3 . "";
 
 		if ($i != $num_dists)
 		{
@@ -252,7 +252,7 @@ if ($rares_closeby > 0)
 			$c_rares_data .= number_format($rare_arr["price"]);
 			$c_rares_data .= "&nbsp;CR)";
 			$c_rares_data .= "<br /><span style='font-weight:normal;'>";
-			$c_rares_data .= "<a href='/system.php?system_name=" . urlencode($rare_arr["system_name"]) . "'>";
+			$c_rares_data .= "<a href='/System.php?system_name=" . urlencode($rare_arr["system_name"]) . "'>";
 			$c_rares_data .= $rare_arr["system_name"];
 			$c_rares_data .= "</a>&nbsp;(";
 			$c_rares_data .= $rare_arr["station"];
@@ -278,7 +278,7 @@ else
 $c_rares_data .= "</div>";
 
 // check if system has screenshots
-$si_screenshots = has_screenshots($si_system_name) ? '<a href="/gallery.php?spgmGal=' . urlencode($si_system_name) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;vertical-align:top" /></a>' : "";
+$si_screenshots = has_screenshots($si_system_name) ? '<a href="/Gallery.php?spgmGal=' . urlencode($si_system_name) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;vertical-align:top" /></a>' : "";
 
 // check if system is logged
 $si_loglink = is_logged($si_system_name) ? '<a href="log.php?system=' . urlencode($si_system_name) . '" style="color:inherit" title="System has log entries"><img src="/style/img/log.png" style="margin-left:5px" /></a>' : "";
@@ -295,7 +295,7 @@ if ($actual_num_res > 0 && valid_coordinates($curSys["x"], $curSys["y"], $curSys
 $data['si_name'] .= "" . $si_system_display_name . "" . $si_loglink.$si_screenshots . " <span style='font-size:11px;text-transform:uppercase;vertical-align:middle;'>[ State: " . $si_system_state . " - Security: " . $si_system_security . " - Visits: " . $num_visits . " ]" . $rare_text . "" . $user_dists . "</span>";
 
 /*
-*	station info for system.php
+*	station info for System.php
 */
 
 $si_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT SQL_CACHE *

@@ -39,7 +39,7 @@ $system = $_GET["system"];
 *	check if system has screenshots
 */
 
-$screenshots = has_screenshots($system) ? '<a href="/gallery.php?spgmGal=' . urlencode($system) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;vertical-align:top" /></a>' : "";
+$screenshots = has_screenshots($system) ? '<a href="/Gallery.php?spgmGal=' . urlencode($system) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;vertical-align:top" /></a>' : "";
 
 /*
 *	check if system is in the bookmarks
@@ -93,7 +93,7 @@ if ($count > 0)
 
 	if (!$visit && !$text)
 	{
-		echo '<a href="system.php?system_name=' . urlencode($system) . '" style="color:inherit">' . $system . '</a>' . $screenshots . '<br />No additional information';
+		echo '<a href="System.php?system_name=' . urlencode($system) . '" style="color:inherit">' . $system . '</a>' . $screenshots . '<br />No additional information';
 	}
 	else
 	{
@@ -124,12 +124,12 @@ if ($count > 0)
 																					WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system) . "'"));
 			$visit_unix = strtotime($visit_og);
 			$visit_ago = get_timeago($visit_unix);
-			echo "<a href=\"/system.php?system_name=" . urlencode($system) . "\" style=\"color:inherit;\">" . $system . "</a>" . $screenshots . "&nbsp;&nbsp;|&nbsp;
+			echo "<a href=\"/System.php?system_name=" . urlencode($system) . "\" style=\"color:inherit;\">" . $system . "</a>" . $screenshots . "&nbsp;&nbsp;|&nbsp;
 			Total visits: " . $visits . "&nbsp;&nbsp;|&nbsp;&nbsp;First visit: " . $visit . " (" . $visit_ago . ")";
 		}
 		else
 		{
-			echo "<a href=\"/system.php?system_name=" . urlencode($system) . "\" style=\"color:inherit;\">" . $system . "</a>";
+			echo "<a href=\"/System.php?system_name=" . urlencode($system) . "\" style=\"color:inherit;\">" . $system . "</a>";
 		}
 
 		if ($logged > 0)

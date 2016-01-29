@@ -589,18 +589,18 @@ function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
 	// make a link for systems with an id
 	if ($key == "system_id" && $value != "0")
 	{
-		$this_row .= '<td style="padding:10px;vertical-align:middle"><a href="/system.php?system_id=' . $value . '">' . $value . '</a></td>';
+		$this_row .= '<td style="padding:10px;vertical-align:middle"><a href="/System.php?system_id=' . $value . '">' . $value . '</a></td>';
 	}
 	// make a link for systems with system name
 	elseif (strpos($key, "system_name") !== false && $value != "0" || $key == "name" && $table == "edtb_systems")
 	{
 		// check if system has screenshots
-		$screenshots = has_screenshots($value) ? '<a href="/gallery.php?spgmGal=' . urlencode($value) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;vertical-align:top" /></a>' : "";
+		$screenshots = has_screenshots($value) ? '<a href="/Gallery.php?spgmGal=' . urlencode($value) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;vertical-align:top" /></a>' : "";
 
 		// check if system is logged
 		$loglink = is_logged($value) ? '<a href="log.php?system=' . urlencode($value) . '" style="color:inherit" title="System has log entries"><img src="/style/img/log.png" style="margin-left:5px;vertical-align:top" /></a>' : "";
 
-		$this_row .= '<td style="padding:10px;vertical-align:middle"><a href="/system.php?system_name=' . urlencode($value) . '">' . $value . '' . $loglink.$screenshots . '</a></td>';
+		$this_row .= '<td style="padding:10px;vertical-align:middle"><a href="/System.php?system_name=' . urlencode($value) . '">' . $value . '' . $loglink.$screenshots . '</a></td>';
 	}
 	// number format some values
 	elseif (strpos($key, "price") !== false || strpos($key, "ls") !== false || strpos($key, "population") !== false || strpos($key, "distance") !== false)

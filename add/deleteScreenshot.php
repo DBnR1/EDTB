@@ -38,7 +38,7 @@ $img = isset($_GET["img"]) ? $_GET["img"] : "";
 if (empty($img))
 {
 	write_log("Error: screenshot deletion failed, variable img not set", __FILE__, __LINE__);
-	$redir_url = "/gallery.php?removed=2";
+	$redir_url = "/Gallery.php?removed=2";
 	echo $redir_url;
 	exit;
 }
@@ -47,7 +47,7 @@ $pathinfo = pathinfo($img);
 $path = $pathinfo['dirname'];
 $file = $pathinfo['basename'];
 $system = str_replace("screenshots/", "", $path);
-$redir_url = "/gallery.php?spgmGal=" . urlencode($system) . "&removed";
+$redir_url = "/Gallery.php?spgmGal=" . urlencode($system) . "&removed";
 $path = "" . $_SERVER["DOCUMENT_ROOT"] . "/" . $path . "";
 
 $image = "" . $path . "/" . $file . "";
@@ -59,7 +59,7 @@ if (file_exists($image))
 	{
 		$error = error_get_last();
 		write_log("Error: " . $error['message'] . " - Could not remove " . $image . "", __FILE__, __LINE__);
-		$redir_url = "/gallery.php?spgmGal=" . urlencode($system) . "&removed=1";
+		$redir_url = "/Gallery.php?spgmGal=" . urlencode($system) . "&removed=1";
 	}
 }
 else
@@ -73,13 +73,13 @@ if (file_exists($thumb))
 	{
 		$error = error_get_last();
 		write_log("Error: " . $error['message'] . " - Could not remove " . $thumb . "", __FILE__, __LINE__);
-		$redir_url = "/gallery.php?spgmGal=" . urlencode($system) . "&removed=1";
+		$redir_url = "/Gallery.php?spgmGal=" . urlencode($system) . "&removed=1";
 	}
 }
 else
 {
 	write_log("Error: Could not remove " . $thumb . " - file doesn't exist", __FILE__, __LINE__);
-	$redir_url = "/gallery.php?spgmGal=" . urlencode($system) . "&removed=1";
+	$redir_url = "/Gallery.php?spgmGal=" . urlencode($system) . "&removed=1";
 }
 
 /*
@@ -88,14 +88,14 @@ else
 
 if (is_dir_empty("" . $path . "/thumbs"))
 {
-	$redir_url = "/gallery.php?removed";
+	$redir_url = "/Gallery.php?removed";
 
 	// remove thumbs dir first
 	if (!rmdir("" . $path . "/thumbs"))
 	{
 		$error = error_get_last();
 		write_log("Error: " . $error['message'] . " - Could not remove directory", __FILE__, __LINE__);
-		$redir_url = "/gallery.php?removed=1";
+		$redir_url = "/Gallery.php?removed=1";
 	}
 
 	// remove dir
@@ -103,7 +103,7 @@ if (is_dir_empty("" . $path . "/thumbs"))
 	{
 		$error = error_get_last();
 		write_log("Error: " . $error['message'] . " - Could not remove directory", __FILE__, __LINE__);
-		$redir_url = "/gallery.php?removed=1";
+		$redir_url = "/Gallery.php?removed=1";
 	}
 }
 

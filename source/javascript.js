@@ -345,7 +345,7 @@ function update_values(editurl, deleteid)
         document.getElementById('delete_poi').innerHTML = '';
         if (deleteid !== false)
         {
-            document.getElementById('delete_poi').innerHTML = '<a href="/poi.php" data-replace="true" data-target=".entries" onclick="confirmation('+deleteid+',\'poi\')" title="Delete item"><div class="delete_button"><img src="/style/img/delete.png" alt="Delete" /></div></a>';
+            document.getElementById('delete_poi').innerHTML = '<a href="/Poi.php" data-replace="true" data-target=".entries" onclick="confirmation('+deleteid+',\'poi\')" title="Delete item"><div class="delete_button"><img src="/style/img/delete.png" alt="Delete" /></div></a>';
         }
     }
 
@@ -355,7 +355,7 @@ function update_values(editurl, deleteid)
         if (deleteid !== false)
         {
             //document.getElementById('delete_bm').innerHTML = '<a href="javascript:void(0);" onclick="confirmation('+deleteid+',\'bm\')"><input class="delete_button" type="button" value="Delete Bookmark" style="width:125px;margin-left:10px;"></a>';
-			document.getElementById('delete_bm').innerHTML = '<a href="/poi.php" data-replace="true" data-target=".entries" onclick="confirmation('+deleteid+',\'bm\')" title="Delete item"><div class="delete_button"><img src="/style/img/delete.png" alt="Delete" /></div></a>';
+			document.getElementById('delete_bm').innerHTML = '<a href="/Poi.php" data-replace="true" data-target=".entries" onclick="confirmation('+deleteid+',\'bm\')" title="Delete item"><div class="delete_button"><img src="/style/img/delete.png" alt="Delete" /></div></a>';
         }
     }
 
@@ -481,7 +481,7 @@ function confirmation(delid, what)
         if (what == "log")
             var script = "/add/log.php?do&deleteid="+delid;
         else if (what == "poi")
-            var script = "/add/poi.php?do&deleteid="+delid;
+            var script = "/add/Poi.php?do&deleteid="+delid;
         else if (what == "bm")
             var script = "/add/bookmark.php?do&deleteid="+delid;
         else if (what == "screenshot")
@@ -1005,7 +1005,7 @@ function get_wikipedia(search, id)
 }
 
 /*
-*	update class and rating on nearest_systems.php
+*	update class and rating on NearestSystems.php
 */
 
 function getCR(group_id, class_name)
