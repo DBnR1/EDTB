@@ -1,4 +1,15 @@
 <?php
+/**
+ * Galnet news
+ *
+ * No description
+ *
+ * @package EDTB\Main
+ * @author Mauri Kujala <contact@edtb.xyz>
+ * @copyright Copyright (C) 2016, Mauri Kujala
+ * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
+ */
+
 /*
 *  ED ToolBox, a companion web app for the video game Elite Dangerous
 *  (C) 1984 - 2016 Frontier Developments Plc.
@@ -19,16 +30,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 */
 
-/**
- * Galnet news
- *
- * @author Mauri Kujala <contact@edtb.xyz>
- * @copyright Copyright (C) 2016, Mauri Kujala
- * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
-*/
-
+/** require phpfastcache */
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/Vendor/phpfastcache/phpfastcache.php");
 
+/** @var pagetitle */
 $pagetitle = "Galnet News";
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 

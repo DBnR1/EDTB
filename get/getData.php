@@ -1,4 +1,15 @@
 <?php
+/**
+ * Main ajax backend file
+ *
+ * This file and required files are responsible for updating all of the on-the-fly stuff
+ *
+ * @package EDTB\Backend
+ * @author Mauri Kujala <contact@edtb.xyz>
+ * @copyright Copyright (C) 2016, Mauri Kujala
+ * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
+ */
+
 /*
 *  ED ToolBox, a companion web app for the video game Elite Dangerous
 *  (C) 1984 - 2016 Frontier Developments Plc.
@@ -19,14 +30,7 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 */
 
-/**
- * Main ajax backend file responsible for updating most of the on-the-fly stuff
- *
- * @author Mauri Kujala <contact@edtb.xyz>
- * @copyright Copyright (C) 2016, Mauri Kujala
- * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
- */
-
+/** require functions */
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 
 $action = isset($_GET["action"]) ? $_GET["action"] : "";
@@ -66,10 +70,18 @@ if ((isset($settings["nowplaying_file"]) && !empty($settings["nowplaying_file"])
 {
 	$nowplaying = "";
 
+	/*
+	*    from file
+	*/
+
 	if (isset($settings["nowplaying_file"]) && !empty($settings["nowplaying_file"]))
 	{
 		$nowplaying .= file_get_contents($settings["nowplaying_file"]);
 	}
+
+	/*
+	*    from VLC (@author Travis)
+	*/
 
 	if (isset($settings["nowplaying_vlc_password"]) && !empty($settings["nowplaying_vlc_password"]))
 	{

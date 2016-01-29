@@ -1,31 +1,34 @@
 <?php
-/*
-*    ED ToolBox, a companion web app for the video game Elite Dangerous
-*    (C) 1984 - 2016 Frontier Developments Plc.
-*    ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
-*
-*    This program is free software; you can redistribute it and/or
-*    modify it under the terms of the GNU General Public License
-*    as published by the Free Software Foundation; either version 2
-*    of the License, or (at your option) any later version.
-*
-*    This program is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU General Public License for more details.
-*
-*    You should have received a copy of the GNU General Public License
-*    along with this program; if not, write to the Free Software
-*    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-*/
-
 /**
  * Backend functions
  *
+ * No description
+ *
+ * @package EDTB\Backend
  * @author Mauri Kujala <contact@edtb.xyz>
  * @copyright Copyright (C) 2016, Mauri Kujala
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
  */
+
+/*
+*  ED ToolBox, a companion web app for the video game Elite Dangerous
+*  (C) 1984 - 2016 Frontier Developments Plc.
+*  ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+*
+*  This program is free software; you can redistribute it and/or
+*  modify it under the terms of the GNU General Public License
+*  as published by the Free Software Foundation; either version 2
+*  of the License, or (at your option) any later version.
+*
+*  This program is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
+*  You should have received a copy of the GNU General Public License
+*  along with this program; if not, write to the Free Software
+*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+*/
 
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
 require_once("" . $settings["install_path"] . "/data/server_config.inc.php");
@@ -120,7 +123,7 @@ while ($settings_arr = mysqli_fetch_assoc($settings_res))
 	}
 }
 
-$maplink = $settings["default_map"] == "galaxy_map" ? "/galmap.php" : "/map.php";
+$maplink = $settings["default_map"] == "galaxy_map" ? "/GalMap.php" : "/Map.php";
 $dropdown = $settings["dropdown"];
 array_push($dropdown, $settings["maxdistance"]);
 
@@ -131,13 +134,13 @@ global $settings;
 */
 
 $links = array( "ED ToolBox--log.png--true" => "/",
-				"System Information--info.png--true" => "/system.php",
+				"System Information--info.png--true" => "/System.php",
 				"Galaxy Map&nbsp;&nbsp;&&nbsp;&nbsp;Neighborhood Map--grid.png--true" => $maplink,
-				"Points of Interest&nbsp;&nbsp;&&nbsp;&nbsp;Bookmarks--poi.png--false" => "/poi.php",
-				"Nearest Systems&nbsp;&nbsp;&&nbsp;&nbsp;Stations--find.png--false" => "/nearest_systems.php",
-				"Data Point--dataview.png--false" => "/datapoint.php",
-				"Galnet News--news.png--false" => "/galnet.php",
-				"Screenshot Gallery--gallery.png--false" => "/gallery.php",
+				"Points of Interest&nbsp;&nbsp;&&nbsp;&nbsp;Bookmarks--poi.png--false" => "/Poi.php",
+				"Nearest Systems&nbsp;&nbsp;&&nbsp;&nbsp;Stations--find.png--false" => "/NearestSystems.php",
+				"Data Point--dataview.png--false" => "/DataPoint.php",
+				"Galnet News--news.png--false" => "/GalNet.php",
+				"Screenshot Gallery--gallery.png--false" => "/Gallery.php",
 				"System Log--log.png--true" => "/");
 
 /*
@@ -713,52 +716,60 @@ function FileSizeConvert($bytes)
  * @param string $type starport type
  * @param bool $planetary 0|1
  * @param string $style overrides the style
- * @return string $icon html img tag for the starport icon
+ * @return string $station_icon html img tag for the starport icon
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function get_station_icon($type, $planetary = "0", $style = "margin-right:6px")
 {
-	$icon = $planetary == "1" ? '<img src="/style/img/spaceports/planetary.png" alt="Planetary" style="' . $style . '" />' : '<img src="/style/img/spaceports/spaceport.png" alt="Starport" style="' . $style . '" />';
+	switch ($type)
+	{
+		case "Coriolis Starport":
+			$station_icon = '<img src="/style/img/spaceports/coriolis.png" alt="Coriolis Starport" style="' . $style . '" />';
+			break;
+		case "Orbis Starport":
+			$station_icon = '<img src="/style/img/spaceports/orbis.png" alt="Orbis Starport" style="' . $style . '" />';
+			break;
+		case "Ocellus Starport":
+			$station_icon = '<img src="/style/img/spaceports/ocellus.png" alt="Ocellus Starport" style="' . $style . '" />';
+			break;
+		case ($planetary == "0"):
+			$station_icon = '<img src="/style/img/spaceports/spaceport.png" alt="Starport" style="' . $style . '" />';
+			break;
+		case ($planetary == "1"):
+			$station_icon = '<img src="/style/img/spaceports/planetary.png" alt="Planetary" style="' . $style . '" />';
+			break;
+		default:
+		$station_icon = '<img src="/style/img/spaceports/unknown.png" alt="Unknown" style="' . $style . '" />';
+	}
 
-	if ($type == "Coriolis Starport")
-	{
-		$icon = '<img src="/style/img/spaceports/coriolis.png" alt="Coriolis Starport" style="' . $style . '" />';
-	}
-	elseif ($type == "Orbis Starport")
-	{
-		$icon = '<img src="/style/img/spaceports/orbis.png" alt="Orbis Starport" style="' . $style . '" />';
-	}
-	elseif ($type == "Ocellus Starport")
-	{
-		$icon = '<img src="/style/img/spaceports/ocellus.png" alt="Ocellus Starport" style="' . $style . '" />';
-	}
-	elseif (stripos($type, "unknown") !== false && $planetary == "0")
-	{
-		$icon = '<img src="/style/img/spaceports/unknown.png" alt="Unknown" style="' . $style . '" />';
-	}
-
-	return $icon;
+	return $station_icon;
 }
 
 /**
  * Return the correct allegiance icon
  *
  * @param string $allegiance
- * @return string $pic name of allegiance icon
+ * @return string $allegiance_icon name of allegiance icon
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function get_allegiance_icon($allegiance)
 {
-	$pic = "system.png";
-
-	if (!empty($allegiance))
+	switch ($allegiance)
 	{
-		$pic = $allegiance == "Empire" ? "empire.png" : $pic;
-		$pic = $allegiance == "Alliance" ? "alliance.png" : $pic;
-		$pic = $allegiance == "Federation" ? "federation.png" : $pic;
+		case "Empire":
+			$allegiance_icon = "empire.png";
+			break;
+		case "Alliance":
+			$allegiance_icon = "alliance.png";
+			break;
+		case "Federation":
+			$allegiance_icon = "federation.png";
+			break;
+		default:
+        $allegiance_icon = "system.png";
 	}
 
-	return $pic;
+	return $allegiance_icon;
 }
 
 /**

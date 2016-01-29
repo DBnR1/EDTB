@@ -1,4 +1,15 @@
 <?php
+/**
+ * Ajax backend file to fetch map points for Galaxy Map
+ *
+ * No description
+ *
+ * @package EDTB\Backend
+ * @author Mauri Kujala <contact@edtb.xyz>
+ * @copyright Copyright (C) 2016, Mauri Kujala
+ * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
+ */
+
 /*
 *  ED ToolBox, a companion web app for the video game Elite Dangerous
 *  (C) 1984 - 2016 Frontier Developments Plc.
@@ -19,15 +30,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 */
 
-/**
- * Ajax backend file to fetch map points for Galaxy Map
- *
- * @author Mauri Kujala <contact@edtb.xyz>
- * @copyright Copyright (C) 2016, Mauri Kujala
- * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
- */
-
+/** require functions */
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+
 Header("content-type: application/json");
 
 $last_system_name = $curSys["name"];
@@ -112,30 +117,31 @@ if ($settings["galmap_show_visited_systems"] == "true")
 			$vs_coordz = $cb_arr["z"] == "" ? "" : $cb_arr["z"];
 		}
 
+		/*
+		*    if we now have valid coordinates, get on with it
+		*/
+
 		if (valid_coordinates($vs_coordx, $vs_coordy, $vs_coordz))
 		{
 			$allegiance = $row["allegiance"];
 			$visit = $row["visit"];
 			$visit_og = $row["visit"];
 
-			if ($allegiance == "Federation")
+			switch ($allegiance)
 			{
-				$cat = ',"cat":[2]';
-			}
-			elseif ($allegiance == "Alliance")
-			{
-				$cat = ',"cat":[3]';
-			}
-			elseif ($allegiance == "Empire")
-			{
-				$cat = ',"cat":[1]';
-			}
-			elseif ($allegiance == "Independent")
-			{
-				$cat = ',"cat":[21]';
-			}
-			else
-			{
+				case "Empire":
+					$cat = ',"cat":[1]';
+					break;
+				case "Alliance":
+					$cat = ',"cat":[3]';
+					break;
+				case "Federation":
+					$cat = ',"cat":[2]';
+					break;
+				case "Independent":
+					$cat = ',"cat":[21]';
+					break;
+				default:
 				$cat = ',"cat":[99]';
 			}
 
@@ -208,14 +214,7 @@ if ($settings["galmap_show_pois"] == "true")
 																	LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 			$visited = mysqli_num_rows($visitres);
 
-			if ($visited > 0)
-			{
-				$cat = ',"cat":[8]';
-			}
-			else
-			{
-				$cat = ',"cat":[7]';
-			}
+			$cat = $visited > 0 ? ',"cat":[8]' :  ',"cat":[7]';
 
 			$info .= '<div class="map_info"><span class="map_info_title">Point of Interest</span><br />';
 			$info .= $category_name == "" ? "" : '<strong>Category</strong><br />' . $category_name . '<br /><br />';

@@ -1,25 +1,40 @@
 <?php
+/**
+ * SPGM (Simple Picture Gallery Manager)
+ *
+ * A basic and configurable PHP script to display picture galleries on the web
+ *
+ * @author Sylvain Pajot <spajot@users.sourceforge.net>
+ * @copyright Copyright 2002-2007, Sylvain Pajot
+ * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
+ * Official website: http://spgm.sourceforge.net
+ *
+ * @package EDTB\Backend
+ */
 
-#  SPGM (Simple Picture Gallery Manager), a basic and configurable PHP script
-#  to display picture galleries on the web
-#  Copyright 2002-2007, Sylvain Pajot <spajot@users.sourceforge.net>
-#  Official website: http://spgm.sourceforge.net
-#
-#  This program is free software; you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation; either version 2 of the License, or
-#  (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the
-#  GNU General Public License for more details.
-#
-#  You should have received a copy of the GNU General Public License
-#  along with this program; if not, write to the Free Software
-#  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+/*
+*  ED ToolBox, a companion web app for the video game Elite Dangerous
+*  (C) 1984 - 2016 Frontier Developments Plc.
+*  ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+*
+*  This program is free software; you can redistribute it and/or
+*  modify it under the terms of the GNU General Public License
+*  as published by the Free Software Foundation; either version 2
+*  of the License, or (at your option) any later version.
+*
+*  This program is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
+*  You should have received a copy of the GNU General Public License
+*  along with this program; if not, write to the Free Software
+*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+*/
 
+/** require functions */
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+
 ###### Toggles #############
 define('MODE_TRACE', false); // toggles debug mode
 define('MODE_WARNING', true); // toggles warning mode
@@ -323,7 +338,7 @@ function spgm_DispSPGMLink()
     spgm_Trace('<p>function spgm_DispSPGMLink</p>' . "\n");
 
     // multi-language support
-    $spgm_cfg['locale']['spgmLink'] = str_replace(PATTERN_SPGM_LINK, '<a href="http://spgm.sourceforge.net" class="' . CLASS_A_SPGM_LINK . '">SPGM</a>', $spgm_cfg['locale']['spgmLink']);
+    $spgm_cfg['locale']['spgmLink'] = str_replace(PATTERN_SPGM_LINK, '<a href="http://spgm.sourceforge.net" target="_BLANK" class="' . CLASS_A_SPGM_LINK . '">SPGM</a>', $spgm_cfg['locale']['spgmLink']);
 
     print $spgm_cfg['locale']['spgmLink'];
 }
@@ -806,11 +821,12 @@ function spgm_PostInitCheck()
         $_lblAlt         = $arrIconInfo[$i][1];
         $_lblClass       = $arrIconInfo[$i][2];
         $_lblNa          = $arrIconInfo[$i][3];
-        $strIconFileName = DIR_THEMES . $spgm_cfg['conf']['theme'] . '/' . $spgm_cfg['theme'][$_key];
+		$strIconFileName2 = DIR_THEMES . $spgm_cfg['conf']['theme'] . '/' . $spgm_cfg['theme'][$_key];
+        $strIconFileName = DIR_THEMES . $spgm_cfg['conf']['theme'] . '/' . rawurlencode($spgm_cfg['theme'][$_key]);
 
         if ($spgm_cfg['theme'][$_key] != '' && spgm_CheckPerms($strIconFileName))
         {
-            $dim                      = getimagesize($strIconFileName);
+            $dim                      = getimagesize($strIconFileName2);
             $spgm_cfg['theme'][$_key] = '<img src="' . $strIconFileName . '"';
             $spgm_cfg['theme'][$_key] .= ' alt="' . $_lblAlt . '"';
             $spgm_cfg['theme'][$_key] .= ' class="' . $_lblClass . '"';
@@ -1216,10 +1232,10 @@ function spgm_DisplayGalleryNavibar($strGalleryId, $strFilterFlags, $mixPictureI
         print ' &raquo; ';
 
 		// check if system is logged
-		$loglink = is_logged($arrExplodedPathToGallery[$i]) ? '<a href="log.php?system=' . urlencode($arrExplodedPathToGallery[$i]) . '" style="color:inherit" title="System has log entries"><img src="/style/img/log.png" style="margin-left:5px" /></a>' : "";
+		$loglink = is_logged($arrExplodedPathToGallery[$i]) ? '<a href="log.php?system=' . urlencode($arrExplodedPathToGallery[$i]) . '" style="color:inherit" title="System has log entries"><img src="/style/img/log.png" alt="Log" style="margin-left:5px" /></a>' : "";
 
 		// show link if system exists
-		$sysinfo_link = system_exists($arrExplodedPathToGallery[$i]) ? '<a href="system.php?system_name=' . urlencode($arrExplodedPathToGallery[$i]) . '" style="color:inherit" title="System info"><img src="/style/img/info.png" style="margin-left:5px" /></a>' : "";
+		$sysinfo_link = system_exists($arrExplodedPathToGallery[$i]) ? '<a href="system.php?system_name=' . urlencode($arrExplodedPathToGallery[$i]) . '" style="color:inherit" title="System info"><img src="/style/img/info.png" alt="Info" style="margin-left:5px" /></a>' : "";
 
         if ($i < ($_max - 1))
         {
@@ -1326,7 +1342,7 @@ function spgm_DisplayGalleryHierarchy($strGalleryId, $iGalleryDepth, $strFilterF
         $strGalleryName              = $arrSubGalleryFilenames[$i]; //*
         $strPathToSubGallery         = $strPathToSuperGallery . $strGalleryName; //*
         $strPathToGalleryTitle       = $strPathToGallery . '/' . $strGalleryName . '/' . FILE_GAL_TITLE;
-        $strGalleryThumbnailBasename = DIR_GAL . $strPathToSuperGallery . PREF_THUMB . $strGalleryName;
+        $strGalleryThumbnailBasename = DIR_GAL . urlencode($strPathToSuperGallery) . PREF_THUMB . urlencode($strGalleryName);
         $strHtmlGalleryName          = '';
         if (spgm_CheckPerms($strPathToGalleryTitle))
         {
@@ -1506,7 +1522,7 @@ function spgm_DisplayGalleryHierarchy($strGalleryId, $iGalleryDepth, $strFilterF
                 print '		 </tr>' . "\n" . '		<tr>' . "\n";
 
 			// check if system is logged
-			$loglink = is_logged($strHtmlGalleryName) ? '<a href="log.php?system=' . urlencode($strHtmlGalleryName) . '" style="color:inherit" title="System has log entries"><img src="/style/img/log.png" style="margin-left:5px" /></a>' : "";
+			$loglink = is_logged($strHtmlGalleryName) ? '<a href="log.php?system=' . urlencode($strHtmlGalleryName) . '" style="color:inherit" title="System has log entries"><img src="/style/img/log.png" alt="Log" style="margin-left:5px" /></a>' : "";
 
             // display the gallery title
             print '		 <td class="' . CLASS_TD_GALITEM_TITLE . '">' . "\n";
@@ -1563,7 +1579,8 @@ function spgm_DisplayPicture($strGalleryId, $iPictureId, $strFilterFlags)
     $strPictureFilename  = $arrPictureFilenames[$iPictureId];
     $_strFileExtension   = strrchr($strPictureFilename, '.');
     $strPictureBasename  = substr($strPictureFilename, 0, -strlen($_strFileExtension));
-    $strPictureURL       = $strPathToPictures . $strPictureFilename;
+    $strPictureURL       = $strPathToPictures . rawurlencode($strPictureFilename);
+	$strPictureURL2      = $strPathToPictures . $strPictureFilename;
     $strCaptionURL       = $strPictureURL . EXT_PIC_CAPTION; // DEPRECATED
     $strGalleryName      = str_replace('_', ' ', $strGalleryId);
     $strGalleryName      = str_replace('/', ' &raquo; ', $strGalleryName);
@@ -1588,7 +1605,7 @@ function spgm_DisplayPicture($strGalleryId, $iPictureId, $strFilterFlags)
 
     if (spgm_IsPicture($strPictureFilename, $strGalleryId))
     {
-        $arrPictureDim      = getimagesize($strPictureURL);
+        $arrPictureDim      = getimagesize($strPictureURL2);
         $iPreviousPictureId = $iPictureId - 1;
         $iNextPictureId     = $iPictureId + 1;
 
@@ -1752,7 +1769,7 @@ function spgm_DisplayPicture($strGalleryId, $iPictureId, $strFilterFlags)
         print '	 </td>' . "\n";
         print '</tr>' . "\n";
 
-        $file = base64_encode(file_get_contents("" . BASE_DIR . "/" . $strPictureURL . ""));
+        $file = base64_encode(file_get_contents("" . BASE_DIR . "/" . $strPictureURL2 . ""));
         // display the picture's filename if needed
         if ($spgm_cfg['conf']['filenameWithPictures'] == true)
         {
@@ -1838,7 +1855,8 @@ function spgm_DisplayThumbnails($strGalleryId, $arrPictureFilenames, $iPictureId
 {
     global $spgm_cfg;
 
-    $strPathToPictures = DIR_GAL . $strGalleryId . '/';
+    $strPathToPictures = DIR_GAL . rawurlencode($strGalleryId) . '/';
+	$strPathToPictures2 = DIR_GAL . $strGalleryId . '/';
     $iPictureNumber    = count($arrPictureFilenames);
     $iPageNumber       = $iPictureNumber / $spgm_cfg['conf']['thumbnailsPerPage'];
     if ($iPageNumber > (int) ($iPictureNumber / $spgm_cfg['conf']['thumbnailsPerPage']))
@@ -1888,13 +1906,16 @@ function spgm_DisplayThumbnails($strGalleryId, $arrPictureFilenames, $iPictureId
         $_strFileExtension    = strrchr($strPictureFilename, '.');
         $strPictureBasename   = substr($strPictureFilename, 0, -strlen($_strFileExtension));
         $strPictureURL        = $strPathToPictures . $strPictureFilename;
+		$strPictureURL2        = $strPathToPictures2 . $strPictureFilename;
         $strThumbnailFilename = PREF_THUMB . $arrPictureFilenames[$i];
         if (defined('DIR_THUMBS'))
         {
-            $strThumbnailFilename = DIR_THUMBS . PREF_THUMB . $arrPictureFilenames[$i];
+            $strThumbnailFilename = DIR_THUMBS . PREF_THUMB . rawurlencode($arrPictureFilenames[$i]);
+			$strThumbnailFilename2 = DIR_THUMBS . PREF_THUMB . $arrPictureFilenames[$i];
         }
         $strThumbnailURL        = $strPathToPictures . $strThumbnailFilename;
-        $arrThumbnailDim        = getimagesize($strThumbnailURL);
+		$strThumbnailURL2       = $strPathToPictures2 . $strThumbnailFilename2;
+        $arrThumbnailDim        = getimagesize($strThumbnailURL2);
         $iCurrentPictureIndex   = $i + 1; // index that is displayed
         $strClassThumbnailThumb = CLASS_TD_THUMBNAILS_THUMB;
         $strClassImgThumbnail   = CLASS_IMG_THUMBNAIL;
@@ -1930,7 +1951,7 @@ function spgm_DisplayThumbnails($strGalleryId, $arrPictureFilenames, $iPictureId
         else
             $strHtmlNew = '';
 
-        $arrPictureDim = getimagesize($strPictureURL);
+        $arrPictureDim = getimagesize($strPictureURL2);
 
         // ...
         print '	 ' . $strHtmlNew . "\n";
@@ -1984,7 +2005,7 @@ function spgm_DisplayThumbnails($strGalleryId, $arrPictureFilenames, $iPictureId
         }
         if ($spgm_cfg['conf']['pictureInfoedThumbnails'] == true)
         {
-            $picsize = (int) (filesize($strPictureURL) / 1024);
+            $picsize = (int) (filesize($strPictureURL2) / 1024);
             print '  [ ' . $arrPictureDim[0] . 'x' . $arrPictureDim[1] . ' - ' . $picsize . ' KB ]' . "\n";
         }
 

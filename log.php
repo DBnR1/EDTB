@@ -1,4 +1,15 @@
 <?php
+/**
+ * Log entries for a specific system
+ *
+ * No description
+ *
+ * @package EDTB\Main
+ * @author Mauri Kujala <contact@edtb.xyz>
+ * @copyright Copyright (C) 2016, Mauri Kujala
+ * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
+ */
+
 /*
 *  ED ToolBox, a companion web app for the video game Elite Dangerous
 *  (C) 1984 - 2016 Frontier Developments Plc.
@@ -19,20 +30,14 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 */
 
-/**
- * Log entries for a specific system
- *
- * @author Mauri Kujala <contact@edtb.xyz>
- * @copyright Copyright (C) 2016, Mauri Kujala
- * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
-*/
-
+/** @var logsystem */
 $logsystem = $_GET["system"];
 if (!$logsystem) exit("No system set");
 
 $logsystem_id = !isset($_GET["system_id"]) ? "-1" : $_GET["system_id"];
 /*if (!$logsystem_id) exit("No system id set");*/
 
+/** @var pagetitle */
 $pagetitle = "ED ToolBox";
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 ?>

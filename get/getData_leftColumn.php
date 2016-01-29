@@ -1,4 +1,15 @@
 <?php
+/**
+ * Ajax backend file for the left column data
+ *
+ * No description
+ *
+ * @package EDTB\Backend
+ * @author Mauri Kujala <contact@edtb.xyz>
+ * @copyright Copyright (C) 2016, Mauri Kujala
+ * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
+ */
+
 /*
 *  ED ToolBox, a companion web app for the video game Elite Dangerous
 *  (C) 1984 - 2016 Frontier Developments Plc.
@@ -20,17 +31,8 @@
 */
 
 /**
- * Ajax backend file for the left column data
- *
- * @author Mauri Kujala <contact@edtb.xyz>
- * @copyright Copyright (C) 2016, Mauri Kujala
- * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
+ *	System title for the left column
  */
-
-/*
-*	System title for the left column
-*/
-
 $data['system_title'] .= '';
 
 $pic = "system.png";

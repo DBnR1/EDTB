@@ -772,6 +772,7 @@ a.poid:hover
 
 .status_ship
 {
+	display:inline-block;
 	white-space:nowrap;
 	font-family:Sintony;
 	vertical-align:middle;
@@ -779,7 +780,8 @@ a.poid:hover
 	font-size:14px;
 	text-shadow:none;
 	font-weight:normal;
-	padding:10px;
+	margin-right:10px;
+	margin-top:2px;
 	line-height:1.5;
 	opacity:0.9;
 }
@@ -1809,9 +1811,15 @@ div.tooltip
 	outline:none;
 }
 
-.markItUp
+.html .markItUp
 {
 	width:765px;
+	margin:5px 0 5px 0;
+}
+
+.poi_bm .markItUp
+{
+	width:600px;
 	margin:5px 0 5px 0;
 }
 
@@ -1837,6 +1845,16 @@ div.tooltip
 	font-family:Sintony;
 	color:#FFFFFA;
 	font-size:12px;
+}
+
+.html .markItUpEditor
+{
+	height:400px;
+}
+
+.poi_bm .markItUpEditor
+{
+	height:200px;
 }
 
 .markItUpPreviewFrame

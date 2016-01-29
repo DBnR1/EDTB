@@ -1,4 +1,15 @@
 <?php
+/**
+ * Ajax backend file for system and general log
+ *
+ * No description
+ *
+ * @package EDTB\Backend
+ * @author Mauri Kujala <contact@edtb.xyz>
+ * @copyright Copyright (C) 2016, Mauri Kujala
+ * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
+ */
+
 /*
 *  ED ToolBox, a companion web app for the video game Elite Dangerous
 *  (C) 1984 - 2016 Frontier Developments Plc.
@@ -19,17 +30,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 */
 
-/**
- * Ajax backend file for system and general log
- *
- * @author Mauri Kujala <contact@edtb.xyz>
- * @copyright Copyright (C) 2016, Mauri Kujala
- * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
- */
 
-/*
-*    System log
-*/
+/**
+ * System logs
+ */
 
 if (!empty($curSys["name"]))
 {
@@ -42,6 +46,13 @@ if (!empty($curSys["name"]))
 	{
 		$ssort = 'DESC';
 	}
+
+	// figure out what coords to calculate from
+	$usable_coords = usable_coords();
+	$usex = $usable_coords["x"];
+	$usey = $usable_coords["y"];
+	$usez = $usable_coords["z"];
+	$exact = $usable_coords["current"] === true ? "" : " *";
 
 	/*
 	*	if log range is set to zero, only show logs from current system
@@ -58,7 +69,8 @@ if (!empty($curSys["name"]))
 																LEFT JOIN edtb_systems ON user_log.system_id = edtb_systems.id
 																LEFT JOIN edtb_stations ON user_log.station_id = edtb_stations.id
 																WHERE user_log.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'
-																ORDER BY stardate " . $ssort . "") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+																ORDER BY user_log.stardate " . $ssort . "")
+																or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 	}
 	/*
 	*	if log range is set to -1, show all logs
@@ -68,59 +80,47 @@ if (!empty($curSys["name"]))
 		$log_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT SQL_CACHE
 																user_log.id, user_log.system_name AS log_system_name, user_log.station_id,
 																user_log.log_entry, user_log.stardate,
+																sqrt(pow((IFNULL(edtb_systems.x, user_systems_own.x)-(" . $usex . ")),2)
+																+pow((IFNULL(edtb_systems.y, user_systems_own.y)-(" . $usey . ")),2)
+																+pow((IFNULL(edtb_systems.z, user_systems_own.z)-(" . $usez . ")),2)) AS distance,
 																edtb_systems.name AS system_name,
 																edtb_stations.name AS station_name
 																FROM user_log
-																LEFT JOIN edtb_systems ON user_log.system_id = edtb_systems.id
+																LEFT JOIN edtb_systems ON user_log.system_name = edtb_systems.name
 																LEFT JOIN edtb_stations ON user_log.station_id = edtb_stations.id
+																LEFT JOIN user_systems_own ON user_log.system_name = user_systems_own.name
 																WHERE user_log.system_name != ''
-																ORDER BY stardate " . $ssort . "") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+																ORDER BY user_log.stardate " . $ssort . "")
+																or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 	}
 	/*
 	*	in other cases, show logs from x ly away from last known location
 	*/
 	else
 	{
-		// figure out what coords to calculate from
-		$usable_coords = usable_coords();
-		$usex = $usable_coords["x"];
-		$usey = $usable_coords["y"];
-		$usez = $usable_coords["z"];
-		$exact = $usable_coords["current"] === true ? "" : " *";
-
 		$log_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT SQL_CACHE
 																user_log.id, user_log.system_id, user_log.system_name AS log_system_name,
 																user_log.station_id, user_log.log_entry, user_log.stardate,
-																sqrt(pow((edtb_systems.x-(" . $usex . ")),2)
-																+pow((edtb_systems.y-(" . $usey . ")),2)
-																+pow((edtb_systems.z-(" . $usez . ")),2)) AS distance,
-																sqrt(pow((user_systems_own.x-(" . $usex . ")),2)
-																+pow((user_systems_own.y-(" . $usey . ")),2)
-																+pow((user_systems_own.z-(" . $usez . ")),2)) AS distance2,
+																sqrt(pow((IFNULL(edtb_systems.x, user_systems_own.x)-(" . $usex . ")),2)
+																+pow((IFNULL(edtb_systems.y, user_systems_own.y)-(" . $usey . ")),2)
+																+pow((IFNULL(edtb_systems.z, user_systems_own.z)-(" . $usez . ")),2)) AS distance,
 																edtb_systems.name AS system_name,
 																edtb_stations.name AS station_name
 																FROM user_log
-																LEFT JOIN edtb_systems ON user_log.system_id = edtb_systems.id
+																LEFT JOIN edtb_systems ON user_log.system_name = edtb_systems.name
 																LEFT JOIN edtb_stations ON user_log.station_id = edtb_stations.id
 																LEFT JOIN user_systems_own ON user_log.system_name = user_systems_own.name
 																WHERE
-																edtb_systems.x BETWEEN " . $usex . "-" . $settings["log_range"] . "
+																IFNULL(edtb_systems.x, user_systems_own.x) BETWEEN " . $usex . "-" . $settings["log_range"] . "
 																AND " . $usex . "+" . $settings["log_range"] . " &&
-																edtb_systems.y BETWEEN " . $usey . "-" . $settings["log_range"] . "
+																IFNULL(edtb_systems.y, user_systems_own.y) BETWEEN " . $usey . "-" . $settings["log_range"] . "
 																AND " . $usey . "+" . $settings["log_range"] . " &&
-																edtb_systems.z BETWEEN " . $usez . "-" . $settings["log_range"] . "
-																AND " . $usez . "+" . $settings["log_range"] . "
-																OR
-																user_systems_own.x BETWEEN " . $usex . "-" . $settings["log_range"] . "
-																AND " . $usex . "+" . $settings["log_range"] . " &&
-																user_systems_own.y BETWEEN " . $usey . "-" . $settings["log_range"] . "
-																AND " . $usey . "+" . $settings["log_range"] . " &&
-																user_systems_own.z BETWEEN " . $usez . "-" . $settings["log_range"] . "
+																IFNULL(edtb_systems.z, user_systems_own.z) BETWEEN " . $usez . "-" . $settings["log_range"] . "
 																AND " . $usez . "+" . $settings["log_range"] . "
 																OR
 																user_log.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'
 																ORDER BY user_log.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "' DESC,
-																distance ASC, distance2 ASC,
+																distance ASC,
 																user_log.stardate " . $ssort . "
 																LIMIT 10") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 	}
@@ -141,18 +141,12 @@ if (!empty($curSys["name"]))
 				$log_text = $log_arr["log_entry"];
 				$date = date_create($log_arr["stardate"]);
 				$log_added = date_modify($date, "+1286 years");
-				$distance = $log_arr["distance"] == "" ? number_format($log_arr["distance2"], 1) : number_format($log_arr["distance"], 1);
+				$distance = $log_arr["distance"] != "" ? number_format($log_arr["distance"], 1) : "";
 
 				if ($this_system != $system_name)
 				{
-					if ($distance != 0)
-					{
-						$add = " (distance " . $distance . " ly" . $exact . ")";
-					}
-					else
-					{
-						$add = "";
-					}
+
+					$add = $distance != 0 ? " (distance " . $distance . " ly" . $exact . ")" : "";
 
 					$sortable = "";
 					if ($i == 0)
@@ -256,4 +250,3 @@ if ($gnum > 0)
 	}
 }
 $data['log_data'] = $logdata;
-

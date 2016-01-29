@@ -2,9 +2,11 @@
 /**
  * Fetch XML from url and convert to array
  *
+ * @param string $url
+ * @param bool $get_attributes
+ * @param string $tag
  * @author Lorenzo Aiello https://gist.github.com/laiello/8189351
  */
-
 function xml2array($url, $get_attributes = 1, $priority = 'tag')
 {
     $contents = "";

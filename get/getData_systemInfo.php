@@ -1,4 +1,15 @@
 <?php
+/**
+ * Ajax backend file to fetch system data for system.php
+ *
+ * No description
+ *
+ * @package EDTB\Backend
+ * @author Mauri Kujala <contact@edtb.xyz>
+ * @copyright Copyright (C) 2016, Mauri Kujala
+ * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
+ */
+
 /*
 *  ED ToolBox, a companion web app for the video game Elite Dangerous
 *  (C) 1984 - 2016 Frontier Developments Plc.
@@ -19,17 +30,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 */
 
-/**
- * Ajax backend file to fetch system data for system.php
- *
- * @author Mauri Kujala <contact@edtb.xyz>
- * @copyright Copyright (C) 2016, Mauri Kujala
- * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
- */
-
 // If system id or name is set, show info about that system
 if ($_GET["system_id"] != "undefined" || $_GET["system_name"] != "undefined")
 {
+	/** @var $system_id */
 	$system_id = $_GET["system_id"] != "undefined" ? $_GET["system_id"] : "-1";
 
 	if ($system_id == "-1")
@@ -110,7 +114,9 @@ if ($_GET["system_id"] != "undefined" || $_GET["system_name"] != "undefined")
 	$curSys["y"] = $si_system_arr["si_system_coordy"];
 	$curSys["z"] = $si_system_arr["si_system_coordz"];
 }
-// if system_id not set, show info about current system
+/*
+*    if system_id not set, show info about current system
+*/
 else
 {
 	$si_system_name = $curSys["name"];
@@ -193,7 +199,10 @@ else
 	$rares_closeby = 0;
 }
 
-// get distances to user defined systems
+/*
+*    get distances to user defined systems
+*/
+
 $user_dists = "<span class=\"right\" style=\"font-size:11px;\">" . $si_dist_add . "";
 if (isset($settings["dist_systems"]))
 {
@@ -286,7 +295,7 @@ if ($actual_num_res > 0 && valid_coordinates($curSys["x"], $curSys["y"], $curSys
 $data['si_name'] .= "" . $si_system_display_name . "" . $si_loglink.$si_screenshots . " <span style='font-size:11px;text-transform:uppercase;vertical-align:middle;'>[ State: " . $si_system_state . " - Security: " . $si_system_security . " - Visits: " . $num_visits . " ]" . $rare_text . "" . $user_dists . "</span>";
 
 /*
-*    station info for system.php
+*	station info for system.php
 */
 
 $si_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT SQL_CACHE *
@@ -354,6 +363,9 @@ else
 
 		$selling_modules = "";
 
+		/*
+		*    modules information
+		*/
 		if (!empty($sarr2["selling_modules"]))
 		{
 			$modules = $sarr2["selling_modules"];
@@ -369,7 +381,7 @@ else
 			$i = 0;
 			foreach ($modules_s as $mods)
 			{
-				$mods_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT SQL_CACHE class, rating, price, group_name, category_name
+				$mods_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT SQL_CACHE class, rating, price, group_name, category_name
 																		FROM edtb_modules
 																		WHERE id = '" . $mods . "'
 																		LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
@@ -508,8 +520,6 @@ else
 			$data['si_stations'] .= '</div><div class="wpsearch" id="wpsearch_' . $station_id . '" style="display:none"></div>';
 
 			$data['si_stations'] .= '<div id="info_'. $station_id .'" class="systeminfo_station_info">';
-				//$data['si_stations'] .= $services;
-				//$data['si_stations'] .= "<br /><br />";
 				$data['si_stations'] .= $info;
 				if ($info != "")
 				{
@@ -573,7 +583,7 @@ else
 }
 
 /*
-*    detailed system info
+*	detailed system info
 */
 
 if ($exists == 0 && $_GET["system_id"] == "undefined" && $_GET["system_name"] == "undefined")

@@ -1,4 +1,15 @@
 <?php
+/**
+ * Galaxy map
+ *
+ * No description
+ *
+ * @package EDTB\Backend
+ * @author Mauri Kujala <contact@edtb.xyz>
+ * @copyright Copyright (C) 2016, Mauri Kujala
+ * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
+ */
+
 /*
 *  ED ToolBox, a companion web app for the video game Elite Dangerous
 *  (C) 1984 - 2016 Frontier Developments Plc.
@@ -19,15 +30,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 */
 
-/**
- * Galaxy map
- *
- * @author Mauri Kujala <contact@edtb.xyz>
- * @copyright Copyright (C) 2016, Mauri Kujala
- * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
-*/
-
 //http://ed-board.net/3Dgalnet/
+/** @var pagetitle */
 $pagetitle = "Galaxy Map&nbsp;&nbsp;&&nbsp;&nbsp;Neighborhood Map";
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 
@@ -62,8 +66,8 @@ else
 			<tr>
 				<th style="text-align: center">
 					<ul class="pagination">
-						<li class="actives"><a href="/galmap.php">Galaxy Map</a></li>
-						<li><a href="/map.php">Neighborhood Map</a></li>
+						<li class="actives"><a href="/GalMap.php">Galaxy Map</a></li>
+						<li><a href="/Map.php">Neighborhood Map</a></li>
 					</ul>
 				</th>
 			</tr>

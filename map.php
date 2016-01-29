@@ -1,4 +1,15 @@
 <?php
+/**
+ * Neighborhood map
+ *
+ * No description
+ *
+ * @package EDTB\Main
+ * @author Mauri Kujala <contact@edtb.xyz>
+ * @copyright Copyright (C) 2016, Mauri Kujala
+ * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
+ */
+
 /*
 *  ED ToolBox, a companion web app for the video game Elite Dangerous
 *  (C) 1984 - 2016 Frontier Developments Plc.
@@ -19,15 +30,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 */
 
-/**
- * Neighborhood map
- *
- * @author Mauri Kujala <contact@edtb.xyz>
- * @copyright Copyright (C) 2016, Mauri Kujala
- * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
-*/
-
+/** @var pagetitle */
 $pagetitle = "Galaxy Map&nbsp;&nbsp;&&nbsp;&nbsp;Neighborhood Map";
+
+/** @require header file */
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 
 if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"]))
@@ -41,8 +47,8 @@ if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"]))
 			<tr>
 				<th style="text-align: center">
 					<ul class="pagination">
-						<li><a href="/galmap.php">Galaxy Map</a></li>
-						<li class="actives"><a href="/map.php">Neighborhood Map</a></li>
+						<li><a href="/GalMap.php">Galaxy Map</a></li>
+						<li class="actives"><a href="/Map.php">Neighborhood Map</a></li>
 					</ul>
 				</th>
 			</tr>
@@ -121,13 +127,13 @@ if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"]))
 			<?php
 			if (isset($_GET["mode"]) && $_GET["mode"] == "2d")
 			{
-				$linkto = "map.php";
+				$linkto = "/Map.php";
 				$linkname = "Switch to 3D mode";
 				$mode = "2d";
 			}
 			else
 			{
-				$linkto = "map.php?mode=2d";
+				$linkto = "/Map.php?mode=2d";
 				$linkname = "Switch to 2D mode";
 				$mode = "3d";
 			}
@@ -142,14 +148,7 @@ if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"]))
 
 					foreach ($dropdowns as $value)
 					{
-						if ($settings["maxdistance"] == $value)
-						{
-							$selected = " SELECTED";
-						}
-						else
-						{
-							$selected = "";
-						}
+						$selected = $settings["maxdistance"] == $value ? ' selected="selected"' : "";
 
 						echo '<option value="' . $value . '"' . $selected . '>Range ' . $value . ' ly</option>';
 					}

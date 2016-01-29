@@ -1,4 +1,15 @@
 			<?php
+			/**
+			 * Footer file
+			 *
+			 * No description
+			 *
+			 * @package EDTB\Main
+			 * @author Mauri Kujala <contact@edtb.xyz>
+			 * @copyright Copyright (C) 2016, Mauri Kujala
+			 * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
+			 */
+
 			/*
 			*  ED ToolBox, a companion web app for the video game Elite Dangerous
 			*  (C) 1984 - 2016 Frontier Developments Plc.
@@ -19,17 +30,10 @@
 			*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 			*/
 
-			/**
-			 * Footer file
-			 *
-			 * @author Mauri Kujala <contact@edtb.xyz>
-			 * @copyright Copyright (C) 2016, Mauri Kujala
-			 * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
-			*/
 			?>
 			<div class="rightpanel-content">
 				<?php
-				// add and edit log
+				/** require log */
 				include_once("" . $_SERVER["DOCUMENT_ROOT"] . "/add/log.php");
 				//
 
@@ -50,8 +54,22 @@
 				//
 				((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
 				?>
+				<!-- initialize textareas -->
 				<script type="text/javascript">
-					$('#html').markItUp(mySettings);
+					if ($('#html'))
+					{
+						$('#html').markItUp(html_textarea);
+					}
+
+					if ($('#poi_text'))
+					{
+						$('#poi_text').markItUp(poi_bm);
+					}
+
+					if ($('#bm_text'))
+					{
+						$('#bm_text').markItUp(poi_bm);
+					}
 				</script>
 				<!-- calculate distances -->
 				<div class="input" id="distance" style="text-align:center">

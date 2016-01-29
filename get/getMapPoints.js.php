@@ -1,4 +1,15 @@
 <?php
+/**
+ * Ajax backend file to fetch map points for Neighborhood Map
+ *
+ * No description
+ *
+ * @package EDTB\Backend
+ * @author Mauri Kujala <contact@edtb.xyz>
+ * @copyright Copyright (C) 2016, Mauri Kujala
+ * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
+ */
+
 /*
 *  ED ToolBox, a companion web app for the video game Elite Dangerous
 *  (C) 1984 - 2016 Frontier Developments Plc.
@@ -19,15 +30,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 */
 
-/**
- * Ajax backend file to fetch map points for Neighborhood Map
- *
- * @author Mauri Kujala <contact@edtb.xyz>
- * @copyright Copyright (C) 2016, Mauri Kujala
- * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
- */
-
+/** require functions */
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+
 Header("content-type: application/x-javascript");
 
 if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"]))
@@ -268,20 +273,18 @@ if ($settings["nmap_show_visited_systems"] == "true")
 																						LIMIT 1"));
 				$allegiance = $row["allegiance"];
 
-				if ($allegiance == "Federation")
+				switch ($allegiance)
 				{
-					$color = 'rgba(140, 140, 140, 0.7)';
-				}
-				elseif ($allegiance == "Alliance")
-				{
-					$color = 'rgba(9, 180, 244, 0.7)';
-				}
-				elseif ($allegiance == "Empire")
-				{
-					$color = 'rgba(231, 216, 132, 0.7)';
-				}
-				else
-				{
+					case "Empire":
+						$color = 'rgba(231, 216, 132, 0.7)';
+						break;
+					case "Alliance":
+						$color = 'rgba(9, 180, 244, 0.7)';
+						break;
+					case "Federation":
+						$color = 'rgba(140, 140, 140, 0.7)';
+						break;
+					default:
 					$color = 'rgba(255, 255, 255, 0.8)';
 				}
 

@@ -1,4 +1,15 @@
 <?php
+/**
+ * Ajax backend file to check if a new version of ED ToolBox is available
+ *
+ * No description
+ *
+ * @package EDTB\Backend
+ * @author Mauri Kujala <contact@edtb.xyz>
+ * @copyright Copyright (C) 2016, Mauri Kujala
+ * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
+ */
+
 /*
 *  ED ToolBox, a companion web app for the video game Elite Dangerous
 *  (C) 1984 - 2016 Frontier Developments Plc.
@@ -19,14 +30,7 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 */
 
-/**
- * Ajax backend file to check if a new version of ED ToolBox is available
- *
- * @author Mauri Kujala <contact@edtb.xyz>
- * @copyright Copyright (C) 2016, Mauri Kujala
- * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
- */
-
+/** @var $data */
 $data['notifications'] = '';
 $data['notifications_data'] = 'false';
 
@@ -44,13 +48,13 @@ if ($last_check < $time_frame)
 
 		// update latest_version value
 		edtb_common("latest_version", "value", true, $newest_version);
-
 	}
 	else
 	{
 		$error = error_get_last();
 		write_log("Error: " . $error['message'] . "", __FILE__, __LINE__);
 	}
+	// update last_update_check time
 	edtb_common("last_update_check", "unixtime", true, time());
 }
 
@@ -75,6 +79,7 @@ if (version_compare($current_version, $newest_version) < 0)
 		}
 	}
 }
+
 /*
 *	Display notification if user hasn't updated data in a while
 */

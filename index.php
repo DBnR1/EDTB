@@ -1,4 +1,15 @@
 <?php
+/**
+ * Front page
+ *
+ * No description
+ *
+ * @package EDTB\Main
+ * @author Mauri Kujala <contact@edtb.xyz>
+ * @copyright Copyright (C) 2016, Mauri Kujala
+ * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
+ */
+
 /*
 *  ED ToolBox, a companion web app for the video game Elite Dangerous
 *  (C) 1984 - 2016 Frontier Developments Plc.
@@ -20,16 +31,8 @@
 */
 
 /**
- * Front page
- *
- * @author Mauri Kujala <contact@edtb.xyz>
- * @copyright Copyright (C) 2016, Mauri Kujala
- * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
-*/
-
-/*
-*	if the user is new, show an installation page
-*/
+ * if the user is new, show an installation page
+ */
 
 if (file_exists("" . $_SERVER["DOCUMENT_ROOT"] . "/install.php"))
 {

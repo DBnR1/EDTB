@@ -1,4 +1,15 @@
 <?php
+/**
+ * Points of Interest and Bookmarks
+ *
+ * No description
+ *
+ * @package EDTB\Main
+ * @author Mauri Kujala <contact@edtb.xyz>
+ * @copyright Copyright (C) 2016, Mauri Kujala
+ * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
+ */
+
 /*
 *  ED ToolBox, a companion web app for the video game Elite Dangerous
 *  (C) 1984 - 2016 Frontier Developments Plc.
@@ -19,14 +30,7 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 */
 
-/**
- * Points of Interest and Bookmarks
- *
- * @author Mauri Kujala <contact@edtb.xyz>
- * @copyright Copyright (C) 2016, Mauri Kujala
- * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
-*/
-
+/** @var pagetitle */
 $pagetitle = "Points of Interest&nbsp;&nbsp;&&nbsp;&nbsp;Bookmarks";
 
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
@@ -41,6 +45,15 @@ $usex = $usable["x"];
 $usey = $usable["y"];
 $usez = $usable["z"];
 
+/**
+ * Make items
+ *
+ * @param array $arr
+ * @param string $type
+ * @param int $i
+ * @return string
+ * @author Mauri Kujala <contact@edtb.xyz>
+ */
 function makeitem($arr, $type, &$i)
 {
 	global $usex, $usey, $usez;
@@ -124,7 +137,7 @@ function makeitem($arr, $type, &$i)
 	echo '</a>' . $loglink.$screenshots . '<span class="right" style="margin-left:5px">' . $item_cat_name . '</span><br />';
 
 	// make a link if text includes url
-	$reg_exUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
+	/*$reg_exUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
 
 	if (preg_match($reg_exUrl, $item_text, $url))
 	{
@@ -137,17 +150,21 @@ function makeitem($arr, $type, &$i)
 			$urli = $item_text;
 		}
 		$item_text = preg_replace($reg_exUrl, "<a href='" . $url[0] . "' target='_BLANK'>" . $urli . "</a> ", $item_text);
-	}
+	}*/
 
 	echo nl2br($item_text);
 	echo '</div></td></tr>';
 	$i++;
 }
 
-/*
-*	make item table
-*/
-
+/**
+ * Make item table
+ *
+ * @param resource $res
+ * @param string $type
+ * @return string
+ * @author Mauri Kujala <contact@edtb.xyz>
+ */
 function maketable($res, $type)
 {
 	global $curSys;
