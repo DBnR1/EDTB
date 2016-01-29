@@ -1302,25 +1302,30 @@ function edsm_comment(comment, send)
 	}
 	else
 	{
-		$.ajax(
+		// check for existing comments
+		if ($('#edsm_comment').is(":hidden"))
 		{
-			url: "/get/getData.php?action=onlysystem",
-			cache: false,
-			success: function(result)
+			$.ajax(
 			{
-				$.ajax({
-					url: "/get/getEDSMComment.php?system_name="+result,
-					cache: false,
-					dataType: 'text',
-					success: function(res)
-					{
-						if (res != "")
+				url: "/get/getData.php?action=onlysystem",
+				cache: false,
+				success: function(result)
+				{
+					$.ajax({
+						url: "/get/getEDSMComment.php?system_name="+result,
+						cache: false,
+						dataType: 'text',
+						success: function(res)
 						{
-							$('#comment2').val(res);
+							if (res != "")
+							{
+								//console.log(res);
+								$('#comment2').val(res);
+							}
 						}
-					}
-				});
-			}
-		});
+					});
+				}
+			});
+		}
 	}
 }
