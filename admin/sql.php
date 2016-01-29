@@ -83,8 +83,16 @@ if (isset($_POST["code"]))
 			}
 			else
 			{
-				$error = mysqli_info($GLOBALS["___mysqli_ston"]);
-				$notify = '<div class="notify_success">Query succesfully executed.<br />' . $error . '</div>';
+				if ($rows = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "" . $query . "")))
+				{
+					$error = mysqli_info($GLOBALS["___mysqli_ston"]);
+					$notify = '<div class="notify_success">Query succesfully executed.<br />' . $error . '<br />Rows: ' . $rows . '</div>';
+				}
+				else
+				{
+					$error = mysqli_info($GLOBALS["___mysqli_ston"]);
+					$notify = '<div class="notify_success">Query succesfully executed.<br />' . $error . '</div>';
+				}
 			}
 		}
 	}

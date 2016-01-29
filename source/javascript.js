@@ -1319,7 +1319,7 @@ function edsm_comment(comment, send)
 						{
 							if (res != "")
 							{
-								//console.log(res);
+								console.log("/get/getEDSMComment.php?system_name="+result);
 								$('#comment2').val(res);
 							}
 						}

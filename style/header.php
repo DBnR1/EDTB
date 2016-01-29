@@ -92,7 +92,7 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 					<div class="leftpanel-title" id="t1"></div>
 					<!-- date and clock will be rendered here -->
 					<div id="datetime" onclick="$('#ext_links').fadeToggle('fast')">
-						<div class="leftpanel-clock" id="hrs"></div><br />
+						<div class="leftpanel-clock" id="hrs"></div>
 						<div class="leftpanel-date" id="date"></div>
 					</div>
 					<!-- links to external resources -->
@@ -145,14 +145,8 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 							$pic = $names[1];
 							$reload = $names[2];
 
-							if ($pagetitle == $name)
-							{
-								$class = "active";
-							}
-							else
-							{
-								$class = "link";
-							}
+							$class = $pagetitle == $name ? "active" : "link";
+
 							//
 							if ($pagetitle == "System Log" && $name == "ED ToolBox")
 							{
@@ -331,9 +325,9 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 							<td class="info_td" colspan="3" style="padding-bottom:5px;padding-top:5px">
 								ED ToolBox is a companion tool for the
 								<a href="http://www.frontier.co.uk/" target="_BLANK">Frontier Developments</a>
-								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" /> game
+								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:1px" alt="ext" /> game
 								<a href="http://www.elitedangerous.com" target="_BLANK">Elite: Dangerous</a>
-								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" />.<br />
+								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:1px" alt="ext" />.<br />
 								ED ToolBox is an unofficial tool and is in no way affiliated with Frontier Developments.
 							</td>
 						</tr>
@@ -348,78 +342,78 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 						<tr>
 							<td class="info_td">
 								<a href="http://eddb.io" target="_BLANK">EDDB.io</a>
-								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" /> (system and station data)
+								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:1px" alt="ext" /> (system and station data)
 							</td>
 							<td class="info_td">
 								<a href="http://markitup.jaysalvat.com/home/" target="_BLANK">markItUp!</a>
-								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" /> (log editor)
+								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:1px" alt="ext" /> (log editor)
 							</td>
 							<td class="info_td">
 								<a href="http://sourceforge.net/projects/sql-edit-table/" target="_BLANK">MySQL Edit Table</a>
-								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" /> (Data Point)
+								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:1px" alt="ext" /> (Data Point)
 							</td>
 						</tr>
 						<tr>
 							<td class="info_td">
 								<a href="http://www.phpfastcache.com/" target="_BLANK">phpFastCache</a>
-								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" /> (page caching)
+								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:1px" alt="ext" /> (page caching)
 							</td>
 							<td class="info_td">
 								<a href="https://codemirror.net/" target="_BLANK">CodeMirror</a>
-								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" /> (ini-file editor)
+								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:1px" alt="ext" /> (ini-file editor)
 							</td>
 							<td class="info_td">
 								<a href="http://spgm.sourceforge.net/" target="_BLANK">SPGM</a>
-								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" /> (screenshot gallery)
+								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:1px" alt="ext" /> (screenshot gallery)
 							</td>
 						</tr>
 						<tr>
 							<td class="info_td">
 								<a href="https://jquery.com/" target="_BLANK">jQuery</a>
-								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" /> (js library)
+								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:1px" alt="ext" /> (js library)
 							</td>
 							<td class="info_td">
 								<a href="http://feed43.com/" target="_BLANK">Feed43</a>
-								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" /> (GalNet feed)
+								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:1px" alt="ext" /> (GalNet feed)
 							</td>
 							<td class="info_td">
 								<a href="http://www.highcharts.com/" target="_BLANK">Highcharts</a>
-								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" /> (neighborhood map)
+								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:1px" alt="ext" /> (neighborhood map)
 							</td>
 						</tr>
 						<tr>
 							<td class="info_td">
 								<a href="https://github.com/gbiobob/ED3D-Galaxy-Map" target="_BLANK">ED3D Galaxy Map</a>
-								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" /> (galaxy map)
+								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:1px" alt="ext" /> (galaxy map)
 							</td>
 							<td class="info_td">
 								<a href="http://threejs.org/" target="_BLANK">Three.js</a>
-								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" /> (js library)
+								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:1px" alt="ext" /> (js library)
 							</td>
 							<td class="info_td">
 								<a href="http://www.imagemagick.org" target="_BLANK">ImageMagick®</a>
-								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" /> (screenshot tools)
+								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:1px" alt="ext" /> (screenshot tools)
 							</td>
 						</tr>
 						<tr>
 							<td class="info_td" colspan="3">
 								Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a>
-								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" />,
+								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:1px" alt="ext" />,
 								<a href="http://www.flaticon.com/authors/designmodo" title="Designmodo">Designmodo</a>
-								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" />, and
+								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:1px" alt="ext" />, and
 								<a href="http://www.flaticon.com/authors/dave-gandy" title="Dave Gandy">Dave Gandy</a>
-								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" /> from
+								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:1px" alt="ext" /> from
 								<a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a>
-								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" /> are licensed by
+								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:1px" alt="ext" /> are licensed by
 								<a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC BY 3.0</a>
-								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" />
+								<img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:1px" alt="ext" />
 							</td>
 						</tr>
 						<tr>
 							<td class="info_td" colspan="3">
-							ED ToolBox was created using assets and imagery from Elite Dangerous, with the permission of Frontier Developments plc,<br />
-							for non-commercial purposes. It is not endorsed by nor reflects the views or opinions of Frontier Developments and no<br />
-							employee of Frontier Developments was involved in the making of it.
+								ED ToolBox was created using assets and imagery from Elite Dangerous, with the permission of Frontier Developments plc,<br />
+								for non-commercial purposes. It is not endorsed by nor reflects the views or opinions of Frontier Developments and no<br />
+								employee of Frontier Developments was involved in the making of it.
 							</td>
 						</tr>
 					</table>

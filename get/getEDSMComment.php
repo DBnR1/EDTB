@@ -50,18 +50,19 @@ $result = "";
 
 if (!empty($settings["edsm_api_key"]) && !empty($settings["edsm_cmdr_name"]))
 {
-	if ($get_comment = file_get_contents("http://www.edsm.net/api-logs-v1/get-comments?commanderName=" . urlencode($settings["edsm_cmdr_name"]) . "&apiKey=" . $settings["edsm_api_key"] . "&systemName=" . $system . ""))
+	if ($get_comment = file_get_contents("http://www.edsm.net/api-logs-v1/get-comment?systemName=" . $system . "&commanderName=" . urlencode($settings["edsm_cmdr_name"]) . "&apiKey=" . $settings["edsm_api_key"] . ""))
 	{
 		$json_d = json_decode($get_comment, true);
 
-		if (!empty($json_d["comments"]))
+		if (!empty($json_d["comment"]))
 		{
-			$result = $json_d["comments"][0]["comment"];
+			$result = $json_d["comment"];
 		}
 		else
 		{
 			write_log("No comments", __FILE__, __LINE__);
 		}
+		write_log($get_comment);
 	}
 	else
 	{
