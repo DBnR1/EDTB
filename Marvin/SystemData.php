@@ -502,13 +502,13 @@ if (isset($_GET["dist"]))
 	exit;
 }
 
-/*
-*	curSys access
-*/
+/**
+ *	curSys access, added the cSys variable because VA has oddly short limit on the url
+ */
 
-if (isset($_GET["curSys"]))
+if (isset($_GET["curSys"]) || isset($_GET["cSys"]))
 {
-	$search = $_GET["curSys"];
+	$search = isset($_GET["curSys"]) ? $_GET["curSys"] : $_GET["cSys"];
 
 	$info = "";
 
