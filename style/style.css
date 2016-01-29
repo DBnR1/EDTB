@@ -722,6 +722,22 @@ a.poid:hover
 	width:auto;
 }
 
+.edsm_comment
+{
+	display:none;
+	position:absolute;
+	left:200px;
+	font-family:Sintony;
+	vertical-align:middle;
+	color:#FFFFFA;
+	text-shadow:none;
+	text-align:center;
+	font-size:13px;
+	background-color:#0e0e11;
+	border:1px solid #333333;
+	padding:10px;
+	opacity:0.97;
+}
 .status
 {
 	display:block;

@@ -168,7 +168,7 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"]))
 																	('" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "',
 																	'" . $visited_on . "')") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
-						// export to edsm
+						// export to EDSM
 						if ($settings["edsm_api_key"] != "" && $settings["edsm_export"] == "true" && $settings["edsm_cmdr_name"] != "")
 						{
 							$visited_on_utc = date("Y-m-d H:i:s");

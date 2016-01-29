@@ -178,12 +178,23 @@
 			var int=self.setInterval(get_data, 10000);
 		</script>
 
+		<!-- show loader icon -->
 		<script type="text/javascript">
 			// Wait for window load
 			$(window).load(function()
 			{
 				// Animate loader off screen
 				$(".se-pre-con").fadeOut("slow");
+			});
+		</script>
+
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$('#edsm_click').click(function()
+				{
+				  edsm_comment('', false);
+				  $('#edsm_comment').fadeToggle('fast');
+				});
 			});
 		</script>
     </body>

@@ -209,7 +209,50 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 						<?php //echo str_replace("&nbsp;&nbsp", "&nbsp", $pagetitle)?>
 						ED ToolBox
 					</a>
+					<!-- EDSM comment link -->
+					<?php
+					if (!empty($settings["edsm_api_key"]) && !empty($settings["edsm_cmdr_name"]))
+					{
+						?>
+						<span style="margin-left:10px">
+							<a id="edsm_cmnt_pic" href="javascript:void(0)" title="Add private comment to EDSM">
+								<img src="/style/img/comment.png" alt="EDSM" id="edsm_click" />
+							</a>
+						</span>
+						<?php
+					}
+					?>
 				</span>
+				<!-- EDSM comment -->
+				<?php
+				if (!empty($settings["edsm_api_key"]) && !empty($settings["edsm_cmdr_name"]))
+				{
+					?>
+					<div class="edsm_comment" id="edsm_comment">
+						<form method="get" action="/" data-push="true">
+							<input type="textbox" id="comment2" class="textbox" name="comment" placeholder="Private EDSM comment for this system" style="width:350px" />
+							<br />
+							<div class="button" onclick="edsm_comment($('#comment2').val(), true)" style="margin-top:6px;margin-bottom:6px">Send comment</div>
+						</form>
+						<?php
+						if (!empty($settings["edsm_standard_comments"]))
+						{
+							echo '<br />&nbsp;OR choose from standard set<form method="get" action="/">';
+							echo '<select class="selectbox" id="comment1" name="comment" onchange="edsm_comment($(\'#comment1\').val(), true)">';
+							echo '<option value="">Choose comment</option>';
+							foreach ($settings["edsm_standard_comments"] as $name => $comment)
+							{
+								echo '<option value="' . $comment . '">';
+								echo $name;
+								echo '</option>';
+							}
+							echo '</select></form>';
+						}
+						?>
+					</div>
+					<?php
+				}
+				?>
 				<!-- icons & ships status -->
 				<div class="right" style="display:inline-block;margin-right:10px;margin-top:15px">
 					<?php
