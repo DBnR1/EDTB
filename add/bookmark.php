@@ -1,4 +1,15 @@
 <?php
+/**
+ * Ajax backend file to add or edit bookmarks
+ *
+ * No description
+ *
+ * @package EDTB\Backend
+ * @author Mauri Kujala <contact@edtb.xyz>
+ * @copyright Copyright (C) 2016, Mauri Kujala
+ * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
+ */
+
 /*
 *  ED ToolBox, a companion web app for the video game Elite Dangerous
 *  (C) 1984 - 2016 Frontier Developments Plc.
@@ -19,16 +30,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 */
 
-/**
- * Ajax backend file to add or edit bookmarks
- *
- * @author Mauri Kujala <contact@edtb.xyz>
- * @copyright Copyright (C) 2016, Mauri Kujala
- * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
- */
-
 if (isset($_GET["do"]))
 {
+	/** require functions */
 	require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 
 	$data = json_decode($_REQUEST["input"], true);
@@ -84,30 +88,31 @@ if (isset($_GET["do"]))
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2" class="dark">
-					<input type="hidden" name="bm_edit_id" id="bm_edit_id">
-					<input type="hidden" name="bm_system_id" id="bm_system_id">
-					<div>
-						<input class="textbox" type="text" name="bm_system_name" placeholder="System name" id="bm_system_name" style="width:469px" oninput="showResult(this.value, '3', 'no', 'no', 'no', 'yes')" />
-					</div>
+					<td class="dark">
+						<input type="hidden" name="bm_edit_id" id="bm_edit_id">
+						<input type="hidden" name="bm_system_id" id="bm_system_id">
+						<div>
+							<input class="textbox" type="text" name="bm_system_name" placeholder="System name" id="bm_system_name" style="width:400px" oninput="showResult(this.value, '3', 'no', 'no', 'no', 'yes')" />
+						</div>
+					</td>
+					<td class="dark">
+						<select class="selectbox" name="bm_catid" id="bm_catid" style="width:140px">
+							<option value="0">Category (optional)</option>
+							<?php
+							$cat_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id, name FROM user_bm_categories ORDER BY name");
+
+							while ($cat_arr = mysqli_fetch_assoc($cat_res))
+							{
+								echo '<option value="' . $cat_arr["id"] . '">' . $cat_arr["name"] . '</option>';
+							}
+							?>
+						</select>
 					</td>
 				</tr>
 				<tr>
-					<td class="dark">
-						<input class="textbox" type="text" name="bm_text" id="bm_text" placeholder="Comment (optional)" style="width:326px" />
-					</td>
-					<td class="dark">
-					<select class="selectbox" name="bm_catid" id="bm_catid" style="width:140px">
-						<option value="0">Category (optional)</option>
-						<?php
-						$cat_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id, name FROM user_bm_categories ORDER BY name");
-
-						while ($cat_arr = mysqli_fetch_assoc($cat_res))
-						{
-							echo '<option value="' . $cat_arr["id"] . '">' . $cat_arr["name"] . '</option>';
-						}
-						?>
-					</select>
+					<td colspan="2" class="dark">
+						<!--<input class="textbox" type="text" name="bm_text" id="bm_text" placeholder="Comment (optional)" style="width:326px" />-->
+						<textarea id="bm_text" name="bm_text" placeholder="Comment (optional)" rows="10" cols="40"></textarea>
 					</td>
 				</tr>
 				<tr>

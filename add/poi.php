@@ -1,4 +1,15 @@
 <?php
+/**
+ * Add or edit points of interest
+ *
+ * No description
+ *
+ * @package EDTB\Backend
+ * @author Mauri Kujala <contact@edtb.xyz>
+ * @copyright Copyright (C) 2016, Mauri Kujala
+ * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
+ */
+
 /*
 *  ED ToolBox, a companion web app for the video game Elite Dangerous
 *  (C) 1984 - 2016 Frontier Developments Plc.
@@ -19,16 +30,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 */
 
-/**
- * Add or edit points of interest
- *
- * @author Mauri Kujala <contact@edtb.xyz>
- * @copyright Copyright (C) 2016, Mauri Kujala
- * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
- */
-
 if (isset($_GET["do"]))
 {
+	/** require functions */
 	require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 
 	$data = json_decode($_REQUEST["input"], true);
@@ -102,21 +106,21 @@ if ($_SERVER['PHP_SELF'] == "/poi.php")
 						</td>
 					</tr>
 					<tr>
-						<td class="dark" style="width:90%">
+						<td class="dark" style="width:50%">
 							<input type="hidden" name="poi_edit_id" id="poi_edit_id">
 							<input class="textbox" type="text" name="poi_system_name" placeholder="System name" id="system_33" style="width:95%" oninput="showResult(this.value, '33')" />
 						</td>
-						<td class="dark">
-							<input class="textbox" type="text" name="poi_coordx" placeholder="x.x" id="coordsx_33" />
-							<input class="textbox" type="text" name="poi_coordy" placeholder="y.y" id="coordsy_33" />
-							<input class="textbox" type="text" name="poi_coordz" placeholder="z.z" id="coordsz_33" />
+						<td class="dark" style="white-space:nowrap;width:30%">
+							<input class="textbox" type="text" name="poi_coordx" placeholder="x.x" id="coordsx_33" style="width:40px" />
+							<input class="textbox" type="text" name="poi_coordy" placeholder="y.y" id="coordsy_33" style="width:40px" />
+							<input class="textbox" type="text" name="poi_coordz" placeholder="z.z" id="coordsz_33" style="width:40px" />
 						</td>
 					</tr>
 					<tr>
-						<td class="dark">
+						<td class="dark" style="width:70%">
 							<input class="textbox" type="text" name="poi_name" id="poi_name" placeholder="POI name (optional)" style="width:95%" />
 						</td>
-						<td class="dark">
+						<td class="dark" style="white-space:nowrap;width:auto">
 							<select class="selectbox" name="category_id" id="category_id" style="width:auto">
 								<option value="0">Category (optional)</option>
 								<?php
@@ -132,7 +136,8 @@ if ($_SERVER['PHP_SELF'] == "/poi.php")
 					</tr>
 					<tr>
 						<td class="dark" colspan="2">
-							<input class="textbox" type="text" name="poi_text" id="poi_text" placeholder="Text (optional)" style="width:95%" />
+							<!--<input class="textbox" type="text" name="poi_text" id="poi_text" placeholder="Text (optional)" style="width:95%" />-->
+							<textarea id="poi_text" name="poi_text" placeholder="Text (optional)" rows="10" cols="40"></textarea>
 						</td>
 					</tr>
 					<tr>
