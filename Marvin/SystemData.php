@@ -30,16 +30,17 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 */
 
+/** @require functions */
 require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 
-$va_text = array();
-
-/*
-*	System Info
-*/
+/**
+ * System Info
+ */
 
 if (isset($_GET["sys"]))
 {
+	//$va_text = array();
+
 	$num_visits = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id
 																				FROM user_visited_systems
 																				WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'"))
@@ -56,23 +57,30 @@ if (isset($_GET["sys"]))
 		$va_allegiance = $curSys["allegiance"] == "None" ? "No additional data available. " : $curSys["allegiance"];
 		$va_allegiance = $va_allegiance == "" ? "No additional data available. " : $va_allegiance;
 
+		/**
+		 * Marvin goes on a bit of a rant
+		 */
+
 		$rant = "";
-		$rants = array();
-		if ($curSys["allegiance"] == "Federation")
+		if ($settings["angry_droid"] == "true")
 		{
-			$rants[] = "Please tell me we're here to kill Federal scum!";
-			$rants[] = "Let's show these Federal bastards who's boss!";
-			$rants[] = "Why do you insist on flying through Federal space you dick!?";
-			$rants[] = "Why do you insist on flying through Federal space you little shit!?";
-			$rants[] = "What's that smell? Oh, we're in Federation space, never mind.";
-			$rants[] = "For fuck's sake, another Federation system?! Really?!";
-			$rants[] = "Let's get the fuck out already!";
-			$rants[] = "Oh good, a Federation system. We can dump our waste here.";
-			$rants[] = "Why do I even bother maintaining this ship if you're just going to sully it by flying through Federal infested space?";
+			$rants = array();
+			if ($curSys["allegiance"] == "Federation")
+			{
+				$rants[] = "Please tell me we're here to kill Federal scum!";
+				$rants[] = "Let's show these Federal bastards who's boss!";
+				$rants[] = "Why do you insist on flying through Federal space you dick!?";
+				$rants[] = "Why do you insist on flying through Federal space you little shit!?";
+				$rants[] = "What's that smell? Oh, we're in Federation space, never mind.";
+				$rants[] = "For fuck's sake, another Federation system?! Really?!";
+				$rants[] = "Let's get the fuck out already!";
+				$rants[] = "Oh good, a Federation system. We can dump our waste here.";
+				$rants[] = "Why do I even bother maintaining this ship if you're just going to sully it by flying through Federal infested space?";
 
-			shuffle($rants);
+				shuffle($rants);
 
-			$rant = $rants[0];
+				$rant = $rants[0];
+			}
 		}
 
 		$va_government = $curSys["government"] == "None" ? "" : " " . $curSys["government"] . "";
@@ -82,26 +90,33 @@ if (isset($_GET["sys"]))
 			$va_power_text = array();
 			$va_power_text[] = $curSys["power"];
 
-			if ($curSys["power"] == "Felicia Winters")
-			{
-				$va_power_text[] = random_insult("Felicia Winters");
-			}
+			/**
+			 * Another rant incoming...
+			 */
 
-			if ($curSys["power"] == "Zachary Hudson")
+			if ($settings["angry_droid"] == "true")
 			{
-				$va_power_text[] = random_insult("Zachary Hudson");
-			}
-
-			if ($curSys["power"] == "Arissa Lavigny-Duval")
-			{
-				$va_power_text[] = "Arissa Lavigny-Duval, bask in her glory!";
-				$va_power_text[] = "Arissa Lavigny-Duval, bask in her glory! Do it! Bask motherfucker!";
-				$va_power_text[] = "the one and only Arissa Lavigny-Duval";
-
-				if ($curSys["population"] < 100000)
+				if ($curSys["power"] == "Felicia Winters")
 				{
-					$va_power_text[] = "Arissa Lavigny-Duval. It's a hellhole but they all count.";
-					$va_power_text[] = "Arissa Lavigny-Duval. It's small but cute";
+					$va_power_text[] = random_insult("Felicia Winters");
+				}
+
+				if ($curSys["power"] == "Zachary Hudson")
+				{
+					$va_power_text[] = random_insult("Zachary Hudson");
+				}
+
+				if ($curSys["power"] == "Arissa Lavigny-Duval")
+				{
+					$va_power_text[] = "Arissa Lavigny-Duval, bask in her glory!";
+					$va_power_text[] = "Arissa Lavigny-Duval, bask in her glory! Do it! Bask motherfucker!";
+					$va_power_text[] = "the one and only Arissa Lavigny-Duval";
+
+					if ($curSys["population"] < 100000)
+					{
+						$va_power_text[] = "Arissa Lavigny-Duval. It's a hellhole but they all count.";
+						$va_power_text[] = "Arissa Lavigny-Duval. It's small but cute";
+					}
 				}
 			}
 
@@ -119,6 +134,11 @@ if (isset($_GET["sys"]))
 		{
 			$va_power = "";
 		}
+
+		/**
+		 * Round value for population
+		 * @todo use switch here
+		 */
 
 		if ($curSys["population"] >= 1000000000)
 			$round = -6;
@@ -159,15 +179,15 @@ if (isset($_GET["sys"]))
 			}
 		}
 
-		$va_text .= "" . $article . " " . $va_allegiance . "" . strtolower($va_government) . "" . $va_power . "" . $va_pop . "";
+		$va_text .= "" . $article . " " . $va_allegiance . "" . strtolower($va_government) . "" . $va_power . "" . $va_pop;
 
-		$va_text .= " " . $rant . "";
+		$va_text .= " " . $rant;
 
 		$ress = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT name, ls_from_star
 															FROM edtb_stations
 															WHERE system_id = '" . $curSys["id"] . "'
 															ORDER BY -ls_from_star DESC, name")
-		or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+															or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 		$count = mysqli_num_rows($ress);
 
@@ -255,9 +275,9 @@ if (isset($_GET["sys"]))
 	exit;
 }
 
-/*
-*	Closest Station
-*/
+/**
+ * Nearest Station
+ */
 
 if (isset($_GET["cs"]))
 {
@@ -413,9 +433,9 @@ if (isset($_GET["cs"]))
 	exit;
 }
 
-/*
-*	Random Musings
-*/
+/**
+ * Random Musings
+ */
 
 if (isset($_GET["rm"]))
 {
@@ -442,34 +462,32 @@ if (isset($_GET["rm"]))
 	exit;
 }
 
-/*
-*	current system short
-*/
+/**
+ * current system short
+ */
 
 if (isset($_GET["sys_short"]))
 {
-	$va_text .= "unknown";
+	$sys_short = "unknown";
 	if (!empty($curSys["name"]))
 	{
-		$va_text = $curSys["name"];
+		$sys_short = $curSys["name"];
 	}
 
-	echo tts_override($va_text);
+	echo tts_override($sys_short);
 
 	exit;
 }
 
-/*
-*	distance to X
-*/
+/**
+ * distance to X
+ */
 
 if (isset($_GET["dist"]))
 {
 	$to = $_GET["dist"];
 
 	$distance = "";
-
-	//write_log($to);
 
 	$to = str_replace("system", "", $to);
 
