@@ -10,31 +10,31 @@
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
  */
 
-/*
-*  ED ToolBox, a companion web app for the video game Elite Dangerous
-*  (C) 1984 - 2016 Frontier Developments Plc.
-*  ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
-*
-*  This program is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU General Public License
-*  as published by the Free Software Foundation; either version 2
-*  of the License, or (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-*/
+ /*
+ * ED ToolBox, a companion web app for the video game Elite Dangerous
+ * (C) 1984 - 2016 Frontier Developments Plc.
+ * ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ */
 
 /** @var pagetitle */
 $pagetitle = "Galaxy Map&nbsp;&nbsp;&&nbsp;&nbsp;Neighborhood Map";
 
 /** @require header file */
-require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 
 if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"]))
 {
@@ -58,7 +58,7 @@ if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"]))
 		<div id="container"></div>
 		<div id="report" onclick='$("#report").fadeToggle("fast")'></div>
 		<div id="disclaimer" onclick='$("#disclaimer").fadeToggle("fast")'></div>
-		<div id="map_legend" onclick='$("#map_legend2").fadeToggle("fast")'>Legend</div>
+		<div id="map_legend">Legend</div>
 		<div id="map_legend2">
 			<table style="padding:5px">
 				<tr>
@@ -139,7 +139,7 @@ if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"]))
 			}
 			?>
 			<a href="<?php echo $linkto?>" style="margin-left:4px"><?php echo $linkname?></a><br />
-			<form method="GET" action="map.php">
+			<form method="GET" action="Map.php">
 				<input type="hidden" name="mode" value="<?php echo $mode?>">
 				<select class="distance" name="maxdistance" onchange="this.form.submit()">
 					<?php
@@ -159,4 +159,4 @@ if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"]))
 	</div>
 </div>
 <?php
-require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");

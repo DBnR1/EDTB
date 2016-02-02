@@ -10,31 +10,32 @@
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
  */
 
-/*
-*  ED ToolBox, a companion web app for the video game Elite Dangerous
-*  (C) 1984 - 2016 Frontier Developments Plc.
-*  ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
-*
-*  This program is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU General Public License
-*  as published by the Free Software Foundation; either version 2
-*  of the License, or (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-*/
+ /*
+ * ED ToolBox, a companion web app for the video game Elite Dangerous
+ * (C) 1984 - 2016 Frontier Developments Plc.
+ * ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ */
 
 /** @var pagetitle */
 $pagetitle = "SQL";
 $notify = "";
 
-require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
+/** @require header file */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 
 if (isset($_POST["code"]))
 {
@@ -114,7 +115,8 @@ if (isset($_POST["code"]))
 	<?php echo $notify;?>
 	<div style="padding:5px;margin-bottom:10px">
 	You can use this form to perform sql statements. Certain commands, such as<br />
-	<strong>DELETE</strong>, <strong>TRUNCATE</strong> and <strong>DROP</strong> are not available here.<br /><br />
+	<strong>DELETE</strong>, <strong>TRUNCATE</strong> and <strong>DROP</strong> are not available here.<br />
+	 To do multiple statements, use <code>>>BREAK<<</code> to separate statements<br /><br />
 
 	For more complete database management, use the included db manager (<a href="/admin/">Adminer</a>)<br />
 	or a database manager of your choice.
@@ -130,9 +132,6 @@ else
 {
 	echo '/*
 * 	     SQL statement goes here...
-*	 To do multiple statements, use
-*				  >>BREAK<<
-*	    to separate statements
 */
 ';
 }
@@ -150,4 +149,4 @@ else
 	</div>
 </div>
 <?php
-require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");

@@ -9,28 +9,45 @@
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
  */
 
-/*
-*  ED ToolBox, a companion web app for the video game Elite Dangerous
-*  (C) 1984 - 2016 Frontier Developments Plc.
-*  ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
-*
-*  This program is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU General Public License
-*  as published by the Free Software Foundation; either version 2
-*  of the License, or (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-*/
+ /*
+ * ED ToolBox, a companion web app for the video game Elite Dangerous
+ * (C) 1984 - 2016 Frontier Developments Plc.
+ * ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ */
 
 /** @var zindexmax */
 var zindexmax = 100000;
+
+/** @var debug_mode */
+var debug_mode = false;
+
+/**
+ * Send error messages to console if debug_mode = true
+ *
+ * @param string msg
+ * @author Mauri Kujala <contact@edtb.xyz>
+ */
+function log(msg)
+{
+	if (debug_mode !== false)
+	{
+		console.log(msg);
+	}
+}
 
 /**
  * Slider for long system names
@@ -44,9 +61,9 @@ function slide()
 	};
 	var s = $('#ltitle');
 
-	if (s.width() >= 198)
+	if (s.width() >= 288)
 	{
-		value = s.width() - 194;
+		value = s.width() - 284;
 		s.css("right", value+"px");
 	}
 }
@@ -63,7 +80,7 @@ function slideout()
 	};
 	var s = $('#ltitle');
 
-	if (s.width() >= 198)
+	if (s.width() >= 288)
 	{
 		s.css("right", "0px");
 	}
@@ -71,8 +88,9 @@ function slideout()
 
 /**
  * Retrieve URL variables
+ * http://papermashup.com/read-url-get-variables-withjavascript/
  *
- * @author Ashley <ashley@papermashup.com> http://papermashup.com/read-url-get-variables-withjavascript/
+ * @author Ashley <ashley@papermashup.com>
  */
 function getUrlVars()
 {
@@ -98,7 +116,12 @@ function update_map()
 		dataType: 'html',
 		success: function()
 		{
-			//console.log('success')
+
+			log('Requested /get/getMapPoints.json.php succesfully');
+		},
+		error: function()
+		{
+			log('Error occured when requesting /get/getMapPoints.json.php');
 		}
 	});
 }
@@ -117,11 +140,15 @@ function get_data(override)
     if (override == true)
 	{
         requestno = 0;
-		time = 0;
     }
+
+	if (requestno == 0)
+	{
+		time = 200;
+	}
 	else
 	{
-		time = 4800;
+		time = 4500;
 	}
 
 	system_id = getUrlVars()["system_id"];
@@ -130,7 +157,9 @@ function get_data(override)
 	slog_sort = getUrlVars()["slog_sort"];
 	glog_sort = getUrlVars()["glog_sort"];
 
-    // get system info and log
+    /**
+	 * fetch info for left panel, system.php and maps
+	 */
     $.ajax(
     {
         url: "/get/getData.php?request="+requestno+"&system_id="+system_id+"&system_name="+system_name+"&slog_sort="+slog_sort+"&glog_sort="+glog_sort,
@@ -144,6 +173,8 @@ function get_data(override)
 
             if (result['renew'] != "false")
             {
+				log("Refreshing data (renew=true)");
+
                 $('#t1').html(result['system_title']);
                 $('#systeminfo').html(result['system_info']);
                 $('#scrollable').html(result['log_data']);
@@ -155,6 +186,15 @@ function get_data(override)
 					if (result['notifications_data'] != "false")
 					{
 						$('#notice_new').html(result['notifications_data']);
+					}
+				}
+
+				if (result['update_in_progress'] != "false")
+				{
+					$('#notifications').html(result['update_notification']);
+					if (result['update_notification_data'] != "false")
+					{
+						$('#notice').html(result['update_notification_data']);
 					}
 				}
 
@@ -173,10 +213,15 @@ function get_data(override)
                     $('#si_name').html(result['si_name']);
 					$('#si_stations').html(result['si_stations']);
 					$('#si_detailed').html(result['si_detailed']);
+
+					//log(result['si_name']);
+					log(result['si_stations']);
+					//log(result['si_detailed']);
                 }
 
                 if (document.getElementById('container'))
                 {
+					log("Updating Neighborhood Map");
                     var chart = $('#container').highcharts();
 
                     if (chart)
@@ -191,16 +236,38 @@ function get_data(override)
 
                     $('head').append(script);
                 }
+
 				if (result['update_map'] != "false")
 				{
+					log("Calling update_map()");
 					update_map();
 				}
             }
+			else
+			{
+				log("getData called but no need to refresh");
+			}
             requestno = 1;
-        }
+			//log("Success: requesting /get/getData.php ok");
+        },
+		error: function()
+		{
+			log("Error: requesting /get/getData.php failed");
+		}
     });
 
-    // get api data a few seconds later
+	update_api(time);
+}
+
+/**
+ * Updata data from FD API
+ *
+ * @param int wait
+ * @author Mauri Kujala <contact@edtb.xyz>
+ */
+function update_api(wait)
+{
+	wait = wait | 0;
 	setTimeout(function()
 	{
 		$.ajax(
@@ -210,52 +277,49 @@ function get_data(override)
 			dataType: 'json',
 			success: function(result)
 			{
-				if (result['cmdr_status'] != "false")
+				if (result['cmdr_status'] != "false" && result['cmdr_ranks_update'] == "true")
 				{
+					log("CMDR status changed, refreshing");
 					$('#cmdr_status').html(result['cmdr_status']);
 				}
-
-				if (result['ship_status'] != "false")
+				else
 				{
+					log("CMDR status not changed");
+				}
+
+				if (result['cmdr_balance_status'] != "false" && result['cmdr_balance_update'] == "true")
+				{
+					log("CMDR balance changed, refreshing");
+					$('#balance_st').html(result['cmdr_balance_status']);
+				}
+				else
+				{
+					log("CMDR balance not changed");
+				}
+
+				if (result['ship_status'] != "false" && result['ship_status_update'] == "true")
+				{
+					log("Ship status changed, refreshing");
 					$('#ship_status').html(result['ship_status']);
 				}
+				else
+				{
+					log("Ship status not changed");
+				}
+				//log("Success: requesting /get/getData_status.php ok");
+			},
+			error: function()
+			{
+				log("Error: requesting /get/getData_status.php failed");
 			}
 		});
-	}, time);
+	}, wait);
 }
 
 $(function()
 {
     get_data();
 });
-/*
-// function for systems.php
-function get_system_data()
-{
-	if (document.getElementById('systemsdata'))
-	{
-		sort = getUrlVars()["sort"];
-
-		$.ajax(
-		{
-			url: "/get/getSystemsData.php?sort="+sort,
-			cache: false,
-			dataType: 'json',
-			success: function(result)
-			{
-				var returnedvalue = result;
-
-				$('#systemsdata').html(result['systemsdata']);
-			}
-		});
-	}
-}
-
-$(function()
-{
-    get_system_data();
-});
-*/
 
 /**
  * Get the current system when called
@@ -324,7 +388,7 @@ function get_cs(formid, coordformid, onlyid)
  */
 function update_values(editurl, deleteid)
 {
-	//console.log(editurl);
+	//log(editurl);
     deleteid = deleteid || false;
     $.ajax(
 	{
@@ -382,19 +446,9 @@ function update_values(editurl, deleteid)
         document.getElementById('delete_bm').innerHTML = '';
         if (deleteid !== false)
         {
-            //document.getElementById('delete_bm').innerHTML = '<a href="javascript:void(0);" onclick="confirmation('+deleteid+',\'bm\')"><input class="delete_button" type="button" value="Delete Bookmark" style="width:125px;margin-left:10px;"></a>';
 			document.getElementById('delete_bm').innerHTML = '<a href="/Poi.php" data-replace="true" data-target=".entries" onclick="confirmation('+deleteid+',\'bm\')" title="Delete item"><div class="delete_button"><img src="/style/img/delete.png" alt="Delete" /></div></a>';
         }
     }
-
-    /*if (document.getElementById('delete_station'))
-    {
-        document.getElementById('delete_station').innerHTML = '';
-        if (deleteid !== false)
-        {
-            document.getElementById('delete_station').innerHTML = '<a href="javascript:void(0);" onclick="confirmation('+deleteid+',\'station\')"><input class="button" type="button" value="Delete station" style="width:125px;margin-left:120px;"></a>';
-        }
-    }*/
 }
 
 /**
@@ -433,7 +487,7 @@ function update_data(formid, file, update_map)
             }
         }
     }
-    //console.log(data_to_send);
+    //log(data_to_send);
     var st = JSON.stringify(data_to_send);
     $.ajax(
 	{
@@ -467,14 +521,14 @@ function update_data(formid, file, update_map)
 			dataType: 'html',
 			success: function()
 			{
-				//console.log('success')
+				//log('success')
 			}
 		});
 	}
 }
 
 /**
- * Add zero to time < 10
+ * Add zero to time if < 10
  *
  * @param int i
  * @return int i
@@ -490,7 +544,6 @@ function addZero(i)
 
 /**
  * Update the clock
- *
  */
 function startTime()
 {
@@ -529,11 +582,7 @@ function confirmation(delid, what)
         else if (what == "bm")
             var script = "/add/bookmark.php?do&deleteid="+delid;
         else if (what == "screenshot")
-            var script = "/add/deleteScreenshot.php?img="+delid;
-       /* else if (what == "station")
-            var location = "/add/station.php?deleteid="+delid;
-        else if (what == "system")
-            var location = "/add/systemE.php?deleteid="+delid;*/
+            var script = "/action/deleteScreenshot.php?img="+delid;
 
         if (script != "")
         {
@@ -545,12 +594,12 @@ function confirmation(delid, what)
                 {
 					if (what == "screenshot")
 					{
-						var url = result;
-						console.log(url);
-						window.location = url;
+						//var url = result;
+						//log(url);
+						window.location = result;
 					}
 					update_map();
-                    //console.log(delid+' a thing was deleted');
+                    //log(delid+' a thing was deleted');
                 }
             });
         }
@@ -649,22 +698,18 @@ function showResult(str, divid, link, station, idlink, sysid, dp)
 
     if (str.length>=2)
     {
-        document.getElementById("suggestions_"+divid).style.display="block";
+        document.getElementById("suggestions_"+divid).style.display = "block";
     }
     else
 	{
-        document.getElementById("suggestions_"+divid).style.display="none";
+        document.getElementById("suggestions_"+divid).style.display = "none";
 	}
 
     if (window.XMLHttpRequest)
     {
-        // code for IE7+, Firefox, Chrome, Opera, Safari
         xmlhttp=new XMLHttpRequest();
     }
-	else
-	{  // code for IE6, IE5
 
-    }
 	xmlhttp.onreadystatechange=function()
 	{
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200)
@@ -720,7 +765,7 @@ function setResult(result, coordinates, divid)
     $('#coordsx_'+divid).val(x);
 	$('#coordsy_'+divid).val(y);
 	$('#coordsz_'+divid).val(z);
-    document.getElementById("suggestions_"+divid).style.display="none";
+    document.getElementById("suggestions_"+divid).style.display = "none";
 }
 
 /**
@@ -737,7 +782,7 @@ function setbm(name, sysid)
 	$('#bm_edit_id').val('');
 	$('#bm_text').val('');
 	$('#bm_catid').val('0');
-	document.getElementById("suggestions_3").style.display="none";
+	document.getElementById("suggestions_3").style.display = "none";
 }
 
 /**
@@ -750,8 +795,7 @@ function setbm(name, sysid)
 function setl(name, stationid)
 {
     $('#statname').val(name);
-	//$('#station_id').val(stationid);
-	document.getElementById("suggestions_41").style.display="none";
+	document.getElementById("suggestions_41").style.display = "none";
 }
 
 /**
@@ -771,7 +815,7 @@ function setdp(name, coordinates, systemid)
 	$('#x').val(x);
 	$('#y').val(y);
 	$('#z').val(z);
-	document.getElementById("suggestions_37").style.display="none";
+	document.getElementById("suggestions_37").style.display = "none";
 }
 
 /*
@@ -928,13 +972,9 @@ function calcDist(coord_fromx, coord_fromy, coord_fromz, coord_tox, coord_toy, c
 	to_id = to_id || "";
 	from_id = from_id || "";
 
-    //var coor_from = coord_from.split(",");
-
     var x1 = coord_fromx;
     var y1 = coord_fromy;
     var z1 = coord_fromz;
-
-    //var coor_to = coord_to.split(",");
 
     var x2 = coord_tox;
     var y2 = coord_toy;
@@ -988,7 +1028,7 @@ function calcDist(coord_fromx, coord_fromy, coord_fromz, coord_tox, coord_toy, c
  */
 function addstation(station, station_id)
 {
-    document.getElementById("statname").value=station;
+    document.getElementById("statname").value = station;
 }
 
 /**
@@ -1003,7 +1043,7 @@ function savelog(log)
     $.ajax(
 	{
       type: "POST",
-      url: "/add/sessionLogSave.php",
+      url: "/action/sessionLogSave.php",
       data: { logtext: data }
     })
     .done(function( msg )
@@ -1086,7 +1126,7 @@ function tofront(divid, toback)
  */
 function imgurUpload(file, fileurl)
 {
-	$('#uploaded').html("Uploading image...<br /><img src='/style/img/loading.gif' />");
+	$('#uploaded').html("Uploading image...<br /><img src='/style/img/loading.gif' alt='Uploading...' />");
 	$.ajax(
 	{
 		url: 'https://api.imgur.com/3/image',
@@ -1105,7 +1145,7 @@ function imgurUpload(file, fileurl)
 		{
 			var url = result.data.link;
 
-			$('#uploaded').html("Image succesfully uploaded!<br /><a target='_BLANK' href='"+url+"'>Link to your image on imgur.com<img src='/style/img/external_link.png' style='margin-bottom:3px;margin-left:6px;' alt='ext' /></a>");
+			$('#uploaded').html("Image succesfully uploaded!<br /><a target='_BLANK' href='"+url+"'>Link to your image on imgur.com<img src='/style/img/external_link.png' style='margin-bottom:3px;margin-left:6px' alt='ext' /></a>");
 
 			// write to file so we can retrieve url later
 			$.ajax(
@@ -1115,14 +1155,13 @@ function imgurUpload(file, fileurl)
 				dataType: 'html',
 				success: function(re)
 				{
-					//console.log(re);
+					//log(re);
 				}
             });
-			//console.log(result);
+			//log(result);
 		}
     });
 }
-
 
 /**
  * Set links as active
@@ -1155,7 +1194,7 @@ function get_wikipedia(search, id)
 	if (document.getElementById("wpsearch_"+id).style.display == "none")
 	{
 		$("#wpsearch_"+id).fadeIn();
-		$("#wpsearch_"+id).html('<strong>Querying Wikipedia</strong><br /><img src="/style/img/loading.gif" alt="loading" />');
+		$("#wpsearch_"+id).html('<strong>Querying Wikipedia</strong><br /><img src="/style/img/loading.gif" alt="Loading..." />');
 
 		$.ajax(
 		{
@@ -1200,17 +1239,30 @@ function getCR(group_id, class_name)
 	});
 }
 
-/*
-* 	http://stackoverflow.com/questions/1144783/replacing-all-occurrences-of-a-string-in-javascript
-*/
-
+/**
+ * Escape regex
+ * http://stackoverflow.com/questions/1144783/replacing-all-occurrences-of-a-string-in-javascript
+ *
+ * @param string str
+ * @author Sean Bright
+ */
 function escapeRegExp(str)
 {
     return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
 }
+
+/**
+ * Replace all occurrences of a string
+ * http://stackoverflow.com/questions/1144783/replacing-all-occurrences-of-a-string-in-javascript
+ *
+ * @param string str
+ * @param string find
+ * @param string replace
+ * @author Sean Bright
+ */
 function replaceAll(str, find, replace)
 {
-  return str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
+	return str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
 }
 
 /**
@@ -1222,7 +1274,7 @@ function refresh_api()
 {
 	$.ajax(
 	{
-		url: "/get/getAPIdata.php?override",
+		url: "/action/updateAPIdata.php?override",
 		cache: false,
 		dataType: 'json',
 		success: function(result)
@@ -1319,7 +1371,7 @@ function edsm_comment(comment, send)
 						{
 							if (res != "")
 							{
-								console.log("/get/getEDSMComment.php?system_name="+result);
+								//log("/get/getEDSMComment.php?system_name="+result);
 								$('#comment2').val(res);
 							}
 						}
@@ -1328,4 +1380,36 @@ function edsm_comment(comment, send)
 			});
 		}
 	}
+}
+
+/**
+ * Set reference systems
+ *
+ * @author Mauri Kujala <contact@edtb.xyz>
+ */
+function set_reference_systems(standard)
+{
+	if (standard != false)
+		var urli = "/get/getReferenceSystems.php?standard=true";
+	else
+		var urli = "/get/getReferenceSystems.php";
+
+	$.ajax(
+	{
+		url: urli,
+		cache: false,
+		success: function(result)
+		{
+			if (standard)
+			{
+				$(".refid").remove();
+				$("#refid").replaceWith(result);
+			}
+			else
+			{
+				$(".refid").remove();
+				$(result).insertAfter("#ref_id");
+			}
+		}
+	});
 }

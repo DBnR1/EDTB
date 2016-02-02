@@ -10,28 +10,32 @@
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
  */
 
-/*
-*  ED ToolBox, a companion web app for the video game Elite Dangerous
-*  (C) 1984 - 2016 Frontier Developments Plc.
-*  ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
-*
-*  This program is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU General Public License
-*  as published by the Free Software Foundation; either version 2
-*  of the License, or (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-*/
+ /*
+ * ED ToolBox, a companion web app for the video game Elite Dangerous
+ * (C) 1984 - 2016 Frontier Developments Plc.
+ * ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ */
 
-/** require functions */
-require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+/** @require congig */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
+/** @require functions */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+/** @require MySQL */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 
 Header("content-type: application/json");
 
@@ -72,9 +76,9 @@ $data_start .= '"11":{"name":"Logged systems","color":"2938F8"}}}, "systems":[';
 
 $last_row = "";
 
-/*
-*	fetch visited systems data for the map
-*/
+/**
+ * fetch visited systems data for the map
+ */
 
 if ($settings["galmap_show_visited_systems"] == "true")
 {
@@ -99,9 +103,9 @@ if ($settings["galmap_show_visited_systems"] == "true")
 		$vs_coordy = $row["y"];
 		$vs_coordz = $row["z"];
 
-		/*
-		*	if coords are not set, see if user has calculated them
-		*/
+		/**
+		 * if coords are not set, see if user has calculated them
+		 */
 
 		if (!valid_coordinates($vs_coordx, $vs_coordy, $vs_coordz))
 		{
@@ -117,9 +121,9 @@ if ($settings["galmap_show_visited_systems"] == "true")
 			$vs_coordz = $cb_arr["z"] == "" ? "" : $cb_arr["z"];
 		}
 
-		/*
+		/**
 		*    if we now have valid coordinates, get on with it
-		*/
+		 */
 
 		if (valid_coordinates($vs_coordx, $vs_coordy, $vs_coordz))
 		{
@@ -176,9 +180,9 @@ if ($settings["galmap_show_visited_systems"] == "true")
 	}
 }
 
-/*
-*	 fetch point of interest data for the map
-*/
+/**
+ *  fetch point of interest data for the map
+ */
 
 if ($settings["galmap_show_pois"] == "true")
 {
@@ -230,9 +234,9 @@ if ($settings["galmap_show_pois"] == "true")
 	}
 }
 
-/*
-*	 fetch bookmark data for the map
-*/
+/**
+ *  fetch bookmark data for the map
+ */
 
 if ($settings["galmap_show_bookmarks"] == "true")
 {
@@ -256,9 +260,9 @@ if ($settings["galmap_show_bookmarks"] == "true")
 		$bm_coordy = $bm_row["y"];
 		$bm_coordz = $bm_row["z"];
 
-		/*
-		*	if coords are not set, see if user has calculated them
-		*/
+		/**
+		 * if coords are not set, see if user has calculated them
+		 */
 
 		if (!valid_coordinates($bm_coordx, $bm_coordy, $bm_coordz))
 		{
@@ -311,9 +315,9 @@ if ($settings["galmap_show_bookmarks"] == "true")
 	}
 }
 
-/*
-*	 fetch rares data for the map
-*/
+/**
+ *  fetch rares data for the map
+ */
 
 if ($settings["galmap_show_rares"] == "true")
 {
@@ -360,9 +364,9 @@ if ($settings["galmap_show_rares"] == "true")
 	}
 }
 
-/*
-*	 fetch logged systems data for the map
-*/
+/**
+ *  fetch logged systems data for the map
+ */
 
 $log_result = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT user_log.id, user_log.stardate, user_log.log_entry, user_log.system_name,
 															edtb_systems.x, edtb_systems.y, edtb_systems.z
@@ -428,11 +432,15 @@ $cur_sys_data = "";
 
 if (strtolower($last_system_name) == strtolower($curSys["name"]) && valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"]))
 {
-	$cur_sys_data = ',{"name":"' . $curSys["name"]  . '","cat":[5],"coords":{"x":' . $curSys["x"] . ',"y":' . $curSys["y"] . ',"z":' . $curSys["z"] . '}}';
+	$comma = !empty($data) ? "," : "";
+	$cur_sys_data = $comma . '{"name":"' . $curSys["name"]  . '","cat":[5],"coords":{"x":' . $curSys["x"] . ',"y":' . $curSys["y"] . ',"z":' . $curSys["z"] . '}}';
 }
 
-$data = "" . $data_start . "" . $data . "" . $cur_sys_data . "]}";
-$map_json = "" . $_SERVER["DOCUMENT_ROOT"] . "/map_points.json";
+$data = $data_start . $data . $cur_sys_data . "]}";
+
+$map_json = $_SERVER["DOCUMENT_ROOT"] . "/map_points.json";
 file_put_contents($map_json, $data);
+
+edtb_common("last_map_update", "unixtime", true, time());
 
 ((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);

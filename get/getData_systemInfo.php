@@ -10,25 +10,25 @@
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
  */
 
-/*
-*  ED ToolBox, a companion web app for the video game Elite Dangerous
-*  (C) 1984 - 2016 Frontier Developments Plc.
-*  ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
-*
-*  This program is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU General Public License
-*  as published by the Free Software Foundation; either version 2
-*  of the License, or (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-*/
+ /*
+ * ED ToolBox, a companion web app for the video game Elite Dangerous
+ * (C) 1984 - 2016 Frontier Developments Plc.
+ * ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ */
 
 // If system id or name is set, show info about that system
 if ($_GET["system_id"] != "undefined" || $_GET["system_name"] != "undefined")
@@ -76,7 +76,7 @@ if ($_GET["system_id"] != "undefined" || $_GET["system_name"] != "undefined")
 
 	if ($curSys["simbad_ref"] != "")
 	{
-		$si_system_display_name = '<a href="http://simbad.u-strasbg.fr/simbad/sim-id?Ident=' . urlencode($si_system_name) . '" target="_BLANK" title="View on Simbad">' . $si_system_name . '&nbsp;<img src="/style/img/external_link.png" alt="ext" /></a>';
+		$si_system_display_name = '<a href="http://simbad.u-strasbg.fr/simbad/sim-id?Ident=' . urlencode($si_system_name) . '" target="_BLANK" title="View on Simbad">' . $si_system_name . '</a><img src="/style/img/external_link.png" alt="ext" style="margin-left:5px" />';
 	}
 
 	$si_system_id = $si_system_arr["id"];
@@ -114,9 +114,9 @@ if ($_GET["system_id"] != "undefined" || $_GET["system_name"] != "undefined")
 	$curSys["y"] = $si_system_arr["si_system_coordy"];
 	$curSys["z"] = $si_system_arr["si_system_coordz"];
 }
-/*
-*    if system_id not set, show info about current system
-*/
+/**
+ * if system_id not set, show info about current system
+ */
 else
 {
 	$si_system_name = $curSys["name"];
@@ -124,7 +124,7 @@ else
 
 	if ($curSys["simbad_ref"] != "")
 	{
-		$si_system_display_name = '<a href="http://simbad.u-strasbg.fr/simbad/sim-id?Ident=' . urlencode($si_system_name) . '" target="_BLANK" title="View on Simbad">' . $si_system_name . '&nbsp;<img src="/style/img/external_link.png" alt="ext" /></a>';
+		$si_system_display_name = '<a href="http://simbad.u-strasbg.fr/simbad/sim-id?Ident=' . urlencode($si_system_name) . '" target="_BLANK" title="View on Simbad">' . $si_system_name . '</a><img src="/style/img/external_link.png" alt="ext" style="margin-left:5px" />';
 	}
 
 	$si_system_id = $curSys["id"];
@@ -139,9 +139,9 @@ else
 	$si_system_power_state = $curSys["power_state"] == "" ? "None" : $curSys["power_state"];
 }
 
-/*
-*    basic system info
-*/
+/**
+ * basic system info
+ */
 
 // get distance to system
 if (valid_coordinates($curSys["x"], $curSys["z"], $curSys["y"]))
@@ -158,7 +158,7 @@ if (valid_coordinates($curSys["x"], $curSys["z"], $curSys["y"]))
 	}
 	else
 	{
-		$rare_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT SQL_CACHE
+		$rare_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT SQL_CACHE
 																sqrt(pow((edtb_systems.x-(" . $curSys["x"] . ")),2)+pow((edtb_systems.y-(" . $curSys["y"] . ")),2)+pow((edtb_systems.z-(" . $curSys["z"] . ")),2)) AS distance,
 																edtb_rares.item, edtb_rares.system_name, edtb_rares.station, edtb_rares.price,
 																edtb_rares.sc_est_mins, edtb_rares.ls_to_star,
@@ -199,11 +199,11 @@ else
 	$rares_closeby = 0;
 }
 
-/*
-*    get distances to user defined systems
-*/
+/**
+ * get distances to user defined systems
+ */
 
-$user_dists = "<span class=\"right\" style=\"font-size:11px;\">" . $si_dist_add . "";
+$user_dists = "<span class=\"right\" style=\"font-size:11px;\">" . $si_dist_add;
 if (isset($settings["dist_systems"]))
 {
 	$num_dists = count($settings["dist_systems"]);
@@ -294,9 +294,9 @@ if ($actual_num_res > 0 && valid_coordinates($curSys["x"], $curSys["y"], $curSys
 
 $data['si_name'] .= "" . $si_system_display_name . "" . $si_loglink.$si_screenshots . " <span style='font-size:11px;text-transform:uppercase;vertical-align:middle;'>[ State: " . $si_system_state . " - Security: " . $si_system_security . " - Visits: " . $num_visits . " ]" . $rare_text . "" . $user_dists . "</span>";
 
-/*
-*	station info for System.php
-*/
+/**
+ * station info for System.php
+ */
 
 $si_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT SQL_CACHE *
 													FROM edtb_stations
@@ -336,20 +336,20 @@ else
 
 		$station_id = $sarr2["id"];
 
-		$s_name = "<span class='wp' onclick='get_wikipedia(\"" . urlencode($first_url) . "\", \"" . $station_id . "\");'><a href='javascript:void(0);' title='Ask Wikipedia about " . $first_url . "' style='font-weight:inherit;'>" . trim($first) . "</a></span> " . $last . "";
+		$s_name = "<span class='wp' onclick='get_wikipedia(\"" . urlencode($first_url) . "\", \"" . $station_id . "\");'><a href='javascript:void(0);' title='Ask Wikipedia about " . $first_url . "' style='font-weight:inherit;'>" . trim($first) . "</a></span> " . $last;
 
 		$ls_from_star = $sarr2["ls_from_star"];
 		$max_landing_pad_size = $sarr2["max_landing_pad_size"];
 
-		$s_faction = $sarr2["faction"] == "" ? "" : "<strong>Faction:</strong> " . $sarr2["faction"] . "";
+		$s_faction = $sarr2["faction"] == "" ? "" : "<strong>Faction:</strong> " . $sarr2["faction"];
 		$s_distance_from_star = $ls_from_star == 0 ? "" : "" . number_format($ls_from_star, 0) . " ls - ";
 		$s_information = "<span style='float:right;margin-right:8px;'>&boxur;&nbsp" . $s_distance_from_star . "Landing pad: " . $max_landing_pad_size . "</span><br />";
-		$s_government = $sarr2["government"] == "" ? "Government unknown" : "" . $sarr2["government"] . "";
-		$s_allegiance = $sarr2["allegiance"] == "" ? "Allegiance unknown" : "" . $sarr2["allegiance"] . "";
+		$s_government = $sarr2["government"] == "" ? "Government unknown" : "" . $sarr2["government"];
+		$s_allegiance = $sarr2["allegiance"] == "" ? "Allegiance unknown" : "" . $sarr2["allegiance"];
 
 		$s_state = $sarr2["state"] == "" ? "" : "<strong>State:</strong> " . $sarr2["state"] . "<br />";
 		$type = $sarr2["type"] == "" ? "Type unknown" : "" . $sarr2["type"] . "";
-		$economies = $sarr2["economies"] == "" ? "Economies unknown" : "" . $sarr2["economies"] . "";
+		$economies = $sarr2["economies"] == "" ? "Economies unknown" : "" . $sarr2["economies"];
 		$economies = $economies == "" ? "Economies unknown" : $economies;
 
 		$import_commodities = $sarr2["import_commodities"] == "" ? "" : "<br /><strong>Import commodities:</strong> " . $sarr2["import_commodities"] . "<br />";
@@ -359,13 +359,13 @@ else
 		$outfitting_updated_ago = !empty($sarr2["outfitting_updated_at"]) ? 'Outfitting last updated: ' . get_timeago($sarr2["outfitting_updated_at"], true, true) . '' : "";
 		$shipyard_updated_ago = !empty($sarr2["shipyard_updated_at"]) ? ' (updated ' . get_timeago($sarr2["shipyard_updated_at"], true, true) . ')' : "";
 
-		$selling_ships = $sarr2["selling_ships"] == "" ? "" : "<br /><br /><strong>Selling ships:</strong> " . str_replace("'", "", $sarr2["selling_ships"]) . "" . $shipyard_updated_ago . "";
+		$selling_ships = $sarr2["selling_ships"] == "" ? "" : "<br /><br /><strong>Selling ships:</strong> " . str_replace("'", "", $sarr2["selling_ships"]) . $shipyard_updated_ago;
 
 		$selling_modules = "";
 
-		/*
-		*    modules information
-		*/
+		/**
+		 * modules information
+		 */
 		if (!empty($sarr2["selling_modules"]))
 		{
 			$modules = $sarr2["selling_modules"];
@@ -498,7 +498,7 @@ else
 			}
 		}
 
-		$info = $s_faction.$s_information.$import_commodities.$export_commodities.$prohibited_commodities;
+		$info = $s_faction . $s_information . $import_commodities . $export_commodities . $prohibited_commodities;
 		$info = str_replace("['", "", $info);
 		$info = str_replace("']", "", $info);
 		$info = str_replace("', '", ", ", $info);
@@ -513,7 +513,7 @@ else
 		$data['si_stations'] .= '<div class="systeminfo_station" style="background-image:url(/style/img/' . $allegiance_icon . ');background-repeat:no-repeat;background-position:right 0 bottom -2px">';
 			//$data['si_stations'] .= '<div class="heading" onclick="$(\'#info_'.$station_id.'\').toggle();$(\'#prices_'.$station_id.'\').toggle()">';
 			$data['si_stations'] .= '<div class="heading">';
-				$data['si_stations'] .= '' . $icon . '' . $s_name . '	<span style="font-weight:normal;font-size:10px">
+				$data['si_stations'] .= '' . $icon . $s_name . '<span style="font-weight:normal;font-size:10px">
 																[ ' . $type . ' - ' . $s_allegiance . ' - ' . $s_government . ' - ' . $economies . ' ]
 															</span>';
 				$data['si_stations'] .= '<span style="float:right"><a href="http://eddb.io/station/' . $station_id . '" title="View station on eddb.io" target="_BLANK"><img src="/style/img/eddb.png" alt="EDDB" /></a></span>';
@@ -532,7 +532,7 @@ else
 			$data['si_stations'] .= '</div>';
 
 			// prices information
-			/*$p_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT 	listings.supply, listings.buy_price, listings.sell_price, listings.demand,
+			/**$p_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT 	listings.supply, listings.buy_price, listings.sell_price, listings.demand,
 											commodities.name, commodities.average_price, commodities.category_id, commodities.category
 											FROM listings
 											LEFT JOIN commodities ON listings.commodity_id = commodities.id
@@ -576,15 +576,15 @@ else
 
 					$cur_cat = $arr3["category_id"];
 				}
-			$data['si_stations'] .= '</table></div>';*/
+			$data['si_stations'] .= '</table></div>'; */
 
 		$data['si_stations'] .= '</div>';
 	}
 }
 
-/*
-*	detailed system info
-*/
+/**
+ * detailed system info
+ */
 
 if ($exists == 0 && $_GET["system_id"] == "undefined" && $_GET["system_name"] == "undefined")
 {

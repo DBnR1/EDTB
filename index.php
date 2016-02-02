@@ -10,58 +10,66 @@
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
  */
 
-/*
-*  ED ToolBox, a companion web app for the video game Elite Dangerous
-*  (C) 1984 - 2016 Frontier Developments Plc.
-*  ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
-*
-*  This program is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU General Public License
-*  as published by the Free Software Foundation; either version 2
-*  of the License, or (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-*/
+ /*
+ * ED ToolBox, a companion web app for the video game Elite Dangerous
+ * (C) 1984 - 2016 Frontier Developments Plc.
+ * ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ */
 
 /**
  * if the user is new, show an installation page
  */
 
-if (file_exists("" . $_SERVER["DOCUMENT_ROOT"] . "/install.php"))
+if (file_exists($_SERVER["DOCUMENT_ROOT"] . "/install.php"))
 {
 	$inst_path = str_replace("EDTB", "", $_SERVER["DOCUMENT_ROOT"]);
-	require_once("" . $inst_path . "/data/server_config.inc.php");
+	require_once($inst_path . "/data/server_config.inc.php");
 
-	/*
-	*
-	*/
+	/**
+	 *
+	 */
 
-	require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/installer_style.php");
-	require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
+	require_once($_SERVER["DOCUMENT_ROOT"] . "/style/installer_style.php");
+	require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config_ini.inc.php");
 
-	/*
-	*	if mysql insertion was succesfull, remove install files
-	*/
+	/**
+	 * if mysql insertion was succesfull, remove install files
+	 */
 
 	if (isset($_GET["doned"]))
 	{
-		$script_path = "" . $settings["install_path"] . "\\EDTB\\install.sql";
-		$installer_path = "" . $settings["install_path"] . "\\EDTB\\install.php";
+		$script_path = $settings["install_path"] . "\\EDTB\\install.sql";
+		$installer_path = $settings["install_path"] . "\\EDTB\\install.php";
 
 		if (file_exists($script_path))
 		{
-			unlink($script_path);
+			if (!unlink($script_path))
+			{
+				$error = error_get_last();
+				write_log("Error: " . $error['message'], __FILE__, __LINE__);
+			}
 		}
 		if (file_exists($installer_path))
 		{
-			unlink($installer_path);
+			if (!unlink($installer_path))
+			{
+				$error = error_get_last();
+				write_log("Error: " . $error['message'], __FILE__, __LINE__);
+			}
 		}
 
 		header('Location: /index.php?dones');
@@ -70,9 +78,9 @@ if (file_exists("" . $_SERVER["DOCUMENT_ROOT"] . "/install.php"))
 
 	echo installer_header();
 
-	/*
-	*	if mysql insertion was succesfull, ask to finish setup
-	*/
+	/**
+	 * if mysql insertion was succesfull, ask to finish setup
+	 */
 
 	if (isset($_GET["done"]))
 	{
@@ -81,9 +89,9 @@ if (file_exists("" . $_SERVER["DOCUMENT_ROOT"] . "/install.php"))
 		exit;
 	}
 
-	/*
-	*	if install is done but install.php still exists, something's gone wrong
-	*/
+	/**
+	 * if install is done but install.php still exists, something's gone wrong
+	 */
 
 	if (isset($_GET["dones"]))
 	{
@@ -105,8 +113,11 @@ if (file_exists("" . $_SERVER["DOCUMENT_ROOT"] . "/install.php"))
 	exit;
 }
 
+/** @var pagetitle */
 $pagetitle = "ED ToolBox";
-require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
+
+/** @require header file */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 
 if (isset($_GET["import_done"]))
 {
@@ -127,7 +138,7 @@ if (isset($_GET["import_done"]))
 	<?php
 	echo notice("Succesfully added " . number_format($_GET["num"]) . " visited systems to the database.", "Logs imported");
 	echo '</div></div>';
-	require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");
+	require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");
 	exit;
 }
 ?>
@@ -136,4 +147,4 @@ if (isset($_GET["import_done"]))
 	</div>
 </div>
 <?php
-require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");

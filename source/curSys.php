@@ -11,47 +11,52 @@
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
  */
 
-/*
-*  ED ToolBox, a companion web app for the video game Elite Dangerous
-*  (C) 1984 - 2016 Frontier Developments Plc.
-*  ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
-*
-*  This program is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU General Public License
-*  as published by the Free Software Foundation; either version 2
-*  of the License, or (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-*/
+ /*
+ * ED ToolBox, a companion web app for the video game Elite Dangerous
+ * (C) 1984 - 2016 Frontier Developments Plc.
+ * ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ */
 
-/** @var curSys */
+/** @require configs */
+require_once("config.inc.php");
+/** @require functions */
+require_once("functions.php");
+/** @array curSys */
 $curSys = array();
+
 if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"]))
 {
-    // select the newest  file
+    // select the newest file
     if (!$files = scandir($settings["log_dir"], SCANDIR_SORT_DESCENDING))
 	{
 		$error = error_get_last();
-		write_log("Error: " . $error["message"] . "", __FILE__, __LINE__);
+		write_log("Error: " . $error["message"], __FILE__, __LINE__);
 	}
     $newest_file = $files[0];
 
     // read file to an array
-    if (!$line = file("" . $settings["log_dir"] . "/" . $newest_file . ""))
+    if (!$line = file($settings["log_dir"] . "/" . $newest_file))
 	{
 		$error = error_get_last();
-		write_log("Error: " . $error["message"] . "", __FILE__, __LINE__);
+		write_log("Error: " . $error["message"], __FILE__, __LINE__);
 	}
 	else
 	{
-		//  reverse array
+		// reverse array
 		$lines = array_reverse($line);
 
 		foreach ($lines as $line_num => $line)
@@ -90,8 +95,8 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"]))
 				$curSys["updated_at"] = "";
 				$curSys["simbad_ref"] = "";
 
-				$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT 	id, x, y, z, ruling_faction, population, government, allegiance, state,
-																			security, economy, power, power_state, needs_permit, updated_at, simbad_ref
+				$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id, x, y, z, ruling_faction, population, government, allegiance, state,
+																	security, economy, power, power_state, needs_permit, updated_at, simbad_ref
 																	FROM edtb_systems
 																	WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'
 																	LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
@@ -101,7 +106,7 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"]))
 				{
 					$arr = mysqli_fetch_assoc($res);
 
-					$curSys["coordinates"] = "" . $arr['x'] . "," . $arr['y'] . "," . $arr['z'] . "";
+					$curSys["coordinates"] = $arr['x'] . "," . $arr['y'] . "," . $arr['z'];
 					$curSys["id"] = $arr["id"];
 					$curSys["population"] = $arr["population"];
 					$curSys["allegiance"] = $arr["allegiance"];
@@ -136,7 +141,7 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"]))
 						$curSys["x"] = $carr["x"] == "" ? "" : $carr["x"];
 						$curSys["y"] = $carr["y"] == "" ? "" : $carr["y"];
 						$curSys["z"] = $carr["z"] == "" ? "" : $carr["z"];
-						$curSys["coordinates"] = "" . $curSys["x"] . "," . $curSys["y"] . "," . $curSys["z"] . "";
+						$curSys["coordinates"] = $curSys["x"] . "," . $curSys["y"] . "," . $curSys["z"];
 					}
 					else
 					{
@@ -159,7 +164,7 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"]))
 																		DESC LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 					$vs_arr = mysqli_fetch_assoc($rows);
 
-					$visited_on = "" . date("Y-m-d") . " " . $visited_time . "";
+					$visited_on = date("Y-m-d") . " " . $visited_time;
 
 					if ($vs_arr["system_name"] != $curSys["name"] && !empty($curSys["name"]))
 					{
@@ -183,6 +188,7 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"]))
 						}
 
 						$newSystem = true;
+						//write_log($prev_system . " new: " . $cssystemname);
 					}
 
 					// update latest system
@@ -204,5 +210,5 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"]))
 }
 else
 {
-	write_log("Error: " . $settings["log_dir"] . " is not a directory", __FILE__, __LINE__);
+	write_log("Error: " . $settings["log_dir"] . " doesn't exist or is not readable", __FILE__, __LINE__);
 }

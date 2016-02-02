@@ -10,30 +10,34 @@
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
  */
 
-/*
-*  ED ToolBox, a companion web app for the video game Elite Dangerous
-*  (C) 1984 - 2016 Frontier Developments Plc.
-*  ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
-*
-*  This program is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU General Public License
-*  as published by the Free Software Foundation; either version 2
-*  of the License, or (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-*/
+ /*
+ * ED ToolBox, a companion web app for the video game Elite Dangerous
+ * (C) 1984 - 2016 Frontier Developments Plc.
+ * ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ */
 
 if (isset($_GET["do"]))
 {
-	/** require functions */
-	require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+	/** @require config */
+	require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
+	/** @require functions */
+	require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+	/** @require MySQL */
+	require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 
 	$data = json_decode($_REQUEST["input"], true);
 
@@ -94,7 +98,7 @@ if ($_SERVER['PHP_SELF'] == "/Poi.php")
     <div class="input" id="addPoi" style="text-align:center">
 		<form method="post" id="poi_form" action="Poi.php">
 			<div class="input-inner">
-				<div class="suggestions" id="suggestions_33" style="margin-top:115px;margin-left:10px"></div>
+				<div class="suggestions" id="suggestions_33" style="margin-top:79px;margin-left:12px"></div>
 				<table>
 					<tr>
 						<td class="heading" colspan="2">Add/edit Point of Interest
@@ -136,7 +140,6 @@ if ($_SERVER['PHP_SELF'] == "/Poi.php")
 					</tr>
 					<tr>
 						<td class="dark" colspan="2">
-							<!--<input class="textbox" type="text" name="poi_text" id="poi_text" placeholder="Text (optional)" style="width:95%" />-->
 							<textarea id="poi_text" name="poi_text" placeholder="Text (optional)" rows="10" cols="40"></textarea>
 						</td>
 					</tr>

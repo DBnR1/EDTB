@@ -11,11 +11,11 @@ INSTALLATION:
 
   Start EDTBManager_x_x_x.exe and follow the instructions in the setup wizard.
 
-- After install is successfull, start ED ToolBox. A tray icon will appear. If the tray icon turns blue,
-  that means the services are running and everything is fine. Right click the tray icon and choose
-  "Open ED ToolBox". This will open the app in your web browser. An install prompt will appear that
-  will quide you trough the rest of the process.
+- After install is successfull, start ED ToolBox. This will start Apache webserver and MySQL database server.
+  A tray icon will appear. If the tray icon turns blue, that means the MySQL service is running.
 
+  Right click the tray icon and choose "Open ED ToolBox". This will open the app in your web browser.
+  An install prompt will appear that will quide you trough the rest of the process.
 
-FOR MORE INFORMATION VISIT HTTP://EDTB.XYZ
-------------------------------------------
+  FOR MORE INFORMATION VISIT HTTP://EDTB.XYZ
+  ------------------------------------------

@@ -10,28 +10,34 @@
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
  */
 
-/*
-*  ED ToolBox, a companion web app for the video game Elite Dangerous
-*  (C) 1984 - 2016 Frontier Developments Plc.
-*  ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
-*
-*  This program is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU General Public License
-*  as published by the Free Software Foundation; either version 2
-*  of the License, or (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-*/
+ /*
+ * ED ToolBox, a companion web app for the video game Elite Dangerous
+ * (C) 1984 - 2016 Frontier Developments Plc.
+ * ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ */
 
-/** require functions */
-require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+/** @require config */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
+/** @require functions */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+/** @require MySQL */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
+/** @require curSys */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/curSys.php");
 
 $action = isset($_GET["action"]) ? $_GET["action"] : "";
 $request = isset($_GET["request"]) ? $_GET["request"] : 0;
@@ -60,9 +66,9 @@ elseif ($action == "onlyid")
 
 $data = array();
 
-/*
+/**
 * 	Now Playing
-*/
+ */
 
 $data['now_playing'] = "";
 
@@ -70,22 +76,21 @@ if ((isset($settings["nowplaying_file"]) && !empty($settings["nowplaying_file"])
 {
 	$nowplaying = "";
 
-	/*
-	*    from file
-	*/
+	/**
+	 *  from file
+	 */
 
 	if (isset($settings["nowplaying_file"]) && !empty($settings["nowplaying_file"]))
 	{
 		$nowplaying .= file_get_contents($settings["nowplaying_file"]);
 	}
 
-	/*
-	*    from VLC (@author Travis)
-	*/
+	/**
+	 *  from VLC (@author Travis)
+	 */
 
 	if (isset($settings["nowplaying_vlc_password"]) && !empty($settings["nowplaying_vlc_password"]))
 	{
-
 		$username = "";
 		$password = $settings["nowplaying_vlc_password"];
 		$url = $settings["nowplaying_vlc_url"];
@@ -114,45 +119,59 @@ if ((isset($settings["nowplaying_file"]) && !empty($settings["nowplaying_file"])
 	$data['now_playing'] .= $nowplaying;
 }
 
-/*
-* 	If we've arrived in a new system or
-* 	are requesting page for the first time
-*/
+/**
+ * If we've arrived in a new system or
+ * are requesting page for the first time
+ */
 
+$data['update_in_progress'] = "false";
+$data['update_notification_data'] = "false";
 if ($newSystem !== false || $request == 0)
 {
-	/*
-	*	update system and station data in the background if last update was more than 6 hours ago
-	*/
+	/**
+	 * update system and station data in the background if last update was more than 6 hours ago
+	 */
 
 	$last_update = edtb_common("last_data_update", "unixtime");
 	$time_frame = time()-6*60*60;
 
 	if ($last_update < $time_frame)
 	{
-		// run update script
-		if (file_exists("" . $settings["install_path"] . "/bin/UpdateData/updatedata_bg.bat"))
-		{
-			$handle = popen("start \"UpdateData\" /b \"" . $settings["install_path"] . "/bin/UpdateData/updatedata_bg.bat\"", "r");
+		// fetch last update start time
+		$last_data_update_start = edtb_common("last_data_update_start", "unixtime");
+		$start_time_frame = time()-120;
 
-			pclose($handle);
-		}
-		else
+		// run update script
+		if ($last_data_update_start < $start_time_frame)
 		{
-			write_log("Error: update error");
+			$batch_file = $settings["install_path"] . "/bin/UpdateData/updatedata_bg.bat";
+			if (file_exists($batch_file))
+			{
+				edtb_common("last_data_update_start", "unixtime", true, time());
+
+				pclose(popen("start \"UpdateData\" /b \"" . $batch_file . "\"", "r"));
+
+				$data['update_in_progress'] = "true";
+				$data['update_notification'] .= '<a href="javascript:void(0)" title="Data update in progress" onclick="$(\'#notice\').fadeToggle(\'fast\')"><img src="/style/img/notice.png" style="height:26px;width:26px;margin-right:6px" alt="Update" /></a>';
+				$data['update_notification_data'] = 'System and station data is being updated in the background.';
+			}
+			else
+			{
+				write_log("Error: update error");
+			}
 		}
 	}
 
-	/*
-	*	update galmap json if system is new or file doesn't exist
-	*	or if last update was more than an hour ago
-	*/
+	/**
+	 * update galmap json if system is new or file doesn't exist
+	 * or if last update was more than an hour ago
+	 */
 
 	$data['update_map'] = "false";
 	$last_map_update = edtb_common("last_map_update", "unixtime");
 	$map_update_time_frame = time()-1*60*60;
 
-	if ($newSystem !== false || !file_exists("" . $_SERVER["DOCUMENT_ROOT"] . "/map_points.json") || $last_map_update < $map_update_time_frame)
+	if ($newSystem !== false || !file_exists($_SERVER["DOCUMENT_ROOT"] . "/map_points.json") || $last_map_update < $map_update_time_frame)
 	{
 		$data['update_map'] = "true";
 	}
@@ -166,52 +185,49 @@ if ($newSystem !== false || $request == 0)
 	$data['current_system_name'] = $curSys["name"];
 	$data['current_coordinates'] = $curSys["coordinates"];
 
-	/*
-	*	Data for the left column
-	*/
+	/**
+	 * Data for the left column
+	 */
 
-	require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/get/getData_leftColumn.php");
+	require_once($_SERVER["DOCUMENT_ROOT"] . "/get/getData_leftColumn.php");
 
-	/*
-	*	Stuff specifically for System.php
-	*/
+	/**
+	 * Stuff specifically for System.php
+	 */
 
-	require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/get/getData_systemInfo.php");
+	require_once($_SERVER["DOCUMENT_ROOT"] . "/get/getData_systemInfo.php");
 
-	/*
-	*	System and general logs
-	*/
+	/**
+	 * System and general logs
+	 */
 
-	require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/get/getData_logs.php");
+	require_once($_SERVER["DOCUMENT_ROOT"] . "/get/getData_logs.php");
 
-	/*
-	*	User and Ship status from API
-	*/
+	/**
+	 * Check for updates
+	 */
 
-	//require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/get/getData_status.php");
+	require_once($_SERVER["DOCUMENT_ROOT"] . "/get/getData_checkForUpdates.php");
 
-	/*
-	*	Check for updates
-	*/
-
-	require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/get/getData_checkForUpdates.php");
-
-	/*
-	*	set data renew tag
-	*/
+	/**
+	 * set data renew tag
+	 */
 
 	$data['renew'] = "true";
 
-	/*
-	*	update last_access time
-	*/
+	/**
+	 * update last_access time
+	 */
 
-	update_last_access();
+	//update_last_access();
 }
 else
 {
 	$data['renew'] = "false";
 }
+
+// make screenshot gallery
+make_gallery($curSys["name"]);
 
 echo json_encode($data);
 

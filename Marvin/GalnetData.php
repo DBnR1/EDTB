@@ -10,31 +10,36 @@
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
  */
 
-/*
-*  ED ToolBox, a companion web app for the video game Elite Dangerous
-*  (C) 1984 - 2016 Frontier Developments Plc.
-*  ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
-*
-*  This program is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU General Public License
-*  as published by the Free Software Foundation; either version 2
-*  of the License, or (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-*/
+ /*
+ * ED ToolBox, a companion web app for the video game Elite Dangerous
+ * (C) 1984 - 2016 Frontier Developments Plc.
+ * ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ */
 
-require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+/** @require functions */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+/** @require config */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
+/** @require MySQL */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 
-/*
-*	if data is older than 30 minutes, update
-*/
+/**
+ * if data is older than 30 minutes, update
+ */
 
 $ga_last_update = edtb_common("last_galnet_update", "unixtime") + 30*60; // 30 minutes
 
@@ -72,15 +77,15 @@ if ($ga_last_update < time())
 		if ($continue !== false)
 		{
 			// write articles into txt files for VoiceAttack
-			$to_write = "" . $ga_title . "\n\r" . $text . "";
+			$to_write = $ga_title . "\n\r" . $text;
 
 			if ($in <= $settings["galnet_articles"])
 			{
-				/*
-				*	write four of the latest articles to .txt files
-				*/
+				/**
+				 * write four of the latest articles to .txt files
+				 */
 
-				$newfile = "" . $_SERVER["DOCUMENT_ROOT"] . "/Marvin/galnet" . $in . ".txt";
+				$newfile = $_SERVER["DOCUMENT_ROOT"] . "/Marvin/galnet" . $in . ".txt";
 
 				$old_file = "";
 				if (file_exists($newfile))
@@ -91,12 +96,12 @@ if ($ga_last_update < time())
 				if (!file_put_contents($newfile, $to_write))
 				{
 					$error = error_get_last();
-					write_log("Error: " . $error['message'] . "", __FILE__, __LINE__);
+					write_log("Error: " . $error['message'], __FILE__, __LINE__);
 				}
 
-				/*
-				*	compare to the latest to see if new articles have been posted since last check
-				*/
+				/**
+				 * compare to the latest to see if new articles have been posted since last check
+				 */
 
 				$new_file = "-1";
 				if (file_exists($newfile))
@@ -113,16 +118,16 @@ if ($ga_last_update < time())
 		}
 	}
 
-	/*
-	*	update last_update time
-	*/
+	/**
+	 * update last_update time
+	 */
 
 	edtb_common("last_galnet_update", "unixtime", true, time());
 }
 
-/*
-*	fetch last check time and last new article time
-*/
+/**
+ * fetch last check time and last new article time
+ */
 
 $last_galnet_check = edtb_common("last_galnet_check", "unixtime");
 $last_galnet_new = edtb_common("last_galnet_new", "unixtime");
@@ -136,9 +141,9 @@ else
 	echo "New GalNet articles have been published since you last asked. Would you like me to read them to you?";
 }
 
-/*
-*	 update last check time
-*/
+/**
+ *  update last check time
+ */
 
 edtb_common("last_galnet_check", "unixtime", true, time());
 

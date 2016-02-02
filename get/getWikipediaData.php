@@ -10,36 +10,37 @@
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
  */
 
-/*
-*  ED ToolBox, a companion web app for the video game Elite Dangerous
-*  (C) 1984 - 2016 Frontier Developments Plc.
-*  ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
-*
-*  This program is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU General Public License
-*  as published by the Free Software Foundation; either version 2
-*  of the License, or (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-*/
+ /*
+ * ED ToolBox, a companion web app for the video game Elite Dangerous
+ * (C) 1984 - 2016 Frontier Developments Plc.
+ * ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ */
 
-/** require functions */
-require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+/** @require functions */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 
 if (isset($_GET["search"]) && !empty($_GET["search"]))
 {
 	$search = urlencode($_GET["search"]);
+	$text = "";
 
-	/*
-	*	first try the dismbiguation
-	*/
+	/**
+	 * first try the dismbiguation
+	 */
 
 	$url = "https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&redirects=&exsectionformat=plain&titles=" . strtolower($search) . "_(disambiguation)";
 
@@ -143,13 +144,13 @@ if (isset($_GET["search"]) && !empty($_GET["search"]))
 		write_log("Failed to contact Wikipedia", __FILE__, __LINE__);
 	}
 
-	/*
-	*	if that yields no results, try the direct approach
-	*/
+	/**
+	 * if that yields no results, try the direct approach
+	 */
 
 	if ($i == 0)
 	{
-		$url = "https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exsectionformat=plain&titles=" . strtolower($search) . "";
+		$url = "https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exsectionformat=plain&titles=" . strtolower($search);
 
 		if ($result = file_get_contents($url))
 		{
@@ -192,9 +193,9 @@ if (isset($_GET["search"]) && !empty($_GET["search"]))
 		}
 	}
 
-	/*
-	*	if nothing's still found, give up
-	*/
+	/**
+	 * if nothing's still found, give up
+	 */
 
 	if ($i == 0)
 	{
@@ -208,4 +209,3 @@ else
 	echo 'No search string set.';
 }
 
-((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);

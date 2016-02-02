@@ -10,35 +10,36 @@
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
  */
 
-/*
-*  ED ToolBox, a companion web app for the video game Elite Dangerous
-*  (C) 1984 - 2016 Frontier Developments Plc.
-*  ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
-*
-*  This program is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU General Public License
-*  as published by the Free Software Foundation; either version 2
-*  of the License, or (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-*/
+ /*
+ * ED ToolBox, a companion web app for the video game Elite Dangerous
+ * (C) 1984 - 2016 Frontier Developments Plc.
+ * ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ */
 
 /** @var pagetitle */
 $pagetitle = "Points of Interest&nbsp;&nbsp;&&nbsp;&nbsp;Bookmarks";
 
-require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
-require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/add/Poi.php");
+/** @require header file */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/add/Poi.php");
 
-/*
-*	show item
-*/
+/**
+ * show item
+ */
 
 $usable = usable_coords();
 $usex = $usable["x"];
@@ -137,7 +138,7 @@ function makeitem($arr, $type, &$i)
 	echo '</a>' . $loglink.$screenshots . '<span class="right" style="margin-left:5px">' . $item_cat_name . '</span><br />';
 
 	// make a link if text includes url
-	/*$reg_exUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
+	/**$reg_exUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
 
 	if (preg_match($reg_exUrl, $item_text, $url))
 	{
@@ -150,7 +151,7 @@ function makeitem($arr, $type, &$i)
 			$urli = $item_text;
 		}
 		$item_text = preg_replace($reg_exUrl, "<a href='" . $url[0] . "' target='_BLANK'>" . $urli . "</a> ", $item_text);
-	}*/
+	} */
 
 	echo nl2br($item_text);
 	echo '</div></td></tr>';
@@ -253,4 +254,4 @@ function maketable($res, $type)
 	</div>
 </div>
 <?php
-require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");

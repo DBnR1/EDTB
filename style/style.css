@@ -1,32 +1,35 @@
-/*
-*  ED ToolBox, a companion web app for the video game Elite Dangerous
-*  (C) 1984 - 2016 Frontier Developments Plc.
-*  ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
-*
-*  This program is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU General Public License
-*  as published by the Free Software Foundation; either version 2
-*  of the License, or (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-*/
-
 /**
  * Main stylesheet file
  *
+ * No description
+ *
+ * @package EDTB\Backend
  * @author Mauri Kujala <contact@edtb.xyz>
  * @copyright Copyright (C) 2016, Mauri Kujala
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
-*/
+ */
 
-/* icon color #6F90A1 */
+ /*
+ * ED ToolBox, a companion web app for the video game Elite Dangerous
+ * (C) 1984 - 2016 Frontier Developments Plc.
+ * ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ */
+
+/** icon color #6F90A1 */
 img
 {
 	vertical-align:middle;
@@ -204,8 +207,9 @@ a:hover img
 	vertical-align:middle;
 	position:absolute;
 	left:56px;
-	width:198px;
+	width:288px;
 	height:61px;
+	/*border-right:1px solid red;*/
 	overflow:hidden;
 	line-height:56px;
 	white-space:nowrap;
@@ -275,16 +279,6 @@ a.poid:hover
 	opacity:0.7;
 }
 
-.leftpanel-title-border
-{
-	position:absolute;
-	top:9px;
-	left:255px;
-	border-right:2px solid #4A4B4A;
-	height:40px;
-	z-index:1000;
-}
-
 #t1
 {
 	text-shadow:1px 1px 6px #efefef;
@@ -295,29 +289,31 @@ a.poid:hover
 .leftpanel-clock
 {
 	position:absolute;
-	top:9px;
-	left:3px;
+	top:92px;
+	right:10px;
 	font-family:Telegrama;
-	color:#111111;
-	font-size:14px;
-	text-shadow:1px 1px 6px #efefef;
+	color:#ccc;
+	font-size:13px;
+	text-shadow:2px 2px 2px #000;
 	margin-left:257px;
 	height:20px;
+	z-index:10002;
 }
 
 #datetime:hover div
 {
-	text-shadow:none;
+	color:#fffffa;
 }
 
 .leftpanel-date
 {
 	position:absolute;
-	top:29px;
-	left:3px;
+	top:67px;
+	right:10px;
 	font-family:Sintony;
-	color:#111111;
-	text-shadow:1px 1px 6px #efefef;
+	z-index:10002;
+	color:#ccc;
+	text-shadow:2px 2px 2px #000;
 	font-size:14px;
 	display:block;
 	height:20px;
@@ -329,11 +325,11 @@ a.poid:hover
 .leftpanel-ext_links
 {
 	display:none;
-	position:fixed;
+	position:absolute;
 	width:auto;
 	max-width:250px;
 	float:right;
-	top:61px;
+	top:117px;
 	left:194px;
 	padding:10px;
 	font-family:Sintony;
@@ -712,7 +708,7 @@ a.poid:hover
 .rightpanel-pagetitle
 {
 	position:absolute;
-	left:80px;
+	left:75px;
 	top:15px;
 }
 
@@ -738,23 +734,43 @@ a.poid:hover
 	padding:10px;
 	opacity:0.97;
 }
-.status
+
+/**
+ * CMDR ranks from API
+ */
+
+.status_ranks
 {
-	display:block;
+	display:inline-block;
 	position:relative;
-	margin-top:0;
+	margin-left:10px;
 	white-space:nowrap;
 	font-family:Sintony;
 	vertical-align:middle;
 	z-index:100000;
 	color:#FFFFFA;
 	font-size:14px;
+	opacity:0.97;
+}
+
+/**
+ * CMDR balance from API
+ */
+
+.status_balance
+{
+	display:inline-block;
+	position:absolute;
+	top:92px;
+	right:98px;
+	white-space:nowrap;
+	font-family:Sintony;
+	vertical-align:middle;
+	z-index:100000;
+	color:#FFFFFA;
+	font-size:13px;
 	text-align:right;
-	margin-right:10px;
-	/*background-color:#0e0e11;
-	border:1px solid #333333;*/
-	line-height:26px;
-	opacity:0.9;
+	opacity:0.97;
 }
 
 .status_img
@@ -785,6 +801,10 @@ a.poid:hover
 {
     opacity:0.7;
 }
+
+/**
+ * Ship status from API
+ */
 
 .status_ship
 {
@@ -820,6 +840,8 @@ a.poid:hover
 	margin-left:10px;
 	margin-top:5px;
 	text-shadow:none;
+	max-height:600px;
+	overflow:auto;
 }
 
 #ship_status_mi a, #ship_status_mi a:visited
@@ -1282,7 +1304,7 @@ button:hover, .button:hover
 {
 	font-family:Sintony;
 	color:#FFFFFA;
-	font-size:12px;
+	font-size:13px;
 	/*font-weight:bold;*/
 	background-color:#37474F;
 	padding:6px;
@@ -1294,7 +1316,7 @@ button:hover, .button:hover
 {
 	font-family:Sintony;
 	color:#FFFFFA;
-	font-size:12px;
+	font-size:13px;
 	padding:6px;
 	vertical-align:middle;
 	background-color:transparent;
@@ -1305,7 +1327,7 @@ button:hover, .button:hover
 {
 	font-family:Sintony;
 	color:#FFFFFA;
-	font-size:12px;
+	font-size:13px;
 	padding:6px;
 	vertical-align:middle;
 	background-color:#273238;

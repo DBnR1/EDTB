@@ -10,36 +10,38 @@
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
  */
 
-/*
-*  ED ToolBox, a companion web app for the video game Elite Dangerous
-*  (C) 1984 - 2016 Frontier Developments Plc.
-*  ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
-*
-*  This program is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU General Public License
-*  as published by the Free Software Foundation; either version 2
-*  of the License, or (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-*/
+ /*
+ * ED ToolBox, a companion web app for the video game Elite Dangerous
+ * (C) 1984 - 2016 Frontier Developments Plc.
+ * ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ */
 
 /** @var logsystem */
 $logsystem = $_GET["system"];
 if (!$logsystem) exit("No system set");
 
 $logsystem_id = !isset($_GET["system_id"]) ? "-1" : $_GET["system_id"];
-/*if (!$logsystem_id) exit("No system id set");*/
+/**if (!$logsystem_id) exit("No system id set"); */
 
 /** @var pagetitle */
 $pagetitle = "ED ToolBox";
-require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
+
+/** @require header file */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 ?>
 <div class="entries">
 	<div class="entries_inner">
@@ -58,7 +60,8 @@ require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 		{
 			// check if system has screenshots
 			$screenshots = has_screenshots($logsystem) ? '<a href="/Gallery.php?spgmGal=' . urlencode($logsystem) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;vertical-align:top" /></a>' : "";
-			echo "<h2>System log for <a href='System.php?system_name=" . urlencode($logsystem) . "'>" . $logsystem.$screenshots . "</a></h2>";
+
+			echo "<h2>System log for <a href='System.php?system_name=" . urlencode($logsystem) . "'>" . $logsystem . $screenshots . "</a></h2>";
 			echo '<hr>';
 
 			while ($log_arr = mysqli_fetch_assoc($log_res))
@@ -88,4 +91,4 @@ require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 	</div>
 </div>
 <?php
-require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");

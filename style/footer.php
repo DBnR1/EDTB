@@ -10,31 +10,31 @@
 			 * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
 			 */
 
-			/*
-			*  ED ToolBox, a companion web app for the video game Elite Dangerous
-			*  (C) 1984 - 2016 Frontier Developments Plc.
-			*  ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
-			*
-			*  This program is free software; you can redistribute it and/or
-			*  modify it under the terms of the GNU General Public License
-			*  as published by the Free Software Foundation; either version 2
-			*  of the License, or (at your option) any later version.
-			*
-			*  This program is distributed in the hope that it will be useful,
-			*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-			*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-			*  GNU General Public License for more details.
-			*
-			*  You should have received a copy of the GNU General Public License
-			*  along with this program; if not, write to the Free Software
-			*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-			*/
+			 /*
+			 * ED ToolBox, a companion web app for the video game Elite Dangerous
+			 * (C) 1984 - 2016 Frontier Developments Plc.
+			 * ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+			 *
+			 * This program is free software; you can redistribute it and/or
+			 * modify it under the terms of the GNU General Public License
+			 * as published by the Free Software Foundation; either version 2
+			 * of the License, or (at your option) any later version.
+			 *
+			 * This program is distributed in the hope that it will be useful,
+			 * but WITHOUT ANY WARRANTY; without even the implied warranty of
+			 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+			 * GNU General Public License for more details.
+			 *
+			 * You should have received a copy of the GNU General Public License
+			 * along with this program; if not, write to the Free Software
+			 * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+			 */
 
 			?>
 			<div class="rightpanel-content">
 				<?php
-				/** require log */
-				include_once("" . $_SERVER["DOCUMENT_ROOT"] . "/add/log.php");
+				/** @include log */
+				include_once($_SERVER["DOCUMENT_ROOT"] . "/add/log.php");
 				//
 
 				// add and edit stations
@@ -42,7 +42,7 @@
 				//
 
 				// calculate coordinates
-				include_once("" . $_SERVER["DOCUMENT_ROOT"] . "/add/coord.php");
+				include_once($_SERVER["DOCUMENT_ROOT"] . "/add/coord.php");
 				//
 
 				// edit system
@@ -50,7 +50,7 @@
 				//
 
 				// add/edit bookmakrs
-				include_once("" . $_SERVER["DOCUMENT_ROOT"] . "/add/bookmark.php");
+				include_once($_SERVER["DOCUMENT_ROOT"] . "/add/bookmark.php");
 				//
 				((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
 				?>
@@ -143,7 +143,7 @@
 			<img class="callout" alt="co" src="/style/img/callout_black.gif" style="top:-14px;left:20px" />Click the date to open editing window
 		</div>
 		<div class="tooltip" id="help_search" style="position:fixed;top:70px;left:440px">
-			<img class="callout" alt="co" src="/style/img/callout_black.gif" style="top:-14px;left:20px" />Click the page title text to open a search dialog for systems and stations
+			<img class="callout" alt="co" src="/style/img/callout_black.gif" style="top:-14px;left:20px" />Click your CMDR name to open a search dialog for systems and stations
 		</div>
 		<div class="tooltip" id="help_bm" style="position:fixed;top:70px;left:6px">
 			<img class="callout" alt="co" src="/style/img/callout_black.gif" style="top:-14px;left:5px" />Click the allegiance icon to bookmark system
@@ -151,10 +151,10 @@
 		<div class="tooltip" id="help_calc" style="position:fixed;top:70px;left:50px">
 			<img class="callout" alt="co" src="/style/img/callout_black.gif" style="top:-14px;left:20px" />Click the system name to calculate distances
 		</div>
-		<div class="tooltip" id="help_links" style="position:fixed;top:70px;left:250px">
+		<div class="tooltip" id="help_links" style="position:fixed;top:120px;left:260px">
 			<img class="callout" alt="co" src="/style/img/callout_black.gif" style="top:-14px;left:20px" />Click the date and time to open external links<br />You can edit these from the <a href="/admin/settings.php?cat_id=5">settings</a>
 		</div>
-		<!-- -->
+		<!-- Wiselinks -->
 		<script>
 			$(document).ready(function()
 			{
@@ -173,7 +173,8 @@
 				});
 			});
 		</script>
-		<!-- update data every 10000 ms -->
+
+		<!-- update data every x ms -->
 		<script type="text/javascript">
 			var int=self.setInterval(get_data, 10000);
 		</script>
@@ -188,12 +189,93 @@
 			});
 		</script>
 
+		<!-- Hide divs when clicking a second time -->
 		<script type="text/javascript">
-			$(document).ready(function() {
+			$(document).ready(function()
+			{
+				// edsm comment
 				$('#edsm_click').click(function()
 				{
 				  edsm_comment('', false);
-				  $('#edsm_comment').fadeToggle('fast');
+				  if ($('#edsm_comment').is(":hidden"))
+					{
+						 $('#edsm_comment').fadeToggle('fast');
+					}
+				});
+				// about ED ToolBox
+				$('#about_click').click(function()
+				{
+					if ($('#about').is(":hidden"))
+					{
+						$('#about').fadeToggle('fast');
+					}
+				});
+				// Settings panel
+				$('#settings_click').click(function()
+				{
+					if ($('#settings').is(":hidden"))
+					{
+						$('#settings').fadeToggle('fast');
+					}
+				});
+				// CMDR info from API
+				$('#cmdr_click').click(function()
+				{
+					if ($('#cmdr_status_mi').is(":hidden"))
+					{
+						$('#cmdr_status_mi').fadeToggle('fast')
+					}
+				});
+				// Ship info from API
+				$('#ship_status').click(function()
+				{
+					if ($('#ship_status_mi').is(":hidden"))
+					{
+						$('#ship_status_mi').fadeToggle('fast');
+					}
+				});
+				// External links
+				$('#datetime').click(function()
+				{
+					if ($('#ext_links').is(":hidden"))
+					{
+						$('#ext_links').fadeToggle('fast');
+					}
+				});
+				// Map legend
+				$('#map_legend').click(function()
+				{
+					if ($('#map_legend2').is(":hidden"))
+					{
+						$('#map_legend2').fadeToggle('fast');
+					}
+				});
+			});
+		</script>
+
+		<!-- Hide divs by clicking outside of them -->
+		<script>
+			$(document).mouseup(function (e)
+			{
+				var container = new Array();
+				container.push($('#settings'));
+				container.push($('#about'));
+				container.push($('#ext_links'));
+				container.push($('#cmdr_status_mi'));
+				container.push($('#ship_status_mi'));
+				container.push($('#map_legend2'));
+				container.push($('#edsm_comment'));
+				// container.push($('#edsm_comment'));
+				// container.push($('#edsm_comment'));
+				// container.push($('#edsm_comment'));
+
+				$.each(container, function(key, value)
+				{
+					if (!$(value).is(e.target) // if the target of the click isn't the container...
+						&& $(value).has(e.target).length === 0) // ... nor a descendant of the container
+					{
+						$(value).fadeOut("fast");
+					}
 				});
 			});
 		</script>

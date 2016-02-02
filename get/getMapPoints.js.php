@@ -10,28 +10,32 @@
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
  */
 
-/*
-*  ED ToolBox, a companion web app for the video game Elite Dangerous
-*  (C) 1984 - 2016 Frontier Developments Plc.
-*  ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
-*
-*  This program is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU General Public License
-*  as published by the Free Software Foundation; either version 2
-*  of the License, or (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-*/
+ /*
+ * ED ToolBox, a companion web app for the video game Elite Dangerous
+ * (C) 1984 - 2016 Frontier Developments Plc.
+ * ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ */
 
-/** require functions */
-require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+/** @require config */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
+/** @require functions */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+/** @require MySQL */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 
 Header("content-type: application/x-javascript");
 
@@ -40,9 +44,9 @@ if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"]))
 	$settings["maxdistance"] = $_GET["maxdistance"];
 }
 
-/*
-*	if current coordinates aren't valid, use last known coordinates
-*/
+/**
+ * if current coordinates aren't valid, use last known coordinates
+ */
 
 if (!valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"]))
 {
@@ -63,9 +67,9 @@ else
 $data = "";
 $last_row = "";
 
-/*
-*	fetch point of interest data for the map
-*/
+/**
+ * fetch point of interest data for the map
+ */
 
 if ($settings["nmap_show_pois"] == "true")
 {
@@ -113,16 +117,16 @@ if ($settings["nmap_show_pois"] == "true")
 				$marker = 'marker:{symbol:"url(/style/img/goto.png)"}';
 			}
 
-			$data = "{name:\"" . $disp_name . "\",data:[[" . $coord . "]]," . $marker . "}" . $last_row . "";
+			$data = "{name:\"" . $disp_name . "\",data:[[" . $coord . "]]," . $marker . "}" . $last_row;
 
-			$last_row = "," . $data . "";
+			$last_row = "," . $data;
 		}
 	}
 }
 
-/*
-*	 fetch bookmark data for the map
-*/
+/**
+ *  fetch bookmark data for the map
+ */
 
 if ($settings["nmap_show_bookmarks"] == "true")
 {
@@ -146,7 +150,7 @@ if ($settings["nmap_show_bookmarks"] == "true")
 		$bm_coordx = $bm_row["x"];
 		$bm_coordy = $bm_row["y"];
 		$bm_coordz = $bm_row["z"];
-		$coord = "" . $bm_row["x"] . "," . $bm_row["y"] . "," . $bm_row["z"] . "";
+		$coord = $bm_row["x"] . "," . $bm_row["y"] . "," . $bm_row["z"];
 
 		$distance_from_current = "";
 		if (valid_coordinates($bm_coordx, $bm_coordy, $bm_coordz))
@@ -159,16 +163,16 @@ if ($settings["nmap_show_bookmarks"] == "true")
 		{
 			$marker = 'marker:{symbol:"url(/style/img/bm.png)"}';
 
-			$data = "{name:\"" . $bm_system_name . "\",data:[[" . $coord . "]]," . $marker . "}" . $last_row . "";
+			$data = "{name:\"" . $bm_system_name . "\",data:[[" . $coord . "]]," . $marker . "}" . $last_row;
 
-			$last_row = "," . $data . "";
+			$last_row = "," . $data;
 		}
 	}
 }
 
-/*
-*	 fetch rares data for the map
-*/
+/**
+ *  fetch rares data for the map
+ */
 
 if ($settings["nmap_show_rares"] == "true")
 {
@@ -186,14 +190,14 @@ if ($settings["nmap_show_rares"] == "true")
 		$rare_system = $rare_row["system_name"];
 		$rare_dist_to_star = number_format($rare_row["ls_to_star"]);
 
-		$rare_disp_name = "" . $rare_item . " - " . $rare_system . " (" . $rare_station . " - " . $rare_dist_to_star . " ls)";
+		$rare_disp_name = $rare_item . " - " . $rare_system . " (" . $rare_station . " - " . $rare_dist_to_star . " ls)";
 
 		// coordinates for distance calculations
 		$rare_coordx = $rare_row["x"];
 		$rare_coordy = $rare_row["y"];
 		$rare_coordz = $rare_row["z"];
 
-		$rare_coord = "" . $rare_coordx . "," . $rare_coordy . "," . $rare_coordz . "";
+		$rare_coord = $rare_coordx . "," . $rare_coordy . "," . $rare_coordz;
 
 		$rare_distance_from_current = "";
 		if (valid_coordinates($rare_coordx, $rare_coordy, $rare_coordz))
@@ -206,16 +210,16 @@ if ($settings["nmap_show_rares"] == "true")
 		{
 			$rare_marker = 'marker:{symbol:"url(/style/img/rare.png)"}';
 
-			$data = "{name:\"" . $rare_disp_name . "\",data:[[" . $rare_coord . "]]," . $rare_marker . "}" . $last_row . "";
+			$data = "{name:\"" . $rare_disp_name . "\",data:[[" . $rare_coord . "]]," . $rare_marker . "}" . $last_row;
 
-			$last_row = "," . $data . "";
+			$last_row = "," . $data;
 		}
 	}
 }
 
-/*
-*	fetch visited systems data for the map
-*/
+/**
+ * fetch visited systems data for the map
+ */
 
 if ($settings["nmap_show_visited_systems"] == "true")
 {
@@ -238,9 +242,9 @@ if ($settings["nmap_show_visited_systems"] == "true")
 		$vs_coordy = $row["y"];
 		$vs_coordz = $row["z"];
 
-		/*
-		*	if coords are not set, see if user has calculated them
-		*/
+		/**
+		 * if coords are not set, see if user has calculated them
+		 */
 
 		if (!valid_coordinates($vs_coordx, $vs_coordy, $vs_coordz))
 		{
@@ -260,7 +264,7 @@ if ($settings["nmap_show_visited_systems"] == "true")
 		$distance_from_current = "";
 		if (valid_coordinates($vs_coordx, $vs_coordy, $vs_coordz))
 		{
-			$coord = "" . $vs_coordx . "," . $vs_coordy . "," . $vs_coordz . "";
+			$coord = $vs_coordx . "," . $vs_coordy . "," . $vs_coordz;
 
 			$distance_from_current = sqrt(pow(($vs_coordx-($curSys["x"])), 2)+pow(($vs_coordy-($curSys["y"])), 2)+pow(($vs_coordz-($curSys["z"])), 2));
 
@@ -303,14 +307,14 @@ if ($settings["nmap_show_visited_systems"] == "true")
 
 				if (isset($name) && isset($coord))
 				{
-					$data = "{name:\"" . $name . "\",data:[[" . $coord . "]],".$marker."}" . $last_row . "";
+					$data = "{name:\"" . $name . "\",data:[[" . $coord . "]],".$marker."}" . $last_row;
 				}
 				else
 				{
 					$data = $last_row;
 				}
 
-				$last_row = "," . $data . "";
+				$last_row = "," . $data;
 			}
 		}
 	}
@@ -339,7 +343,7 @@ else
 if (isset($_GET["mode"]) && $_GET["mode"] == "2d")
 {
 	?>
-	/* http://stackoverflow.com/questions/524696/how-to-create-a-style-tag-with-javascript */
+	/** http://stackoverflow.com/questions/524696/how-to-create-a-style-tag-with-javascript */
 	var css = '#container {left:-12px;top:-20px;}',
 		head = document.head || document.getElementsByTagName('head')[0],
 		style = document.createElement('style');
@@ -353,7 +357,7 @@ if (isset($_GET["mode"]) && $_GET["mode"] == "2d")
 
 	head.appendChild(style);
 
-	/* custom tooltip format */
+	/** custom tooltip format */
 	function tooltipFormatter() {
 		return this.series.name.toUpperCase();
 	}
@@ -367,7 +371,7 @@ if (isset($_GET["mode"]) && $_GET["mode"] == "2d")
 else
 {
 	?>
-	/* custom tooltip format */
+	/** custom tooltip format */
 	function tooltipFormatter() {
 		return ""+this.series.name.toUpperCase()+" is "+Math.round(Math.sqrt(Math.pow((this.x-(<?php echo $curSys["x"] ?>)),2)+Math.pow((this.y-(<?php echo $curSys["y"] ?>)),2)+Math.pow((this.point.z-(<?php echo $curSys["z"] ?>)),2)))+" ly away";
 	}
@@ -381,7 +385,7 @@ else
 $(function ()
 {
 	// Give the points a 3D feel by adding a radial gradient
-	/* Highcharts.getOptions().colors = $.map(Highcharts.getOptions().colors, function (color) {
+	/** Highcharts.getOptions().colors = $.map(Highcharts.getOptions().colors, function (color) {
 		return {
 			radialGradient: {
 				cx: 0.4,
@@ -396,7 +400,7 @@ $(function ()
 	}); */
 	Highcharts.theme =
 	{
-		/* colors: ['rgba(117,38,38,0.7)', 'rgba(192,251,251,0.7)', 'rgba(120,171,173,0.7)', 'rgba(195,44,222,0.7)', 'rgba(255,179,0,0.7)', 'rgba(24,219,216,0.7)', 'rgba(128,0,0,0.7)', 'rgba(145,232,23,0.7)'], */
+		/** colors: ['rgba(117,38,38,0.7)', 'rgba(192,251,251,0.7)', 'rgba(120,171,173,0.7)', 'rgba(195,44,222,0.7)', 'rgba(255,179,0,0.7)', 'rgba(24,219,216,0.7)', 'rgba(128,0,0,0.7)', 'rgba(145,232,23,0.7)'], */
 		chart:
 		{
 			backgroundColor: 'transparent',

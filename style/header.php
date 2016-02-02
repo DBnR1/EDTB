@@ -10,28 +10,34 @@
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
  */
 
-/*
-*  ED ToolBox, a companion web app for the video game Elite Dangerous
-*  (C) 1984 - 2016 Frontier Developments Plc.
-*  ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
-*
-*  This program is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU General Public License
-*  as published by the Free Software Foundation; either version 2
-*  of the License, or (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-*/
+ /*
+ * ED ToolBox, a companion web app for the video game Elite Dangerous
+ * (C) 1984 - 2016 Frontier Developments Plc.
+ * ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ */
 
-/** require functions */
-require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+/** @require config */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
+/** @require functions */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+/** @require MySQL */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
+/** @require curSys */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/curSys.php");
 
 // get action if any
 $action = isset($_GET["action"]) ? $_GET["action"] : "";
@@ -42,7 +48,7 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 			<!-- icon, styles and custom fonts -->
             <link type="image/png" href="/style/img/icon.png" rel="icon" />
-            <link type="text/css" href="/style/style.css" rel="stylesheet" />
+            <link type="text/css" href="/style/style.css?ver=<?php echo $settings["edtb_version"]?>" rel="stylesheet" />
 
 			<!-- jquery -->
             <script type="text/javascript" src="/source/Vendor/jquery-2.2.0.min.js"></script>
@@ -58,7 +64,7 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 				<!-- Three.js -->
 				<script src="/source/Vendor/three.min.js"></script>
 				<!-- ED3D-Galaxy-Map -->
-				<link href="/source/Vendor/ED3D-Galaxy-Map/css/styles.css" rel="stylesheet" type="text/css" />
+				<link href="/source/Vendor/ED3D-Galaxy-Map/css/styles.css?ver=<?php echo $settings["edtb_version"]?>" rel="stylesheet" type="text/css" />
 				<script src="/source/Vendor/ED3D-Galaxy-Map/js/ed3dmap.js"></script>
 			<?php
 			}
@@ -91,17 +97,19 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 					<!-- current system name will be rendered here -->
 					<div class="leftpanel-title" id="t1"></div>
 					<!-- date and clock will be rendered here -->
-					<div id="datetime" onclick="$('#ext_links').fadeToggle('fast')">
-						<div class="leftpanel-clock" id="hrs"></div>
+					<div id="datetime">
 						<div class="leftpanel-date" id="date"></div>
+						<div class="leftpanel-clock" id="hrs"></div>
 					</div>
 					<!-- links to external resources -->
 					<div id="ext_links" class="leftpanel-ext_links">
 						<?php
-						// links
+						// External links
 						foreach ($settings["ext_links"] as $name => $link_href)
 						{
-							echo '<a href="' .  $link_href . '" target="_BLANK" onclick="$(\'#ext_links\').fadeToggle(\'fast\')"><div class="leftpanel-ext_links_link">' . $name . '</div></a>';
+							echo '<a href="' .  $link_href . '" target="_BLANK" onclick="$(\'#ext_links\').fadeToggle(\'fast\')">';
+							echo '	<div class="leftpanel-ext_links_link">' . $name . '</div>';
+							echo '</a>';
 						}
 						?>
 					</div>
@@ -109,24 +117,6 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 				<div class="leftpanel-systeminfo">
 					<!-- system info will be rendered here -->
 					<!-- <div id="systeminfo" onclick="update_values('/get/getSystemEditData.php');tofront('editsystem')"></div> -->
-					<?php
-					/*
-					*	show user status
-					*/
-
-					if (isset($api["commander"]) && $settings["show_cmdr_status"] == "true")
-					{
-						if (file_exists("" . $_SERVER["DOCUMENT_ROOT"] . "/cache/cmdr_status.html"))
-						{
-							$cache = file_get_contents("" . $_SERVER["DOCUMENT_ROOT"] . "/cache/cmdr_status.html");
-						}
-						else
-						{
-							$cache = "";
-						}
-						echo '<div class="right"><div class="status" onclick="$(\'#cmdr_status_mi\').fadeToggle(\'fast\')"><div id="cmdr_status">' . $cache . '</div></div></div>';
-					}
-					?>
 					<div id="systeminfo"></div>
 				</div>
 				<!-- stations for the current system will be rendered here -->
@@ -177,10 +167,10 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 					<?php
 					// session log
 					// get old session log
-					if (!$sessionlog = file_get_contents("" . $settings["install_path"] . "/data/sessionlog.txt"))
+					if (!$sessionlog = file_get_contents($settings["install_path"] . "/data/sessionlog.txt"))
 					{
 						$error = error_get_last();
-						write_log("Error: " . $error["message"] . "", __FILE__, __LINE__);
+						write_log("Error: " . $error["message"], __FILE__, __LINE__);
 					}
 					?>
 					<div class="seslog" id="seslog">
@@ -198,17 +188,36 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 				</a>
 
 				<!-- page title and search systems & stations -->
-				<span class="rightpanel-pagetitle">
+				<div class="rightpanel-pagetitle">
 					<a href="javascript:void(0)" onclick="tofront('search_system');$('#system_22').focus()" title="Search for a system" id="pagetitle">
-						<?php //echo str_replace("&nbsp;&nbsp", "&nbsp", $pagetitle)?>
-						ED ToolBox
+						CMDR <?php echo $settings["cmdr_name"];?>
 					</a>
-					<!-- EDSM comment link -->
 					<?php
+					/**
+					 * User ranks from FD API
+					 */
+
+					if (isset($api["commander"]) && $settings["show_cmdr_status"] == "true")
+					{
+						if (file_exists($_SERVER["DOCUMENT_ROOT"] . "/cache/cmdr_ranks_status.html"))
+						{
+							$status_ranks_cache = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/cache/cmdr_ranks_status.html");
+						}
+						else
+						{
+							$status_ranks_cache = "";
+						}
+						echo '<div class="status_ranks" id="cmdr_click"><div id="cmdr_status">' . $status_ranks_cache . '</div></div>';
+					}
+
+					/**
+					 * EDSM comment link
+					 */
+
 					if (!empty($settings["edsm_api_key"]) && !empty($settings["edsm_cmdr_name"]))
 					{
 						?>
-						<span style="margin-left:10px">
+						<span>
 							<a id="edsm_cmnt_pic" href="javascript:void(0)" title="Add private comment to EDSM">
 								<img src="/style/img/comment.png" alt="EDSM" id="edsm_click" />
 							</a>
@@ -216,7 +225,7 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 						<?php
 					}
 					?>
-				</span>
+				</div>
 				<!-- EDSM comment -->
 				<?php
 				if (!empty($settings["edsm_api_key"]) && !empty($settings["edsm_cmdr_name"]))
@@ -250,39 +259,39 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 				<!-- icons & ships status -->
 				<div class="right" style="display:inline-block;margin-right:10px;margin-top:15px">
 					<?php
-					/*
-					*	show ship status
-					*/
+					/**
+					 * show ship status
+					 */
 
 					if (isset($api["ship"]) && $settings["show_ship_status"] == "true")
 					{
-						if (file_exists("" . $_SERVER["DOCUMENT_ROOT"] . "/cache/ship_status.html"))
+						if (file_exists($_SERVER["DOCUMENT_ROOT"] . "/cache/ship_status.html"))
 						{
-							$ship_cache = file_get_contents("" . $_SERVER["DOCUMENT_ROOT"] . "/cache/ship_status.html");
+							$ship_cache = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/cache/ship_status.html");
 						}
 						else
 						{
 							$ship_cache = "";
 						}
-						echo '<div class="status_ship" onclick="$(\'#ship_status_mi\').fadeToggle(\'fast\')" id="ship_status">' . $ship_cache . '</div>';
+						echo '<div class="status_ship" id="ship_status">' . $ship_cache . '</div>';
 					}
 					?>
 					<!-- notifications appear here -->
 					<span id="notifications"></span>
 					<?php
-					/*
-					*	show refresh button
-					*/
+					/**
+					 * show refresh button
+					 */
 
 					if (isset($api["commander"]) || isset($api["ship"]))
 					{
 						echo '<a id="api_refresh" href="javascript:void(0)" onclick="refresh_api()" title="Refresh API data"><img src="/style/img/refresh_24.png" alt="Refresh" style="height:24px;width:24px" /></a>';
 					}
 					?>
-					<a href="javascript:void(0)" title="About ED ToolBox" onclick="$('#about').fadeToggle('fast')">
+					<a href="javascript:void(0)" title="About ED ToolBox" id="about_click">
 						<img src="/style/img/about.png" style="height:26px;width:26px" alt="About" />
 					</a>
-					<a href="javascript:void(0)" title="Settings Panel" onclick="$('#settings').fadeToggle('fast')">
+					<a href="javascript:void(0)" title="Settings Panel" id="settings_click">
 						<img src="/style/img/settings.png" style="height:26px;width:26px" alt="Settings" />
 					</a>
 				</div>

@@ -10,28 +10,34 @@
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
  */
 
-/*
-*  ED ToolBox, a companion web app for the video game Elite Dangerous
-*  (C) 1984 - 2016 Frontier Developments Plc.
-*  ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
-*
-*  This program is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU General Public License
-*  as published by the Free Software Foundation; either version 2
-*  of the License, or (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-*/
+ /*
+ * ED ToolBox, a companion web app for the video game Elite Dangerous
+ * (C) 1984 - 2016 Frontier Developments Plc.
+ * ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ */
 
 /** @require functions */
-require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+/** @require config */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
+/** @require MySQL */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
+/** @require curSys */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/curSys.php");
 
 /**
  * System Info
@@ -39,8 +45,6 @@ require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 
 if (isset($_GET["sys"]))
 {
-	//$va_text = array();
-
 	$num_visits = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id
 																				FROM user_visited_systems
 																				WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'"))
@@ -83,7 +87,7 @@ if (isset($_GET["sys"]))
 			}
 		}
 
-		$va_government = $curSys["government"] == "None" ? "" : " " . $curSys["government"] . "";
+		$va_government = $curSys["government"] == "None" ? "" : " " . $curSys["government"];
 
 		if (!empty($curSys["power"]) && !empty($curSys["power_state"]))
 		{
@@ -127,7 +131,7 @@ if (isset($_GET["sys"]))
 			else
 			{
 				shuffle($va_power_text);
-				$va_power = $curSys["power_state"] == "None" ? "" : " " . strtolower($curSys["power_state"]) . " by " . $va_power_text[0] . "";
+				$va_power = $curSys["power_state"] == "None" ? "" : " " . strtolower($curSys["power_state"]) . " by " . $va_power_text[0];
 			}
 		}
 		else
@@ -137,7 +141,6 @@ if (isset($_GET["sys"]))
 
 		/**
 		 * Round value for population
-		 * @todo use switch here
 		 */
 
 		if ($curSys["population"] >= 1000000000)
@@ -179,7 +182,7 @@ if (isset($_GET["sys"]))
 			}
 		}
 
-		$va_text .= "" . $article . " " . $va_allegiance . "" . strtolower($va_government) . "" . $va_power . "" . $va_pop;
+		$va_text .= $article . " " . $va_allegiance . "" . strtolower($va_government) . "" . $va_power . "" . $va_pop;
 
 		$va_text .= " " . $rant;
 
@@ -281,6 +284,7 @@ if (isset($_GET["sys"]))
 
 if (isset($_GET["cs"]))
 {
+	$ambiguity = "";
 	if (valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"]))
 	{
 		$usex = $curSys["x"];
@@ -297,6 +301,7 @@ if (isset($_GET["cs"]))
 		$last_system = $last_coords["name"];
 
 		$add2 = "I am unable to determine the coordinates of our current location. Our last known location is the " . tts_override($last_system) . " system. ";
+		$ambiguity = " some";
 	}
 
 	$cs_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT
@@ -410,7 +415,7 @@ if (isset($_GET["cs"]))
 	}
 	else
 	{
-		echo 'The nearest spaceport is in the ' . $cs_system . ' system, ' . number_format($cs_distance, 1) . ' light years away.';
+		echo 'The nearest spaceport is in the ' . $cs_system . ' system,' . $ambiguity . number_format($cs_distance, 1) . ' light years away.';
 	}
 
 	echo ' ' . $cs_station_name;
@@ -493,20 +498,17 @@ if (isset($_GET["dist"]))
 
 	if (system_exists($to))
 	{
-		if (valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"]))
-		{
-			$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT
-																sqrt(pow((IFNULL(edtb_systems.x, user_systems_own.x)-(" . $curSys["x"] . ")),2)+pow((IFNULL(edtb_systems.y, user_systems_own.y)-(" . $curSys["y"] . ")),2)+pow((IFNULL(edtb_systems.z, user_systems_own.z)-(" . $curSys["z"] . ")),2))
-																AS distance
-																FROM edtb_systems
-																LEFT JOIN user_systems_own ON edtb_systems.name = user_systems_own.name
-																WHERE edtb_systems.name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $to) . "'
-																LIMIT 1")
-																or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+		$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT
+															sqrt(pow((IFNULL(edtb_systems.x, user_systems_own.x)-(" . $curSys["x"] . ")),2)+pow((IFNULL(edtb_systems.y, user_systems_own.y)-(" . $curSys["y"] . ")),2)+pow((IFNULL(edtb_systems.z, user_systems_own.z)-(" . $curSys["z"] . ")),2))
+															AS distance
+															FROM edtb_systems
+															LEFT JOIN user_systems_own ON edtb_systems.name = user_systems_own.name
+															WHERE edtb_systems.name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $to) . "'
+															LIMIT 1")
+															or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
-			$arr = mysqli_fetch_assoc($res);
-			$distance = number_format($arr["distance"], 1);
-		}
+
+		$distance = $arr["distance"] == "" ? "Not available" : number_format($arr["distance"], 1);
 	}
 	else
 	{
@@ -521,7 +523,7 @@ if (isset($_GET["dist"]))
 }
 
 /**
- *	curSys access, added the cSys variable because VA has oddly short limit on the url
+ * curSys access, added the cSys variable because VA has oddly short limit on the url
  */
 
 if (isset($_GET["curSys"]) || isset($_GET["cSys"]))

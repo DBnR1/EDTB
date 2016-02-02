@@ -6,7 +6,7 @@
  * $param array $p2
  * $param array $p3
  * $param array $p4
- * @return string $coords
+ * @return array $coords coordinates
  * @author Snuble and Harbinger (https://forums.frontier.co.uk/showthread.php?t=43362&page=7&p=869662&highlight=trilateration3d#post869662)
  */
 function trilateration3d($p1, $p2, $p3, $p4)

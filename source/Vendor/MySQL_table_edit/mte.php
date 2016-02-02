@@ -1,5 +1,5 @@
 <?php
-require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 
 // no direct access
 if (strtolower(basename($_SERVER['PHP_SELF'])) == strtolower(basename(__FILE__)))
@@ -670,13 +670,6 @@ class MySQLtabledit
 			</table>
 		";
 
-		// $this->javascript = "
-			// function del_confirm(id) {
-				// if (confirm('{$this->text['Delete']} record {$this->show_text[$this->primary_key]} ' + id + '...?')) {
-					// window.location='$this->url_script?$query_string&mte_a=del&id=' + id
-				// }
-			// }
-		// ";
 		$this->javascript = "
 			function del_confirm(id) {
 				if (confirm('{$this->text['Delete']} record {$this->show_text[$this->primary_key]} ' + id + '...?')) {

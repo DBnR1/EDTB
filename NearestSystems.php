@@ -10,30 +10,30 @@
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
  */
 
-/*
-*  ED ToolBox, a companion web app for the video game Elite Dangerous
-*  (C) 1984 - 2016 Frontier Developments Plc.
-*  ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
-*
-*  This program is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU General Public License
-*  as published by the Free Software Foundation; either version 2
-*  of the License, or (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-*/
+ /*
+ * ED ToolBox, a companion web app for the video game Elite Dangerous
+ * (C) 1984 - 2016 Frontier Developments Plc.
+ * ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ */
 
 /** @var pagetitle */
 $pagetitle = "Nearest Systems&nbsp;&nbsp;&&nbsp;&nbsp;Stations";
-/** require functions */
-require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
+/** @require header file */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 
 $addtolink = "";
 $addtolink2 = "";
@@ -60,8 +60,8 @@ if (!empty($system))
 	$usez = $sys_arr["z"];
 
 	$text .= " (to <a href='System.php?system_id=" . $sys_id . "'>" . $sys_name . "</a>) ";
-	$addtolink .= "&system=" . $system . "";
-	$addtolink2 .= "&system=" . $system . "";
+	$addtolink .= "&system=" . $system;
+	$addtolink2 .= "&system=" . $system;
 	$hidden_inputs .= '<input type="hidden" name="system" value="' . $sys_id . '" />';
 }
 elseif (valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"]) && empty($system))
@@ -91,9 +91,9 @@ $power = isset($_GET["power"]) ? $_GET["power"] : "";
 $pad = isset($_GET["pad"]) ? $_GET["pad"] : "";
 $stations = true;
 
-/*
-*    specific power
-*/
+/**
+ * specific power
+ */
 
 if ($power != "")
 {
@@ -102,13 +102,13 @@ if ($power != "")
     $add .= " AND edtb_systems.power = '" . $power . "'";
 	$text .= " " . $power . " systems";
 	$hidden_inputs .= '<input type="hidden" name="power" value="' . $power . '" />';
-	$addtolink .= "&power=" . urlencode($power) . "";
-	$addtolink2 .= "&power=" . urlencode($power) . "";
+	$addtolink .= "&power=" . urlencode($power);
+	$addtolink2 .= "&power=" . urlencode($power);
 }
 
-/*
-*    specific station allegiance
-*/
+/**
+ * specific station allegiance
+ */
 
 if ($only != "")
 {
@@ -137,12 +137,12 @@ if ($only != "")
 	}
 
 	$hidden_inputs .= '<input type="hidden" name="allegiance" value="' . $only . '" />';
-	$addtolink .= "&allegiance=" . $only . "";
+	$addtolink .= "&allegiance=" . $only;
 }
 
-/*
-*    specific system allegiance
-*/
+/**
+ * specific system allegiance
+ */
 
 if ($system_allegiance != "")
 {
@@ -151,12 +151,12 @@ if ($system_allegiance != "")
     $add .= " AND edtb_systems.allegiance = '" . $system_allegiance . "'";
 	$text .= " " . str_replace('None', 'Non-allied', $system_allegiance) . " systems";
 	$hidden_inputs .= '<input type="hidden" name="system_allegiance" value="' . $system_allegiance . '" />';
-	$addtolink .= "&system_allegiance=" . $system_allegiance . "";
+	$addtolink .= "&system_allegiance=" . $system_allegiance;
 }
 
-/*
-*    if we're searching facilities
-*/
+/**
+ * if we're searching facilities
+ */
 
 if (!empty($facility))
 {
@@ -181,13 +181,13 @@ if (!empty($facility))
 
 	$text .= " stations with " . $article . " " . $f_name . " facility";
 	$hidden_inputs .= '<input type="hidden" name="facility" value="' . $facility . '" />';
-	$addtolink .= "&facility=" . $facility . "";
-	$addtolink2 .= "&facility=" . $facility . "";
+	$addtolink .= "&facility=" . $facility;
+	$addtolink2 .= "&facility=" . $facility;
 }
 
-/*
-*    landing pad size
-*/
+/**
+ * landing pad size
+ */
 
 if ($pad != "")
 {
@@ -197,13 +197,13 @@ if ($pad != "")
 	$padsize = $pad == "L" ? "Large" : "Medium";
 	$text .= "  stations with " . $padsize . " sized landing pads";
 	$hidden_inputs .= '<input type="hidden" name="pad" value="' . $pad . '" />';
-	$addtolink .= "&pad=" . $pad . "";
-	$addtolink2 .= "&pad=" . $pad . "";
+	$addtolink .= "&pad=" . $pad;
+	$addtolink2 .= "&pad=" . $pad;
 }
 
-/*
-*    nearest stations....
-*/
+/**
+ * nearest stations....
+ */
 
 if ($stations !== false)
 {
@@ -235,9 +235,9 @@ if ($stations !== false)
 														LIMIT 10") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 }
 
-/*
-*    ...or nearest systems
-*/
+/**
+ * ...or nearest systems
+ */
 
 else
 {
@@ -256,9 +256,9 @@ else
 														LIMIT 10") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 }
 
-/*
-*    if we're searching modules
-*/
+/**
+ * if we're searching modules
+ */
 
 if (!empty($group_id))
 {
@@ -290,14 +290,14 @@ if (!empty($group_id))
 	{
 		$ratings = " " . $_GET["rating"] . " rated ";
 		$hidden_inputs .= '<input type="hidden" name="rating" value="' . $rating . '" />';
-		$addtolink .= "&rating=" . $rating . "";
+		$addtolink .= "&rating=" . $rating;
 	}
 
 	if (!empty($class))
 	{
 		$classes = " class " . $_GET["class"] . " ";
 		$hidden_inputs .= '<input type="hidden" name="class" value="' . $class . '" />';
-		$addtolink .= "&class=" . $class . "";
+		$addtolink .= "&class=" . $class;
 	}
 
 	if (!empty($class) && !empty($rating))
@@ -313,14 +313,14 @@ if (!empty($group_id))
 		$price = " (normal price " . $modules_price . " CR) ";
 	}
 
-	$text .= " stations selling " . $ratings . "" . $classes . "" . $group_name . "" . $price . "";
+	$text .= " stations selling " . $ratings . "" . $classes . "" . $group_name . "" . $price;
 	$hidden_inputs .= '<input type="hidden" name="group_id" value="' . $group_id . '" />';
-	$addtolink .= "&group_id=" . $group_id . "";
-	$addtolink2 .= "&group_id=" . $group_id . "";
+	$addtolink .= "&group_id=" . $group_id;
+	$addtolink2 .= "&group_id=" . $group_id;
 
 	$module_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id
 																FROM edtb_modules
-																WHERE group_id = '" . $group_id . "'" . $class_add . "" . $rating_add . "
+																WHERE group_id = '" . $group_id . "'" . $class_add . $rating_add . "
 																LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 	$mod_count = mysqli_num_rows($module_res);
 
@@ -364,9 +364,9 @@ if (!empty($group_id))
 	}
 }
 
-/*
-*    if we're searching ships
-*/
+/**
+ * if we're searching ships
+ */
 
 if (!empty($ship_name))
 {
@@ -411,10 +411,10 @@ if (!empty($ship_name))
 	}
 
 	$stations = true;
-	$text .= " stations selling the " . $ship_name . "" . $s_price . "";
+	$text .= " stations selling the " . $ship_name . $s_price;
 	$hidden_inputs .= '<input type="hidden" name="ship_name" value="' . $ship_name . '" />';
-	$addtolink .= "&ship_name=" . $ship_name . "";
-	$addtolink2 .= "&ship_name=" . $ship_name . "";
+	$addtolink .= "&ship_name=" . $ship_name;
+	$addtolink2 .= "&ship_name=" . $ship_name;
 }
 
 if ($text == "Nearest")
@@ -427,9 +427,9 @@ if (substr($text, 0, 11) == "Nearest (to" && $stations === true)
 	$text = str_replace("Nearest ", "Nearest stations ", $text);
 }
 
-/*
-*	replace all but the first occurance of "key" with "value"
-*/
+/**
+ * replace all but the first occurance of "key" with "value"
+ */
 
 $replaces = array(	"stations" => "",
 					"selling" => "and",
@@ -445,9 +445,9 @@ foreach ($replaces as $replace => $with)
 	}
 }
 
-/*
-*	replace all but the last occurance of "systems"
-*/
+/**
+ * replace all but the last occurance of "systems"
+ */
 
 $pos = substr_count($text, 'systems');
 if ($pos > 1)
@@ -458,9 +458,16 @@ if ($pos > 1)
 
 $count = mysqli_num_rows($res);
 ?>
+<script>
+	$("a.send").click(function()
+	{
+		$.get("/action/shipControls.php?send=" + $(this).data("send"));
+		$('#ref_' + $(this).data("id") + '_dist').focus();
+	});
+</script>
 <div class="entries">
 	<div class="entries_inner">
-		<table id="nscontent" style="margin-top:16px;width:100%">
+		<table id="nscontent" style="margin-top:16px;width:100%;margin-bottom:20px;">
 			<tr>
 				<td class="heading" style="width:25%;white-space:nowrap">Nearest stations</td>
 				<td class="heading" style="width:25%;white-space:nowrap">Nearest Allegiances</td>
@@ -527,7 +534,7 @@ $count = mysqli_num_rows($res);
 							$addtolink = str_replace("?power=", "", $addtolink);
 							$addtolink = str_replace(urlencode($power), "", $addtolink);
 						}
-						echo '<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?power=' . urlencode($power_name). '' . $addtolink . '" title="' . $power_name . '">' . $power_name . '</a><br />';
+						echo '<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?power=' . urlencode($power_name) . $addtolink . '" title="' . $power_name . '">' . $power_name . '</a><br />';
 					}
 					?>
 				</td>
@@ -733,13 +740,19 @@ $count = mysqli_num_rows($res);
 
 								if ($system != $last_system)
 								{
-									echo '<tr><td class="transparent" style="text-align:center"><img src="style/img/' . $pic . '" alt="' . $allegiance . '" /></td>';
+									echo '<tr>';
+									echo '<td class="transparent" style="text-align:center"><img src="style/img/' . $pic . '" alt="' . $allegiance . '" /></td>';
 
 									echo '<td class="transparent">';
 									echo number_format($distance,2);
 									echo ' ly' . $is_unknown . '</td>';
 
-									echo '<td class="transparent"><a href="System.php?system_id=' . $system_id . '">' . $system . '</a>' . $loglink.$screenshots . '</td>';
+									echo '<td class="transparent">';
+									echo '	<a class="send" href="javascript:void(0)" title="Send to ED" data-send="' . $system . '" data-id="' . $system_id . '">';
+									echo '		<img class="btn" src="/style/img/magic.png" alt="Send" style="margin-bottom:7px;margin-right:4px;width:16px;height:16px" />';
+									echo '	</a>';
+									echo '	<a href="System.php?system_id=' . $system_id . '">' . $system . '</a>' . $loglink . $screenshots;
+									echo '</td>';
 									echo '<td class="transparent">' . $sys_population . '</td>';
 									echo '<td class="transparent">' . $sys_economy . '</td>';
 									echo '<td class="transparent">' . $sys_government . '</td>';
@@ -815,7 +828,7 @@ $count = mysqli_num_rows($res);
 
 									$shipyard_updated_at = $arr["shipyard_updated_at"] == "0" ? "" : "<strong>Shipyard last updated:</strong> " . get_timeago($arr["shipyard_updated_at"], true, true) . "<br />";
 
-									$info = $station_type_d.$station_faction.$station_government.$station_allegiance.$station_state.$station_economies.$station_services.$station_import_commodities.$station_export_commodities.$station_prohibited_commodities.$outfitting_updated_at.$shipyard_updated_at.$station_selling_ships;
+									$info = $station_type_d . $station_faction . $station_government . $station_allegiance . $station_state . $station_economies . $station_services . $station_import_commodities . $station_export_commodities . $station_prohibited_commodities . $outfitting_updated_at . $shipyard_updated_at . $station_selling_ships;
 
 									$info = str_replace("['", "", $info);
 									$info = str_replace("']", "", $info);
@@ -825,9 +838,9 @@ $count = mysqli_num_rows($res);
 									$station_allegiance_icon = get_allegiance_icon($arr["station_allegiance"]);
 									$station_allegiance_icon = '<img src="/style/img/' . $station_allegiance_icon . '" alt="' . $arr["station_allegiance"] . '" style="width:19px;height:19px;margin-right:5px" />';
 
-									/*
-									*	notify user if data is old
-									*/
+									/**
+									 * notify user if data is old
+									 */
 
 									$station_disp_name = $station_name;
 
@@ -860,4 +873,4 @@ $count = mysqli_num_rows($res);
 	</div>
 </div>
 <?php
-require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");

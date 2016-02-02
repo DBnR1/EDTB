@@ -10,34 +10,35 @@
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
  */
 
-/*
-*  ED ToolBox, a companion web app for the video game Elite Dangerous
-*  (C) 1984 - 2016 Frontier Developments Plc.
-*  ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
-*
-*  This program is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU General Public License
-*  as published by the Free Software Foundation; either version 2
-*  of the License, or (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-*/
+ /*
+ * ED ToolBox, a companion web app for the video game Elite Dangerous
+ * (C) 1984 - 2016 Frontier Developments Plc.
+ * ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ */
 
-/** @var pagetitle */
+/** @var pagetitle  */
 $pagetitle = "Companion API login";
 
-require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
+/** @require header file  */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 
-/*
-*	send login details
-*/
+/**
+ * send login details
+ */
 
 if (isset($_GET["login"]) && isset($_POST["email"]) && isset($_POST["password"]))
 {
@@ -46,19 +47,19 @@ if (isset($_GET["login"]) && isset($_POST["email"]) && isset($_POST["password"])
 
 	if (!empty($email) && !empty($password))
 	{
-		exec("\"" . $curl_exe . "\" -c \"" . $cookie_file . "\" -H \"User-Agent: " . $agent . "\" -d email=" . $email . " -d password=\"" . urlencode($password) . "\" \"https://companion.orerve.net/user/login\" -k", $out);
+		exec("\"" . $curl_exe . "\" -c \"" . $cookie_file . "\" -H \"User-Agent: " . $agent . "\" -d email=" . $email . " -d password=\"" . urlencode($password) . "\" \"https://companion.orerve.net/user/login\" --cacert \"" . $cert_file . "\"", $out);
 	}
 
 	if (!empty($out))
 	{
 		$error = json_encode($out);
-		write_log("Error: " . $error . "", __FILE__, __LINE__);
+		write_log("Error: " . $error, __FILE__, __LINE__);
 	}
 }
 
-/*
-*	send verification code
-*/
+/**
+ * send verification code
+ */
 
 if (isset($_GET["sendcode"]))
 {
@@ -66,13 +67,13 @@ if (isset($_GET["sendcode"]))
 
 	if (!empty($code))
 	{
-		exec("\"" . $curl_exe . "\" -b \"" . $cookie_file . "\" -c \"" . $cookie_file . "\" -H \"User-Agent: " . $agent . "\" -d code=" . $code . " \"https://companion.orerve.net/user/confirm\" -k", $out);
+		exec("\"" . $curl_exe . "\" -b \"" . $cookie_file . "\" -c \"" . $cookie_file . "\" -H \"User-Agent: " . $agent . "\" -d code=" . $code . " \"https://companion.orerve.net/user/confirm\" --cacert \"" . $cert_file . "\"", $out);
 	}
 
 	if (!empty($out))
 	{
 		$error = json_encode($out);
-		write_log("Error: " . $error . "", __FILE__, __LINE__);
+		write_log("Error: " . $error, __FILE__, __LINE__);
 	}
 }
 ?>
@@ -81,11 +82,11 @@ if (isset($_GET["sendcode"]))
 		<?php
 		if (isset($_GET["login"]) && !isset($_GET["sendcode"]))
 		{
-			/*
-			*	check if we need the code
-			*/
+			/**
+			 * check if we need the code
+			 */
 
-			exec("". $curl_exe . " -b " . $cookie_file . " -c " . $cookie_file . " -H \"User-Agent: " . $agent . "\" \"https://companion.orerve.net/profile\" -k", $out);
+			exec("\"" . $curl_exe . "\" -b \"" . $cookie_file . "\" -c \"" . $cookie_file . "\" -H \"User-Agent: " . $agent . "\" \"https://companion.orerve.net/profile\" --cacert \"" . $cert_file . "\"", $out);
 
 			if (!empty($out))
 			{
@@ -125,15 +126,28 @@ if (isset($_GET["sendcode"]))
 		}
 		elseif (isset($_GET["sendcode"]) && isset($_POST["code"]))
 		{
-			echo notice('The companion api is now connected.<br />Click the refresh icon to initialize.<br /><a id="api_refresh" href="javascript:void(0)" onclick="refresh_api()" title="Refresh API data"><img src="/style/img/refresh_24.png" alt="Refresh" style="height:24px;width:24px" /></a>', "API connected");
+			/**
+			 * check if the connetion works
+			 */
+
+			exec("\"" . $curl_exe . "\" -b \"" . $cookie_file . "\" -c \"" . $cookie_file . "\" -H \"User-Agent: " . $agent . "\" \"https://companion.orerve.net/profile\" --cacert \"" . $cert_file . "\"", $out);
+
+			if (!empty($out))
+			{
+				echo notice('The companion api is now connected.<br />Click the refresh icon to initialize. Then return to using ED ToolBox normally.<br /><a id="api_refresh" href="javascript:void(0)" onclick="refresh_api()" title="Refresh API data"><img src="/style/img/refresh_24.png" alt="Refresh" style="height:24px;width:24px" /></a>', "API connected");
+			}
+			else
+			{
+				echo notice('Something went awry.<br />Try again.', "API error");
+			}
 		}
 		else
 		{
-			/*
-			*	check if cookies are good (when are they not?)
-			*/
+			/**
+			 * check if cookies are good (when are they not?)
+			 */
 
-			exec("\"". $curl_exe . "\" -b \"" . $cookie_file . "\" -c \"" . $cookie_file . "\" -H \"User-Agent: " . $agent . "\" \"https://companion.orerve.net/profile\" -k", $out);
+			exec("\"" . $curl_exe . "\" -b \"" . $cookie_file . "\" -c \"" . $cookie_file . "\" -H \"User-Agent: " . $agent . "\" \"https://companion.orerve.net/profile\" --cacert \"" . $cert_file . "\"", $out);
 
 			if (!empty($out))
 			{
@@ -180,4 +194,4 @@ if (isset($_GET["sendcode"]))
 	</div>
 </div>
 <?php
-require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");

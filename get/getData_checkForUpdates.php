@@ -10,27 +10,27 @@
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
  */
 
-/*
-*  ED ToolBox, a companion web app for the video game Elite Dangerous
-*  (C) 1984 - 2016 Frontier Developments Plc.
-*  ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
-*
-*  This program is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU General Public License
-*  as published by the Free Software Foundation; either version 2
-*  of the License, or (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-*/
+ /*
+ * ED ToolBox, a companion web app for the video game Elite Dangerous
+ * (C) 1984 - 2016 Frontier Developments Plc.
+ * ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ */
 
-/** @var $data */
+/** @array $data */
 $data['notifications'] = '';
 $data['notifications_data'] = 'false';
 
@@ -52,7 +52,7 @@ if ($last_check < $time_frame)
 	else
 	{
 		$error = error_get_last();
-		write_log("Error: " . $error['message'] . "", __FILE__, __LINE__);
+		write_log("Error: " . $error['message'], __FILE__, __LINE__);
 	}
 	// update last_update_check time
 	edtb_common("last_update_check", "unixtime", true, time());
@@ -80,14 +80,14 @@ if (version_compare($current_version, $newest_version) < 0)
 	}
 }
 
-/*
-*	Display notification if user hasn't updated data in a while
-*/
+/**
+ * Display notification if user hasn't updated data in a while
+ */
 
 $last_update = edtb_common("last_data_update", "unixtime");
 $now = time()-(7*24*60*60); // 7 days
 
-if ($now > $last_update)
+if ($now > $last_update && $last_update != "1")
 {
 	$data['notifications'] .= '<a href="javascript:void(0)" title="Notice" onclick="$(\'#notice\').fadeToggle(\'fast\')"><img src="/style/img/notice.png" style="height:26px;width:26px" alt="Notice" /></a>';
 }

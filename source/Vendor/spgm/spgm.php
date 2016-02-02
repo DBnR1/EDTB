@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * SPGM (Simple Picture Gallery Manager)
  *
  * A basic and configurable PHP script to display picture galleries on the web
@@ -32,8 +32,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 */
 
-/** require functions */
-require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+/** @require functions  */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 
 ###### Toggles #############
 define('MODE_TRACE', false); // toggles debug mode
@@ -144,7 +144,7 @@ define('SORT_DESCENDING', 1);
 define('RIGHT', 0);
 define('BOTTOM', 1);
 
-/* multi-language support... */
+/** multi-language support...  */
 define('PATTERN_SPGM_LINK', '>SPGM_LINK<');
 define('PATTERN_CURRENT_PAGE', '>CURRENT_PAGE<');
 define('PATTERN_NB_PAGES', '>NB_PAGES<');
@@ -1339,8 +1339,8 @@ function spgm_DisplayGalleryHierarchy($strGalleryId, $iGalleryDepth, $strFilterF
 
     for ($i = 0; $i < $_max; $i++)
     {
-        $strGalleryName              = $arrSubGalleryFilenames[$i]; //*
-        $strPathToSubGallery         = $strPathToSuperGallery . $strGalleryName; //*
+        $strGalleryName              = $arrSubGalleryFilenames[$i]; //**
+        $strPathToSubGallery         = $strPathToSuperGallery . $strGalleryName; //**
         $strPathToGalleryTitle       = $strPathToGallery . '/' . $strGalleryName . '/' . FILE_GAL_TITLE;
         $strGalleryThumbnailBasename = DIR_GAL . urlencode($strPathToSuperGallery) . PREF_THUMB . urlencode($strGalleryName);
         $strHtmlGalleryName          = '';

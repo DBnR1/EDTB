@@ -10,28 +10,30 @@
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
  */
 
-/*
-*  ED ToolBox, a companion web app for the video game Elite Dangerous
-*  (C) 1984 - 2016 Frontier Developments Plc.
-*  ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
-*
-*  This program is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU General Public License
-*  as published by the Free Software Foundation; either version 2
-*  of the License, or (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-*/
+ /*
+ * ED ToolBox, a companion web app for the video game Elite Dangerous
+ * (C) 1984 - 2016 Frontier Developments Plc.
+ * ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ */
 
-/** require functions */
-require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+/** @require functions */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+/** @require MySQL */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 
 $action = isset($_GET["action"]) ? $_GET["action"] : "";
 
@@ -43,17 +45,17 @@ if (isset($_GET["q"]) && !empty($_GET["q"]) && isset($_GET["divid"]))
 	$addtl = "";
 	if (isset($_GET["allegiance"]) && $_GET["allegiance"] != "undefined")
 	{
-		$addtl .= "&allegiance=" . $_GET['allegiance'] . "";
+		$addtl .= "&allegiance=" . $_GET['allegiance'];
 	}
 
 	if (isset($_GET["system_allegiance"]) && $_GET["system_allegiance"] != "undefined")
 	{
-		$addtl .= "&system_allegiance=" . $_GET['system_allegiance'] . "";
+		$addtl .= "&system_allegiance=" . $_GET['system_allegiance'];
 	}
 
 	if (isset($_GET["power"]) && $_GET["power"] != "undefined")
 	{
-		$addtl .= "&power=" . $_GET['power'] . "";
+		$addtl .= "&power=" . $_GET['power'];
 	}
 
 	$suggest_query = mysqli_query($GLOBALS["___mysqli_ston"], "	(SELECT
@@ -77,18 +79,6 @@ if (isset($_GET["q"]) && !empty($_GET["q"]) && isset($_GET["divid"]))
 
 	$found = mysqli_num_rows($suggest_query);
 
-	/*if ($found == 0)
-	{
-		$suggest_query = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT DISTINCT(name),
-																	id, x, y, z
-																	FROM user_systems_own
-																	WHERE name LIKE('%" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $search) . "%')
-																	ORDER BY name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $search) . "' DESC,
-																	name
-																	LIMIT 30") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-	}*/
-
-
 	if ($found == 0)
 	{
 		echo '<a href="#">Nothing found</a>';
@@ -97,7 +87,7 @@ if (isset($_GET["q"]) && !empty($_GET["q"]) && isset($_GET["divid"]))
 	{
 		while ($suggest = mysqli_fetch_assoc($suggest_query))
 		{
-			$suggest_coords = "" . $suggest['x'] . "," . $suggest['y'] . "," . $suggest['z'] . "";
+			$suggest_coords = $suggest['x'] . "," . $suggest['y'] . "," . $suggest['z'];
 			// find systems
 			if ($_GET["link"] == "yes")
 			{

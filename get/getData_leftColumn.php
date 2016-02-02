@@ -10,38 +10,32 @@
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
  */
 
-/*
-*  ED ToolBox, a companion web app for the video game Elite Dangerous
-*  (C) 1984 - 2016 Frontier Developments Plc.
-*  ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
-*
-*  This program is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU General Public License
-*  as published by the Free Software Foundation; either version 2
-*  of the License, or (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-*/
+ /*
+ * ED ToolBox, a companion web app for the video game Elite Dangerous
+ * (C) 1984 - 2016 Frontier Developments Plc.
+ * ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ */
 
 /**
- *	System title for the left column
+ * System title for the left column
  */
 $data['system_title'] .= '';
 
-$pic = "system.png";
-if (isset($curSys["allegiance"]))
-{
-	$pic = $curSys["allegiance"] == "Empire" ? "empire.png" : $pic;
-	$pic = $curSys["allegiance"] == "Alliance" ? "alliance.png" : $pic;
-	$pic = $curSys["allegiance"] == "Federation" ? "federation.png" : $pic;
-}
+$pic = get_allegiance_icon($curSys["allegiance"]);
 
 $data['system_title'] = '	<div class="leftpanel-add-data">
 								<a href="javascript:void(0)" id="toggle" onclick="setbm(\'' . addslashes($curSys["name"]) . '\', \'' . $curSys["id"] . '\');tofront(\'addBm\');$(\'#bm_text\').focus()" title="Bookmark system">
@@ -100,11 +94,24 @@ else
 }
 $data['system_title'] .= "</a>";
 
-$data['system_title'] .= "</span></div><div class='leftpanel-title-border'></div>";
+$data['system_title'] .= "</span></div>";
 
-/*
-*	System information for the left column
-*/
+/**
+ * User balance from FD API
+ */
+
+$status_balance_cache = "";
+if (isset($api["commander"]) && $settings["show_cmdr_status"] == "true")
+{
+	if (file_exists($_SERVER["DOCUMENT_ROOT"] . "/cache/cmdr_balance_status.html"))
+	{
+		$status_balance_cache = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/cache/cmdr_balance_status.html");
+	}
+}
+
+/**
+ * System information for the left column
+ */
 
 $data['system_info'] = "";
 
@@ -114,22 +121,28 @@ if (!empty($curSys["allegiance"]))
 	$population_s = $curSys["population"] == "None" ? "" : $curSys["population"];
 	$population_s = $curSys["government"] == "" ? "" : " - " . $curSys["government"];
 
-	$data['system_info'] .= '<div class="subtitle" id="t2">' . $curSys["allegiance"] . '' . $government_s . '' . $population_s . '</div>';
+	$data['system_info'] .= '<div class="subtitle" id="t2">' . $curSys["allegiance"] . $government_s . $population_s . '</div>';
 
+	$data['system_info'] .= '<div class="text" id="t3">';
 	if (!empty($curSys["economy"]))
 	{
-		$data['system_info'] .= '<div class="text" id="t3">&boxur; Economy: ' . $curSys["economy"] . '</div>';
+		$data['system_info'] .= '&boxur; Economy: ' . $curSys["economy"] . '<span style="margin-left:10px">';
 	}
+	$data['system_info'] .= '<span id="balance_st">' . $status_balance_cache . '</span>';
+	$data['system_info'] .= '</span></div>';
 }
 else
 {
 	$data['system_info'] .= '<div class="subtitle" id="t2">Welcome</div>';
-	$data['system_info'] .= '<div class="text" id="t3">&boxur; CMDR ' . $settings["cmdr_name"] . '</div>';
+	$data['system_info'] .= '<div class="text" id="t3">';
+	$data['system_info'] .= '&boxur; CMDR ' . $settings["cmdr_name"] . '<span style="margin-left:10px">';
+	$data['system_info'] .= '<span id="balance_st">' . $status_balance_cache . '</span>';
+	$data['system_info'] .= '</span></div>';
 }
 
-/*
-*    Stations for the left column
-*/
+/**
+ * Stations for the left column
+ */
 
 $ress = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT SQL_CACHE
 													id, name, ls_from_star, max_landing_pad_size, faction, government, allegiance,
@@ -214,7 +227,7 @@ if ($count > 0)
 		}
 		$services .= "<br />";
 
-		$info = $type.$max_landing_pad_size.$faction.$government.$allegiance.$state.$economies.$services.$import_commodities.$export_commodities.$prohibited_commodities.$selling_ships;
+		$info = $type . $max_landing_pad_size . $faction . $government . $allegiance . $state . $economies . $services . $import_commodities . $export_commodities . $prohibited_commodities . $selling_ships;
 
 		$info = str_replace("['", "", $info);
 		$info = str_replace("']", "", $info);
@@ -242,7 +255,7 @@ else
 	// link to calculate coordinates
 	if (empty($curSys["coordinates"]) && !empty($curSys["name"]))
 	{
-		$station_data .= "<span style='margin-bottom:6px;height:40px'><a href='javascript:void(0);' onclick='tofront(\"calculate\");get_cs(\"target_system\")' title='No coordinates found, click here to calculate'>";
+		$station_data .= "<span style='margin-bottom:6px;height:40px'><a href='javascript:void(0)' onclick='set_reference_systems(false);tofront(\"calculate\");get_cs(\"target_system\")' title='No coordinates found, click here to calculate'>";
 		$station_data .= "<img src='/style/img/calculator.png' alt='Calculate' />";
 		$station_data .= "&nbsp;*&nbsp;No coordinates, click to calculate them.</a></span><br /><br />&nbsp";
 	}
@@ -250,9 +263,9 @@ else
 }
 
 
-/*
-*	if system coords are user calculated, show calc button
-*/
+/**
+ * if system coords are user calculated, show calc button
+ */
 
 $system_user_calculated = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id
 																						FROM user_systems_own

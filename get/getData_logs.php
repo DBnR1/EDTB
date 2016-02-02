@@ -10,26 +10,25 @@
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
  */
 
-/*
-*  ED ToolBox, a companion web app for the video game Elite Dangerous
-*  (C) 1984 - 2016 Frontier Developments Plc.
-*  ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
-*
-*  This program is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU General Public License
-*  as published by the Free Software Foundation; either version 2
-*  of the License, or (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-*/
-
+ /*
+ * ED ToolBox, a companion web app for the video game Elite Dangerous
+ * (C) 1984 - 2016 Frontier Developments Plc.
+ * ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ */
 
 /**
  * System logs
@@ -54,9 +53,9 @@ if (!empty($curSys["name"]))
 	$usez = $usable_coords["z"];
 	$exact = $usable_coords["current"] === true ? "" : " *";
 
-	/*
-	*	if log range is set to zero, only show logs from current system
-	*/
+	/**
+	 * if log range is set to zero, only show logs from current system
+	 */
 
 	if ($settings["log_range"] == 0)
 	{
@@ -72,9 +71,9 @@ if (!empty($curSys["name"]))
 																ORDER BY user_log.stardate " . $ssort . "")
 																or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 	}
-	/*
-	*	if log range is set to -1, show all logs
-	*/
+	/**
+	 * if log range is set to -1, show all logs
+	 */
 	elseif ($settings["log_range"] == -1)
 	{
 		$log_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT SQL_CACHE
@@ -93,9 +92,9 @@ if (!empty($curSys["name"]))
 																ORDER BY user_log.stardate " . $ssort . "")
 																or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 	}
-	/*
-	*	in other cases, show logs from x ly away from last known location
-	*/
+	/**
+	 * in other cases, show logs from x ly away from last known location
+	 */
 	else
 	{
 		$log_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT SQL_CACHE
@@ -194,9 +193,9 @@ else
 	$logdata = "";
 }
 
-/*
+/**
 *    General log
-*/
+ */
 
 if (isset($_GET["glog_sort"]) && $_GET["glog_sort"] != "undefined")
 {
