@@ -96,8 +96,7 @@ foreach ($referencesystems as $ref_name => $ref_coordinates)
 	echo '		<strong>' . $ref_rname . '</strong>';
 	echo '	</td>';
 	echo '	<td class="dark">';
-	echo '		<input class="textbox" type="text" id="ref_' . $i . '_dist" name="reference_' . $i . '_distance" value="' . $ref[$i]["distance"] . '" placeholder="1234.56" style="width:100px" /><br />';
-	echo '		<span class="settings_info" style="font-size:11px">No commas or spaces</span>';
+	echo '		<input class="textbox" type="number" id="ref_' . $i . '_dist" name="reference_' . $i . '_distance" value="' . $ref[$i]["distance"] . '" placeholder="1234.56" style="width:100px" autocomplete="off" /><br />';
 	echo '	</td>';
 	echo '</tr>';
 	$i++;
