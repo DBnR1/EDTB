@@ -193,13 +193,11 @@ $base_dir = $settings["install_path"] . "/EDTB/";
 $settings["new_screendir"] = $settings["install_path"] . "/EDTB/screenshots";
 
 /** @var agent user agent for FD api */
-$agent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 8_0 like Mac OS X) AppleWebKit/600.1.3 (KHTML, like Gecko) Version/8.0 Mobile/12A4345d Safari/600.1.4';
+$settings["agent"] = "Mozilla/5.0 (iPhone; CPU iPhone OS 7_1_2 like Mac OS X) AppleWebKit/537.51.2 (KHTML, like Gecko) Mobile/11D257";
 /** @var cookie_file cookie file for FD api */
-$cookie_file = $_SERVER["DOCUMENT_ROOT"] . "\cache\cookies";
+$settings["cookie_file"] = $settings["install_path"] . "\EDTB\cache\cookies";
 /** @var curl_exe path to curl executable file */
-$curl_exe = $settings["install_path"] . "\bin\curl.exe";
-/** @var cert_file path to cert file */
-$cert_file = $settings["install_path"] . "\bin\cacert.pem";
+$settings["curl_exe"] = $settings["install_path"] . "\bin\curl.exe";
 
 global $settings;
 

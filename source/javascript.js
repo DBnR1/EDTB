@@ -242,7 +242,9 @@ function get_data(override)
 					log("Calling update_map()");
 					update_map();
 				}
-            }
+
+				update_api(time);
+			}
 			else
 			{
 				log("getData called but no need to refresh");
@@ -255,8 +257,6 @@ function get_data(override)
 			log("Error: requesting /get/getData.php failed");
 		}
     });
-
-	update_api(time);
 }
 
 /**
@@ -1400,16 +1400,7 @@ function set_reference_systems(standard)
 		cache: false,
 		success: function(result)
 		{
-			if (standard)
-			{
-				$(".refid").remove();
-				$("#refid").replaceWith(result);
-			}
-			else
-			{
-				$(".refid").remove();
-				$(result).insertAfter("#ref_id");
-			}
+			$("#calculate").html(result);
 		}
 	});
 }

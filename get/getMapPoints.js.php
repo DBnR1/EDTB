@@ -36,6 +36,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 /** @require MySQL */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
+/** @require curSys */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/curSys.php");
 
 Header("content-type: application/x-javascript");
 

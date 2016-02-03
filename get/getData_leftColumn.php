@@ -273,7 +273,7 @@ $system_user_calculated = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"
 																						LIMIT 1"));
 if ($system_user_calculated > 0 && !empty($curSys["name"]))
 {
-	$station_data .= '<span style="float:right;margin-right:8px;margin-top:6px"><a href="javascript:void(0)" onclick="tofront(\'calculate\');get_cs(\'target_system\')" title="Review distances">';
+	$station_data .= '<span style="float:right;margin-right:8px;margin-top:6px"><a href="javascript:void(0)" onclick="set_reference_systems(false);tofront(\'calculate\');get_cs(\'target_system\')" title="Review distances">';
 	$station_data .= '<img src="/style/img/calculator.png" alt="Calc" />';
 	$station_data .= '</a></span>';
 }

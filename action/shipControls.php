@@ -30,6 +30,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
+/** @require functions */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+
 $actions = isset($_POST["data"]) ? $_POST["data"] : false;
 $send = isset($_GET["send"]) ? $_GET["send"] : false;
 
@@ -70,5 +73,6 @@ if ($actions !== false)
 if ($send !== false)
 {
 	$shell->SendKeys($send);
+	//write_log($send);
 	exit;
 }

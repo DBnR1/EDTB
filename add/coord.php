@@ -164,44 +164,4 @@ if (isset($_GET["do"]))
 	});
 </script>
 <div class="input" id="calculate" style="text-align:center">
-	<form method="post" id="calc_form" action="coorddata.php">
-		<div class="input-inner">
-			<table>
-				<tr>
-					<td class="heading" colspan="2">Calculate Coordinates
-						<span class="right">
-							<a href="javascript:void(0)" onclick="tofront('calculate')" title="Close form">
-								<img src="/style/img/close.png" alt="X" style="width:16px;height:16px" />
-							</a>
-						</span>
-					</td>
-				</tr>
-				<tr>
-					<td class="light" colspan="2" style="text-align:left;font-size:13px">Use this form to calculate coordinates for systems that have no known coordinates<br />in the <a href="http://edsm.net" target="_BLANK">EDSM</a><img src="/style/img/external_link.png" alt="ext" style="margin-left:4px" /> database by inserting distances from the system map into this form.<br /><br />
-					Clicking the <strong>clipboard</strong> icon will copy the system name to the client side clipboard.<br /><br />
-					Clicking the <strong>magic</strong> icon will send the system name to the ED client.<br />
-					<strong>Note:</strong> have the system map open and the search box targeted before clicking the icon.</td>
-				</tr>
-				<tr>
-					<td class="dark" colspan="2" style="font-size:14px">
-						<strong>Target System:</strong> <?php echo $curSys["name"]?><input class="textbox" type="hidden" name="target_system" value="<?php echo $curSys["name"]?>" id="target_system" />
-					</td>
-				</tr>
-				<tr id="ref_id">
-					<td class="light" style="text-align:right"><strong><a href="javascript:void(0)" onclick="set_reference_systems(true)" title="Change reference systems">Reference system</a></strong></td>
-					<td class="light">
-						<strong>Distance (ly)</strong>
-						<div class="button" id="clear" style="width:80px;white-space:nowrap;margin-top:3px" onclick="$('#ref_1_dist').val('');$('#ref_2_dist').val('');$('#ref_3_dist').val('');$('#ref_4_dist').val('');return false">Clear All
-						</div>
-					</td>
-				</tr>
-				<tr id="refid" style="visibility:hidden"><td colspan="2" style="visibility:hidden"></td></tr>
-				<tr>
-					<td class="light" colspan="2">
-						<button id="submitc" onclick="update_data('calc_form', '/add/coord.php?do', true);tofront('null', true);return false">Submit Query</button>
-					</td>
-				</tr>
-			</table>
-		</div>
-	</form>
 </div>

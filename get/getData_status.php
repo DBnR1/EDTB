@@ -34,8 +34,6 @@
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
 /** @require functions */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
-/** @require api update */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/action/updateAPIdata.php");
 
 /**
  * show user status
@@ -45,6 +43,9 @@ $data['cmdr_status'] = "false";
 $data['cmdr_balance_status'] = "false";
 if (isset($api["commander"]) && $settings["show_cmdr_status"] == "true")
 {
+	/** @require api update */
+	require_once($_SERVER["DOCUMENT_ROOT"] . "/action/updateAPIdata.php");
+
 	$cmdr_credits = number_format($api["commander"]["credits"]);
 
 	/**
