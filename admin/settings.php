@@ -68,7 +68,6 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
 	<div class="entries_inner">
 	<h2>
 		<img src="/style/img/settings.png" alt="Settings" style="width:20px;height:20px;margin-right:6px" />Settings
-		<span style="margin-left:20px;font-size:11px">[&nbsp;<a href="/admin/ini_editor.php">Edit .ini file</a>&nbsp;]&nbsp;[&nbsp;<a href="/admin/sql.php">Execute SQL</a>&nbsp;]</span>
 	</h2>
 	<hr>
 	<?php
@@ -151,7 +150,7 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
 						<td class="<?php echo $tdclass?>">
 							<div>
 								<?php echo $info?>
-								<input class="textbox" type="text" name="<?php echo $variable?>" placeholder="<?php echo $name?>" value="<?php echo $value?>" style="width:100px" />
+								<input class="textbox" type="number" name="<?php echo $variable?>" placeholder="<?php echo $name?>" value="<?php echo $value?>" style="width:100px" />
 							</div>
 						</td>
 					</tr>

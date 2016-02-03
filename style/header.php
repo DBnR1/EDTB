@@ -306,12 +306,22 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 				<div class="settings_panel" id="settings" style="width:227px">
 					<a href="/admin/settings.php" title="Settings editor">
 						<div class="link" style="width:90%">
-							<img src="/style/img/vareditor.png" alt="Settings" style="margin-right:5px" />Customize ED ToolBox
+							<img src="/style/img/settings.png" alt="Settings" style="margin-right:5px;width:16px;height:16px" />Customize ED ToolBox
+						</div>
+					</a>
+					<a href="/admin/ini_editor.php" title="Edit ini file">
+						<div class="link" style="width:90%">
+							<img src="/style/img/vareditor.png" alt="INI" style="margin-right:5px;width:16px;height:16px" />Edit ini file
 						</div>
 					</a>
 					<a href="/admin" title="Database manager (Adminer)" target="_BLANK">
 						<div class="link" style="width:90%">
 							<img src="/style/img/dataview.png" alt="DB Manager" style="margin-right:5px" />Database Management
+						</div>
+					</a>
+					<a href="/admin/sql.php" title="Run MySQL queries">
+						<div class="link" style="width:90%">
+							<img src="/style/img/dataview.png" alt="MySQL" style="margin-right:5px" />Run MySQL queries
 						</div>
 					</a>
 					<a href="/admin/import.php" title="Import flight logs">

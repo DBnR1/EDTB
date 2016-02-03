@@ -87,7 +87,7 @@ if (isset($_POST["code"]))
 				if ($rows = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "" . $query . "")))
 				{
 					$error = mysqli_info($GLOBALS["___mysqli_ston"]);
-					$notify = '<div class="notify_success">Query succesfully executed.<br />' . $error . '<br />Rows: ' . $rows . '</div>';
+					$notify = '<div class="notify_success">Query succesfully executed.<br />' . $error . '<br />Rows: ' . number_format($rows) . '</div>';
 				}
 				else
 				{
@@ -109,7 +109,7 @@ if (isset($_POST["code"]))
 <div class="entries">
 	<div class="entries_inner" style="margin-bottom:20px">
 	<h2>
-		<img src="/style/img/settings.png" alt="Settings" style="width:20px;height:20px;margin-right:6px" />Execute SQL<span style="margin-left:20px;font-size:11px">[&nbsp;<a href="/admin/ini_editor.php">Edit .ini file</a>&nbsp;]&nbsp;[&nbsp;<a href="/admin/settings.php">Settings</a>&nbsp;]</span>
+		<img src="/style/img/dataview.png" alt="Settings" style="width:20px;height:20px;margin-right:6px" />Execute SQL
 	</h2>
 	<hr>
 	<?php echo $notify;?>

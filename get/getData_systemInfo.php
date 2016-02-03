@@ -409,7 +409,7 @@ else
 
 			arsort($mod_cat);
 
-			$modules_t .= '<table style="margin-top:10px"><tr><td class="transparent" style="font-weight:bold">' . $outfitting_updated_ago . '</td></tr><tr style="vertical-align:top">';
+			$modules_t .= '<table style="margin-top:10px"><tr><td class="transparent" colspan="3" style="font-weight:bold">' . $outfitting_updated_ago . '</td></tr><tr style="vertical-align:top">';
 			foreach ($mod_cat as $key => $value)
 			{
 				$m_category_name = $key;

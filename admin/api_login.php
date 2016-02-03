@@ -47,7 +47,9 @@ if (isset($_GET["login"]) && isset($_POST["email"]) && isset($_POST["password"])
 
 	if (!empty($email) && !empty($password))
 	{
-		exec("\"" . $curl_exe . "\" -c \"" . $cookie_file . "\" -H \"User-Agent: " . $agent . "\" -d email=" . $email . " -d password=\"" . urlencode($password) . "\" \"https://companion.orerve.net/user/login\" --cacert \"" . $cert_file . "\"", $out);
+		exec("\"" . $settings["curl_exe"] . "\" -c \"" . $settings["cookie_file"] . "\" -H \"User-Agent: " . $settings["agent"] . "\" -d email=" . $email . " -d password=\"" . urlencode($password) . "\" \"https://companion.orerve.net/user/login\"", $out);
+
+		//write_log("\"" . $settings["curl_exe"] . "\" -c \"" . $settings["cookie_file"] . "\" -H \"User-Agent: " . $settings["agent"] . "\" -d email=" . $email . " -d password=\"" . urlencode($password) . "\" \"https://companion.orerve.net/user/login\"");
 	}
 
 	if (!empty($out))
@@ -67,7 +69,9 @@ if (isset($_GET["sendcode"]))
 
 	if (!empty($code))
 	{
-		exec("\"" . $curl_exe . "\" -b \"" . $cookie_file . "\" -c \"" . $cookie_file . "\" -H \"User-Agent: " . $agent . "\" -d code=" . $code . " \"https://companion.orerve.net/user/confirm\" --cacert \"" . $cert_file . "\"", $out);
+		exec("\"" . $settings["curl_exe"] . "\" -b \"" . $settings["cookie_file"] . "\" -c \"" . $settings["cookie_file"] . "\" -H \"User-Agent: " . $settings["agent"] . "\" -d code=" . $code . " \"https://companion.orerve.net/user/confirm\"", $out);
+
+		//write_log("\"" . $settings["curl_exe"] . "\" -b \"" . $settings["cookie_file"] . "\" -c \"" . $settings["cookie_file"] . "\" -H \"User-Agent: " . $settings["agent"] . "\" -d code=" . $code . " \"https://companion.orerve.net/user/confirm\"");
 	}
 
 	if (!empty($out))
@@ -86,7 +90,9 @@ if (isset($_GET["sendcode"]))
 			 * check if we need the code
 			 */
 
-			exec("\"" . $curl_exe . "\" -b \"" . $cookie_file . "\" -c \"" . $cookie_file . "\" -H \"User-Agent: " . $agent . "\" \"https://companion.orerve.net/profile\" --cacert \"" . $cert_file . "\"", $out);
+			exec("\"" . $settings["curl_exe"] . "\" -b \"" . $settings["cookie_file"] . "\" -c \"" . $settings["cookie_file"] . "\" -H \"User-Agent: " . $settings["agent"] . "\" \"https://companion.orerve.net/profile\"", $out);
+
+			//write_log("\"" . $settings["curl_exe"] . "\" -b \"" . $settings["cookie_file"] . "\" -c \"" . $settings["cookie_file"] . "\" -H \"User-Agent: " . $settings["agent"] . "\" \"https://companion.orerve.net/profile\"");
 
 			if (!empty($out))
 			{
@@ -127,10 +133,12 @@ if (isset($_GET["sendcode"]))
 		elseif (isset($_GET["sendcode"]) && isset($_POST["code"]))
 		{
 			/**
-			 * check if the connetion works
+			 * check if the connection works
 			 */
 
-			exec("\"" . $curl_exe . "\" -b \"" . $cookie_file . "\" -c \"" . $cookie_file . "\" -H \"User-Agent: " . $agent . "\" \"https://companion.orerve.net/profile\" --cacert \"" . $cert_file . "\"", $out);
+			exec("\"" . $settings["curl_exe"] . "\" -b \"" . $settings["cookie_file"] . "\" -c \"" . $settings["cookie_file"] . "\" -H \"User-Agent: " . $settings["agent"] . "\" \"https://companion.orerve.net/profile\"", $out);
+
+			//write_log("\"" . $settings["curl_exe"] . "\" -b \"" . $settings["cookie_file"] . "\" -c \"" . $settings["cookie_file"] . "\" -H \"User-Agent: " . $settings["agent"] . "\" \"https://companion.orerve.net/profile\"");
 
 			if (!empty($out))
 			{
@@ -138,7 +146,7 @@ if (isset($_GET["sendcode"]))
 			}
 			else
 			{
-				echo notice('Something went awry.<br />Try again.', "API error");
+				echo notice('Unable to fetch profile data.<br />Please try again.', "API error");
 			}
 		}
 		else
@@ -147,7 +155,9 @@ if (isset($_GET["sendcode"]))
 			 * check if cookies are good (when are they not?)
 			 */
 
-			exec("\"" . $curl_exe . "\" -b \"" . $cookie_file . "\" -c \"" . $cookie_file . "\" -H \"User-Agent: " . $agent . "\" \"https://companion.orerve.net/profile\" --cacert \"" . $cert_file . "\"", $out);
+			exec("\"" . $settings["curl_exe"] . "\" -b \"" . $settings["cookie_file"] . "\" -c \"" . $settings["cookie_file"] . "\" -H \"User-Agent: " . $settings["agent"] . "\" \"https://companion.orerve.net/profile\"", $out);
+
+			//write_log("\"" . $settings["curl_exe"] . "\" -b \"" . $settings["cookie_file"] . "\" -c \"" . $settings["cookie_file"] . "\" -H \"User-Agent: " . $settings["agent"] . "\" \"https://companion.orerve.net/profile\"");
 
 			if (!empty($out))
 			{

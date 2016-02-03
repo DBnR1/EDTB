@@ -62,7 +62,6 @@ $ini = file_get_contents($ini_file);
 	<div class="entries_inner" style="margin-bottom:20px">
 	<h2>
 		<img src="/style/img/settings.png" alt="Settings" style="width:20px;height:20px;margin-right:6px" />Edit .ini file
-		<span style="margin-left:20px;font-size:11px">[&nbsp;<a href="/admin/settings.php">Settings</a>&nbsp;]&nbsp;[&nbsp;<a href="/admin/sql.php">Execute SQL</a>&nbsp;]</span>
 	</h2>
 	<hr>
 		<form method="post" action="ini_editor.php">
