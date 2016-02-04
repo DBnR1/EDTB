@@ -242,7 +242,6 @@ function get_data(override)
 					log("Calling update_map()");
 					update_map();
 				}
-
 				update_api(time);
 			}
 			else

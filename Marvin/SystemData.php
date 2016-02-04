@@ -301,7 +301,7 @@ if (isset($_GET["cs"]))
 		$last_system = $last_coords["name"];
 
 		$add2 = "I am unable to determine the coordinates of our current location. Our last known location is the " . tts_override($last_system) . " system. ";
-		$ambiguity = " some";
+		$ambiguity = " some ";
 	}
 
 	$cs_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT
@@ -415,7 +415,7 @@ if (isset($_GET["cs"]))
 	}
 	else
 	{
-		echo 'The nearest spaceport is in the ' . $cs_system . ' system,' . $ambiguity . number_format($cs_distance, 1) . ' light years away.';
+		echo 'The nearest spaceport is in the ' . $cs_system . ' system, ' . $ambiguity . number_format($cs_distance, 1) . ' light years away.';
 	}
 
 	echo ' ' . $cs_station_name;

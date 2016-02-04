@@ -127,7 +127,7 @@ else
 				echo '		<input class="textbox" type="hidden" name="reference_' . $i . '_coordinates" value="' . $ref_coordinates . '" />';
 				echo '		<span class="left">';
 				echo '			<a class="send" href="javascript:void(0)" title="Send to ED" data-send="' . $ref_rname . '" data-id="' . $i . '">';
-				echo '				<img class="btn" src="/style/img/magic.png" alt="Send" style="margin-right:5px" />';
+				echo '				<img class="icon24" src="/style/img/magic.png" alt="Send" style="margin-right:5px" />';
 				echo '			</a>';
 				echo '			<a href="javascript:void(0)" title="Copy to clipboard">';
 				echo '				<img class="btn" src="/style/img/clipboard.png" alt="Copy" data-clipboard-text="' . $ref_rname . '" />';

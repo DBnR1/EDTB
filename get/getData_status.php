@@ -30,6 +30,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
+/** @require api update */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/action/updateAPIdata.php");
 /** @require config */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
 /** @require functions */
@@ -43,9 +45,6 @@ $data['cmdr_status'] = "false";
 $data['cmdr_balance_status'] = "false";
 if (isset($api["commander"]) && $settings["show_cmdr_status"] == "true")
 {
-	/** @require api update */
-	require_once($_SERVER["DOCUMENT_ROOT"] . "/action/updateAPIdata.php");
-
 	$cmdr_credits = number_format($api["commander"]["credits"]);
 
 	/**
