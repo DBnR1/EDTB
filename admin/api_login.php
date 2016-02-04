@@ -47,9 +47,7 @@ if (isset($_GET["login"]) && isset($_POST["email"]) && isset($_POST["password"])
 
 	if (!empty($email) && !empty($password))
 	{
-		exec("\"" . $settings["curl_exe"] . "\" -c \"" . $settings["cookie_file"] . "\" -H \"User-Agent: " . $settings["agent"] . "\" -d email=" . $email . " -d password=\"" . urlencode($password) . "\" \"https://companion.orerve.net/user/login\"", $out);
-
-		//write_log("\"" . $settings["curl_exe"] . "\" -c \"" . $settings["cookie_file"] . "\" -H \"User-Agent: " . $settings["agent"] . "\" -d email=" . $email . " -d password=\"" . urlencode($password) . "\" \"https://companion.orerve.net/user/login\"");
+		exec("\"" . $settings["curl_exe"] . "\" -c \"" . $settings["cookie_file"] . "\" -H \"User-Agent: " . $settings["agent"] . "\" -d email=" . $email . " -d password=\"" . urlencode($password) . "\" \"https://companion.orerve.net/user/login\" -k", $out);
 	}
 
 	if (!empty($out))
@@ -69,9 +67,7 @@ if (isset($_GET["sendcode"]))
 
 	if (!empty($code))
 	{
-		exec("\"" . $settings["curl_exe"] . "\" -b \"" . $settings["cookie_file"] . "\" -c \"" . $settings["cookie_file"] . "\" -H \"User-Agent: " . $settings["agent"] . "\" -d code=" . $code . " \"https://companion.orerve.net/user/confirm\"", $out);
-
-		//write_log("\"" . $settings["curl_exe"] . "\" -b \"" . $settings["cookie_file"] . "\" -c \"" . $settings["cookie_file"] . "\" -H \"User-Agent: " . $settings["agent"] . "\" -d code=" . $code . " \"https://companion.orerve.net/user/confirm\"");
+		exec("\"" . $settings["curl_exe"] . "\" -b \"" . $settings["cookie_file"] . "\" -c \"" . $settings["cookie_file"] . "\" -H \"User-Agent: " . $settings["agent"] . "\" -d code=" . $code . " \"https://companion.orerve.net/user/confirm\" -k", $out);
 	}
 
 	if (!empty($out))
@@ -86,20 +82,6 @@ if (isset($_GET["sendcode"]))
 		<?php
 		if (isset($_GET["login"]) && !isset($_GET["sendcode"]))
 		{
-			/**
-			 * check if we need the code
-			 */
-
-			exec("\"" . $settings["curl_exe"] . "\" -b \"" . $settings["cookie_file"] . "\" -c \"" . $settings["cookie_file"] . "\" -H \"User-Agent: " . $settings["agent"] . "\" \"https://companion.orerve.net/profile\"", $out);
-
-			//write_log("\"" . $settings["curl_exe"] . "\" -b \"" . $settings["cookie_file"] . "\" -c \"" . $settings["cookie_file"] . "\" -H \"User-Agent: " . $settings["agent"] . "\" \"https://companion.orerve.net/profile\"");
-
-			if (!empty($out))
-			{
-				echo notice('Something went awry. Possibly a wrong email or password?<br />Try again.', "API error");
-			}
-			else
-			{
 			?>
 			<div class="input" style="display:block">
 				<form method="post" action="/admin/api_login.php?sendcode">
@@ -128,26 +110,10 @@ if (isset($_GET["sendcode"]))
 				</form>
 			</div>
 			<?php
-			}
 		}
 		elseif (isset($_GET["sendcode"]) && isset($_POST["code"]))
 		{
-			/**
-			 * check if the connection works
-			 */
-
-			exec("\"" . $settings["curl_exe"] . "\" -b \"" . $settings["cookie_file"] . "\" -c \"" . $settings["cookie_file"] . "\" -H \"User-Agent: " . $settings["agent"] . "\" \"https://companion.orerve.net/profile\"", $out);
-
-			//write_log("\"" . $settings["curl_exe"] . "\" -b \"" . $settings["cookie_file"] . "\" -c \"" . $settings["cookie_file"] . "\" -H \"User-Agent: " . $settings["agent"] . "\" \"https://companion.orerve.net/profile\"");
-
-			if (!empty($out))
-			{
-				echo notice('The companion api is now connected.<br />Click the refresh icon to initialize. Then return to using ED ToolBox normally.<br /><a id="api_refresh" href="javascript:void(0)" onclick="refresh_api()" title="Refresh API data"><img src="/style/img/refresh_24.png" alt="Refresh" style="height:24px;width:24px" /></a>', "API connected");
-			}
-			else
-			{
-				echo notice('Unable to fetch profile data.<br />Please try again.', "API error");
-			}
+			echo notice('The companion api is now connected.<br />Click the refresh icon to initialize. Then return to using ED ToolBox normally.<br /><a id="api_refresh" href="javascript:void(0)" onclick="refresh_api()" title="Refresh API data"><img src="/style/img/refresh_24.png" alt="Refresh" style="height:24px;width:24px" /></a>', "API connected");
 		}
 		else
 		{
@@ -155,9 +121,7 @@ if (isset($_GET["sendcode"]))
 			 * check if cookies are good (when are they not?)
 			 */
 
-			exec("\"" . $settings["curl_exe"] . "\" -b \"" . $settings["cookie_file"] . "\" -c \"" . $settings["cookie_file"] . "\" -H \"User-Agent: " . $settings["agent"] . "\" \"https://companion.orerve.net/profile\"", $out);
-
-			//write_log("\"" . $settings["curl_exe"] . "\" -b \"" . $settings["cookie_file"] . "\" -c \"" . $settings["cookie_file"] . "\" -H \"User-Agent: " . $settings["agent"] . "\" \"https://companion.orerve.net/profile\"");
+			exec("\"" . $settings["curl_exe"] . "\" -b \"" . $settings["cookie_file"] . "\" -c \"" . $settings["cookie_file"] . "\" -H \"User-Agent: " . $settings["agent"] . "\" \"https://companion.orerve.net/profile\" -k", $out);
 
 			if (!empty($out))
 			{

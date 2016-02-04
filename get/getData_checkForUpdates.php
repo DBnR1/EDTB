@@ -84,13 +84,13 @@ if (version_compare($current_version, $newest_version) < 0)
  * Display notification if user hasn't updated data in a while
  */
 
-$last_update = edtb_common("last_data_update", "unixtime");
+/*$last_update = edtb_common("last_data_update", "unixtime");
 $now = time()-(7*24*60*60); // 7 days
 
 if ($now > $last_update && $last_update != "1")
 {
 	$data['notifications'] .= '<a href="javascript:void(0)" title="Notice" onclick="$(\'#notice\').fadeToggle(\'fast\')"><img src="/style/img/notice.png" style="height:26px;width:26px" alt="Notice" /></a>';
-}
+}*/
 
 if ($data['notifications'] == "")
 {

@@ -72,7 +72,7 @@ class db_create
 	 */
     function db($db)
 	{
-		write_log("Running query: CREATE DATABASE IF NOT EXISTS `" . $db . "` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci", $file, $line);
+		//write_log("Running query: CREATE DATABASE IF NOT EXISTS `" . $db . "` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci", $file, $line);
 		$this->link->query("CREATE DATABASE IF NOT EXISTS `" . $db . "` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci") or write_log(mysqli_error($this->link), __FILE__, __LINE__);
 	}
 
@@ -129,7 +129,7 @@ class db_create
 
 				if ($num_column > 0)
 				{
-					write_log("Running query: ALTER TABLE " . $database . ".`" . $table . "` CHANGE `" . $column_name . "` " . $column_sql . "", $file, $line);
+					//write_log("Running query: ALTER TABLE " . $database . ".`" . $table . "` CHANGE `" . $column_name . "` " . $column_sql . "", $file, $line);
 					$this->link->query("ALTER TABLE " . $database . ".`" . $table . "` CHANGE `" . $column_name . "` " . $column_sql . "")
 					or write_log(mysqli_error($this->link), $file, $line);
 
@@ -138,7 +138,7 @@ class db_create
 				}
 				else
 				{
-					write_log("Running query: ALTER TABLE " . $database . ".`" . $table . "` ADD " . $column_sql . " AFTER `" . $prev_column . "`", $file, $line);
+					//write_log("Running query: ALTER TABLE " . $database . ".`" . $table . "` ADD " . $column_sql . " AFTER `" . $prev_column . "`", $file, $line);
 					$this->link->query("ALTER TABLE " . $database . ".`" . $table . "` ADD " . $column_sql . " AFTER `" . $prev_column . "`")
 					or write_log(mysqli_error($this->link), $file, $line);
 
@@ -157,7 +157,7 @@ class db_create
 			{
 				if (!in_array($arr["COLUMN_NAME"], $all_columns))
 				{
-					write_log("Running query: ALTER TABLE " . $database . ".`" . $table . "` DROP COLUMN `" . $arr["COLUMN_NAME"] . "`", $file, $line);
+					//write_log("Running query: ALTER TABLE " . $database . ".`" . $table . "` DROP COLUMN `" . $arr["COLUMN_NAME"] . "`", $file, $line);
 					$this->link->query("ALTER TABLE " . $database . ".`" . $table . "` DROP COLUMN `" . $arr["COLUMN_NAME"] . "`")
 					or write_log(mysqli_error($this->link), $file, $line);
 
@@ -170,7 +170,7 @@ class db_create
 			{
 				if ($mod != "")
 				{
-					write_log("Running query: ALTER TABLE " . $database . ".`" . $table . "` " . $mod . "", $file, $line);
+					//write_log("Running query: ALTER TABLE " . $database . ".`" . $table . "` " . $mod . "", $file, $line);
 					$this->link->query("ALTER TABLE " . $database . ".`" . $table . "` " . $mod . "") or write_log(mysqli_error($this->link), $file, $line);
 
 					$info = mysqli_info($this->link);
@@ -180,7 +180,7 @@ class db_create
 		}
 		else
 		{
-			write_log("Running query: CREATE TABLE IF NOT EXISTS " . $database . ".`" . $table . "` (" . str_replace(">>", "", $sql) . ") ENGINE=InnoDB DEFAULT CHARSET=latin1", $file, $line);
+			//write_log("Running query: CREATE TABLE IF NOT EXISTS " . $database . ".`" . $table . "` (" . str_replace(">>", "", $sql) . ") ENGINE=InnoDB DEFAULT CHARSET=latin1", $file, $line);
 			$this->link->query("CREATE TABLE IF NOT EXISTS " . $database . ".`" . $table . "` (" . str_replace(">>", "", $sql) . ") ENGINE=InnoDB DEFAULT CHARSET=latin1") or write_log(mysqli_error($this->link), $file, $line);
 
 			$info = mysqli_info($this->link);
@@ -190,7 +190,7 @@ class db_create
 			{
 				if ($mod != "")
 				{
-					write_log("Running query: ALTER TABLE " . $database . ".`" . $table . "` " . $mod . "", $file, $line);
+					//write_log("Running query: ALTER TABLE " . $database . ".`" . $table . "` " . $mod . "", $file, $line);
 					$this->link->query("ALTER TABLE " . $database . ".`" . $table . "` " . $mod . "") or write_log(mysqli_error($this->link), $file, $line);
 
 					$info = mysqli_info($this->link);
@@ -210,7 +210,7 @@ class db_create
 	 */
 	function run_sql($sql, $file, $line)
 	{
-		write_log("Running query: " . $sql, $file, $line);
+		//write_log("Running query: " . $sql, $file, $line);
 		$this->link->query($sql) or write_log(mysqli_error($this->link), $file, $line);
 
 		$info = mysqli_info($this->link);

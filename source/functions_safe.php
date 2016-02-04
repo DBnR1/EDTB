@@ -299,15 +299,15 @@ function write_log($msg, $file = "", $line = "", $debug_override = false)
 		if (!file_exists($lfile))
 		{
 			$ua = getBrowser();
-			$debug_info = "Browser: " . $ua['name'] . " " . $ua['version'] . " (" .$ua['platform'] . ")\n";
-			$debug_info .= "Platform: " . getOS() . "\n";
-			$debug_info .= "Reported as: " . $_SERVER["HTTP_USER_AGENT"] . "\n";
-			$debug_info .= "HTTP_HOST: " . $_SERVER["HTTP_HOST"] . "\n";
-			$debug_info .= "SERVER_SOFTWARE: " . $_SERVER["SERVER_SOFTWARE"] . "\n";
-			$debug_info .= "SERVER_NAME: " . $_SERVER["SERVER_NAME"] . "\n";
-			$debug_info .= "SERVER_ADDR: " . $_SERVER["SERVER_ADDR"] . "\n";
-			$debug_info .= "SERVER_PORT: " . $_SERVER["SERVER_PORT"] . "\n";
-			$debug_info .= "DOCUMENT_ROOT: " . $_SERVER["DOCUMENT_ROOT"] . "\n";
+			$debug_info = "Browser: " . $ua['name'] . " " . $ua['version'] . " (" .$ua['platform'] . ")" . PHP_EOL;
+			$debug_info .= "Platform: " . getOS() . PHP_EOL;
+			$debug_info .= "Reported as: " . $_SERVER["HTTP_USER_AGENT"] . PHP_EOL;
+			$debug_info .= "HTTP_HOST: " . $_SERVER["HTTP_HOST"] . PHP_EOL;
+			$debug_info .= "SERVER_SOFTWARE: " . $_SERVER["SERVER_SOFTWARE"] . PHP_EOL;
+			$debug_info .= "SERVER_NAME: " . $_SERVER["SERVER_NAME"] . PHP_EOL;
+			$debug_info .= "SERVER_ADDR: " . $_SERVER["SERVER_ADDR"] . PHP_EOL;
+			$debug_info .= "SERVER_PORT: " . $_SERVER["SERVER_PORT"] . PHP_EOL;
+			$debug_info .= "DOCUMENT_ROOT: " . $_SERVER["DOCUMENT_ROOT"] . PHP_EOL;
 
 			file_put_contents($lfile, $debug_info);
 		}
@@ -318,10 +318,10 @@ function write_log($msg, $file = "", $line = "", $debug_override = false)
 		if (isset($file))
 		{
 			$on_line = $line == "" ? "" : " on line " . $line;
-			$where = "[" . $file . "" . $on_line . "]";
+			$where = "[" . $file . "" . $on_line . "] ";
 		}
 
-		$str = "[" . date("d.m.Y H:i:s", time()) . "]" . $where . " " . $msg;
+		$str = "[" . date("d.m.Y H:i:s", time()) . "]" . $where . $msg;
 
 		fwrite($fd, $str . PHP_EOL);
 		fclose($fd);

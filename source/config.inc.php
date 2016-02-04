@@ -41,67 +41,6 @@ require_once($settings["install_path"] . "/data/server_config.inc.php");
 require_once("MySQL.php");
 
 /**
- *  if the user_settings table doesn't exist, add it
- */
-if (!mysqli_query($GLOBALS["___mysqli_ston"], "DESCRIBE `user_settings`"))
-{
-	/** @require db migration class  */
-	require_once("dbMigrate.php");
-
-	$create = new db_create;
-
-	$create->table("user_settings","
-	  `id` mediumint(8) unsigned NOT null,>>
-	  `variable` varchar(60) NOT null,>>
-	  `value` text NOT null
-	","
-	  ADD PRIMARY KEY (`id`);
-	  MODIFY `id` mediumint(8) NOT null AUTO_INCREMENT;
-	  ADD UNIQUE(`variable`);
-	", __FILE__,  __LINE__);
-
-	$create->run_sql("INSERT IGNORE INTO elite_log.`user_settings` (`id`, `variable`, `value`) VALUES
-	(null, 'log_range', '45'),
-	(null, 'rare_range', '30'),
-	(null, 'edsm_export', 'false'),
-	(null, 'edsm_api_key', ''),
-	(null, 'edsm_cmdr_name', ''),
-	(null, 'edsm_standard_comments', ''),
-	(null, 'dropdown', '10,25,35,50,75,100,150,300,500,700'),
-	(null, 'maxdistance', '50'),
-	(null, 'tts_override', \"1>> one \n2>> two \n3>> tree \n4>> four \n5>> five \n6>> six \n7>> seven \n8>> eight \n9>> niner \n0>> zero \n- >> dash \n&>> and \n:>>. &mdash;\"),
-	(null, 'angry_droid', 'true'),
-	(null, 'thumbnail_size', '265x149'),
-	(null, 'galnet_articles', '4'),
-	(null, 'ext_links', \"ED ToolBox>>http://edtb.xyz\nEDDB>>https://eddb.io\nInara>>http://inara.cz\nCoriolis>>http://coriolis.io\nElite Dangerous>>http://www.elitedangerous.com\nFrontier Forums>>https://forums.frontier.co.uk/subscription.php\nDiscounts thread>>https://forums.frontier.co.uk/showthread.php?t=155377\nCommunity Goals thread>>https://forums.frontier.co.uk/showthread.php?t=187372\"),
-	(null, 'dist_systems', 'Sol>>Sol'),
-	(null, 'galnet_excludes', 'GalNet Weekly, A Week in Powerplay, GalNet Focus, Weekly Conflict Report'),
-	(null, 'nowplaying_file', ''),
-	(null, 'nowplaying_vlc_url', ''),
-	(null, 'nowplaying_vlc_password', ''),
-	(null, 'data_view_table', \"edtb_systems>>Systems\nedtb_stations>>Stations\nuser_visited_systems>>Visited Systems\nedtb_rares>>Rares\nedtb_commodities>>Commodities\nedtb_ships>>Ships\nuser_poi>>Points of Interest\nuser_poi_categories>>POI Categories\\nuser_bm_categories>>Bookmark Categories\nuser_log>>Log Entries\nx_mining_sites>>Mining Sites\nx_saved_posts>>Saved Posts\"),
-	(null, 'data_view_default_table', 'edtb_systems'),
-	(null, 'data_view_ignore', 'edtb_systems>>x,y,z,simbad_ref,updated_at
-	edtb_stations>>economies,selling_modules,shipyard_updated_at,outfitting_updated_at
-	user_poi>>x,y,z
-	edtb_rares>>station_type,system_allegiance,station_allegiance'),
-	(null, 'default_map', 'galaxy_map'),
-	(null, 'galmap_show_rares', 'true'),
-	(null, 'galmap_show_bookmarks', 'true'),
-	(null, 'galmap_show_visited_systems', 'true'),
-	(null, 'galmap_show_pois', 'true'),
-	(null, 'nmap_show_rares', 'true'),
-	(null, 'nmap_show_bookmarks', 'true'),
-	(null, 'nmap_show_visited_systems', 'true'),
-	(null, 'nmap_show_pois', 'true'),
-	(null, 'keep_og', 'true'),
-	(null, 'data_notify_age', '10'),
-	(null, 'show_ship_status', 'true'),
-	(null, 'show_cmdr_status', 'true'),
-	(null, 'show_cqc_rank', 'false')
-	", __FILE__,  __LINE__);
-}
-/**
  * Expand the $settings global variable with stuff from the database
  */
 
@@ -195,9 +134,9 @@ $settings["new_screendir"] = $settings["install_path"] . "/EDTB/screenshots";
 /** @var agent user agent for FD api */
 $settings["agent"] = "Mozilla/5.0 (iPhone; CPU iPhone OS 7_1_2 like Mac OS X) AppleWebKit/537.51.2 (KHTML, like Gecko) Mobile/11D257";
 /** @var cookie_file cookie file for FD api */
-$settings["cookie_file"] = $settings["install_path"] . "\EDTB\cache\cookies";
+$settings["cookie_file"] = "" . $_SERVER["DOCUMENT_ROOT"] . "\cache\cookies";
 /** @var curl_exe path to curl executable file */
-$settings["curl_exe"] = $settings["install_path"] . "\bin\curl.exe";
+$settings["curl_exe"] = "" . $settings["install_path"] . "\bin\curl.exe";
 
 global $settings;
 
