@@ -147,8 +147,6 @@ if (isset($_GET["do"]))
 		write_log("Error: Distances not numeric or all distances not given.", __FILE__, __LINE__);
 	}
 
-	((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
-
 	exit;
 }
 ?>

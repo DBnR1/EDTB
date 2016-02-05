@@ -239,10 +239,10 @@ function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
 	elseif (strpos($key, "system_name") !== false && $value != "0" || $key == "name" && $table == "edtb_systems")
 	{
 		// check if system has screenshots
-		$screenshots = has_screenshots($value) ? '<a href="/Gallery.php?spgmGal=' . urlencode($value) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;vertical-align:top" /></a>' : "";
+		$screenshots = has_screenshots($value) ? '<a href="/Gallery.php?spgmGal=' . urlencode($value) . '" title="View image gallery"><img src="/style/img/image.png" class="icon" alt="Gallery" style="vertical-align:top" /></a>' : "";
 
 		// check if system is logged
-		$loglink = is_logged($value) ? '<a href="log.php?system=' . urlencode($value) . '" style="color:inherit" title="System has log entries"><img src="/style/img/log.png" style="margin-left:5px;vertical-align:top" /></a>' : "";
+		$loglink = is_logged($value) ? '<a href="log.php?system=' . urlencode($value) . '" style="color:inherit" title="System has log entries"><img src="/style/img/log.png" class="icon" style="vertical-align:top" /></a>' : "";
 
 		$this_row .= '<td style="padding:10px;vertical-align:middle"><a href="/System.php?system_name=' . urlencode($value) . '">' . $value . '' . $loglink.$screenshots . '</a></td>';
 	}
@@ -362,27 +362,27 @@ function FileSizeConvert($bytes)
  * @return string $station_icon html img tag for the starport icon
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function get_station_icon($type, $planetary = "0", $style = "margin-right:6px")
+function get_station_icon($type, $planetary = "0", $style = "")
 {
 	switch ($type)
 	{
 		case "Coriolis Starport":
-			$station_icon = '<img src="/style/img/spaceports/coriolis.png" alt="Coriolis Starport" style="' . $style . '" />';
+			$station_icon = '<img src="/style/img/spaceports/coriolis.png" class="icon" alt="Coriolis Starport" style="' . $style . '" />';
 			break;
 		case "Orbis Starport":
-			$station_icon = '<img src="/style/img/spaceports/orbis.png" alt="Orbis Starport" style="' . $style . '" />';
+			$station_icon = '<img src="/style/img/spaceports/orbis.png" class="icon" alt="Orbis Starport" style="' . $style . '" />';
 			break;
 		case "Ocellus Starport":
-			$station_icon = '<img src="/style/img/spaceports/ocellus.png" alt="Ocellus Starport" style="' . $style . '" />';
+			$station_icon = '<img src="/style/img/spaceports/ocellus.png" class="icon" alt="Ocellus Starport" style="' . $style . '" />';
 			break;
 		case ($planetary == "0"):
-			$station_icon = '<img src="/style/img/spaceports/spaceport.png" alt="Starport" style="' . $style . '" />';
+			$station_icon = '<img src="/style/img/spaceports/spaceport.png" class="icon" alt="Starport" style="' . $style . '" />';
 			break;
 		case ($planetary == "1"):
-			$station_icon = '<img src="/style/img/spaceports/planetary.png" alt="Planetary" style="' . $style . '" />';
+			$station_icon = '<img src="/style/img/spaceports/planetary.png" class="icon" alt="Planetary" style="' . $style . '" />';
 			break;
 		default:
-		$station_icon = '<img src="/style/img/spaceports/unknown.png" alt="Unknown" style="' . $style . '" />';
+		$station_icon = '<img src="/style/img/spaceports/unknown.png" class="icon" alt="Unknown" style="' . $style . '" />';
 	}
 
 	return $station_icon;
@@ -893,6 +893,8 @@ function fuzziness()
 					$num++;
 				}
 			}
+
+			$num = $num == 0 ? 1 : $num;
 			$fuzziness = $num * 40 + 20; // assuming a range of 40 ly per jump (+ 20 ly just to be on the safe side)
 
 			$value["fuzziness"] = $fuzziness;
@@ -945,7 +947,23 @@ function reference_systems($standard = false)
 															ORDER BY sqrt(pow((x-(" . $start_x . ")), 2)+pow((y-(" . $start_y . ")), 2)+pow((z-(" . $start_z . ")), 2)) DESC")
 															or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
+		$num = mysqli_num_rows($res);
+
+		if ($num <= 4)
+		{
+			$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT name, x, y, z
+																FROM edtb_systems
+																WHERE x NOT BETWEEN (" . $start_x . " - " . $fuzziness . ") AND (" . $start_x . " + " . $fuzziness . ")
+																AND y NOT BETWEEN (" . $start_y . " - " . $fuzziness . ") AND (" . $start_y . " + " . $fuzziness . ")
+																AND z NOT BETWEEN (" . $start_z . " - " . $fuzziness . ") AND (" . $start_z . " + " . $fuzziness . ")
+																AND sqrt(pow((x-(" . $start_x . ")), 2)+pow((y-(" . $start_y . ")), 2)+pow((z-(" . $start_z . ")), 2)) > " . $fuzziness . "
+																AND name != '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $start_name) . "'
+																ORDER BY sqrt(pow((x-(" . $start_x . ")), 2)+pow((y-(" . $start_y . ")), 2)+pow((z-(" . $start_z . ")), 2)) ASC LIMIT 300")
+																or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+		}
+
 		$i = 0;
+		$pool = array();
 		while ($arr = mysqli_fetch_assoc($res))
 		{
 			$pool[$i]["name"] = $arr["name"];
