@@ -12,25 +12,25 @@
  * @package EDTB\Backend
  */
 
-/*
-*  ED ToolBox, a companion web app for the video game Elite Dangerous
-*  (C) 1984 - 2016 Frontier Developments Plc.
-*  ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
-*
-*  This program is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU General Public License
-*  as published by the Free Software Foundation; either version 2
-*  of the License, or (at your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-*/
+ /*
+ * ED ToolBox, a companion web app for the video game Elite Dangerous
+ * (C) 1984 - 2016 Frontier Developments Plc.
+ * ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ */
 
 /** @require functions  */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
@@ -423,13 +423,15 @@ function spgm_IsPicture($strPictureFileName, $strGalleryId)
     spgm_Trace('<p>function spgm_IsPicture</p>' . "\n" . 'strPictureFileName: ' . $strPictureFileName . '<br />' . "\n" . 'strGalleryId: ' . $strGalleryId . '<br />' . "\n" . 'strPicturePath: ' . $strPicturePath . '<br />' . "\n" . 'strThumbnailPath: ' . $strThumbnailPath . '<br />' . "\n");
 
     // check filename patterns
-    if (PREF_THUMB != '' AND eregi('^' . PREF_THUMB . '*', $strPictureFileName))
+    //if (PREF_THUMB != '' AND preg_match('^' . PREF_THUMB . '*', $strPictureFileName))
+	if (PREF_THUMB != '' AND strripos($strPictureFileName, PREF_THUMB))
         return false;
     $validated = false;
     $extnb     = count($spgm_cfg['global']['supportedExtensions']);
     for ($i = 0; $i < $extnb; $i++)
     {
-        if (eregi($spgm_cfg['global']['supportedExtensions'][$i] . '$', $strPictureFileName))
+        //if (preg_match($spgm_cfg['global']['supportedExtensions'][$i] . '$', $strPictureFileName))
+		if (strripos($strPictureFileName, $spgm_cfg['global']['supportedExtensions'][$i]) !== false)
         {
             $validated = true;
             break;
@@ -468,7 +470,7 @@ function spgm_IsGallery($strGalleryId)
     spgm_Trace('<p>function spgm_IsGallery</p>' . "\n" . 'strGalleryId: ' . $strGalleryId . '<br />' . "\n" . 'strPathToPictures: ' . $strPathToPictures . '<br />' . "\n");
 
     // searching for hazardous patterns
-    if (ereg('^/', $strGalleryId) || ereg('\.\.', $strGalleryId) || ereg('/$', $strGalleryId))
+    if (strrpos($strGalleryId, '^/') || strrpos($strGalleryId, '\.\.') || strrpos($strGalleryId, '/$'))
     {
         return false;
     }
@@ -1786,7 +1788,7 @@ function spgm_DisplayPicture($strGalleryId, $iPictureId, $strFilterFlags)
             else
             {
                 $imgur_url = file_get_contents($imgurfile);
-                print '<span id="uploaded" style="float:right"><a href="' . $imgur_url . '">Link to your image on imgur.com</a><img src="/style/img/external_link.png" style="margin-bottom:3px;margin-left:6px" alt="ext" /></span><br />' . "\n";
+                print '<span id="uploaded" style="float:right"><a href="' . $imgur_url . '">Link to your image on imgur.com</a><img class="ext_icon" src="/style/img/external_link.png" style="margin-bottom:3px" alt="ext" /></span><br />' . "\n";
             }
 
             print ' </td>' . "\n";
