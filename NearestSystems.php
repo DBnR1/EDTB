@@ -479,16 +479,16 @@ $count = mysqli_num_rows($res);
 				<!-- station allegiances -->
 				<td class="transparent" style="vertical-align:top;width:25%;white-space:nowrap">
 					<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?allegiance=Empire<?php echo $addtolink2;?>" title="Empire">
-						<img src="style/img/empire.png" alt="Empire" />
+						<img src="style/img/empire.png" class="allegiance_icon" alt="Empire" />
 					</a>&nbsp;
 					<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?allegiance=Alliance<?php echo $addtolink2;?>" title="Alliance">
-						<img src="style/img/alliance.png" alt="Alliance" />
+						<img src="style/img/alliance.png" class="allegiance_icon" alt="Alliance" />
 					</a>&nbsp;
 					<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?allegiance=Federation<?php echo $addtolink2;?>" title="Federation">
-						<img src="style/img/federation.png" alt="Federation" />
+						<img src="style/img/federation.png" class="allegiance_icon" alt="Federation" />
 					</a>&nbsp;
 						<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?allegiance=Independent<?php echo $addtolink2;?>" title="Independent">
-					<img src="style/img/system.png" alt="Independent" />
+					<img src="style/img/system.png" class="allegiance_icon" alt="Independent" />
 					</a>
 					<!-- search systems and stations-->
 					<div style="text-align:left">
@@ -503,16 +503,16 @@ $count = mysqli_num_rows($res);
 				<!-- allegiances -->
 				<td class="transparent" style="vertical-align:top;width:25%;white-space:nowrap">
 					<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?system_allegiance=Empire<?php echo $addtolink2;?>" title="Empire">
-						<img src="style/img/empire.png" alt="Empire" />
+						<img src="style/img/empire.png" class="allegiance_icon" alt="Empire" />
 					</a>&nbsp;
 					<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?system_allegiance=Alliance<?php echo $addtolink2;?>" title="Alliance">
-						<img src="style/img/alliance.png" alt="Alliance" />
+						<img src="style/img/alliance.png" class="allegiance_icon" alt="Alliance" />
 					</a>&nbsp;
 					<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?system_allegiance=Federation<?php echo $addtolink2;?>" title="Federation">
-						<img src="style/img/federation.png" alt="Federation" />
+						<img src="style/img/federation.png" class="allegiance_icon" alt="Federation" />
 					</a>&nbsp;
 					<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?system_allegiance=None<?php echo $addtolink2;?>" title="None allied">
-						<img src="style/img/system.png" alt="None allied" />
+						<img src="style/img/system.png" class="allegiance_icon" alt="None allied" />
 					</a>
 					<br /><br />
 				</td>
@@ -724,10 +724,10 @@ $count = mysqli_num_rows($res);
 								$station_name = $arr["station_name"];
 
 								// check if system has screenshots
-								$screenshots = has_screenshots($system) ? '<a href="/Gallery.php?spgmGal=' . urlencode($system) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;vertical-align:top" /></a>' : "";
+								$screenshots = has_screenshots($system) ? '<a href="/Gallery.php?spgmGal=' . urlencode($system) . '" title="View image gallery"><img src="/style/img/image.png" class="icon" alt="Gallery" style="margin-left:5px;vertical-align:top" /></a>' : "";
 
 								// check if system is logged
-								$loglink = is_logged($system_id, true) ? '<a href="log.php?system=' . urlencode($system) . '" style="color:inherit" title="System has log entries"><img src="/style/img/log.png" style="margin-left:5px" /></a>' : "";
+								$loglink = is_logged($system_id, true) ? '<a href="log.php?system=' . urlencode($system) . '" style="color:inherit" title="System has log entries"><img src="/style/img/log.png" class="icon" style="margin-left:5px" /></a>' : "";
 
 								$ss_coordx = $arr["coordx"];
 								$ss_coordy = $arr["coordy"];
@@ -741,15 +741,15 @@ $count = mysqli_num_rows($res);
 								if ($system != $last_system)
 								{
 									echo '<tr>';
-									echo '<td class="transparent" style="text-align:center"><img src="style/img/' . $pic . '" alt="' . $allegiance . '" /></td>';
+									echo '<td class="transparent" style="text-align:center"><img src="style/img/' . $pic . '" class="allegiance_icon" alt="' . $allegiance . '" /></td>';
 
 									echo '<td class="transparent">';
 									echo number_format($distance,2);
 									echo ' ly' . $is_unknown . '</td>';
 
 									echo '<td class="transparent">';
-									echo '	<a class="send" href="javascript:void(0)" title="Send to ED" data-send="' . $system . '" data-id="' . $system_id . '">';
-									echo '		<img class="btn" src="/style/img/magic.png" alt="Send" style="margin-bottom:7px;margin-right:4px;width:16px;height:16px" />';
+									echo '	<a class="send" href="javascript:void(0)" title="Send to ED client" data-send="' . $system . '" data-id="' . $system_id . '">';
+									echo '		<img class="icon" src="/style/img/magic.png" alt="Send" style="margin-bottom:7px" />';
 									echo '	</a>';
 									echo '	<a href="System.php?system_id=' . $system_id . '">' . $system . '</a>' . $loglink . $screenshots;
 									echo '</td>';

@@ -109,12 +109,12 @@ if (isset($_POST["code"]))
 <div class="entries">
 	<div class="entries_inner" style="margin-bottom:20px">
 	<h2>
-		<img src="/style/img/dataview.png" alt="Settings" style="width:20px;height:20px;margin-right:6px" />Execute SQL
+		<img src="/style/img/sql24.png" alt="Settings" class="icon24" />Execute SQL
 	</h2>
 	<hr>
 	<?php echo $notify;?>
 	<div style="padding:5px;margin-bottom:10px">
-	You can use this form to perform sql statements. Certain commands, such as<br />
+	You can use this form to perform SQL statements. Certain commands, such as<br />
 	<strong>DELETE</strong>, <strong>TRUNCATE</strong> and <strong>DROP</strong> are not available here.<br />
 	 To do multiple statements, use <code>>>BREAK<<</code> to separate statements<br /><br />
 

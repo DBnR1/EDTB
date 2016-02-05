@@ -50,8 +50,6 @@ if (isset($_GET["do"]))
 													or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 	}
 
-	((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
-
 	exit;
 }
 
@@ -67,7 +65,7 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
 <div class="entries">
 	<div class="entries_inner">
 	<h2>
-		<img src="/style/img/settings.png" alt="Settings" style="width:20px;height:20px;margin-right:6px" />Settings
+		<img src="/style/img/settings.png" alt="Settings" class="icon24" />Settings
 	</h2>
 	<hr>
 	<?php

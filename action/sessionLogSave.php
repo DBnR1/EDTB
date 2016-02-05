@@ -45,4 +45,3 @@ if (!file_put_contents($settings["install_path"] . "/data/sessionlog.txt", $text
 
 echo $text;
 
-((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);

@@ -36,7 +36,7 @@ $data['notifications_data'] = 'false';
 
 $current_version = $settings["edtb_version"];
 $last_check = edtb_common("last_update_check", "unixtime");
-$time_frame = time()-24*60*60;
+$time_frame = time()-5*60*60;
 
 if ($last_check < $time_frame)
 {
@@ -73,7 +73,7 @@ if (version_compare($current_version, $newest_version) < 0)
 
 			$short_desc = $json_data["short"];
 			$long_desc = $json_data["versionInformation"];
-			$data['notifications'] .= '<a href="javascript:void(0)" title="New version available" onclick="$(\'#notice_new\').fadeToggle(\'fast\')"><img src="/style/img/upgrade.png" style="height:26px;width:26px;margin-right:6px" alt="Upgrade" /></a>';
+			$data['notifications'] .= '<a href="javascript:void(0)" title="New version available" onclick="$(\'#notice_new\').fadeToggle(\'fast\')"><img src="/style/img/upgrade.png" class="icon26" alt="Upgrade" /></a>';
 			$data['notifications_data'] = $short_desc . '<br /><br /><br />' . $long_desc;
 			$data['notifications_data'] .= '<br /><br /><strong><a href="javascript:void(0)" onclick="ignore_version(\'' . $newest_version . '\')">Click here if you want to ignore this version</a></strong>';
 		}

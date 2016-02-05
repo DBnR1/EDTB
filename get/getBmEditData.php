@@ -65,5 +65,3 @@ else
 	$data["bm_text"] = $bm_arr["comment"];
 }
 echo json_encode($data);
-
-((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);

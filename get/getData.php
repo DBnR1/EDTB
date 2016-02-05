@@ -46,21 +46,18 @@ if ($action == "onlycoordinates")
 {
 	echo $curSys["coordinates"];
 
-	((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
 	exit;
 }
 elseif ($action == "onlysystem")
 {
 	echo $curSys["name"];
 
-	((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
 	exit;
 }
 elseif ($action == "onlyid")
 {
 	echo $curSys["id"];
 
-	((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
 	exit;
 }
 
@@ -115,7 +112,7 @@ if ((isset($settings["nowplaying_file"]) && !empty($settings["nowplaying_file"])
 		$nowplaying = "Not playing";
 	}
 
-	$data['now_playing'] = '<img src="/style/img/music.png" style="vertical-align:middle;margin-right:6px" alt="Now playing" />';
+	$data['now_playing'] = '<img src="/style/img/music.png" class="icon" alt="Now playing" />';
 	$data['now_playing'] .= $nowplaying;
 }
 
@@ -152,7 +149,7 @@ if ($newSystem !== false || $request == 0)
 				pclose(popen("start \"UpdateData\" /b \"" . $batch_file . "\"", "r"));
 
 				$data['update_in_progress'] = "true";
-				$data['update_notification'] .= '<a href="javascript:void(0)" title="Data update in progress" onclick="$(\'#notice\').fadeToggle(\'fast\')"><img src="/style/img/notice.png" style="height:26px;width:26px;margin-right:6px" alt="Update" /></a>';
+				$data['update_notification'] .= '<a href="javascript:void(0)" title="Data update in progress" onclick="$(\'#notice\').fadeToggle(\'fast\')"><img src="/style/img/notice.png" class="icon26" alt="Update" /></a>';
 				$data['update_notification_data'] = 'System and station data is being updated in the background.';
 			}
 			else
@@ -231,4 +228,3 @@ make_gallery($curSys["name"]);
 
 echo json_encode($data);
 
-((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);

@@ -91,5 +91,3 @@ if (isset($_GET["group_id"]) && !empty($_GET["group_id"]))
 }
 
 echo json_encode($data);
-
-((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);

@@ -64,4 +64,3 @@ else
 	write_log("Api key or commander name not set", __FILE__, __LINE__);
 	exit;
 }
-

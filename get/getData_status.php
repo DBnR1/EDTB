@@ -30,6 +30,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
+/** @var new is the system new */
+$new = isset($_GET["newsys"]) ? $_GET["newsys"] : "false";
+/** @var override override the default min time between refreshes */
+$override = isset($_GET["override"]) ? $_GET["override"] : "false";
+
 /** @require api update */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/action/updateAPIdata.php");
 /** @require config */
@@ -66,7 +71,7 @@ if (isset($api["commander"]) && $settings["show_cmdr_status"] == "true")
 	if ($settings["show_cqc_rank"] == "true")
 	{
 		$cmdr_rank_cqc = $api["commander"]["rank"]["cqc"];
-		$cmdr_rank_cqc_icon = '<a href="#" title="CQC rank: ' . get_rank("cqc", $cmdr_rank_cqc, false) . '"><img src="' . get_rank("cqc", $cmdr_rank_cqc+1) . '" alt="cqc" style="margin-right:6px" /></a>';
+		$cmdr_rank_cqc_icon = '<a href="#" title="CQC rank: ' . get_rank("cqc", $cmdr_rank_cqc, false) . '"><img src="' . get_rank("cqc", $cmdr_rank_cqc+1) . '" class="status_img" alt="cqc" style="margin-right:6px" /></a>';
 	}
 
 	/**
@@ -132,7 +137,7 @@ if (isset($api["ship"]) && $settings["show_ship_status"] == "true")
 
 	$additional = '<div id="ship_status_mi" style="display:none"><strong>Ship value:</strong> ' . $ship_value .' CR<br />Hull: ' . $ship_hull_value . ' CR<br />Modules: ' . $ship_modules_value . ' CR' . $stored_ships . '</div>';
 
-	$data['ship_status'] = '<img src="/style/img/ship.png" style="margin-right:6px" alt="Ship hull" />' . $ship_health . ' %<img src="/style/img/fuel.png" style="margin-right:6px;margin-left:6px;margin-bottom:4px" alt="Ship fuel" />' . $ship_fuel . ' %<img src="/style/img/cargo.png" style="margin-right:6px;margin-left:6px" alt="Ship cargo" />' . $ship_cargo_used . '/' . $ship_cargo_cap . '' . $additional;
+	$data['ship_status'] = '<img src="/style/img/ship.png" class="icon" alt="Ship hull" />' . $ship_health . ' %<img src="/style/img/fuel.png"  class="icon24" style="margin-left:6px;margin-bottom:4px" alt="Ship fuel" />' . $ship_fuel . ' %<img src="/style/img/cargo.png" class="icon24" style="margin-left:6px" alt="Ship cargo" />' . $ship_cargo_used . '/' . $ship_cargo_cap . '' . $additional;
 }
 
 /**

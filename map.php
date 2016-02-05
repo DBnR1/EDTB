@@ -99,25 +99,25 @@ if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"]))
 				</tr>
 				<tr>
 					<td>
-						<img src="/style/img/goto-g.png" alt="POI Visited" style="margin-bottom:4px">
+						<img src="/style/img/goto-g.png" alt="POI Visited" style="margin-bottom:4px;width:12px;height:12px">
 					</td>
 					<td>Visited Point of Interest</td>
 				</tr>
 				<tr>
 					<td>
-						<img src="/style/img/goto.png" alt="POI Unvisited" style="margin-bottom:4px">
+						<img src="/style/img/goto.png" alt="POI Unvisited" style="margin-bottom:4px;width:12px;height:12px">
 					</td>
 					<td>Unvisited Point of Interest</td>
 				</tr>
 				<tr>
 					<td>
-						<img src="/style/img/rare.png" alt="Rare" style="margin-bottom:4px">
+						<img src="/style/img/rare.png" alt="Rare" style="margin-bottom:4px;width:12px;height:12px">
 					</td>
 					<td>Rare Commodity</td>
 				</tr>
 				<tr>
 					<td>
-						<img src="/style/img/bm.png" alt="Rare" style="margin-bottom:4px">
+						<img src="/style/img/bm.png" alt="Rare" style="margin-bottom:4px;width:12px;height:12px">
 					</td>
 					<td>Bookmarked System</td>
 				</tr>

@@ -443,4 +443,3 @@ file_put_contents($map_json, $data);
 
 edtb_common("last_map_update", "unixtime", true, time());
 
-((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);

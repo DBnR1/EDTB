@@ -96,7 +96,6 @@ if (isset($_GET["do"]))
 													'" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $l_entry) . "')") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]));
 	}
 
-	((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
 	exit;
 }
 
@@ -111,7 +110,7 @@ if (isset($_GET["do"]))
 					<td class="heading" colspan="2">Add/Edit Log Entry
 						<span class="right">
 							<a href="javascript:void(0)" onclick="tofront('addlog');$('.addstations').toggle()" title="Close form">
-								<img src="/style/img/close.png" alt="X" style="width:16px;height:16px" />
+								<img src="/style/img/close.png" class="icon" alt="X" />
 							</a>
 						</span>
 					</td>

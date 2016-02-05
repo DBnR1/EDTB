@@ -92,7 +92,7 @@ if (isset($_GET["sendcode"]))
 							</tr>
 							<tr>
 								<td class="dark">
-									<span class="left"><img src="/style/img/about.png" alt="Info" style="margin-right:5px" /></span>You should now have received a verification code to your email.<br />Copy and paste it here, then click Send.
+									<span class="left"><img src="/style/img/about.png" class="icon32" alt="Info" /></span>You should now have received a verification code to your email.<br />Copy and paste it here, then click Send.
 								</td>
 							</tr>
 							<tr>
@@ -113,7 +113,7 @@ if (isset($_GET["sendcode"]))
 		}
 		elseif (isset($_GET["sendcode"]) && isset($_POST["code"]))
 		{
-			echo notice('The companion api is now connected.<br />Click the refresh icon to initialize. Then return to using ED ToolBox normally.<br /><a id="api_refresh" href="javascript:void(0)" onclick="refresh_api()" title="Refresh API data"><img src="/style/img/refresh_24.png" alt="Refresh" style="height:24px;width:24px" /></a>', "API connected");
+			echo notice('The companion api is now connected.<br />Click the refresh icon to initialize. Then return to using ED ToolBox normally.<br /><a id="api_refresh" href="javascript:void(0)" onclick="refresh_api()" title="Refresh API data"><img src="/style/img/refresh_24.png" class="icon24" alt="Refresh" /></a>', "API connected");
 		}
 		else
 		{
@@ -125,7 +125,7 @@ if (isset($_GET["sendcode"]))
 
 			if (!empty($out))
 			{
-				echo notice('The companion api is already connected.<br />Click the refresh icon to refresh.<br /><a id="api_refresh" href="javascript:void(0)" onclick="refresh_api()" title="Refresh API data"><img src="/style/img/refresh_24.png" alt="Refresh" style="height:24px;width:24px" /></a>', "API already connected");
+				echo notice('The companion api is already connected.<br />Click the refresh icon to refresh.<br /><a id="api_refresh" href="javascript:void(0)" onclick="refresh_api()" title="Refresh API data"><img src="/style/img/refresh_24.png" class="icon24" alt="Refresh" /></a>', "API already connected");
 			}
 			else
 			{
@@ -139,7 +139,7 @@ if (isset($_GET["sendcode"]))
 								</tr>
 								<tr>
 									<td class="dark">
-										<span class="left"><img src="/style/img/about.png" alt="Info" style="margin-right:5px" /></span>Provide the email address and password you use to login to <strong>Elite Dangerous</strong>.
+										<span class="left"><img src="/style/img/about.png" alt="Info" class="icon32" /></span>Provide the email address and password you use to login to <strong>Elite Dangerous</strong>.
 									</td>
 								</tr>
 								<tr>

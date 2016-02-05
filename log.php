@@ -59,7 +59,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 		if ($num > 0)
 		{
 			// check if system has screenshots
-			$screenshots = has_screenshots($logsystem) ? '<a href="/Gallery.php?spgmGal=' . urlencode($logsystem) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;vertical-align:top" /></a>' : "";
+			$screenshots = has_screenshots($logsystem) ? '<a href="/Gallery.php?spgmGal=' . urlencode($logsystem) . '" title="View image gallery"><img src="/style/img/image.png" class="icon" alt="Gallery" style="margin-left:5px;vertical-align:top" /></a>' : "";
 
 			echo "<h2>System log for <a href='System.php?system_name=" . urlencode($logsystem) . "'>" . $logsystem . $screenshots . "</a></h2>";
 			echo '<hr>';

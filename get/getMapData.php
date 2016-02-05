@@ -44,7 +44,7 @@ if (empty($system))
  * check if system has screenshots
  */
 
-$screenshots = has_screenshots($system) ? '<a href="/Gallery.php?spgmGal=' . urlencode($system) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;vertical-align:top" /></a>' : "";
+$screenshots = has_screenshots($system) ? '<a href="/Gallery.php?spgmGal=' . urlencode($system) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" class="icon" style="margin-left:5px;vertical-align:top" /></a>' : "";
 
 /**
  * check if system is in the bookmarks

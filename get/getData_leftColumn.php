@@ -39,7 +39,7 @@ $pic = get_allegiance_icon($curSys["allegiance"]);
 
 $data['system_title'] = '	<div class="leftpanel-add-data">
 								<a href="javascript:void(0)" id="toggle" onclick="setbm(\'' . addslashes($curSys["name"]) . '\', \'' . $curSys["id"] . '\');tofront(\'addBm\');$(\'#bm_text\').focus()" title="Bookmark system">
-									<img src="/style/img/' . $pic . '" style="margin-right:5px" alt="' . $curSys["allegiance"] . '" />
+									<img src="/style/img/' . $pic . '" class="allegiance_icon" alt="' . $curSys["allegiance"] . '" />
 								</a>
 							</div>';
 
@@ -243,7 +243,7 @@ if ($count > 0)
 			$station_data .= ' (' . number_format($ls_from_star) . ' ls)';
 		}
 
-		$station_data .= "</a>&nbsp;<a href='javascript:void(0);' title='Add to new log as station' onclick='addstation(\"" . $station_name . "\", \"" . $station_id . "\")'><img src='/style/img/right.png' alt='Add to log' style='vertical-align:top;width:16px;height:16px' class='addstations' /></a>";
+		$station_data .= "</a>&nbsp;<a href='javascript:void(0);' title='Add to new log as station' onclick='addstation(\"" . $station_name . "\", \"" . $station_id . "\")'><img src='/style/img/right.png' alt='Add to log' class='addstations' /></a>";
 
 		$station_data .= '<div class="stationinfo" id="statinfo_' . $station_id . '">' . $info . '</div></div>';
 
@@ -256,7 +256,7 @@ else
 	if (empty($curSys["coordinates"]) && !empty($curSys["name"]))
 	{
 		$station_data .= "<span style='margin-bottom:6px;height:40px'><a href='javascript:void(0)' onclick='set_reference_systems(false);tofront(\"calculate\");get_cs(\"target_system\")' title='No coordinates found, click here to calculate'>";
-		$station_data .= "<img src='/style/img/calculator.png' alt='Calculate' />";
+		$station_data .= "<img src='/style/img/calculator.png' class='icon24' alt='Calculate' />";
 		$station_data .= "&nbsp;*&nbsp;No coordinates, click to calculate them.</a></span><br /><br />&nbsp";
 	}
 	$station_data .= 'No station data available';
@@ -274,7 +274,7 @@ $system_user_calculated = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"
 if ($system_user_calculated > 0 && !empty($curSys["name"]))
 {
 	$station_data .= '<span style="float:right;margin-right:8px;margin-top:6px"><a href="javascript:void(0)" onclick="set_reference_systems(false);tofront(\'calculate\');get_cs(\'target_system\')" title="Review distances">';
-	$station_data .= '<img src="/style/img/calculator.png" alt="Calc" />';
+	$station_data .= '<img src="/style/img/calculator.png" class="icon24" alt="Calculate" />';
 	$station_data .= '</a></span>';
 }
 

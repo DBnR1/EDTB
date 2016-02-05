@@ -83,7 +83,7 @@ if (isset($_GET["search"]) && !empty($_GET["search"]))
 
 					if (strpos($title_m, 'refer') === false)
 					{
-						$title_rest = str_replace($title_m, '<ul><li><a href="https://en.wikipedia.org/wiki/' . $title_first . '" target="_BLANK">' . $title_m . '<img src="/style/img/external_link.png" alt="ext" style="vertical-align:middle;margin-left:6px;" /></a></li></ul>', $title_m);
+						$title_rest = str_replace($title_m, '<ul><li><a href="https://en.wikipedia.org/wiki/' . $title_first . '" target="_BLANK">' . $title_m . '<img src="/style/img/external_link.png" class="ext_link" alt="ext" style="margin-left:3px" /></a></li></ul>', $title_m);
 					}
 					else
 					{
@@ -124,7 +124,7 @@ if (isset($_GET["search"]) && !empty($_GET["search"]))
 					$title_link = preg_split('/\(\d/', $title_link[0]);
 					$title_first = str_replace(" ", "_", strip_tags(trim($title_link[0])));
 
-					$title_rest = str_replace($title_m, '<li><a href="https://en.wikipedia.org/wiki/' . $title_first . '" target="_BLANK">' . $title_m . '</a><img src="/style/img/external_link.png" alt="ext" style="margin-left:4px;" /></li>', $title_m);
+					$title_rest = str_replace($title_m, '<li><a href="https://en.wikipedia.org/wiki/' . $title_first . '" target="_BLANK">' . $title_m . '</a><img src="/style/img/external_link.png" class="ext_link" alt="ext" style="margin-left:3px" /></li>', $title_m);
 
 					echo $title_rest;
 
@@ -173,7 +173,7 @@ if (isset($_GET["search"]) && !empty($_GET["search"]))
 						$title_link = preg_split('/\(\d/', $title_link[0]);
 						$title_first = str_replace(" ", "_", strip_tags(trim($title_link[0])));
 
-						$title_rest = str_replace($title_m, '<li><a href="https://en.wikipedia.org/wiki/' . $title_first . '" target="_BLANK">' . $title_m . '</a><img src="/style/img/external_link.png" alt="ext" style="margin-left:4px;" /></li>', $title_m);
+						$title_rest = str_replace($title_m, '<li><a href="https://en.wikipedia.org/wiki/' . $title_first . '" target="_BLANK">' . $title_m . '</a><img src="/style/img/external_link.png" class="ext_link" alt="ext" style="margin-left:3px" /></li>', $title_m);
 
 						echo $title_rest;
 

@@ -35,6 +35,49 @@ img
 	vertical-align:middle;
 }
 
+.icon
+{
+	width:16px;
+	height:16px;
+	margin-right:5px;
+}
+
+.icon24, .btn
+{
+	width:24px;
+	height:24px;
+	margin-right:5px;
+}
+
+.icon26
+{
+	width:26px;
+	height:26px;
+	margin-right:5px;
+}
+
+.icon32
+{
+	width:32px;
+	height:32px;
+	margin-right:5px;
+}
+
+.allegiance_icon
+{
+	width:45px;
+	height:45px;
+	margin-right:5px;
+}
+
+.ext_icon
+{
+	width:10px;
+	height:10px;
+	margin-bottom:3px;
+	margin-left:2px
+}
+
 @font-face
 {
 	font-family:'Eurocaps';
@@ -511,6 +554,9 @@ a.poid:hover
 .addstations
 {
 	display:none;
+	vertical-align:top;
+	width:16px;
+	height:16px;
 }
 
 .leftpanel-links
@@ -699,9 +745,9 @@ a.poid:hover
 .elite_emb
 {
 	margin-top:10px;
-	margin-left:17px;
-	width:45px;
-	height:40px;
+	margin-left:20px;
+	width:43px;
+	height:38px;
 	/*opacity:0.8;*/
 }
 

@@ -76,7 +76,7 @@ if ($_GET["system_id"] != "undefined" || $_GET["system_name"] != "undefined")
 
 	if ($curSys["simbad_ref"] != "")
 	{
-		$si_system_display_name = '<a href="http://simbad.u-strasbg.fr/simbad/sim-id?Ident=' . urlencode($si_system_name) . '" target="_BLANK" title="View on Simbad">' . $si_system_name . '</a><img src="/style/img/external_link.png" alt="ext" style="margin-left:5px" />';
+		$si_system_display_name = '<a href="http://simbad.u-strasbg.fr/simbad/sim-id?Ident=' . urlencode($si_system_name) . '" target="_BLANK" title="View on Simbad">' . $si_system_name . '</a><img src="/style/img/external_link.png" class="ext_link" alt="ext" style="margin-left:5px" />';
 	}
 
 	$si_system_id = $si_system_arr["id"];
@@ -124,7 +124,7 @@ else
 
 	if ($curSys["simbad_ref"] != "")
 	{
-		$si_system_display_name = '<a href="http://simbad.u-strasbg.fr/simbad/sim-id?Ident=' . urlencode($si_system_name) . '" target="_BLANK" title="View on Simbad">' . $si_system_name . '</a><img src="/style/img/external_link.png" alt="ext" style="margin-left:5px" />';
+		$si_system_display_name = '<a href="http://simbad.u-strasbg.fr/simbad/sim-id?Ident=' . urlencode($si_system_name) . '" target="_BLANK" title="View on Simbad">' . $si_system_name . '</a><img src="/style/img/external_link.png" class="ext_link" alt="ext" style="margin-left:5px" />';
 	}
 
 	$si_system_id = $curSys["id"];
@@ -278,10 +278,10 @@ else
 $c_rares_data .= "</div>";
 
 // check if system has screenshots
-$si_screenshots = has_screenshots($si_system_name) ? '<a href="/Gallery.php?spgmGal=' . urlencode($si_system_name) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;vertical-align:top" /></a>' : "";
+$si_screenshots = has_screenshots($si_system_name) ? '<a href="/Gallery.php?spgmGal=' . urlencode($si_system_name) . '" title="View image gallery"><img src="/style/img/image.png" class="icon" alt="Gallery" style="margin-left:5px;vertical-align:top" /></a>' : "";
 
 // check if system is logged
-$si_loglink = is_logged($si_system_name) ? '<a href="log.php?system=' . urlencode($si_system_name) . '" style="color:inherit" title="System has log entries"><img src="/style/img/log.png" style="margin-left:5px" /></a>' : "";
+$si_loglink = is_logged($si_system_name) ? '<a href="log.php?system=' . urlencode($si_system_name) . '" style="color:inherit" title="System has log entries"><img src="/style/img/log.png" class="icon" style="margin-left:5px" /></a>' : "";
 
 $num_visits = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id
 																		FROM user_visited_systems
@@ -458,7 +458,7 @@ else
 			$modules_t .= "</tr></table>";
 
 			$selling_modules = "<br /><br />
-								<div onclick=\"$('#modules_" . $station_id . "').fadeToggle('fast');\"><a href='javascript:void(0);'><img src=\"/style/img/plus.png\" alt=\"plus\" style=\"margin-right:6px\" \\>Selling modules</a></div>
+								<div onclick=\"$('#modules_" . $station_id . "').fadeToggle('fast');\"><a href='javascript:void(0);'><img src=\"/style/img/plus.png\" alt=\"plus\" class=\"icon\" \\>Selling modules</a></div>
 								<div id='modules_" . $station_id . "' style='display:none;'>" . $modules_t . "</div>";
 		}
 
@@ -488,12 +488,12 @@ else
 			$dname = str_replace("_", " ", $name);
 			if ($included == 1)
 			{
-				$services .= '<img src="/style/img/facilities/' . $name . '.png" alt="' . $name . '" style="margin-right:10px" onmouseover="$(\'#' . $name . '_' . $station_id . '\').fadeToggle(\'fast\')" onmouseout="$(\'#' . $name . '_' . $station_id . '\').toggle()" />';
+				$services .= '<img src="/style/img/facilities/' . $name . '.png" class="icon24" alt="' . $name . '" style="margin-right:10px" onmouseover="$(\'#' . $name . '_' . $station_id . '\').fadeToggle(\'fast\')" onmouseout="$(\'#' . $name . '_' . $station_id . '\').toggle()" />';
 				$services .= '<div class="facilityinfo" style="display:none" id="' . $name . '_' . $station_id . '">Station has ' . $dname . '</div>';
 			}
 			else
 			{
-				$services .= '<img src="/style/img/facilities/' . $name . '_not.png" alt="' . $name . ' not included" style="margin-right:10px" onmouseover="$(\'#' . $name . '_not_' . $station_id . '\').fadeToggle(\'fast\')" onmouseout="$(\'#' . $name . '_not_' . $station_id . '\').toggle()" />';
+				$services .= '<img src="/style/img/facilities/' . $name . '_not.png" class="icon24" alt="' . $name . ' not included" style="margin-right:10px" onmouseover="$(\'#' . $name . '_not_' . $station_id . '\').fadeToggle(\'fast\')" onmouseout="$(\'#' . $name . '_not_' . $station_id . '\').toggle()" />';
 				$services .= '<div class="facilityinfo" style="display:none" id="' . $name . '_not_' . $station_id . '">Station doesn\'t have ' . $dname . '</div>';
 			}
 		}
@@ -516,7 +516,7 @@ else
 				$data['si_stations'] .= '' . $icon . $s_name . '<span style="font-weight:normal;font-size:10px">
 																[ ' . $type . ' - ' . $s_allegiance . ' - ' . $s_government . ' - ' . $economies . ' ]
 															</span>';
-				$data['si_stations'] .= '<span style="float:right"><a href="http://eddb.io/station/' . $station_id . '" title="View station on eddb.io" target="_BLANK"><img src="/style/img/eddb.png" alt="EDDB" /></a></span>';
+				$data['si_stations'] .= '<span style="float:right"><a href="http://eddb.io/station/' . $station_id . '" title="View station on eddb.io" target="_BLANK"><img src="/style/img/eddb.png" alt="EDDB" style="width:10px;height:12px" /></a></span>';
 			$data['si_stations'] .= '</div><div class="wpsearch" id="wpsearch_' . $station_id . '" style="display:none"></div>';
 
 			$data['si_stations'] .= '<div id="info_'. $station_id .'" class="systeminfo_station_info">';

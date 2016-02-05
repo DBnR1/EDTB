@@ -44,7 +44,7 @@ require_once("config_ini.inc.php");
 function notice($msg, $title = "Notice")
 {
 	$notice = '<div class="notice">';
-	$notice .= '<div class="notice_title"><img src="/style/img/notice_b.png" alt="Notice" style="margin-right:5px;margin-bottom:3px" />' . $title . '</div>';
+	$notice .= '<div class="notice_title"><img src="/style/img/notice_b.png" alt="Notice" class="icon" style="margin-bottom:3px" />' . $title . '</div>';
 	$notice .= '<div class="notice_text">' . $msg . '</div>';
 	$notice .= '</div>';
 

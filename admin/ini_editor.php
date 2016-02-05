@@ -57,11 +57,12 @@ $ini = file_get_contents($ini_file);
 <link type="text/css" rel="stylesheet" href="/source/Vendor/codemirror/lib/codemirror.css">
 <script type="text/javascript" src="/source/Vendor/codemirror/lib/codemirror.js"></script>
 <script type="text/javascript" src="/source/Vendor/codemirror/mode/properties/properties.js"></script>
+
 <?php echo $notify;?>
 <div class="entries">
 	<div class="entries_inner" style="margin-bottom:20px">
 	<h2>
-		<img src="/style/img/settings.png" alt="Settings" style="width:20px;height:20px;margin-right:6px" />Edit .ini file
+		<img src="/style/img/settings.png" alt="Settings" class="icon24" />Edit .ini file
 	</h2>
 	<hr>
 		<form method="post" action="ini_editor.php">

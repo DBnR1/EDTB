@@ -146,5 +146,3 @@ if (isset($_GET["q"]) && !empty($_GET["q"]) && isset($_GET["divid"]))
 		}
 	}
 }
-
-((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);

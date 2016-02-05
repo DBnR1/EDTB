@@ -52,7 +52,6 @@
 				// add/edit bookmakrs
 				include_once($_SERVER["DOCUMENT_ROOT"] . "/add/bookmark.php");
 				//
-				((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
 				?>
 				<!-- initialize textareas -->
 				<script type="text/javascript">
@@ -78,7 +77,7 @@
 						<div class="suggestions" id="suggestions_6" style="margin-left:8px;margin-top:237px"></div>
 						<table>
 							<tr>
-								<td class="heading" colspan="2">Calculate Distances<span class="right"><a href="javascript:void(0)" onclick="tofront('distance')"><img src="/style/img/close.png" alt="X" style="width:16px;height:16px" /></a></span></td>
+								<td class="heading" colspan="2">Calculate Distances<span class="right"><a href="javascript:void(0)" onclick="tofront('distance')"><img src="/style/img/close.png" class="icon" alt="X" /></a></span></td>
 							</tr>
 							<tr>
 								<td class="dark" style="width:99%">
@@ -120,7 +119,7 @@
 						<div class="suggestions" id="suggestions_9" style="margin-left:223px;margin-top:79px"></div>
 						<table>
 							<tr>
-								<td class="heading" colspan="2">Search Systems and Stations<span class="right"><a href="javascript:void(0)" onclick="tofront('search_system')" title="Close form"><img src="/style/img/close.png" alt="X" style="width:16px;height:16px" /></a></span></td>
+								<td class="heading" colspan="2">Search Systems and Stations<span class="right"><a href="javascript:void(0)" onclick="tofront('search_system')" title="Close form"><img src="/style/img/close.png" class="icon" alt="X" /></a></span></td>
 							</tr>
 							<tr>
 								<td class="dark" style="width:200px">

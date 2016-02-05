@@ -48,7 +48,7 @@ if ($html == null)
 	?>
 	<div class="entries">
 		<div class="entries_inner">
-		<h2><img src="/style/img/galnet.png" alt="GalNet" style="margin-right:6px" />Latest Galnet News</h2>
+		<h2><img class="icon24" src="/style/img/galnet.png" alt="GalNet" style="margin-right:6px" />Latest Galnet News</h2>
 		<hr>
 		<?php
 		$xml = xml2array($galnet_feed) or die("Error: Cannot create object");

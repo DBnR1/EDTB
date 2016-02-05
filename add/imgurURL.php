@@ -58,6 +58,6 @@ if (!empty($file) && !empty($url))
 }
 else
 {
-	write_log("Error #11", __FILE__, __LINE__);
+	write_log("Error: url or file not set", __FILE__, __LINE__);
 }
 

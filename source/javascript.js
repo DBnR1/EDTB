@@ -148,7 +148,7 @@ function get_data(override)
 	}
 	else
 	{
-		time = 4500;
+		time = 4000;
 	}
 
 	system_id = getUrlVars()["system_id"];
@@ -242,7 +242,7 @@ function get_data(override)
 					log("Calling update_map()");
 					update_map();
 				}
-				update_api(time);
+				update_api(time, "true");
 			}
 			else
 			{
@@ -262,16 +262,20 @@ function get_data(override)
  * Updata data from FD API
  *
  * @param int wait
+ * @param bool newsys
+ * @param bool override
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function update_api(wait)
+function update_api(wait, newsys, override)
 {
 	wait = wait | 0;
+	newsys = newsys | "false";
+	override = override | "false";
 	setTimeout(function()
 	{
 		$.ajax(
 		{
-			url: "/get/getData_status.php",
+			url: "/get/getData_status.php?newsys=" + newsys + "&override=" + override,
 			cache: false,
 			dataType: 'json',
 			success: function(result)
@@ -427,7 +431,7 @@ function update_values(editurl, deleteid)
         document.getElementById('delete').innerHTML = '';
         if (deleteid !== false)
         {
-            document.getElementById('delete').innerHTML = '<a href="javascript:void(0);" onclick="confirmation('+deleteid+',\'log\')" title="Delete item"><div class="delete_button" style="right:-271px;"><img src="/style/img/delete.png" alt="Delete" /></div></a>';
+            document.getElementById('delete').innerHTML = '<a href="javascript:void(0);" onclick="confirmation('+deleteid+',\'log\')" title="Delete item"><div class="delete_button" style="right:-271px;"><img src="/style/img/delete.png" class="icon" alt="Delete" style="margin-right:0" /></div></a>';
         }
     }
 
@@ -436,7 +440,7 @@ function update_values(editurl, deleteid)
         document.getElementById('delete_poi').innerHTML = '';
         if (deleteid !== false)
         {
-            document.getElementById('delete_poi').innerHTML = '<a href="/Poi.php" data-replace="true" data-target=".entries" onclick="confirmation('+deleteid+',\'poi\')" title="Delete item"><div class="delete_button"><img src="/style/img/delete.png" alt="Delete" /></div></a>';
+            document.getElementById('delete_poi').innerHTML = '<a href="/Poi.php" data-replace="true" data-target=".entries" onclick="confirmation('+deleteid+',\'poi\')" title="Delete item"><div class="delete_button"><img src="/style/img/delete.png" class="icon" alt="Delete" style="margin-right:0" /></div></a>';
         }
     }
 
@@ -445,7 +449,7 @@ function update_values(editurl, deleteid)
         document.getElementById('delete_bm').innerHTML = '';
         if (deleteid !== false)
         {
-			document.getElementById('delete_bm').innerHTML = '<a href="/Poi.php" data-replace="true" data-target=".entries" onclick="confirmation('+deleteid+',\'bm\')" title="Delete item"><div class="delete_button"><img src="/style/img/delete.png" alt="Delete" /></div></a>';
+			document.getElementById('delete_bm').innerHTML = '<a href="/Poi.php" data-replace="true" data-target=".entries" onclick="confirmation('+deleteid+',\'bm\')" title="Delete item"><div class="delete_button"><img src="/style/img/delete.png" class="icon" alt="Delete" style="margin-right:0" /></div></a>';
         }
     }
 }
@@ -503,7 +507,7 @@ function update_data(formid, file, update_map)
         else
 		{
             var system_requests = 0;
-            document.getElementById('seslogsuccess').innerHTML = '<img src="/style/img/check.png">';
+            document.getElementById('seslogsuccess').innerHTML = '<img src="/style/img/check.png" class="icon" style="margin-right:0" alt="Done">';
             setTimeout(function()
             {
                 document.getElementById('seslogsuccess').innerHTML = '';
@@ -1047,12 +1051,12 @@ function savelog(log)
     })
     .done(function( msg )
 	{
-        document.getElementById('seslogsuccess').innerHTML = '<img src="/style/img/check.png" alt="Done">';
+        document.getElementById('seslogsuccess').innerHTML = '<img src="/style/img/check.png" class="icon" style="margin-right:0" alt="Done">';
 
 		// display check.png for 3,5 seconds
         setTimeout(function()
         {
-			if (document.getElementById('seslogsuccess').innerHTML == '<img src="/style/img/check.png" alt="Done">')
+			if (document.getElementById('seslogsuccess').innerHTML == '<img src="/style/img/check.png" class="icon" style="margin-right:0" alt="Done">')
 			{
 				document.getElementById('seslogsuccess').innerHTML = '';
 			}
@@ -1068,7 +1072,7 @@ function savelog(log)
  */
 function showsave()
 {
-    document.getElementById('seslogsuccess').innerHTML = '<a href="javascript:void(0);" onclick="savelog()" title="Save session log"><img src="/style/img/save.png"></a>'
+    document.getElementById('seslogsuccess').innerHTML = '<a href="javascript:void(0);" onclick="savelog()" title="Save session log"><img src="/style/img/save.png" class="icon" style="margin-right:0" alt="Save"></a>'
 }
 
 /**
@@ -1144,7 +1148,7 @@ function imgurUpload(file, fileurl)
 		{
 			var url = result.data.link;
 
-			$('#uploaded').html("Image succesfully uploaded!<br /><a target='_BLANK' href='"+url+"'>Link to your image on imgur.com<img src='/style/img/external_link.png' style='margin-bottom:3px;margin-left:6px' alt='ext' /></a>");
+			$('#uploaded').html("Image succesfully uploaded!<br /><a target='_BLANK' href='"+url+"'>Link to your image on imgur.com<img  class='ext_icon' src='/style/img/external_link.png' alt='ext' /></a>");
 
 			// write to file so we can retrieve url later
 			$.ajax(
@@ -1282,7 +1286,7 @@ function refresh_api()
 		}
 	});
 
-	$('#api_refresh').html('<img src="/style/img/check_24.png" alt="Refresh done" style="height:24px;width:24px" />');
+	$('#api_refresh').html('<img src="/style/img/check_24.png" alt="Refresh done" class="icon24" />');
 
 	// wait a couple of seconds before updating data
 	setTimeout(function()
@@ -1292,7 +1296,7 @@ function refresh_api()
 
 	setTimeout(function()
 	{
-		$('#api_refresh').html('<img src="/style/img/refresh_24.png" alt="Refresh" style="height:24px;width:24px" />');
+		$('#api_refresh').html('<img src="/style/img/refresh_24.png" alt="Refresh" class="icon24" />');
 	}, 30000);
 }
 
@@ -1349,7 +1353,7 @@ function edsm_comment(comment, send)
 			}
 		});
 		$('#edsm_comment').fadeToggle('fast');
-		$('#edsm_cmnt_pic').html('<img src="/style/img/check_24.png" alt="Comment sent" style="height:24px;width:24px" />');
+		$('#edsm_cmnt_pic').html('<img src="/style/img/check_24.png" alt="Comment sent" class="icon24" />');
 	}
 	else
 	{

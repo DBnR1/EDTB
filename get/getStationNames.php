@@ -93,7 +93,7 @@ if (isset($_GET["q"]) && !empty($_GET["q"]) && isset($_GET["divid"]))
 	if ($found == 0)
 	{
 		echo '<a href="#">Nothing found</a>';
-		((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
+
 		exit;
 	}
 
@@ -134,5 +134,3 @@ if (isset($_GET["q"]) && !empty($_GET["q"]) && isset($_GET["divid"]))
 		}
 	}
 }
-
-((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
