@@ -490,24 +490,31 @@ if (isset($_GET["dist"]))
 
 	$to = str_replace("system", "", $to);
 
-	if (system_exists($to))
+	if (!valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"]))
 	{
-		$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT
-															sqrt(pow((IFNULL(edtb_systems.x, user_systems_own.x)-(" . $curSys["x"] . ")),2)+pow((IFNULL(edtb_systems.y, user_systems_own.y)-(" . $curSys["y"] . ")),2)+pow((IFNULL(edtb_systems.z, user_systems_own.z)-(" . $curSys["z"] . ")),2))
-															AS distance
-															FROM edtb_systems
-															LEFT JOIN user_systems_own ON edtb_systems.name = user_systems_own.name
-															WHERE edtb_systems.name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $to) . "'
-															LIMIT 1")
-															or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-
-		$arr = mysqli_fetch_assoc($res);
-
-		$distance = $arr["distance"] == "" ? "Not available" : number_format($arr["distance"], 1);
+		$distance = "How can I calculate distances if I don't even know where we are?";
 	}
 	else
 	{
-		$distance = "I'm sorry, I didn't get that.";
+		if (system_exists($to))
+		{
+			$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT
+																sqrt(pow((IFNULL(edtb_systems.x, user_systems_own.x)-(" . $curSys["x"] . ")),2)+pow((IFNULL(edtb_systems.y, user_systems_own.y)-(" . $curSys["y"] . ")),2)+pow((IFNULL(edtb_systems.z, user_systems_own.z)-(" . $curSys["z"] . ")),2))
+																AS distance
+																FROM edtb_systems
+																LEFT JOIN user_systems_own ON edtb_systems.name = user_systems_own.name
+																WHERE edtb_systems.name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $to) . "'
+																LIMIT 1")
+																or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+
+			$arr = mysqli_fetch_assoc($res);
+
+			$distance = $arr["distance"] == "" ? "Not available" : number_format($arr["distance"], 1);
+		}
+		else
+		{
+			$distance = "I'm sorry, I didn't get that.";
+		}
 	}
 
 	echo $distance;

@@ -95,11 +95,9 @@ else
 	$data['system_title'] .= "Location unavailable";
 	$data['system_title'] .= "</a>";
 
-	$data['system_title'] .= '<a href="http://edtb.xyz/?q=common-issues#location_unavailable" target="_BLANK">';
-	$data['system_title'] .= '<img class="icon20" src="/style/img/help.png" alt="Help" style="margin-left:5px" onmouseover="to_view(\'location_help\')" onmouseout="$(\'#location_help\').fadeToggle(\'fast\')" />';
-	$data['system_title'] .= "</a>";
+	$data['system_title'] .= '<img class="icon20" src="/style/img/help.png" alt="Help" style="margin-left:6px" onclick="$(\'#location_help\').fadeToggle(\'fast\')" />';
 	$data['system_title'] .= '</span>';
-	$data['system_title'] .= '<div class="info" id="location_help" style="position:fixed;left:60px;top:40px">If you\'re having trouble getting ED ToolBox to<br />show your current location, click the question<br />mark icon to take you to the Common issues<br />page at EDTB.xyz for help.</div>';
+	$data['system_title'] .= '<div class="info" id="location_help" style="position:fixed;left:60px;top:40px">If you\'re having trouble getting ED ToolBox to<br />show your current location, check the<br /><a href="http://edtb.xyz/?q=common-issues#location_unavailable" target="_BLANK">Common issues</a> page at EDTB.xyz for help.</div>';
 }
 
 $data['system_title'] .= '</div>';

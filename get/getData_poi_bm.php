@@ -85,14 +85,7 @@ function makeitem($arr, $type, &$i)
 
 	$style_override = $visited ? ' style="border-left: 3px solid #3DA822"' : "";
 
-	if ($i % 2)
-	{
-		$tdclass = "dark";
-	}
-	else
-	{
-		$tdclass = "light";
-	}
+	$tdclass = $i % 2 ? "dark" : "light";
 
 	// check if system has screenshots
 	$screenshots = has_screenshots($item_system_name) ? '<a href="/Gallery.php?spgmGal=' . urlencode($item_system_name) . '" title="View image gallery"><img src="/style/img/image.png" class="icon" alt="Gallery" style="margin-left:5px;margin-right:0;vertical-align:top" /></a>' : "";
