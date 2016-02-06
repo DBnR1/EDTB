@@ -43,7 +43,7 @@ $data['system_title'] = '	<div class="leftpanel-add-data">
 								</a>
 							</div>';
 
-$data['system_title'] .= "<div class='leftpanel-title-text'><span id='ltitle'>";
+$data['system_title'] .= '<div class="leftpanel-title-text"><span id="ltitle">';
 
 $bookmarked = 0;
 if ($curSys["id"] != "-1")
@@ -87,14 +87,22 @@ $data['system_title'] .= "<a class='" . $class . "' href='javascript:void(0);' o
 if (isset($curSys["name"]) && !empty($curSys["name"]))
 {
 	$data['system_title'] .= htmlspecialchars($curSys["name"]);
+	$data['system_title'] .= "</a>";
+	$data['system_title'] .= '</span>';
 }
 else
 {
 	$data['system_title'] .= "Location unavailable";
-}
-$data['system_title'] .= "</a>";
+	$data['system_title'] .= "</a>";
 
-$data['system_title'] .= "</span></div>";
+	$data['system_title'] .= '<a href="http://edtb.xyz/?q=common-issues#location_unavailable" target="_BLANK">';
+	$data['system_title'] .= '<img class="icon20" src="/style/img/help.png" alt="Help" style="margin-left:5px" onmouseover="to_view(\'location_help\')" onmouseout="$(\'#location_help\').fadeToggle(\'fast\')" />';
+	$data['system_title'] .= "</a>";
+	$data['system_title'] .= '</span>';
+	$data['system_title'] .= '<div class="info" id="location_help" style="position:fixed;left:60px;top:40px">If you\'re having trouble getting ED ToolBox to<br />show your current location, click the question<br />mark icon to take you to the Common issues<br />page at EDTB.xyz for help.</div>';
+}
+
+$data['system_title'] .= '</div>';
 
 /**
  * User balance from FD API
@@ -144,7 +152,7 @@ else
  * Stations for the left column
  */
 
-$ress = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT SQL_CACHE
+$ress = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT SQL_CACHE
 													id, name, ls_from_star, max_landing_pad_size, faction, government, allegiance,
 													state, type, import_commodities, export_commodities,
 													prohibited_commodities, economies, selling_ships, shipyard,
@@ -274,7 +282,7 @@ $system_user_calculated = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"
 if ($system_user_calculated > 0 && !empty($curSys["name"]))
 {
 	$station_data .= '<span style="float:right;margin-right:8px;margin-top:6px"><a href="javascript:void(0)" onclick="set_reference_systems(false);tofront(\'calculate\');get_cs(\'target_system\')" title="Review distances">';
-	$station_data .= '<img src="/style/img/calculator.png" class="icon24" alt="Calculate" />';
+	$station_data .= '<img class="icon24" src="/style/img/calculator.png" alt="Calculate" />';
 	$station_data .= '</a></span>';
 }
 
