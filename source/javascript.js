@@ -33,7 +33,7 @@
 var zindexmax = 100000;
 
 /** @var debug_mode */
-var debug_mode = true;
+var debug_mode = false;
 
 /**
  * Send error messages to console if debug_mode = true
@@ -1450,4 +1450,32 @@ function to_view(div_id)
 	{
 		$('#' + div_id).fadeToggle('fast');
 	}, 700);
+}
+
+/**
+ * Enlarge thumbnails
+ *
+ * @param string img
+ * @param int og_width
+ * @author Mauri Kujala <contact@edtb.xyz>
+ */
+function enlarge(img, og_width)
+{
+	if ($(img).width() == og_width)
+	{
+		if ($(img)[0].naturalWidth > $(img).parent().width())
+		{
+			var width = $(img).parent().width();
+		}
+		else
+		{
+			var width = $(img)[0].naturalWidth;
+		}
+	}
+	else
+	{
+		var width = og_width;
+	}
+	$(img).width(width);
+	$(img).height('auto');
 }

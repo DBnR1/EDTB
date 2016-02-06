@@ -51,11 +51,11 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
             <link type="text/css" href="/style/style.css?ver=<?php echo $settings["edtb_version"]?>" rel="stylesheet" />
 
 			<!-- jquery -->
-            <script type="text/javascript" src="/source/Vendor/jquery-2.2.0.min.js"></script>
+            <script src="/source/Vendor/jquery-2.2.0.min.js"></script>
 			<!-- wiselinks -->
-			<script type="text/javascript" src="/source/Vendor/wiselinks-1.2.2.min.js"></script>
+			<script src="/source/Vendor/wiselinks-1.2.2.min.js"></script>
 			<!-- clipboard -->
-			<script type="text/javascript" src="/source/Vendor/clipboard.min.js"></script>
+			<script src="/source/Vendor/clipboard.min.js"></script>
 
 			<?php
 			if ($_SERVER["PHP_SELF"] == "/GalMap.php")
@@ -71,22 +71,22 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 			?>
 
 			<!-- markitup -->
-			<script type="text/javascript" src="/source/Vendor/markitup/sets/html/set.js"></script>
-			<script type="text/javascript" src="/source/Vendor/markitup/jquery.markitup.js"></script>
+			<script src="/source/Vendor/markitup/sets/html/set.js"></script>
+			<script src="/source/Vendor/markitup/jquery.markitup.js"></script>
 
 			<?php
 			if ($_SERVER["PHP_SELF"] == "/Map.php")
 			{
 			?>
 				<!-- highcharts (map)-->
-				<script type="text/javascript" src="/source/Vendor/Highcharts/js/highcharts.js"></script>
-				<script type="text/javascript" src="/source/Vendor/Highcharts/js/highcharts-3d.js"></script>
+				<script src="/source/Vendor/Highcharts/js/highcharts.js"></script>
+				<script src="/source/Vendor/Highcharts/js/highcharts-3d.js"></script>
 			<?php
 			}
 			?>
 
 			<!-- own js -->
-            <script type="text/javascript" src="/source/javascript.js"></script>
+            <script src="/source/javascript.js"></script>
 
             <title>CMDR <?php echo $settings["cmdr_name"]; ?>'s ToolBox</title>
         </head>

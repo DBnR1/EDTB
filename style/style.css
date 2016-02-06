@@ -92,6 +92,22 @@ img
 	margin-left:2px
 }
 
+.thumbnail_img
+{
+	border:1px solid transparent;
+}
+
+.thumbnail_img:hover
+{
+	border:1px solid #CCCCCC;
+}
+
+.log_img
+{
+	max-width:100%;
+	height:auto;
+}
+
 @font-face
 {
 	font-family:'Eurocaps';
@@ -2130,6 +2146,10 @@ div.tooltip
 	background-image:url(/style/img/markItUp/picture.png);
 }
 .markItUp .markItUpButton8 a
+{
+	background-image:url(/style/img/markItUp/thumbnail.png);
+}
+.markItUp .markItUpButton9 a
 {
 	background-image:url(/style/img/markItUp/link.png);
 }

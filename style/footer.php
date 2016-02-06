@@ -54,7 +54,7 @@
 				//
 				?>
 				<!-- initialize textareas -->
-				<script type="text/javascript">
+				<script>
 					if ($('#html'))
 					{
 						$('#html').markItUp(html_textarea);
@@ -173,12 +173,12 @@
 			});
 		</script>
 		<!-- update data every x ms -->
-		<script type="text/javascript">
+		<script>
 			var int=self.setInterval(get_data, 10000);
 		</script>
 
 		<!-- show loader icon -->
-		<script type="text/javascript">
+		<script>
 			// Wait for window load
 			$(window).load(function()
 			{
@@ -188,7 +188,7 @@
 		</script>
 
 		<!-- Hide divs when clicking a second time -->
-		<script type="text/javascript">
+		<script>
 			$(document).ready(function()
 			{
 				// edsm comment
