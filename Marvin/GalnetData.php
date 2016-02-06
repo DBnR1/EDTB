@@ -147,4 +147,3 @@ else
 
 edtb_common("last_galnet_check", "unixtime", true, time());
 
-((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);

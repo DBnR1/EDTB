@@ -94,7 +94,7 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
 
 		if (($i % 5) == 0)
 		{
-			echo "</ul><br /><ul class='pagination' style='margin-top:-25px;'>";
+			echo '</ul><br /><ul class="pagination" style="margin-top:-25px">';
 		}
 
 		echo '<li' . $active . '><a data-replace="true" data-target=".rightpanel" class="mtelink" href="settings.php?cat_id=' . $id . '">' . $name . '</a></li>';

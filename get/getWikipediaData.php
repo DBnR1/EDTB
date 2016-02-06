@@ -141,7 +141,7 @@ if (isset($_GET["search"]) && !empty($_GET["search"]))
 	}
 	else
 	{
-		write_log("Failed to contact Wikipedia", __FILE__, __LINE__);
+		write_log("Error: Failed to contact Wikipedia", __FILE__, __LINE__);
 	}
 
 	/**
@@ -189,7 +189,7 @@ if (isset($_GET["search"]) && !empty($_GET["search"]))
 		}
 		else
 		{
-			write_log("Failed to contact Wikipedia", __FILE__, __LINE__);
+			write_log("Error: Failed to contact Wikipedia", __FILE__, __LINE__);
 		}
 	}
 

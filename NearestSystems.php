@@ -724,10 +724,10 @@ $count = mysqli_num_rows($res);
 								$station_name = $arr["station_name"];
 
 								// check if system has screenshots
-								$screenshots = has_screenshots($system) ? '<a href="/Gallery.php?spgmGal=' . urlencode($system) . '" title="View image gallery"><img src="/style/img/image.png" class="icon" alt="Gallery" style="margin-left:5px;vertical-align:top" /></a>' : "";
+								$screenshots = has_screenshots($system) ? '<a href="/Gallery.php?spgmGal=' . urlencode($system) . '" title="View image gallery"><img src="/style/img/image.png" class="icon" alt="Gallery" style="margin-left:0" /></a>' : "";
 
 								// check if system is logged
-								$loglink = is_logged($system_id, true) ? '<a href="log.php?system=' . urlencode($system) . '" style="color:inherit" title="System has log entries"><img src="/style/img/log.png" class="icon" style="margin-left:5px" /></a>' : "";
+								$loglink = is_logged($system_id, true) ? '<a href="log.php?system=' . urlencode($system) . '" style="color:inherit" title="System has log entries"><img src="/style/img/log.png" class="icon" style="margin-left:0" /></a>' : "";
 
 								$ss_coordx = $arr["coordx"];
 								$ss_coordy = $arr["coordy"];
@@ -740,23 +740,29 @@ $count = mysqli_num_rows($res);
 
 								if ($system != $last_system)
 								{
-									echo '<tr>';
-									echo '<td class="transparent" style="text-align:center"><img src="style/img/' . $pic . '" class="allegiance_icon" alt="' . $allegiance . '" /></td>';
-
-									echo '<td class="transparent">';
-									echo number_format($distance,2);
-									echo ' ly' . $is_unknown . '</td>';
-
-									echo '<td class="transparent">';
-									echo '	<a class="send" href="javascript:void(0)" title="Send to ED client" data-send="' . $system . '" data-id="' . $system_id . '">';
-									echo '		<img class="icon" src="/style/img/magic.png" alt="Send" style="margin-bottom:7px" />';
-									echo '	</a>';
-									echo '	<a href="System.php?system_id=' . $system_id . '">' . $system . '</a>' . $loglink . $screenshots;
-									echo '</td>';
-									echo '<td class="transparent">' . $sys_population . '</td>';
-									echo '<td class="transparent">' . $sys_economy . '</td>';
-									echo '<td class="transparent">' . $sys_government . '</td>';
-									echo '<td class="transparent">' . $sys_security . '</td>';
+									?>
+									<tr>
+										<td class="transparent" style="text-align:center">
+											<img src="style/img/<?php echo $pic?>" class="allegiance_icon" alt="<?php echo $allegiance?>" />
+										</td>
+										<td class="transparent">
+											<?php echo number_format($distance,2)?> ly<?php echo $is_unknown?>
+										</td>
+										<td class="transparent">
+											<a class="send" href="javascript:void(0)" data-send="<?php echo $system?>" data-id="<?php echo $system_id?>">
+												<img class="icon" src="/style/img/magic.png" alt="Send" style="margin-bottom:7px;margin-right:0" onmouseover="to_view('s<?php echo $system_id?>')" onmouseout="$('#s<?php echo $system_id?>').fadeToggle('fast')" />
+											</a>
+											<a href="System.php?system_id=<?php echo $system_id?>">
+												<?php echo $system?>
+											</a>
+											<?php echo $loglink . $screenshots;?>
+											<div class="info" id="s<?php echo $system_id?>">Send system name to Elite Dangerous client.<br />Have the textbox in the Galaxy map targeted before clicking.</div>
+										</td>
+										<td class="transparent"><?php echo $sys_population?></td>
+										<td class="transparent"><?php echo $sys_economy?></td>
+										<td class="transparent"><?php echo $sys_government?></td>
+										<td class="transparent"><?php echo $sys_security?></td>
+									<?php
 								}
 								else
 								{

@@ -125,25 +125,26 @@ else
 			foreach ($referencesystems as $ref_name => $ref_coordinates)
 			{
 				$ref_rname = $ref[$i]["name"] != "" ? $ref[$i]["name"] : $ref_name;
-
-				echo '<tr>';
-				echo '	<td class="dark" style="text-align:right">';
-				echo '		<input class="textbox" type="hidden" id="' . $i . '" name="reference_' . $i . '" value="' . $ref_rname . '" />';
-				echo '		<input class="textbox" type="hidden" name="reference_' . $i . '_coordinates" value="' . $ref_coordinates . '" />';
-				echo '		<span class="left">';
-				echo '			<a class="send" href="javascript:void(0)" title="Send to ED client" data-send="' . $ref_rname . '" data-id="' . $i . '">';
-				echo '				<img class="icon24" src="/style/img/magic.png" alt="Send" />';
-				echo '			</a>';
-				echo '			<a href="javascript:void(0)" title="Copy to clipboard">';
-				echo '				<img class="btn" src="/style/img/clipboard.png" alt="Copy" data-clipboard-text="' . $ref_rname . '" />';
-				echo '			</a>';
-				echo '		</span>';
-				echo '		<strong>' . $ref_rname . '</strong>';
-				echo '	</td>';
-				echo '	<td class="dark">';
-				echo '		<input class="textbox" type="number" step="any" min="0" id="ref_' . $i . '_dist" name="reference_' . $i . '_distance" value="' . $ref[$i]["distance"] . '" placeholder="1234.56" style="width:100px" autocomplete="off" /><br />';
-				echo '	</td>';
-				echo '</tr>';
+				?>
+				<tr>
+					<td class="dark" style="text-align:right">
+						<input class="textbox" type="hidden" id="<?php echo $i?>" name="reference_<?php echo $i?>" value="<?php echo $ref_rname?>" />
+						<input class="textbox" type="hidden" name="reference_<?php echo $i?>_coordinates" value="<?php echo $ref_coordinates?>" />
+						<span class="left">
+							<a class="send" href="javascript:void(0)" title="Send to ED client" data-send="<?php echo $ref_rname?>" data-id="<?php echo $i?>">
+								<img class="icon24" src="/style/img/magic.png" alt="Send" />
+							</a>
+							<a href="javascript:void(0)" title="Copy to clipboard">
+								<img class="btn" src="/style/img/clipboard.png" alt="Copy" data-clipboard-text="<?php echo $ref_rname?>" />
+						</span>
+							</a>
+						<strong><?php echo $ref_rname?></strong>
+					</td>
+					<td class="dark">
+						<input class="textbox" type="number" step="any" min="0" id="ref_<?php echo $i?>_dist" name="reference_<?php echo $i?>_distance" value="<?php echo $ref[$i]["distance"]?>" placeholder="1234.56" style="width:100px" autocomplete="off" /><br />
+					</td>
+				</tr>
+				<?php
 				$i++;
 			}
 			?>

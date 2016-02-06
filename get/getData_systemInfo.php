@@ -34,7 +34,7 @@
 if ($_GET["system_id"] != "undefined" || $_GET["system_name"] != "undefined")
 {
 	/** @var $system_id */
-	$system_id = $_GET["system_id"] != "undefined" ? $_GET["system_id"] : "-1";
+	$system_id = $_GET["system_id"] != "undefined" ? 0 + $_GET["system_id"] : "-1";
 
 	if ($system_id == "-1")
 	{
@@ -409,20 +409,27 @@ else
 
 			arsort($mod_cat);
 
-			$modules_t .= '<table style="margin-top:10px"><tr><td class="transparent" colspan="3" style="font-weight:bold">' . $outfitting_updated_ago . '</td></tr><tr style="vertical-align:top">';
+			$modules_t .= '<table style="margin-top:10px">';
+			$modules_t .= '	<tr>';
+			$modules_t .= '		<td class="transparent" colspan="3" style="font-weight:bold">' . $outfitting_updated_ago . '</td>';
+			$modules_t .= '	</tr>';
+
+			$modules_t .= '<tr style="vertical-align:top">';
 			foreach ($mod_cat as $key => $value)
 			{
 				$m_category_name = $key;
-				$modules_t .= '<td><table style="margin-right:10px">';
-				$modules_t .= '<tr><td class="heading" colspan="3">';
-				$modules_t .= $m_category_name;
-				$modules_t .= '</td></tr>';
+				$modules_t .= '<td>';
+				$modules_t .= '	<table style="margin-right:10px">';
+				$modules_t .= '		<tr>';
+				$modules_t .= '			<td class="heading" colspan="3">';
+				$modules_t .= 				$m_category_name;
+				$modules_t .= '			</td>';
+				$modules_t .= '		</tr>';
 
 				asort($value);
 
 				foreach ($value as $module)
 				{
-
 					$m_name = $module["group_name"];
 					$m_class = $module["class"];
 					$m_rating = $module["rating"];
@@ -430,7 +437,11 @@ else
 
 					if ($m_name != $last_module_name)
 					{
-						$modules_t .= '<tr><td class="dark" colspan="3"><strong>' . $m_name . '</strong></td></tr>';
+						$modules_t .= '<tr>';
+						$modules_t .= '	<td class="dark" colspan="3">';
+						$modules_t .= '		<strong>' . $m_name . '</strong>';
+						$modules_t .= '	</td>';
+						$modules_t .= '</tr>';
 						$last_class = "";
 					}
 
@@ -458,8 +469,8 @@ else
 			$modules_t .= "</tr></table>";
 
 			$selling_modules = "<br /><br />
-								<div onclick=\"$('#modules_" . $station_id . "').fadeToggle('fast');\"><a href='javascript:void(0);'><img src=\"/style/img/plus.png\" alt=\"plus\" class=\"icon\" \\>Selling modules</a></div>
-								<div id='modules_" . $station_id . "' style='display:none;'>" . $modules_t . "</div>";
+								<div onclick=\"$('#modules_" . $station_id . "').fadeToggle('fast')\"><a href='javascript:void(0)'><img src=\"/style/img/plus.png\" alt=\"plus\" class=\"icon\" \\>Selling modules</a></div>
+								<div id='modules_" . $station_id . "' style='display:none'>" . $modules_t . "</div>";
 		}
 
 		$shipyard = $sarr2["shipyard"];

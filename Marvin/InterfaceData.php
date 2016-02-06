@@ -33,7 +33,7 @@
 /** @require functions */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 /** @require config */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/fconfig.inc.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
 
 if (isset($_GET["nowplaying"]))
 {
@@ -64,7 +64,7 @@ if (isset($_GET["nowplaying"]))
 		if (!$result = file_get_contents($url, false, $context))
 		{
 			$error = error_get_last();
-			write_log("Error: " . $error['message'] . "", __FILE__, __LINE__);
+			write_log("Error: " . $error["message"], __FILE__, __LINE__);
 		}
 
 		$json_data = json_decode($result, true);

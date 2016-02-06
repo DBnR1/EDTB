@@ -273,8 +273,6 @@ if (isset($_GET["sys"]))
 
 	echo $va_text;
 
-	((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
-
 	exit;
 }
 
@@ -433,8 +431,6 @@ if (isset($_GET["cs"]))
 
 	echo $cs_services;
 
-	((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
-
 	exit;
 }
 
@@ -461,8 +457,6 @@ if (isset($_GET["rm"]))
 												WHERE id = '" . $rm_id . "'
 												LIMIT 1")
 												or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-
-	((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
 
 	exit;
 }
@@ -507,6 +501,7 @@ if (isset($_GET["dist"]))
 															LIMIT 1")
 															or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
+		$arr = mysqli_fetch_assoc($res);
 
 		$distance = $arr["distance"] == "" ? "Not available" : number_format($arr["distance"], 1);
 	}
@@ -516,8 +511,6 @@ if (isset($_GET["dist"]))
 	}
 
 	echo $distance;
-
-	((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
 
 	exit;
 }
@@ -542,8 +535,6 @@ if (isset($_GET["curSys"]) || isset($_GET["cSys"]))
 	}
 
 	echo $info;
-
-	((is_null($___mysqli_res = mysqli_close($link))) ? false : $___mysqli_res);
 
 	exit;
 }

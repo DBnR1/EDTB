@@ -35,7 +35,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 /** @require MySQL */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 
-$log_id = $_GET["logid"];
+$log_id = 0 + $_GET["logid"];
 
 $log_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT user_log.id, user_log.system_id, user_log.system_name AS log_system_name,
 														user_log.station_id, user_log.log_entry, user_log.stardate,
@@ -55,5 +55,3 @@ $data["statname"] = $log_arr["station_name"];
 $data["html"] = $log_arr["log_entry"];
 
 echo json_encode($data);
-
-

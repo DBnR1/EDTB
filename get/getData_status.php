@@ -88,7 +88,7 @@ if (isset($api["commander"]) && $settings["show_cmdr_status"] == "true")
 
 	$data['cmdr_status'] = $cmdr_rank_combat_icon . $cmdr_rank_trade_icon . $cmdr_rank_explore_icon . $cmdr_rank_cqc_icon . $additional;
 
-	$data['cmdr_balance_status'] = '<img src="/style/img/rare.png" style="margin-right:4px;height:14px;width:14px" alt="Cr" />' . $cmdr_credits . ' CR';
+	$data['cmdr_balance_status'] = '<img src="/style/img/rare.png" style="margin-right:3px;margin-bottom:2px;height:14px;width:14px" alt="Cr" />' . $cmdr_credits . ' CR';
 }
 
 /**

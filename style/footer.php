@@ -172,7 +172,6 @@
 				});
 			});
 		</script>
-
 		<!-- update data every x ms -->
 		<script type="text/javascript">
 			var int=self.setInterval(get_data, 10000);

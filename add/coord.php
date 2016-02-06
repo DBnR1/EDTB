@@ -139,7 +139,7 @@ if (isset($_GET["do"]))
 
 		$result = file_get_contents('http://www.edsm.net/api-v1/submit-distances', false, $context);
 
-		write_log($json_string, __FILE__, __LINE__);
+		//write_log($json_string, __FILE__, __LINE__);
 		write_log($result, __FILE__, __LINE__);
 	}
 	else

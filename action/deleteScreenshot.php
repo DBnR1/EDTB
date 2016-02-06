@@ -86,12 +86,12 @@ else
  * delete dir if it's now empty
  */
 
-if (is_dir_empty("" . $path . "/thumbs"))
+if (is_dir_empty($path . "/thumbs"))
 {
 	$redir_url = "/Gallery.php?removed";
 
 	// remove thumbs dir first
-	if (!rmdir("" . $path . "/thumbs"))
+	if (!rmdir($path . "/thumbs"))
 	{
 		$error = error_get_last();
 		write_log("Error: " . $error['message'], __FILE__, __LINE__);
@@ -99,7 +99,7 @@ if (is_dir_empty("" . $path . "/thumbs"))
 	}
 
 	// remove dir
-	if (!rmdir("" . $path . ""))
+	if (!rmdir($path))
 	{
 		$error = error_get_last();
 		write_log("Error: " . $error['message'], __FILE__, __LINE__);

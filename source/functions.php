@@ -41,7 +41,7 @@ require_once("functions_safe.php");
 /** @require mappings */
 require_once("FDMaps.php");
 /** @require utility */
-require_once("/Vendor/utility.php");
+require_once("Vendor/utility.php");
 
 /**
  * Last known system with valid coordinates
@@ -239,10 +239,10 @@ function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
 	elseif (strpos($key, "system_name") !== false && $value != "0" || $key == "name" && $table == "edtb_systems")
 	{
 		// check if system has screenshots
-		$screenshots = has_screenshots($value) ? '<a href="/Gallery.php?spgmGal=' . urlencode($value) . '" title="View image gallery"><img src="/style/img/image.png" class="icon" alt="Gallery" style="vertical-align:top" /></a>' : "";
+		$screenshots = has_screenshots($value) ? '<a href="/Gallery.php?spgmGal=' . urlencode($value) . '" title="View image gallery"><img src="/style/img/image.png" class="icon" alt="Gallery" style="vertical-align:top;margin-left:5px;margin-right:0" /></a>' : "";
 
 		// check if system is logged
-		$loglink = is_logged($value) ? '<a href="log.php?system=' . urlencode($value) . '" style="color:inherit" title="System has log entries"><img src="/style/img/log.png" class="icon" style="vertical-align:top" /></a>' : "";
+		$loglink = is_logged($value) ? '<a href="log.php?system=' . urlencode($value) . '" style="color:inherit" title="System has log entries"><img src="/style/img/log.png" class="icon" alt="Log" style="vertical-align:top;margin-left:5px;margin-right:0" /></a>' : "";
 
 		$this_row .= '<td style="padding:10px;vertical-align:middle"><a href="/System.php?system_name=' . urlencode($value) . '">' . $value . '' . $loglink.$screenshots . '</a></td>';
 	}
@@ -760,7 +760,7 @@ function make_gallery($gallery_name)
 							if (!mkdir($newscreendir, 0775, true))
 							{
 								$error = error_get_last();
-								write_log("Error: " . $error['message'], __FILE__, __LINE__);
+								write_log("Error: " . $error["message"], __FILE__, __LINE__);
 								break;
 							}
 						}
@@ -772,12 +772,15 @@ function make_gallery($gallery_name)
 						$new_screenshot = $newscreendir . "/" . $new_filename;
 
 						// convert from bmp to jpg
-						exec("\"" . $settings["install_path"] . "/bin/ImageMagick/convert\" \"" . $old_file_bmp . "\" \"" . $new_file_jpg . "\"", $out);
-
-						if (!empty($out))
+						if (file_exists($old_file_bmp))
 						{
-							$error = json_encode($out);
-							write_log("Error: " . $error, __FILE__, __LINE__);
+							exec("\"" . $settings["install_path"] . "/bin/ImageMagick/convert\" \"" . $old_file_bmp . "\" \"" . $new_file_jpg . "\"", $out);
+
+							if (!empty($out))
+							{
+								$error = json_encode($out);
+								write_log("Error: " . $error, __FILE__, __LINE__);
+							}
 						}
 
 						if ($settings["keep_og"] == "false")
@@ -785,7 +788,7 @@ function make_gallery($gallery_name)
 							if (!unlink($old_file_bmp))
 							{
 								$error = error_get_last();
-								write_log("Error: " . $error['message'], __FILE__, __LINE__);
+								write_log("Error: " . $error["message"], __FILE__, __LINE__);
 							}
 						}
 						else
@@ -795,21 +798,24 @@ function make_gallery($gallery_name)
 								if (!mkdir($settings["old_screendir"] . "/originals", 0775, true))
 								{
 									$error = error_get_last();
-									write_log("Error: " . $error['message'], __FILE__, __LINE__);
+									write_log("Error: " . $error["message"], __FILE__, __LINE__);
 									break;
 								}
 							}
 							if (!rename($old_file_bmp, $old_file_og))
 							{
 								$error = error_get_last();
-								write_log("Error: " . $error['message'], __FILE__, __LINE__);
+								write_log("Error: " . $error["message"], __FILE__, __LINE__);
 							}
 						}
 						// move to new screenshot folder
-						if (!rename($new_file_jpg, $new_screenshot))
+						if (file_exists($new_file_jpg))
 						{
-							$error = error_get_last();
-							write_log("Error: " . $error['message'], __FILE__, __LINE__);
+							if (!rename($new_file_jpg, $new_screenshot))
+							{
+								$error = error_get_last();
+								write_log("Error: " . $error["message"], __FILE__, __LINE__);
+							}
 						}
 						$added++;
 
@@ -834,7 +840,7 @@ function make_gallery($gallery_name)
 					if (!mkdir($thumbdir, 0775, true))
 					{
 						$error = error_get_last();
-						write_log("Error: " . $error['message'], __FILE__, __LINE__);
+						write_log("Error: " . $error["message"], __FILE__, __LINE__);
 						//break;
 					}
 				}

@@ -42,7 +42,7 @@ if (isset($_GET["comment"]) && isset($_GET["system_name"]))
 }
 else
 {
-	write_log("Comment or system not set", __FILE__, __LINE__);
+	write_log("Error: EDSM comment or system not set", __FILE__, __LINE__);
 	exit;
 }
 
@@ -56,11 +56,10 @@ if (!empty($settings["edsm_api_key"]) && !empty($settings["edsm_cmdr_name"]))
 	{
 		$error = error_get_last();
 		write_log("Error: " . $error['message'], __FILE__, __LINE__);
-		write_log($cmnt_string, __FILE__, __LINE__);
 	}
 }
 else
 {
-	write_log("Api key or commander name not set", __FILE__, __LINE__);
+	write_log("Error: EDSM API key or commander name not set", __FILE__, __LINE__);
 	exit;
 }

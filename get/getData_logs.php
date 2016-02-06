@@ -177,7 +177,8 @@ if (!empty($curSys["name"]))
 				{
 					$logdata .= '&nbsp;[Station: ' . htmlspecialchars($log_station_name) . ']';
 				}
-				$logdata .= '</a></h3><pre class="entriespre" style="margin-bottom: 20px">';
+				$logdata .= '</a></h3>';
+				$logdata .= '<pre class="entriespre" style="margin-bottom:20px">';
 				$logdata .= $log_text;
 				$logdata .= '</pre>';
 			}

@@ -78,13 +78,17 @@ if ($html == null)
 			{
 				echo '<h3>';
 				echo '	<a href="javascript:void(0)" onclick="$(\'#'.$i.'\').fadeToggle()">';
-				echo '		<img src="/style/img/plus.png" alt="expand" style="width:16px;height:16px;margin-right:5px;padding-bottom:3px" />' . $title;
+				echo '		<img class="icon" src="/style/img/plus.png" alt="expand" style="padding-bottom:3px" />' . $title;
 				echo '	</a>';
 				echo '</h3>';
 				echo '<p id="' . $i . '" style="display:none;padding-left:22px;max-width:800px">';
 				echo str_replace('<p><sub><i>-- Delivered by <a href="http://feed43.com/">Feed43</a> service</i></sub></p>', "", $text);
 				echo '<br /><br /><br />';
-				echo '<span style="margin-bottom:15px"><a href="' . $link . '" target="_BLANK">Read on elitedangerous.com</a><img src="style/img/external_link.png" style="margin-bottom:3px;margin-left:5px" alt="ext" /></span>';
+				echo '<span style="margin-bottom:15px">';
+				echo '	<a href="' . $link . '" target="_BLANK">';
+				echo '		Read on elitedangerous.com';
+				echo '	</a><img class="ext_icon" src="style/img/external_link.png" style="margin-bottom:3px" alt="ext" />';
+				echo '</span>';
 				echo '</p>';
 
 				$i++;
@@ -99,7 +103,7 @@ if ($html == null)
 	__c("files")->set("galnet", $html, 1800);
 
 	require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");
-	die();
+	exit;
 }
 echo $html;
 

@@ -285,7 +285,9 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 
 					if (isset($api["commander"]) || isset($api["ship"]))
 					{
-						echo '<a id="api_refresh" href="javascript:void(0)" onclick="refresh_api()" title="Refresh API data"><img src="/style/img/refresh_24.png" alt="Refresh" class="icon24" /></a>';
+						echo '<a id="api_refresh" href="javascript:void(0)" onclick="refresh_api()" title="Refresh API data">';
+						echo '	<img class="icon24" src="/style/img/refresh_24.png" alt="Refresh" />';
+						echo '</a>';
 					}
 					?>
 					<a href="javascript:void(0)" title="About ED ToolBox" id="about_click">
@@ -306,32 +308,32 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 				<div class="settings_panel" id="settings" style="width:227px">
 					<a href="/admin/settings.php" title="Settings editor">
 						<div class="link" style="width:90%">
-							<img src="/style/img/settings.png" alt="Settings" class="icon" />Customize ED ToolBox
+							<img class="icon" src="/style/img/settings.png" alt="Settings" />Customize ED ToolBox
 						</div>
 					</a>
 					<a href="/admin/ini_editor.php" title="Edit ini file">
 						<div class="link" style="width:90%">
-							<img src="/style/img/vareditor.png" alt="INI" class="icon" />Edit ini file
+							<img class="icon" src="/style/img/vareditor.png" alt="INI" />Edit ini file
 						</div>
 					</a>
 					<a href="/admin" title="Database manager (Adminer)" target="_BLANK">
 						<div class="link" style="width:90%">
-							<img src="/style/img/dataview.png" alt="DB Manager" class="icon" />Database Management
+							<img class="icon" src="/style/img/dataview.png" alt="DB Manager" />Database Management
 						</div>
 					</a>
 					<a href="/admin/sql.php" title="Run MySQL queries">
 						<div class="link" style="width:90%">
-							<img src="/style/img/sql.png" alt="MySQL" class="icon" />Run MySQL queries
+							<img class="icon" src="/style/img/sql.png" alt="MySQL" />Run MySQL queries
 						</div>
 					</a>
 					<a href="/admin/import.php" title="Import flight logs">
 						<div class="link" style="width:90%">
-							<img src="/style/img/import.png" alt="Import" class="icon" />Import Flight Logs
+							<img class="icon" src="/style/img/import.png" alt="Import" />Import Flight Logs
 						</div>
 					</a>
 					<a href="/admin/api_login.php" title="Connect Companion API">
 						<div class="link" style="width:90%">
-							<img src="/style/img/api.png" alt="API" class="icon" />Connect Companion API
+							<img class="icon" src="/style/img/api.png" alt="API" />Connect Companion API
 						</div>
 					</a>
 				</div>
@@ -344,9 +346,9 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 							<td class="info_td" colspan="3" style="padding-bottom:5px;padding-top:5px">
 								ED ToolBox is a companion tool for the
 								<a href="http://www.frontier.co.uk/" target="_BLANK">Frontier Developments</a>
-								<img src="/style/img/external_link.png" class="ext_icon" alt="ext" /> game
+								<img class="ext_icon" src="/style/img/external_link.png" alt="ext" /> game
 								<a href="http://www.elitedangerous.com" target="_BLANK">Elite: Dangerous</a>
-								<img src="/style/img/external_link.png" class="ext_icon" alt="ext" />.<br />
+								<img class="ext_icon" src="/style/img/external_link.png" alt="ext" />.<br />
 								ED ToolBox is an unofficial tool and is in no way affiliated with Frontier Developments.
 							</td>
 						</tr>
@@ -361,71 +363,71 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 						<tr>
 							<td class="info_td">
 								<a href="http://eddb.io" target="_BLANK">EDDB.io</a>
-								<img src="/style/img/external_link.png" class="ext_icon" alt="ext" /> (system and station data)
+								<img class="ext_icon" src="/style/img/external_link.png" alt="ext" /> (system and station data)
 							</td>
 							<td class="info_td">
 								<a href="http://markitup.jaysalvat.com/home/" target="_BLANK">markItUp!</a>
-								<img src="/style/img/external_link.png" class="ext_icon" alt="ext" /> (log editor)
+								<img class="ext_icon" src="/style/img/external_link.png" alt="ext" /> (log editor)
 							</td>
 							<td class="info_td">
 								<a href="http://sourceforge.net/projects/sql-edit-table/" target="_BLANK">MySQL Edit Table</a>
-								<img src="/style/img/external_link.png" class="ext_icon" alt="ext" /> (Data Point)
+								<img class="ext_icon" src="/style/img/external_link.png" alt="ext" /> (Data Point)
 							</td>
 						</tr>
 						<tr>
 							<td class="info_td">
 								<a href="http://www.phpfastcache.com/" target="_BLANK">phpFastCache</a>
-								<img src="/style/img/external_link.png" class="ext_icon" alt="ext" /> (page caching)
+								<img class="ext_icon" src="/style/img/external_link.png" alt="ext" /> (page caching)
 							</td>
 							<td class="info_td">
 								<a href="https://codemirror.net/" target="_BLANK">CodeMirror</a>
-								<img src="/style/img/external_link.png" class="ext_icon" alt="ext" /> (ini-file editor)
+								<img class="ext_icon" src="/style/img/external_link.png" alt="ext" /> (ini-file editor)
 							</td>
 							<td class="info_td">
 								<a href="http://spgm.sourceforge.net/" target="_BLANK">SPGM</a>
-								<img src="/style/img/external_link.png" class="ext_icon" alt="ext" /> (screenshot gallery)
+								<img class="ext_icon" src="/style/img/external_link.png" alt="ext" /> (screenshot gallery)
 							</td>
 						</tr>
 						<tr>
 							<td class="info_td">
 								<a href="https://jquery.com/" target="_BLANK">jQuery</a>
-								<img src="/style/img/external_link.png" class="ext_icon" alt="ext" /> (js library)
+								<img class="ext_icon" src="/style/img/external_link.png" alt="ext" /> (js library)
 							</td>
 							<td class="info_td">
 								<a href="http://feed43.com/" target="_BLANK">Feed43</a>
-								<img src="/style/img/external_link.png" class="ext_icon" alt="ext" /> (GalNet feed)
+								<img class="ext_icon" src="/style/img/external_link.png" alt="ext" /> (GalNet feed)
 							</td>
 							<td class="info_td">
 								<a href="http://www.highcharts.com/" target="_BLANK">Highcharts</a>
-								<img src="/style/img/external_link.png" class="ext_icon" alt="ext" /> (neighborhood map)
+								<img class="ext_icon" src="/style/img/external_link.png" alt="ext" /> (neighborhood map)
 							</td>
 						</tr>
 						<tr>
 							<td class="info_td">
 								<a href="https://github.com/gbiobob/ED3D-Galaxy-Map" target="_BLANK">ED3D Galaxy Map</a>
-								<img src="/style/img/external_link.png" class="ext_icon" alt="ext" /> (galaxy map)
+								<img class="ext_icon" src="/style/img/external_link.png" alt="ext" /> (galaxy map)
 							</td>
 							<td class="info_td">
 								<a href="http://threejs.org/" target="_BLANK">Three.js</a>
-								<img src="/style/img/external_link.png" class="ext_icon" alt="ext" /> (js library)
+								<img class="ext_icon" src="/style/img/external_link.png" alt="ext" /> (js library)
 							</td>
 							<td class="info_td">
 								<a href="http://www.imagemagick.org" target="_BLANK">ImageMagick®</a>
-								<img src="/style/img/external_link.png" class="ext_icon" alt="ext" /> (screenshot tools)
+								<img class="ext_icon" src="/style/img/external_link.png" alt="ext" /> (screenshot tools)
 							</td>
 						</tr>
 						<tr>
 							<td class="info_td" colspan="3">
 								Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a>
-								<img src="/style/img/external_link.png" class="ext_icon" alt="ext" />,
+								<img class="ext_icon" src="/style/img/external_link.png" alt="ext" />,
 								<a href="http://www.flaticon.com/authors/designmodo" title="Designmodo">Designmodo</a>
-								<img src="/style/img/external_link.png" class="ext_icon" alt="ext" />, and
+								<img class="ext_icon" src="/style/img/external_link.png" alt="ext" />, and
 								<a href="http://www.flaticon.com/authors/dave-gandy" title="Dave Gandy">Dave Gandy</a>
-								<img src="/style/img/external_link.png" class="ext_icon" alt="ext" /> from
+								<img class="ext_icon" src="/style/img/external_link.png" alt="ext" /> from
 								<a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a>
-								<img src="/style/img/external_link.png" class="ext_icon" alt="ext" /> are licensed by
+								<img class="ext_icon" src="/style/img/external_link.png" alt="ext" /> are licensed by
 								<a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC BY 3.0</a>
-								<img src="/style/img/external_link.png" class="ext_icon" alt="ext" />
+								<img class="ext_icon" src="/style/img/external_link.png" alt="ext" />
 							</td>
 						</tr>
 						<tr>

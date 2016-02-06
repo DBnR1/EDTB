@@ -150,11 +150,11 @@ if ($newSystem !== false || $request == 0)
 
 				$data['update_in_progress'] = "true";
 				$data['update_notification'] .= '<a href="javascript:void(0)" title="Data update in progress" onclick="$(\'#notice\').fadeToggle(\'fast\')"><img src="/style/img/notice.png" class="icon26" alt="Update" /></a>';
-				$data['update_notification_data'] = 'System and station data is being updated in the background.';
+				$data['update_notification_data'] = 'System and station data is being updated in the background.<br /><br />You can continue using ED ToolBox normally.';
 			}
 			else
 			{
-				write_log("Error: update error");
+				write_log("Error: " . $batch_file . " doesn't exist");
 			}
 		}
 	}

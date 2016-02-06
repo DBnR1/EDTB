@@ -41,7 +41,7 @@ if (isset($_GET["system_name"]))
 }
 else
 {
-	write_log("System not set", __FILE__, __LINE__);
+	write_log("Error: System name not set", __FILE__, __LINE__);
 	exit;
 }
 
@@ -69,7 +69,7 @@ if (!empty($settings["edsm_api_key"]) && !empty($settings["edsm_cmdr_name"]))
 }
 else
 {
-	write_log("Api key or commander name not set", __FILE__, __LINE__);
+	write_log("Error: EDSM API key or commander name not set", __FILE__, __LINE__);
 }
 
 echo $result;

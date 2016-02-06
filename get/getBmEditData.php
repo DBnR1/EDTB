@@ -35,7 +35,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 /** @require MySQL */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 
-$bm_id = $_GET["Bm_id"];
+$bm_id = 0 + $_GET["Bm_id"];
 $data = array();
 
 if ($bm_id == "0")
@@ -64,4 +64,5 @@ else
 	$data["bm_catid"] = $bm_arr["category_id"];
 	$data["bm_text"] = $bm_arr["comment"];
 }
+
 echo json_encode($data);

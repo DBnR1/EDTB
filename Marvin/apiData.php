@@ -84,6 +84,7 @@ if (isset($_GET["ship"]))
 				break;
 			case "cargo_used":
 				$info = $api["ship"]["cargo"]["qty"];
+				break;
 			case "value":
 				$info = number_format($api["ship"]["value"]["total"]);
 				break;

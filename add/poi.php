@@ -102,7 +102,7 @@ if ($_SERVER['PHP_SELF'] == "/Poi.php")
 						<td class="heading" colspan="2">Add/edit Point of Interest
 							<span class="right">
 								<a href="javascript:void(0)" onclick="tofront('addPoi')" title="Close form">
-									<img src="/style/img/close.png" class="icon" alt="X" />
+									<img class="icon" src="/style/img/close.png" alt="X" />
 								</a>
 							</span>
 						</td>
@@ -144,7 +144,9 @@ if ($_SERVER['PHP_SELF'] == "/Poi.php")
 					<tr>
 						<td class="dark" colspan="2">
 							<a href="/Poi.php" data-replace="true" data-target=".entries">
-								<div class="button" onclick="update_data('poi_form', '/add/Poi.php?do', true);tofront('null', true)">Submit Point of Interest</div>
+								<div class="button" onclick="update_data('poi_form', '/add/Poi.php?do', true);tofront('null', true)">
+									Submit Point of Interest
+								</div>
 							</a>
 							<span id="delete_poi"></span>
 						</td>

@@ -116,7 +116,7 @@ array_push($dropdown, $settings["maxdistance"]);
 $links = array( "ED ToolBox--log.png--true" => "/",
 				"System Information--info.png--true" => "/System.php",
 				"Galaxy Map&nbsp;&nbsp;&&nbsp;&nbsp;Neighborhood Map--grid.png--true" => $maplink,
-				"Points of Interest&nbsp;&nbsp;&&nbsp;&nbsp;Bookmarks--poi.png--false" => "/Poi.php",
+				"Points of Interest&nbsp;&nbsp;&&nbsp;&nbsp;Bookmarks--poi.png--true" => "/Poi.php",
 				"Nearest Systems&nbsp;&nbsp;&&nbsp;&nbsp;Stations--find.png--false" => "/NearestSystems.php",
 				"Data Point--dataview.png--false" => "/DataPoint.php",
 				"Galnet News--news.png--false" => "/GalNet.php",

@@ -60,7 +60,7 @@ if (file_exists($_SERVER["DOCUMENT_ROOT"] . "/install.php"))
 			if (!unlink($script_path))
 			{
 				$error = error_get_last();
-				write_log("Error: " . $error['message'], __FILE__, __LINE__);
+				write_log("Error: " . $error["message"], __FILE__, __LINE__);
 			}
 		}
 		if (file_exists($installer_path))
@@ -68,7 +68,7 @@ if (file_exists($_SERVER["DOCUMENT_ROOT"] . "/install.php"))
 			if (!unlink($installer_path))
 			{
 				$error = error_get_last();
-				write_log("Error: " . $error['message'], __FILE__, __LINE__);
+				write_log("Error: " . $error["message"], __FILE__, __LINE__);
 			}
 		}
 

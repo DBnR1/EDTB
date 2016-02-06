@@ -35,7 +35,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 /** @require MySQL */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 
-$poi_id = $_GET["Poi_id"];
+$poi_id = 0 + $_GET["Poi_id"];
 $data = array();
 
 if ($poi_id == "0")
@@ -77,5 +77,5 @@ else
 	$data["poi_name"] = $poi_arr["poi_name"];
 	$data["category_id"] = $poi_arr["category_id"];
 }
-echo json_encode($data);
 
+echo json_encode($data);

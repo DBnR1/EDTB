@@ -42,6 +42,20 @@ img
 	margin-right:5px;
 }
 
+.icon18
+{
+	width:18px;
+	height:18px;
+	margin-right:5px;
+}
+
+.icon20
+{
+	width:20px;
+	height:20px;
+	margin-right:5px;
+}
+
 .icon24, .btn
 {
 	width:24px;
@@ -546,6 +560,26 @@ a.poid:hover
 	text-shadow:1px 1px 1px #000000;
 	z-index:1000;
 	max-height:630px;
+	overflow:auto;
+	white-space:nowrap;
+}
+
+.info
+{
+	font-family:Sintony;
+	color:#FFFFFA;
+	font-size:12px;
+	letter-spacing:normal;
+	font-weight:normal;
+	display:none;
+	position:absolute;
+	line-height:1.5;
+	padding:8px;
+	background-color:#2A3C45;
+	border:1px solid #000;
+	color:#FFFFFA;
+	text-shadow:1px 1px 1px #000000;
+	z-index:100000000;
 	overflow:auto;
 	white-space:nowrap;
 }
