@@ -1048,6 +1048,12 @@ a.poid:hover
 	margin-bottom:15px;
 }
 
+.entriespre img
+{
+	max-width:100%;
+	height:auto;
+}
+
 .poi
 {
 	font-family:Sintony;

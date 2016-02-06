@@ -306,7 +306,7 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 				<div class="settings_panel" id="notice_new"></div>
 
 				<div class="settings_panel" id="settings" style="width:227px">
-					<a href="/admin/settings.php" title="Settings editor">
+					<a href="/admin/Settings.php" title="Settings editor">
 						<div class="link" style="width:90%">
 							<img class="icon" src="/style/img/settings.png" alt="Settings" />Customize ED ToolBox
 						</div>
@@ -321,19 +321,24 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 							<img class="icon" src="/style/img/dataview.png" alt="DB Manager" />Database Management
 						</div>
 					</a>
-					<a href="/admin/sql.php" title="Run MySQL queries">
+					<a href="/admin/SQL.php" title="Run MySQL queries">
 						<div class="link" style="width:90%">
 							<img class="icon" src="/style/img/sql.png" alt="MySQL" />Run MySQL queries
 						</div>
 					</a>
-					<a href="/admin/import.php" title="Import flight logs">
+					<a href="/admin/Import.php" title="Import flight logs">
 						<div class="link" style="width:90%">
 							<img class="icon" src="/style/img/import.png" alt="Import" />Import Flight Logs
 						</div>
 					</a>
-					<a href="/admin/api_login.php" title="Connect Companion API">
+					<a href="/admin/API_login.php" title="Connect Companion API">
 						<div class="link" style="width:90%">
 							<img class="icon" src="/style/img/api.png" alt="API" />Connect Companion API
+						</div>
+					</a>
+					<a href="/admin/Log.php" title="View Error Log">
+						<div class="link" style="width:90%">
+							<img class="icon" src="/style/img/log2.png" alt="Log" />View Error Log
 						</div>
 					</a>
 				</div>
