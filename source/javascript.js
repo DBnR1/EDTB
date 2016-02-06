@@ -33,7 +33,7 @@
 var zindexmax = 100000;
 
 /** @var debug_mode */
-var debug_mode = false;
+var debug_mode = true;
 
 /**
  * Send error messages to console if debug_mode = true
@@ -237,6 +237,12 @@ function get_data(override)
                     $('head').append(script);
                 }
 
+                if (document.getElementById('poi_bm'))
+                {
+					log("Updating Poi & BM");
+                    update_poi_bm();
+                }
+
 				if (result['update_map'] != "false")
 				{
 					log("Calling update_map()");
@@ -317,6 +323,30 @@ function update_api(wait, newsys, override)
 			}
 		});
 	}, wait);
+}
+
+/**
+ * Update points of interest and bookmarks
+ *
+ * @author Mauri Kujala <contact@edtb.xyz>
+ */
+function update_poi_bm()
+{
+	$.ajax(
+	{
+		url: "/get/getData_poi_bm.php",
+		cache: false,
+		dataType: 'html',
+		success: function(result)
+		{
+			log("Refreshing poi & bm data");
+			$('#poi_bm').html(result);
+		},
+		error: function()
+		{
+			log("Error: requesting /get/getData_poi_bm.php failed");
+		}
+	});
 }
 
 $(function()
@@ -1406,4 +1436,18 @@ function set_reference_systems(standard)
 			$("#calculate").html(result);
 		}
 	});
+}
+
+/**
+ * Bring info to view
+ *
+ * @param string div_id
+ * @author Mauri Kujala <contact@edtb.xyz>
+ */
+function to_view(div_id)
+{
+	setTimeout(function()
+	{
+		$('#' + div_id).fadeToggle('fast');
+	}, 700);
 }
