@@ -49,6 +49,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 		<table>
 			<thead>
 				<tr>
+					<td class="heading"></td>
 					<td class="heading"><strong>Time</strong></td>
 					<td class="heading"><strong>File</strong></td>
 					<td class="heading"><strong>Line</strong></td>
@@ -65,23 +66,35 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 					// only show first 600 lines
 					if ($line_num <= 599)
 					{
+						// Regular Expression filter for links
+						$reg_exUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
+
 						// split data and define variables
 						$data = explode("]", $line);
 						$time = str_replace("[", "", $data[0]);
 
 						$parts = explode(" on line ", $data[1]);
 						$error_line = $parts[1];
+
 						$file = str_replace("[", "", $parts[0]);
 						$file = str_replace($settings["install_path"] . "\EDTB\\", "", $file);
 						$error = $data[2];
 
+						if (preg_match($reg_exUrl, $error, $url))
+						{
+							$error = preg_replace($reg_exUrl, "<a href='" . $url[0] . "' target='_BLANK'>" . $url[0] . "</a>", $error);
+						}
+
 						$tdclass = $line_num % 2 ? "dark" : "light";
 						?>
 						<tr>
-							<td class="<?php echo $tdclass?>" style="width:1%;text-align:center">
+							<td class="<?php echo $tdclass?>" style="padding:10px;width:1%;text-align:center">
 								<a class="copy" href="javascript:void(0);" title="Copy to clipboard" data-clipboard-text="<?php echo $line?>">
-									<?php echo $time?>
+									<img class="icon" src="/style/img/clipboard.png" alt="Copy" style="margin-left:5px" />
 								</a>
+							</td>
+							<td class="<?php echo $tdclass?>" style="width:1%;text-align:center">
+									<?php echo $time?>
 							</td>
 							<td class="<?php echo $tdclass?>">
 								<?php echo $file?>
