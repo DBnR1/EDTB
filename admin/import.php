@@ -116,7 +116,7 @@ if (is_dir($settings["log_dir"]))
 				$day = $sub[2];
 
 				// read file to an array
-				$filr = file("" . $newest_file . "");
+				$filr = file($newest_file);
 				$lines = $filr;
 
 				foreach ($lines as $line_num => $line)
@@ -171,7 +171,7 @@ if (is_dir($settings["log_dir"]))
 
 		if (!isset($_GET["batches_left"]))
 		{
-			$num_tot = $_GET["num"]+ $i ;
+			$num_tot = $_GET["num"] + $i ;
 			$nums = isset($_GET["num"]) ? $num_tot : $i;
 			header('Location: /index.php?import_done&num=' . $nums);
 		}

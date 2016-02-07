@@ -58,7 +58,7 @@ if (file_exists($image))
 	if (!unlink($image))
 	{
 		$error = error_get_last();
-		write_log("Error: " . $error['message'], __FILE__, __LINE__);
+		write_log("Error: " . $error["message"], __FILE__, __LINE__);
 		$redir_url = "/Gallery.php?spgmGal=" . urlencode($system) . "&removed=1";
 	}
 }
@@ -72,7 +72,7 @@ if (file_exists($thumb))
 	if (!unlink($thumb))
 	{
 		$error = error_get_last();
-		write_log("Error: " . $error['message'], __FILE__, __LINE__);
+		write_log("Error: " . $error["message"], __FILE__, __LINE__);
 		$redir_url = "/Gallery.php?spgmGal=" . urlencode($system) . "&removed=1";
 	}
 }
@@ -94,7 +94,7 @@ if (is_dir_empty($path . "/thumbs"))
 	if (!rmdir($path . "/thumbs"))
 	{
 		$error = error_get_last();
-		write_log("Error: " . $error['message'], __FILE__, __LINE__);
+		write_log("Error: " . $error["message"], __FILE__, __LINE__);
 		$redir_url = "/Gallery.php?removed=1";
 	}
 
@@ -102,7 +102,7 @@ if (is_dir_empty($path . "/thumbs"))
 	if (!rmdir($path))
 	{
 		$error = error_get_last();
-		write_log("Error: " . $error['message'], __FILE__, __LINE__);
+		write_log("Error: " . $error["message"], __FILE__, __LINE__);
 		$redir_url = "/Gallery.php?removed=1";
 	}
 }

@@ -52,7 +52,7 @@ if ($last_check < $time_frame)
 	else
 	{
 		$error = error_get_last();
-		write_log("Error: " . $error['message'], __FILE__, __LINE__);
+		write_log("Error: " . $error["message"], __FILE__, __LINE__);
 	}
 	// update last_update_check time
 	edtb_common("last_update_check", "unixtime", true, time());

@@ -55,7 +55,7 @@ if (!empty($settings["edsm_api_key"]) && !empty($settings["edsm_cmdr_name"]))
 	if (!$cmnt_string = file_get_contents("http://www.edsm.net/api-logs-v1/set-comment?commanderName=" . urlencode($settings["edsm_cmdr_name"]) . "&apiKey=" . $settings["edsm_api_key"] . "&systemName=" . urlencode($system) . "&comment=" . urlencode($comment)))
 	{
 		$error = error_get_last();
-		write_log("Error: " . $error['message'], __FILE__, __LINE__);
+		write_log("Error: " . $error["message"], __FILE__, __LINE__);
 	}
 }
 else

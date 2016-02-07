@@ -64,7 +64,7 @@ if (!empty($settings["edsm_api_key"]) && !empty($settings["edsm_cmdr_name"]))
 	else
 	{
 		$error = error_get_last();
-		write_log("Error: " . $error['message'], __FILE__, __LINE__);
+		write_log("Error: " . $error["message"], __FILE__, __LINE__);
 	}
 }
 else

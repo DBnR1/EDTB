@@ -9,7 +9,6 @@ if (strtolower(basename($_SERVER['PHP_SELF'])) == strtolower(basename(__FILE__))
 
 class MySQLtabledit
 {
-
    /**
     *
 	* MySQL Edit Table

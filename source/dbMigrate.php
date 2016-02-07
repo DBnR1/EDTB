@@ -51,11 +51,8 @@ class db_create
 	{
 		$ini_dir = str_replace("/EDTB", "", $_SERVER['DOCUMENT_ROOT']);
 		require_once($ini_dir . "/data/server_config.inc.php");
-		$host = $server;
-		$username = $user;
-		$password = $pwd;
 
-        $this->link = new mysqli($host, $username, $password);
+        $this->link = new mysqli($server, $user, $pwd);
 
         if ($this->link->connect_error)
 		{

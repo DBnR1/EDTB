@@ -96,7 +96,7 @@ if ($ga_last_update < time())
 				if (!file_put_contents($newfile, $to_write))
 				{
 					$error = error_get_last();
-					write_log("Error: " . $error['message'], __FILE__, __LINE__);
+					write_log("Error: " . $error["message"], __FILE__, __LINE__);
 				}
 
 				/**

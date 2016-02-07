@@ -161,7 +161,7 @@ if ($cmdr_rank_cache != $data["cmdr_status"])
 	if (!file_put_contents($cmdr_ranks_file, $data["cmdr_status"]))
 	{
 		$error = error_get_last();
-		write_log("Error: " . $error['message'], __FILE__, __LINE__);
+		write_log("Error: " . $error["message"], __FILE__, __LINE__);
 	}
 	$data['cmdr_ranks_update'] = "true";
 }
@@ -171,7 +171,7 @@ if ($cmdr_balance_cache != $data["cmdr_balance_status"])
 	if (!file_put_contents($cmdr_balance_file, $data["cmdr_balance_status"]))
 	{
 		$error = error_get_last();
-		write_log("Error: " . $error['message'], __FILE__, __LINE__);
+		write_log("Error: " . $error["message"], __FILE__, __LINE__);
 	}
 	$data['cmdr_balance_update'] = "true";
 }
@@ -181,7 +181,7 @@ if ($ship_status_cache != $data["ship_status"])
 	if (!file_put_contents($ship_status_file, $data["ship_status"]))
 	{
 		$error = error_get_last();
-		write_log("Error: " . $error['message'], __FILE__, __LINE__);
+		write_log("Error: " . $error["message"], __FILE__, __LINE__);
 	}
 	$data['ship_status_update'] = "true";
 }

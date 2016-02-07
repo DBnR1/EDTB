@@ -45,7 +45,7 @@ if (!empty($file) && !empty($url))
 		if (!mkdir($path, 0775, true))
 		{
 			$error = error_get_last();
-			write_log("Error: " . $error['message'], __FILE__, __LINE__);
+			write_log("Error: " . $error["message"], __FILE__, __LINE__);
 		}
 	}
 
@@ -53,7 +53,7 @@ if (!empty($file) && !empty($url))
 	if (!file_put_contents($path . "/" . $filename, $url))
 	{
 		$error = error_get_last();
-		write_log("Error: " . $error['message'], __FILE__, __LINE__);
+		write_log("Error: " . $error["message"], __FILE__, __LINE__);
 	}
 }
 else

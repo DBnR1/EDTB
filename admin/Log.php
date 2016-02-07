@@ -49,7 +49,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 		<table>
 			<thead>
 				<tr>
-					<td class="heading"></td>
+					<td class="heading">&nbsp;</td>
 					<td class="heading"><strong>Time</strong></td>
 					<td class="heading"><strong>File</strong></td>
 					<td class="heading"><strong>Line</strong></td>
@@ -103,7 +103,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 								<?php echo $error_line?>
 							</td>
 							<td class="<?php echo $tdclass?>">
-								<?php echo $error?>
+								<?php echo strip_tags($error)?>
 							</td>
 						</tr>
 						<?php
@@ -114,8 +114,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 			{
 				?>
 				<tr>
-					<td class="dark" colspan="4">
-						Log file is empty.
+					<td class="dark" colspan="5">
+						The log file is empty.
 					</td>
 				</tr>
 				<?php

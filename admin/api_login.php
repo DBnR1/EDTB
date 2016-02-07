@@ -52,8 +52,7 @@ if (isset($_GET["login"]) && isset($_POST["email"]) && isset($_POST["password"])
 
 	if (!empty($out))
 	{
-		$error = json_encode($out);
-		write_log("Error: " . $error, __FILE__, __LINE__);
+		write_log("Error: API login failed, possibly mistyped password or email.", __FILE__, __LINE__);
 	}
 }
 
@@ -92,7 +91,7 @@ if (isset($_GET["sendcode"]))
 							</tr>
 							<tr>
 								<td class="dark">
-									<span class="left"><img src="/style/img/about.png" class="icon32" alt="Info" /></span>You should now have received a verification code to your email.<br />Copy and paste it here, then click Send.
+									<span class="left"><img src="/style/img/about.png" class="icon32" alt="Info" /></span>If your email and password were correct,<br />you should now have received a verification code to your email.<br />Copy and paste it here, then click Send.
 								</td>
 							</tr>
 							<tr>
