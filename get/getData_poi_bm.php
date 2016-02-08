@@ -189,11 +189,11 @@ function maketable($res, $type)
 }
 ?>
 <script>
-	$('#addp').click(function()
+	$("#addp").click(function()
 	{
-		tofront('addPoi');
-		update_values('/get/getPoiEditData.php?Poi_id=0');
-		$('#system_33').focus();
+		tofront("addPoi");
+		update_values("/get/getPoiEditData.php?Poi_id=0");
+		$("#system_33").focus();
 	});
 </script>
 <table>

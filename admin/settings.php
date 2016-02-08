@@ -248,7 +248,6 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
 				<tr>
 					<td class="<?php echo $lclass?>">
 						<a href="#" data-replace="true" data-target=".entries"><div class="button" onclick="update_data('settings_form', '/admin/settings.php?do', true);$('#notify').fadeToggle('fast')">Submit changes</div></a>
-						<span id="delete_bm"></span>
 					</td>
 				</tr>
 			</table>

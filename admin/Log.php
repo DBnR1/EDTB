@@ -78,7 +78,9 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 
 						$file = str_replace("[", "", $parts[0]);
 						$file = str_replace($settings["install_path"] . "\EDTB\\", "", $file);
-						$error = $data[2];
+
+						$error = array_slice($data, 2);
+						$error = implode("", $error);
 
 						if (preg_match($reg_exUrl, $error, $url))
 						{
@@ -94,7 +96,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 								</a>
 							</td>
 							<td class="<?php echo $tdclass?>" style="width:1%;text-align:center">
-									<?php echo $time?>
+								<?php echo $time?>
 							</td>
 							<td class="<?php echo $tdclass?>">
 								<?php echo $file?>

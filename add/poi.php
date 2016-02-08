@@ -143,7 +143,7 @@ if ($_SERVER['PHP_SELF'] == "/Poi.php")
 					</tr>
 					<tr>
 						<td class="dark" colspan="2">
-							<a href="/Poi.php" data-replace="true" data-target=".entries">
+							<a href="javascript:void(0)" data-replace="true" data-target=".entries">
 								<div class="button" onclick="update_data('poi_form', '/add/Poi.php?do', true);tofront('null', true)">
 									Submit Point of Interest
 								</div>

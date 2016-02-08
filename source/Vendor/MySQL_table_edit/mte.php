@@ -757,11 +757,14 @@ class MySQLtabledit
 			$readonly = '';
 			$value_htmlentities = '';
 
-			if (in_array($key, $this->fields_required))
+			if (isset($this->fields_required))
 			{
-				$count_required++;
-				$style = "class='mte_req'";
-				$field_id = "id='id_" . $count_required . "'";
+				if (in_array($key, $this->fields_required))
+				{
+					$count_required++;
+					$style = "class='mte_req'";
+					$field_id = "id='id_" . $count_required . "'";
+				}
 			}
 
 			$field_kind = $field_type[$key];

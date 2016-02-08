@@ -43,7 +43,7 @@ if (isset($_GET["group_id"]) && !empty($_GET["group_id"]))
 	 * set class
 	 */
 
-	$data['class'] .= '<option value="0">Class</option>';
+	$data['classv'] .= '<option value="0">Class</option>';
 	$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT DISTINCT class
 														FROM edtb_modules
 														WHERE class != ''
@@ -56,7 +56,7 @@ if (isset($_GET["group_id"]) && !empty($_GET["group_id"]))
 	{
 		while ($arr = mysqli_fetch_assoc($res))
 		{
-			$data['class'] .= '<option value="' . $arr["class"] . '">Class ' . $arr["class"] . '</option>';
+			$data['classv'] .= '<option value="' . $arr["class"] . '">Class ' . $arr["class"] . '</option>';
 		}
 	}
 

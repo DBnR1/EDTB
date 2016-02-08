@@ -462,12 +462,15 @@ $count = mysqli_num_rows($res);
 	$("a.send").click(function()
 	{
 		$.get("/action/shipControls.php?send=" + $(this).data("send"));
-		$('#ref_' + $(this).data("id") + '_dist').focus();
 	});
 </script>
 <div class="entries">
 	<div class="entries_inner">
-		<table id="nscontent" style="margin-top:16px;width:100%;margin-bottom:20px;">
+		<div class="stationinfo_ns" id="si_statinfo"></div>
+		<div class="info" id="sysinfo" style="position:fixed">
+			Send system name to Elite Dangerous client.<br />Have the textbox in the Galaxy Map targeted before clicking.
+		</div>
+		<table id="nscontent" style="margin-top:16px;width:100%;margin-bottom:20px">
 			<tr>
 				<td class="heading" style="width:25%;white-space:nowrap">Nearest stations</td>
 				<td class="heading" style="width:25%;white-space:nowrap">Nearest Allegiances</td>
@@ -672,37 +675,40 @@ $count = mysqli_num_rows($res);
 				</td>
 			</tr>
 			<tr>
-				<td class="heading" colspan="5"><?php echo $text?></td>
+				<td class="transparent" colspan="5">
+					<header><h2><?php echo $text?></h2></header>
+					<hr>
+				</td>
 			</tr>
 			<tr>
 				<td class="ns_nearest" colspan="5">
 					<table id="nearest_systems">
 						<tr>
-							<td class="light" colspan="7"><strong>System</strong></td>
+							<td class="heading" colspan="7"><strong>System</strong></td>
 							<?php
 							if ($stations !== false)
 							{
 							?>
-								<td class="light" colspan="3"><strong>Station</strong></td>
+								<td class="heading" colspan="3"><strong>Station</strong></td>
 							<?php
 							}
 							?>
 						</tr>
 						<tr>
-							<td class="dark">Allegiance</td>
-							<td class="dark">Distance</td>
-							<td class="dark">Name</td>
-							<td class="dark">Pop.</td>
-							<td class="dark">Economy</td>
-							<td class="dark">Government</td>
-							<td class="dark">Security</td>
+							<td class="dark"><strong>Allegiance</strong></td>
+							<td class="dark"><strong>Distance</strong></td>
+							<td class="dark"><strong>Name</strong></td>
+							<td class="dark"><strong>Pop.</strong></td>
+							<td class="dark"><strong>Economy</strong></td>
+							<td class="dark"><strong>Government</strong></td>
+							<td class="dark"><strong>Security</strong></td>
 							<?php
 							if ($stations !== false)
 							{
 							?>
-								<td class="dark">Name</td>
-								<td class="dark">LS From Star</td>
-								<td class="dark">Landing Pad</td>
+								<td class="dark"><strong>Name</strong></td>
+								<td class="dark"><strong>LS From Star</strong></td>
+								<td class="dark"><strong>Landing Pad</strong></td>
 							<?php
 							}
 							?>
@@ -711,14 +717,15 @@ $count = mysqli_num_rows($res);
 						if ($count > 0)
 						{
 							$last_system = "";
+							$ii = 0;
 							while ($arr = mysqli_fetch_assoc($res))
 							{
 								$system = $arr["system"];
 								$system_id = $arr["system_id"];
 								$sys_population = number_format($arr["population"]);
-								$sys_economy = $arr["economy"];
+								$sys_economy = empty($arr["economy"]) ? "n/a" : $arr["economy"];
 								$sys_government = $arr["government"];
-								$sys_security = $arr["security"];
+								$sys_security = empty($arr["security"]) ? "None" : $arr["security"];
 								$allegiance = $arr["allegiance"];
 
 								$station_name = $arr["station_name"];
@@ -740,28 +747,28 @@ $count = mysqli_num_rows($res);
 
 								if ($system != $last_system)
 								{
+									$tdclass = $tdclass == "light" ? "dark" : "light";
 									?>
 									<tr>
-										<td class="transparent" style="text-align:center">
-											<img src="style/img/<?php echo $pic?>" class="allegiance_icon" alt="<?php echo $allegiance?>" />
+										<td class="<?php echo $tdclass?>" style="text-align:center">
+											<img src="style/img/<?php echo $pic?>" class="allegiance_icon" alt="<?php echo $allegiance?>" style="margin:0" />
 										</td>
-										<td class="transparent">
+										<td class="<?php echo $tdclass?>">
 											<?php echo number_format($distance,2)?> ly<?php echo $is_unknown?>
 										</td>
-										<td class="transparent">
+										<td class="<?php echo $tdclass?>">
 											<a class="send" href="javascript:void(0)" data-send="<?php echo $system?>" data-id="<?php echo $system_id?>">
-												<img class="icon" src="/style/img/magic.png" alt="Send" style="margin-bottom:7px;margin-right:0" onmouseover="to_view('s<?php echo $system_id?>')" onmouseout="$('#s<?php echo $system_id?>').fadeToggle('fast')" />
+												<img class="icon" src="/style/img/magic.png" alt="Send" style="margin-bottom:7px;margin-right:0" onmouseover="to_view('sysinfo')" onmouseout="$('#sysinfo').fadeToggle('fast')" />
 											</a>
 											<a href="System.php?system_id=<?php echo $system_id?>">
 												<?php echo $system?>
 											</a>
 											<?php echo $loglink . $screenshots;?>
-											<div class="info" id="s<?php echo $system_id?>">Send system name to Elite Dangerous client.<br />Have the textbox in the Galaxy map targeted before clicking.</div>
 										</td>
-										<td class="transparent"><?php echo $sys_population?></td>
-										<td class="transparent"><?php echo $sys_economy?></td>
-										<td class="transparent"><?php echo $sys_government?></td>
-										<td class="transparent"><?php echo $sys_security?></td>
+										<td class="<?php echo $tdclass?>"><?php echo $sys_population?></td>
+										<td class="<?php echo $tdclass?>"><?php echo $sys_economy?></td>
+										<td class="<?php echo $tdclass?>"><?php echo $sys_government?></td>
+										<td class="<?php echo $tdclass?>"><?php echo $sys_security?></td>
 									<?php
 								}
 								else
@@ -773,6 +780,7 @@ $count = mysqli_num_rows($res);
 								{
 									$station_ls_from_star = $arr["ls_from_star"] == 0 ? "n/a" : number_format($arr["ls_from_star"]);
 									$station_max_landing_pad_size = $arr["max_landing_pad_size"];
+									$station_max_landing_pad_size = $station_max_landing_pad_size == "L" ? "Large" : "Medium";
 									$station_is_planetary = $arr["is_planetary"];
 									$station_type = $arr["type"];
 
@@ -858,13 +866,42 @@ $count = mysqli_num_rows($res);
 										}
 									}
 
-									echo '<td class="transparent">' . $station_allegiance_icon.$icon . '<a href="javascript:void(0)" onclick="$(\'#si_statinfo_' . $station_id . '\').fadeToggle(\'fast\')" title="Additional information">' . $station_disp_name . '</a><div class="stationinfo_ns" id="si_statinfo_' . $station_id . '">' . $info . '</div></td>';
-									echo '<td class="transparent">' . $station_ls_from_star . '</td>';
-									echo '<td class="transparent">' . $station_max_landing_pad_size . '</td>';
+									echo '<td class="' . $tdclass . '">' . $station_allegiance_icon . $icon . '<a href="javascript:void(0)" id="minfo' . $station_id . '"  title="Additional information">' . $station_disp_name . '</a></td>';
+									echo '<td class="' . $tdclass . '">' . $station_ls_from_star . '</td>';
+									echo '<td class="' . $tdclass . '">' . $station_max_landing_pad_size . '</td>';
+									echo '<script>
+											$(document).mouseup(function (e)
+											{
+												var containers = new Array();
+												containers.push($("#si_statinfo"));
+
+												$.each(containers, function(key, value)
+												{
+													if (!$(value).is(e.target)
+														&& $(value).has(e.target).length === 0)
+													{
+														$(value).fadeOut("fast");
+													}
+												});
+											});
+											$("#minfo' . $station_id . '").click(function()
+											{
+												if ($("#si_statinfo").is(":hidden"))
+												{
+													$("#si_statinfo").fadeToggle("fast");
+													$("#si_statinfo").css({
+														left: event.pageX+5,
+														top: event.pageY
+													});
+													$("#si_statinfo").html(\'' . $info . '\');
+												}
+											});
+										</script>';
 								}
 
 								echo '</tr>';
 								$last_system = $system;
+								$ii++;
 							}
 						}
 						else
