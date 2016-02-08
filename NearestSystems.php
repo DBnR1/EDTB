@@ -676,7 +676,7 @@ $count = mysqli_num_rows($res);
 			</tr>
 			<tr>
 				<td class="transparent" colspan="5">
-					<header><h2><?php echo $text?></h2></header>
+					<header><h2><img class="icon" src="/style/img/find.png" alt="Find" /><?php echo $text?></h2></header>
 					<hr>
 				</td>
 			</tr>
@@ -688,9 +688,9 @@ $count = mysqli_num_rows($res);
 							<?php
 							if ($stations !== false)
 							{
-							?>
+								?>
 								<td class="heading" colspan="3"><strong>Station</strong></td>
-							<?php
+								<?php
 							}
 							?>
 						</tr>
@@ -705,11 +705,11 @@ $count = mysqli_num_rows($res);
 							<?php
 							if ($stations !== false)
 							{
-							?>
+								?>
 								<td class="dark"><strong>Name</strong></td>
 								<td class="dark"><strong>LS From Star</strong></td>
 								<td class="dark"><strong>Landing Pad</strong></td>
-							<?php
+								<?php
 							}
 							?>
 						</tr>
@@ -773,7 +773,9 @@ $count = mysqli_num_rows($res);
 								}
 								else
 								{
-									echo '<tr><td class="transparent" colspan="7" style="height:45px">&nbsp;</td>';
+									?>
+									<tr><td class="transparent" colspan="7" style="height:45px">&nbsp;</td>
+									<?php
 								}
 
 								if (!empty($station_name))
@@ -865,11 +867,17 @@ $count = mysqli_num_rows($res);
 											$station_disp_name = '<span class="old_data">' . $station_name . '</span>';
 										}
 									}
-
-									echo '<td class="' . $tdclass . '">' . $station_allegiance_icon . $icon . '<a href="javascript:void(0)" id="minfo' . $station_id . '"  title="Additional information">' . $station_disp_name . '</a></td>';
-									echo '<td class="' . $tdclass . '">' . $station_ls_from_star . '</td>';
-									echo '<td class="' . $tdclass . '">' . $station_max_landing_pad_size . '</td>';
-									echo '<script>
+									?>
+									<td class="<?php echo $tdclass;?>">
+										<?php echo $station_allegiance_icon . $icon;?><a href="javascript:void(0)" id="minfo<?php echo $station_id;?>"  title="Additional information"><?php echo $station_disp_name;?></a>
+									</td>
+									<td class="<?php echo $tdclass;?>">
+										<?php echo $station_ls_from_star;?>
+									</td>
+									<td class="<?php echo $tdclass;?>">
+										<?php echo $station_max_landing_pad_size;?>
+									</td>
+									<script>
 											$(document).mouseup(function (e)
 											{
 												var containers = new Array();
@@ -877,14 +885,13 @@ $count = mysqli_num_rows($res);
 
 												$.each(containers, function(key, value)
 												{
-													if (!$(value).is(e.target)
-														&& $(value).has(e.target).length === 0)
+													if (!$(value).is(e.target) && $(value).has(e.target).length === 0)
 													{
 														$(value).fadeOut("fast");
 													}
 												});
 											});
-											$("#minfo' . $station_id . '").click(function()
+											$("#minfo<?php echo $station_id;?>").click(function()
 											{
 												if ($("#si_statinfo").is(":hidden"))
 												{
@@ -893,20 +900,25 @@ $count = mysqli_num_rows($res);
 														left: event.pageX+5,
 														top: event.pageY
 													});
-													$("#si_statinfo").html(\'' . $info . '\');
+													$("#si_statinfo").html("<?php echo addslashes($info);?>");
 												}
 											});
-										</script>';
+										</script>
+								<?php
 								}
-
-								echo '</tr>';
+								?>
+								</tr>
+								<?php
 								$last_system = $system;
 								$ii++;
 							}
 						}
 						else
 						{
-							echo '<tr><td>None found!</td></tr>';
+							$colspan = $stations !== false ? "10" : "7";
+							?>
+							<tr><td class="light" colspan="<?php echo $colspan;?>">None found!</td></tr>
+							<?php
 						}
 						?>
 					</table>

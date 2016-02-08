@@ -198,6 +198,7 @@
 				  if ($("#edsm_comment").is(":hidden"))
 					{
 						 $("#edsm_comment").fadeToggle("fast");
+						 $("#comment2").focus();
 					}
 				});
 				// about ED ToolBox

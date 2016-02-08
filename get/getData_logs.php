@@ -160,13 +160,13 @@ if (!empty($curSys["name"]))
 							$sssort = 'asc';
 						}
 
-						$sortable = '<span class="right"><a href="/index.php?slog_sort=' . $sssort . '" title="Sort by date asc/desc"><img src="/style/img/sort.png" alt="Sort" /></a></span>';
+						$sortable = '<span class="right"><a href="/index.php?slog_sort=' . $sssort . '" title="Sort by date asc/desc"><img class="icon" src="/style/img/sort.png" alt="Sort" style="margin-right:0" /></a></span>';
 					}
 
 					// check if system has screenshots
 					$screenshots = has_screenshots($system_name) ? '<a href="/Gallery.php?spgmGal=' . urlencode($system_name) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;margin-right:3px;vertical-align:top" /></a>' : "";
 
-					$logdata .= '<header><h2><img src="/style/img/system_log.png" alt="log" style="margin-right:6px" />System log for <a href="/System.php?system_name=' . urlencode($system_name) . '">' . $system_name . '</a>' . $screenshots . '' . $add . '' . $sortable . '</h2></header>';
+					$logdata .= '<header><h2><img class="icon" src="/style/img/system_log.png" alt="log" />System log for <a href="/System.php?system_name=' . urlencode($system_name) . '">' . $system_name . '</a>' . $screenshots . '' . $add . '' . $sortable . '</h2></header>';
 					$logdata .= '<hr>';
 				}
 
@@ -228,9 +228,9 @@ if ($gnum > 0)
 		$gssort = 'asc';
 	}
 
-	$sortable = '<span class="right"><a href="/index.php?glog_sort=' . $gssort . '" title="Sort by date asc/desc"><img src="/style/img/sort.png" alt="Sort" /></a></span>';
+	$sortable = '<span class="right"><a href="/index.php?glog_sort=' . $gssort . '" title="Sort by date asc/desc"><img class="icon" src="/style/img/sort.png" alt="Sort" style="margin-right:0" /></a></span>';
 
-	$logdata .= '<header><h2><img src="/style/img/log.png" alt="log" style="margin-right:6px" />Commander\'s Log' . $sortable . '</h2></header>';
+	$logdata .= '<header><h2><img class="icon" src="/style/img/log.png" alt="log" />Commander\'s Log' . $sortable . '</h2></header>';
 	$logdata .= '<hr>';
 
 	while ($glog_arr = mysqli_fetch_assoc($glog_res))

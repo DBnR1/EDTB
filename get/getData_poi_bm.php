@@ -83,7 +83,7 @@ function makeitem($arr, $type, &$i)
 																			WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $item_system_name) . "'
 																			LIMIT 1"));
 
-	$style_override = $visited ? ' style="border-left: 3px solid #3DA822"' : "";
+	$style_override = $visited ? ' style="border-left: 3px solid #3da822"' : "";
 
 	$tdclass = $i % 2 ? "dark" : "light";
 
@@ -91,14 +91,14 @@ function makeitem($arr, $type, &$i)
 	$screenshots = has_screenshots($item_system_name) ? '<a href="/Gallery.php?spgmGal=' . urlencode($item_system_name) . '" title="View image gallery"><img src="/style/img/image.png" class="icon" alt="Gallery" style="margin-left:5px;margin-right:0;vertical-align:top" /></a>' : "";
 
 	// check if system is logged
-	$loglink = is_logged($item_system_name) ? '<a href="log.php?system=' . urlencode($item_system_name) . '" style="color:inherit" title="System has log entries"><img src="/style/img/log.png" class="icon" style="margin-left:5px;margin-right:0;vertical-align:top" /></a>' : "";
+	$loglink = is_logged($item_system_name) ? '<a href="/Log.php?system=' . urlencode($item_system_name) . '" style="color:inherit" title="System has log entries"><img src="/style/img/log.png" class="icon" style="margin-left:5px;margin-right:0;vertical-align:top" /></a>' : "";
 
 	echo '<tr>
 			<td class="' . $tdclass . '" style="min-width:420px;max-width:500px">
 				<div class="poi"' . $style_override . '>
 					<a href="javascript:void(0)" onclick="update_values(\'/get/get' . $type . 'EditData.php?' . $type . '_id=' . $item_id . '\',\'' . $item_id . '\');tofront(\'add' . $type . '\')" style="color:inherit" title="Click to edit entry">';
 
-	echo '(' . $distance . ')';
+	echo '' . $distance . ' &ndash;';
 
 	if (!empty($item_system_id))
 	{
