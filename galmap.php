@@ -64,7 +64,7 @@ else
 <div style="display:none" id="rcurz"><?php echo round($ucoordz)?></div>
 
 <div class="entries" style="position:absolute;bottom:0;top:0;height:auto">
-	<table style="margin-left:370px">
+	<table class="edmap_table">
 		<tbody>
 			<tr>
 				<th style="text-align: center">
@@ -76,7 +76,7 @@ else
 			</tr>
 		</tbody>
 	</table>
-	<div id="edmap" style="position:absolute;left:353px;right:0;top:0;bottom:0;width:auto;height:auto;z-index:5"></div>
+	<div class="edmap" id="edmap"></div>
 	<!-- Launch ED3Dmap -->
 	<script type="text/javascript">
 		Ed3d.init({

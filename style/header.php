@@ -50,6 +50,15 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
             <link type="image/png" href="/style/img/icon.png" rel="icon" />
             <link type="text/css" href="/style/style.css?ver=<?php echo $settings["edtb_version"]?>" rel="stylesheet" />
 
+			<?php
+			if (isset($_COOKIE["style"]) && $_COOKIE["style"] == "narrow")
+			{
+				?>
+				<link type="text/css" href="/style/style_narrow.css?ver=<?php echo $settings["edtb_version"]?>" rel="stylesheet" />
+				<?php
+			}
+			?>
+
 			<!-- jquery -->
             <script src="/source/Vendor/jquery-2.2.0.min.js"></script>
 			<!-- wiselinks -->
@@ -98,8 +107,21 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 					<div class="leftpanel-title" id="t1"></div>
 					<!-- date and clock will be rendered here -->
 					<div id="datetime">
-						<div class="leftpanel-date" id="date"></div>
-						<div class="leftpanel-clock" id="hrs"></div>
+						<?php
+						if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow")
+						{
+						?>
+							<div class="leftpanel-date" id="date"></div>
+							<div class="leftpanel-clock" id="hrs"></div>
+						<?php
+						}
+						else
+						{
+						?>
+						<div class="leftpanel-clock" id="hrsns"></div>
+						<?php
+						}
+						?>
 					</div>
 					<!-- links to external resources -->
 					<div id="ext_links" class="leftpanel-ext_links">
@@ -150,35 +172,87 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 							}
 							else
 							{
-								$aclass = '';
-								$onclick = '';
+								$aclass = "";
+								$onclick = "";
 							}
 
 							if ($name != "System Log")
 							{
-								echo '<a' . $aclass . $onclick . ' href="' .  $link_href . '"><div id="link_' . $i . '" class="' . $class . '"><img src="/style/img/' . $pic . '" alt="pic" class="icon" />' . $name . '</div></a>';
+								if (isset($_COOKIE["style"]) && $_COOKIE["style"] == "narrow")
+								{
+									// offset the log icon to make it appear centered
+									$styling = $pic == "log.png" ? ' style="margin-left:6px"' : "";
+
+									echo '<a' . $aclass . $onclick . ' href="' .  $link_href . '">';
+									echo '<div id="link_' . $i . '" class="' . $class . '">';
+									echo '<img src="/style/img/' . $pic . '" alt="pic" class="icon"' . $styling . ' />';
+									echo '</div>';
+									echo '</a>';
+								}
+								else
+								{
+
+									echo '<a' . $aclass . $onclick . ' href="' .  $link_href . '">';
+									echo '<div id="link_' . $i . '" class="' . $class . '">';
+									echo '<img src="/style/img/' . $pic . '" alt="pic" class="icon" />' . $name;
+									echo '</div>';
+									echo '</a>';
+								}
 							}
 							$i++;
 						}
 						?>
 					</div>
 				</div>
+				<?php
+				/**
+				 *  minimize or maximize left panel
+				 */
+
+				if (isset($_COOKIE["style"]) && $_COOKIE["style"] == "narrow")
+				{
+					$minm .= '<a href="javascript:void(0)" onclick="minmax(\'normal\')" title="Maximize left panel">';
+					$minm .= '<img class="minmax" src="/style/img/minmax.png" alt="Max" />';
+					$minm .= '</a>';
+				}
+				else
+				{
+					$minm .= '<a href="javascript:void(0)" onclick="minmax(\'narrow\')" title="Minimize left panel">';
+					$minm .= '<img class="minmax" src="/style/img/minmax.png" alt="Min" />';
+					$minm .= '</a>';
+				}
+				?>
 				<div class="leftpanel-sessionlog">
 					<?php
-					// session log
-					// get old session log
-					if (!$sessionlog = file_get_contents($settings["install_path"] . "/data/sessionlog.txt"))
+					if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow")
 					{
-						$error = error_get_last();
-						write_log("Error: " . $error["message"], __FILE__, __LINE__);
+						// session log
+						// get old session log
+						if (!$sessionlog = file_get_contents($settings["install_path"] . "/data/sessionlog.txt"))
+						{
+							$error = error_get_last();
+							write_log("Error: " . $error["message"], __FILE__, __LINE__);
+						}
+						?>
+						<div class="seslog" id="seslog">
+							<textarea class="seslogtext" cols="40" rows="13" id="logtext" oninput="showsave()"><?php echo $sessionlog?></textarea>
+							<span id="seslogsuccess"><?php echo $minm?></span>
+							<span id="old_val" style="display:none"><?php echo $minm?></span>
+						</div>
+						<!-- currently playing from foobar2000 // -->
+						<div id="nowplaying"></div>
+						<?php
+					}
+					else
+					{
+						?>
+						<div class="seslog" id="seslog">
+							<span id="seslogsuccess"><?php echo $minm?></span>
+							<span id="old_val" style="display:none"><?php echo $minm?></span>
+						</div>
+						<?php
 					}
 					?>
-					<div class="seslog" id="seslog">
-						<textarea class="seslogtext" cols="40" rows="13" id="logtext" oninput="showsave()"><?php echo $sessionlog?></textarea>
-						<span id="seslogsuccess"></span>
-					</div>
-					<!-- currently playing from foobar2000 // -->
-					<div id="nowplaying"></div>
 				</div>
 			</div>
 			<div class="rightpanel-top">
@@ -233,7 +307,7 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 					?>
 					<div class="edsm_comment" id="edsm_comment">
 						<form method="get" action="/" data-push="true">
-							<input type="textbox" id="comment2" class="textbox" name="comment" placeholder="Private EDSM comment for this system" style="width:350px" />
+							<input type="text" id="comment2" class="textbox" name="comment" placeholder="Private EDSM comment for this system" style="width:350px" />
 							<br />
 							<div class="button" onclick="edsm_comment($('#comment2').val(), true)" style="margin-top:6px;margin-bottom:6px">Send comment</div>
 						</form>
@@ -291,10 +365,10 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 					}
 					?>
 					<a href="javascript:void(0)" title="About ED ToolBox" id="about_click">
-						<img src="/style/img/about.png" style="height:26px;width:26px" alt="About" />
+						<img class="icon24" src="/style/img/about.png" style="height:26px;width:26px" alt="About" />
 					</a>
 					<a href="javascript:void(0)" title="Settings Panel" id="settings_click">
-						<img src="/style/img/settings.png" style="height:26px;width:26px" alt="Settings" />
+						<img class="icon24" src="/style/img/settings.png" style="height:26px;width:26px" alt="Settings" />
 					</a>
 				</div>
 
@@ -307,37 +381,37 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 
 				<div class="settings_panel" id="settings" style="width:227px">
 					<a href="/admin/Settings.php" title="Settings editor">
-						<div class="link" style="width:90%">
+						<div class="link" style="width:90%;text-align:left">
 							<img class="icon" src="/style/img/settings.png" alt="Settings" />Customize ED ToolBox
 						</div>
 					</a>
 					<a href="/admin/ini_editor.php" title="Edit ini file">
-						<div class="link" style="width:90%">
+						<div class="link" style="width:90%;text-align:left">
 							<img class="icon" src="/style/img/vareditor.png" alt="INI" />Edit ini file
 						</div>
 					</a>
 					<a href="/admin" title="Database manager (Adminer)" target="_BLANK">
-						<div class="link" style="width:90%">
+						<div class="link" style="width:90%;text-align:left">
 							<img class="icon" src="/style/img/dataview.png" alt="DB Manager" />Database Management
 						</div>
 					</a>
 					<a href="/admin/SQL.php" title="Run MySQL queries">
-						<div class="link" style="width:90%">
+						<div class="link" style="width:90%;text-align:left">
 							<img class="icon" src="/style/img/sql.png" alt="MySQL" />Run MySQL queries
 						</div>
 					</a>
 					<a href="/admin/Import.php" title="Import flight logs">
-						<div class="link" style="width:90%">
+						<div class="link" style="width:90%;text-align:left">
 							<img class="icon" src="/style/img/import.png" alt="Import" />Import Flight Logs
 						</div>
 					</a>
 					<a href="/admin/API_login.php" title="Connect Companion API">
-						<div class="link" style="width:90%">
+						<div class="link" style="width:90%;text-align:left">
 							<img class="icon" src="/style/img/api.png" alt="API" />Connect Companion API
 						</div>
 					</a>
 					<a href="/admin/Log.php" title="View Error Log">
-						<div class="link" style="width:90%">
+						<div class="link" style="width:90%;text-align:left">
 							<img class="icon" src="/style/img/log2.png" alt="Log" />View Error Log
 						</div>
 					</a>

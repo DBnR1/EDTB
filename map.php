@@ -42,7 +42,7 @@ if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"]))
 }
 ?>
 <div class="entries">
-	<table style="margin-left:370px">
+	<table class="edmap_table">
 		<tbody>
 			<tr>
 				<th style="text-align: center">

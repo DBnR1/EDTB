@@ -1,0 +1,149 @@
+/**
+ * Stylesheet file for narrow style
+ *
+ * This file mainly changes some of the positioning of the elements.
+ * The main stylesheet is the style.css file
+ *
+ * @package EDTB\Backend
+ * @author Mauri Kujala <contact@edtb.xyz>
+ * @copyright Copyright (C) 2016, Mauri Kujala
+ * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
+ */
+
+ /*
+ * ED ToolBox, a companion web app for the video game Elite Dangerous
+ * (C) 1984 - 2016 Frontier Developments Plc.
+ * ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ */
+
+.leftpanel
+{
+	width:60px;
+}
+
+.minmax
+{
+	margin-left:5px;
+	transform:rotate(180deg);
+}
+
+.leftpanel-clock
+{
+	top:68px;
+	right:13px;
+}
+
+.leftpanel-systeminfo
+{
+	height:55px;
+}
+
+.leftpanel-ext_links
+{
+	top:60px;
+	left:64px;
+	border:1px solid #000000;
+	border-left:none;
+}
+
+.leftpanel-systeminfo
+{
+	height:30px;
+	border-bottom:1px solid #06060d;
+}
+
+.leftpanel-stations
+{
+	height:35px;
+	background-image:none;
+}
+
+.leftpanel-links
+{
+	width:100%;
+}
+
+.link
+{
+	width:32px;
+	text-align:center;
+}
+
+.active
+{
+	width:32px;
+	text-align:center;
+}
+
+.active:hover,.active:focus
+{
+	width:32px;
+	text-align:center;
+}
+
+/*  */
+
+.rightpanel-top
+{
+	left:63px;
+}
+
+.input-inner
+{
+	left:87px;
+	top:100px;
+}
+
+.entries_inner
+{
+	margin-left:87px;
+	margin-top:14px;
+	margin-right:14px;
+}
+
+#disclaimer
+{
+	left:380px;
+}
+
+/* the additional info for systems on map.php */
+#report
+{
+	left:93px;
+	top:68px;
+}
+
+/**
+ * ed map
+ */
+
+.edmap
+{
+	position:absolute;
+	left:63px;
+	right:0;
+	top:0;
+	bottom:0;
+	width:auto;
+	height:auto;
+	z-index:5;
+}
+
+.edmap_table
+{
+	margin-left:90px;
+}

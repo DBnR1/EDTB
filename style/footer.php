@@ -157,24 +157,24 @@
 		<script>
 			$(document).ready(function()
 			{
-				window.wiselinks = new Wiselinks($('.rightpanel'));
+				window.wiselinks = new Wiselinks($(".rightpanel"));
 
-				$(document).off('page:loading').on('page:loading', function(event, $target, render, url) {
-					$('.se-pre-con').show();
+				$(document).off("page:loading").on("page:loading", function(event, $target, render, url) {
+					$(".se-pre-con").show();
 				});
 
-				$(document).off('page:always').on('page:always', function(event, xhr, settings) {
-					$('.se-pre-con').fadeOut('slow');
+				$(document).off("page:always").on("page:always", function(event, xhr, settings) {
+					$(".se-pre-con").fadeOut("slow");
 				});
 
-				$(document).off('page:done').on('page:done', function(event, $target, status, url, data) {
-					$('.se-pre-con').fadeOut('slow');
+				$(document).off("page:done").on("page:done", function(event, $target, status, url, data) {
+					$(".se-pre-con").fadeOut("slow");
 				});
 			});
 		</script>
 		<!-- update data every x ms -->
 		<script>
-			var int=self.setInterval(get_data, 10000);
+			var int = self.setInterval(get_data, 10000);
 		</script>
 
 		<!-- show loader icon -->
@@ -192,60 +192,60 @@
 			$(document).ready(function()
 			{
 				// edsm comment
-				$('#edsm_click').click(function()
+				$("#edsm_click").click(function()
 				{
-				  edsm_comment('', false);
-				  if ($('#edsm_comment').is(":hidden"))
+				  edsm_comment("", false);
+				  if ($("#edsm_comment").is(":hidden"))
 					{
-						 $('#edsm_comment').fadeToggle('fast');
+						 $("#edsm_comment").fadeToggle("fast");
 					}
 				});
 				// about ED ToolBox
-				$('#about_click').click(function()
+				$("#about_click").click(function()
 				{
-					if ($('#about').is(":hidden"))
+					if ($("#about").is(":hidden"))
 					{
-						$('#about').fadeToggle('fast');
+						$("#about").fadeToggle("fast");
 					}
 				});
 				// Settings panel
-				$('#settings_click').click(function()
+				$("#settings_click").click(function()
 				{
-					if ($('#settings').is(":hidden"))
+					if ($("#settings").is(":hidden"))
 					{
-						$('#settings').fadeToggle('fast');
+						$("#settings").fadeToggle("fast");
 					}
 				});
 				// CMDR info from API
-				$('#cmdr_click').click(function()
+				$("#cmdr_click").click(function()
 				{
-					if ($('#cmdr_status_mi').is(":hidden"))
+					if ($("#cmdr_status_mi").is(":hidden"))
 					{
-						$('#cmdr_status_mi').fadeToggle('fast')
+						$("#cmdr_status_mi").fadeToggle("fast")
 					}
 				});
 				// Ship info from API
-				$('#ship_status').click(function()
+				$("#ship_status").click(function()
 				{
-					if ($('#ship_status_mi').is(":hidden"))
+					if ($("#ship_status_mi").is(":hidden"))
 					{
-						$('#ship_status_mi').fadeToggle('fast');
+						$("#ship_status_mi").fadeToggle("fast");
 					}
 				});
 				// External links
-				$('#datetime').click(function()
+				$("#datetime").click(function()
 				{
-					if ($('#ext_links').is(":hidden"))
+					if ($("#ext_links").is(":hidden"))
 					{
-						$('#ext_links').fadeToggle('fast');
+						$("#ext_links").fadeToggle("fast");
 					}
 				});
 				// Map legend
-				$('#map_legend').click(function()
+				$("#map_legend").click(function()
 				{
-					if ($('#map_legend2').is(":hidden"))
+					if ($("#map_legend2").is(":hidden"))
 					{
-						$('#map_legend2').fadeToggle('fast');
+						$("#map_legend2").fadeToggle("fast");
 					}
 				});
 			});
@@ -256,16 +256,16 @@
 			$(document).mouseup(function (e)
 			{
 				var container = new Array();
-				container.push($('#settings'));
-				container.push($('#about'));
-				container.push($('#ext_links'));
-				container.push($('#cmdr_status_mi'));
-				container.push($('#ship_status_mi'));
-				container.push($('#map_legend2'));
-				container.push($('#edsm_comment'));
-				// container.push($('#edsm_comment'));
-				// container.push($('#edsm_comment'));
-				// container.push($('#edsm_comment'));
+				container.push($("#settings"));
+				container.push($("#about"));
+				container.push($("#ext_links"));
+				container.push($("#cmdr_status_mi"));
+				container.push($("#ship_status_mi"));
+				container.push($("#map_legend2"));
+				container.push($("#edsm_comment"));
+				// container.push($("#edsm_comment"));
+				// container.push($("#edsm_comment"));
+				// container.push($("#edsm_comment"));
 
 				$.each(container, function(key, value)
 				{
