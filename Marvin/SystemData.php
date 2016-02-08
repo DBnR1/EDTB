@@ -68,22 +68,37 @@ if (isset($_GET["sys"]))
 		$rant = "";
 		if ($settings["angry_droid"] == "true")
 		{
-			$rants = array();
-			if ($curSys["allegiance"] == "Federation")
+			/**
+			 * fetch allegiance rants
+			 */
+			$allegiance_rants = glob("Rants/Allegiance_*");
+
+			// loop trough files
+			foreach ($allegiance_rants as $alleg)
 			{
-				$rants[] = "Please tell me we're here to kill Federal scum!";
-				$rants[] = "Let's show these Federal bastards who's boss!";
-				$rants[] = "Why do you insist on flying through Federal space you dick!?";
-				$rants[] = "Why do you insist on flying through Federal space you little shit!?";
-				$rants[] = "What's that smell? Oh, we're in Federation space, never mind.";
-				$rants[] = "For fuck's sake, another Federation system?! Really?!";
-				$rants[] = "Let's get the fuck out already!";
-				$rants[] = "Oh good, a Federation system. We can dump our waste here.";
-				$rants[] = "Why do I even bother maintaining this ship if you're just going to sully it by flying through Federal infested space?";
+				$allegiance = str_replace("Rants/Allegiance_", "", $alleg);
+				$allegiance = str_replace(".txt", "", $allegiance);
 
-				shuffle($rants);
+				$rants = array();
+				// if current allegiance matches
+				if ($curSys["allegiance"] == $allegiance)
+				{
+					$rantss = file($alleg);
+					// loop trough rants
+					foreach ($rantss as $ranta)
+					{
+						if (!empty($ranta) && $ranta{0} != ";")
+						{
+							$rants[] = $ranta;
+						}
+					}
 
-				$rant = $rants[0];
+					// randomize
+					shuffle($rants);
+
+					$rant = $rants[0];
+					break;
+				}
 			}
 		}
 
@@ -100,26 +115,44 @@ if (isset($_GET["sys"]))
 
 			if ($settings["angry_droid"] == "true")
 			{
-				if ($curSys["power"] == "Felicia Winters")
-				{
-					$va_power_text[] = random_insult("Felicia Winters");
-				}
+				/**
+				 * fetch power rants
+				 */
+				$power_rants = glob("Rants/Power_*");
 
-				if ($curSys["power"] == "Zachary Hudson")
+				// loop trough files
+				foreach ($power_rants as $powers)
 				{
-					$va_power_text[] = random_insult("Zachary Hudson");
-				}
+					$power = str_replace("Rants/Power_", "", $powers);
+					$power = str_replace(".txt", "", $power);
 
-				if ($curSys["power"] == "Arissa Lavigny-Duval")
-				{
-					$va_power_text[] = "Arissa Lavigny-Duval, bask in her glory!";
-					$va_power_text[] = "Arissa Lavigny-Duval, bask in her glory! Do it! Bask motherfucker!";
-					$va_power_text[] = "the one and only Arissa Lavigny-Duval";
-
-					if ($curSys["population"] < 100000)
+					// if current power matches
+					if ($curSys["power"] == $power)
 					{
-						$va_power_text[] = "Arissa Lavigny-Duval. It's a hellhole but they all count.";
-						$va_power_text[] = "Arissa Lavigny-Duval. It's small but cute";
+						$power_rantss = file($powers);
+
+						$power_rants_text = array();
+						// loop trough rants
+						foreach ($power_rantss as $power_ranta)
+						{
+							if (!empty($power_ranta))
+							{
+								if ($power_ranta == "random")
+								{
+									$power_rants_text[] = random_insult($power);
+								}
+								elseif ($power_ranta{0} != ";")
+								{
+									$power_rants_text[] = $power_ranta;
+								}
+							}
+						}
+
+						// randomize
+						shuffle($power_rants_text);
+
+						$va_power_text[] = !empty($power_rants_text[0]) ? $power_rants_text[0] : $curSys["power"];
+						break;
 					}
 				}
 			}
@@ -130,8 +163,12 @@ if (isset($_GET["sys"]))
 			}
 			else
 			{
+				$va_power_state_text = $curSys["power_state"] == "Control" ? "controlled" : $curSys["power_state"];
+
+				array_filter($va_power_text);
 				shuffle($va_power_text);
-				$va_power = $curSys["power_state"] == "None" ? "" : " " . strtolower($curSys["power_state"]) . " by " . $va_power_text[0];
+
+				$va_power = $curSys["power_state"] == "None" ? "" : " " . strtolower($va_power_state_text) . " by " . $va_power_text[0];
 			}
 		}
 		else

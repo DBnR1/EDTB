@@ -1,0 +1,9 @@
+;
+; Marvin rants for Zachary Hudson
+;
+; One insult, praise, whatever per line
+;
+; Lines starting with ; are comments
+; "random" means to use the random insult generator
+;
+random

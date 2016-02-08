@@ -1,0 +1,14 @@
+;
+; Marvin praises for Arissa Lavigny-Duval
+;
+; One insult, praise, whatever per line
+;
+; Lines starting with ; are comments
+; "random" means to use the random insult generator
+;
+; This will sound something like:
+; "...An Empire patronage controlled by the one and only Arissa Lavigny-Duval, with a population of about..."
+;
+Arissa Lavigny-Duval, bask in her glory!
+Arissa Lavigny-Duval, bask in her glory! Do it! Bask motherfucker!
+the one and only Arissa Lavigny-Duval
