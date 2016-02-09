@@ -34,7 +34,7 @@
 $logsystem = $_GET["system"];
 if (!$logsystem) exit("No system set");
 
-$logsystem_id = !isset($_GET["system_id"]) ? "-1" : $_GET["system_id"];
+$logsystem_id = !isset($_GET["system_id"]) ? "-1" : 0 + $_GET["system_id"];
 /**if (!$logsystem_id) exit("No system id set"); */
 
 /** @var pagetitle */
@@ -48,12 +48,13 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 		<?php
 		// get system-specific log
 		$log_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT user_log.id, user_log.station_id, user_log.log_entry, user_log.stardate,
+																user_log.pinned, user_log.type, user_log.title,
 																edtb_stations.name AS station_name
 																FROM user_log
 																LEFT JOIN edtb_stations ON edtb_stations.id = user_log.station_id
 																WHERE user_log.system_id = '" . $logsystem_id . "'
 																OR user_log.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $logsystem) . "'
-																ORDER BY user_log.stardate DESC") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]));
+																ORDER BY -user_log.pinned, user_log.weight, user_log.stardate DESC") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]));
 		$num = mysqli_num_rows($log_res);
 
 		if ($num > 0)
@@ -71,12 +72,23 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 				$date = date_create($log_arr["stardate"]);
 				$log_added = date_modify($date, "+1286 years");
 
-				echo '<h3><a href="javascript:void()" onclick="toggle_log_edit(\'' . $log_arr["id"] . '\')" style="color:inherit" title="Edit entry">';
+				// check if log is pinned
+				$pinned = $log_arr["pinned"] == "1" ? '<img class="icon" src="/style/img/pinned.png" alt="Pinned" style="margin-right:3px" />' : "";
+
+				// check if log is personal
+				$personal = $log_arr["type"] == "personal" ? '<img class="icon" src="/style/img/user.png" alt="Personal" style="margin-right:3px" />' : "";
+
+				$log_title = !empty($log_arr["title"]) ? '&nbsp;&ndash;&nbsp;' . $log_arr["title"] : "";
+
+				echo '<h3>' . $pinned . $personal . '';
+				echo '<a href="javascript:void(0)" onclick="toggle_log_edit(\'' . $log_arr["id"] . '\')" style="color:inherit" title="Edit entry">';
 				echo date_format($log_added, "j M Y, H:i");
+
 				if (!empty($log_station_name))
 				{
 					echo "&nbsp;[Station: " . $log_station_name . "]";
 				}
+				echo $log_title;
 				echo '</a></h3><pre class="entriespre">';
 				echo $log_text;
 				echo '</pre>';

@@ -146,7 +146,7 @@ if ($settings["galmap_show_visited_systems"] == "true")
 					$cat = ',"cat":[21]';
 					break;
 				default:
-				$cat = ',"cat":[99]';
+					$cat = ',"cat":[99]';
 			}
 
 			$info .= '<div class="map_info"><span class="map_info_title">Visited system</span><br />';
@@ -168,14 +168,14 @@ if ($settings["galmap_show_visited_systems"] == "true")
 
 			if (isset($name) && isset($vs_coordx) && isset($vs_coordy) && isset($vs_coordz))
 			{
-				$data = '{"name":"' . $name  . '"' . $cat . ',"coords":{"x":' . $vs_coordx . ',"y":' . $vs_coordy . ',"z":' . $vs_coordz . '},"infos":' . json_encode($info) . '}' . $last_row . '';
+				$data = '{"name":"' . $name  . '"' . $cat . ',"coords":{"x":' . $vs_coordx . ',"y":' . $vs_coordy . ',"z":' . $vs_coordz . '},"infos":' . json_encode($info) . '}' . $last_row;
 			}
 			else
 			{
 				$data = $last_row;
 			}
 
-			$last_row = "," . $data . "";
+			$last_row = "," . $data;
 		}
 	}
 }
@@ -227,9 +227,9 @@ if ($settings["galmap_show_pois"] == "true")
 
 			$info .= '</div>';
 
-			$data = '{"name":"' . $disp_name  . '"' . $cat . ',"coords":{"x":' . $poi_coordx . ',"y":' . $poi_coordy . ',"z":' . $poi_coordz . '},"infos":' . json_encode($info) . '}' . $last_row . '';
+			$data = '{"name":"' . $disp_name  . '"' . $cat . ',"coords":{"x":' . $poi_coordx . ',"y":' . $poi_coordy . ',"z":' . $poi_coordz . '},"infos":' . json_encode($info) . '}' . $last_row;
 
-			$last_row = "," . $data . "";
+			$last_row = "," . $data;
 		}
 	}
 }
@@ -308,8 +308,8 @@ if ($settings["galmap_show_bookmarks"] == "true")
 
 				$info .= '</div>';
 
-				$data = '{"name":"' . $bm_system_name  . '"' . $cat . ',"coords":{"x":' . $bm_coordx . ',"y":' . $bm_coordy . ',"z":' . $bm_coordz . '},"infos":' . json_encode($info) . '}' . $last_row . '';
-				$last_row = "," . $data . "";
+				$data = '{"name":"' . $bm_system_name  . '"' . $cat . ',"coords":{"x":' . $bm_coordx . ',"y":' . $bm_coordy . ',"z":' . $bm_coordz . '},"infos":' . json_encode($info) . '}' . $last_row;
+				$last_row = "," . $data;
 			}
 		}
 	}
@@ -357,9 +357,9 @@ if ($settings["galmap_show_rares"] == "true")
 
 			$info .= '</div>';
 
-			$data = '{"name":"' . $rare_disp_name  . '"' . $cat . ',"coords":{"x":' . $rare_coordx . ',"y":' . $rare_coordy . ',"z":' . $rare_coordz . '},"infos":' . json_encode($info) . '}' . $last_row . '';
+			$data = '{"name":"' . $rare_disp_name  . '"' . $cat . ',"coords":{"x":' . $rare_coordx . ',"y":' . $rare_coordy . ',"z":' . $rare_coordz . '},"infos":' . json_encode($info) . '}' . $last_row;
 
-			$last_row = "," . $data . "";
+			$last_row = "," . $data;
 		}
 	}
 }
@@ -409,8 +409,10 @@ while ($log_row = mysqli_fetch_array($log_result))
 
 		if (mb_strlen($text) > 40)
 		{
-			$text = "" . substr($text, 0, 40) . "...";
+			$text = substr($text, 0, 40) . "...";
 		}
+
+		$text = !empty($text) ? $text : "No entry";
 
 		$cat = ',"cat":[11]';
 
@@ -421,9 +423,9 @@ while ($log_row = mysqli_fetch_array($log_result))
 
 		$info .= '</div>';
 
-		$data = '{"name":"' . $log_system  . '"' . $cat . ',"coords":{"x":' . $log_coordx . ',"y":' . $log_coordy . ',"z":' . $log_coordz . '},"infos":' . json_encode($info) . '}' . $last_row . '';
+		$data = '{"name":"' . $log_system  . '"' . $cat . ',"coords":{"x":' . $log_coordx . ',"y":' . $log_coordy . ',"z":' . $log_coordz . '},"infos":' . json_encode($info) . '}' . $last_row;
 
-		$last_row = "," . $data . "";
+		$last_row = "," . $data;
 	}
 }
 
@@ -442,4 +444,3 @@ $map_json = $_SERVER["DOCUMENT_ROOT"] . "/map_points.json";
 file_put_contents($map_json, $data);
 
 edtb_common("last_map_update", "unixtime", true, time());
-

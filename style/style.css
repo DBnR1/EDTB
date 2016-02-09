@@ -160,7 +160,7 @@ h3
 {
 	font-size:13px;
 	font-family:Sintony;
-	color:#7eaad6;
+	color:#70A4BD;
 	font-weight:400;
 	text-shadow:1px 1px 1px #000000;
 	margin-top:20px;
@@ -1199,6 +1199,34 @@ a.poid:hover
 	background-color:#4e6470;
 }
 
+input[type=checkbox]
+{
+	display:none;
+}
+
+input[type=checkbox] + label
+{
+	height:16px;
+	width:16px;
+	display:inline-block;
+	background-image:url(/style/img/pinned_not.png);
+	background-repeat:no-repeat;
+}
+
+input[type=checkbox]:checked + label
+{
+	height:16px;
+	width:16px;
+	display:inline-block;
+	background-image:url(/style/img/pinned.png);
+	background-repeat:no-repeat;
+}
+
+#pin_click:hover
+{
+	text-shadow:1px 1px 4px #bcafab;
+}
+
 select::-ms-expand
 {
     display:none;
@@ -1325,6 +1353,14 @@ button:hover, .button:hover
 .delete_button:hover
 {
 	background-color:red;
+}
+
+fieldset
+{
+    display:inline-block;
+    margin-left:6px;
+    padding:0;
+    border:0;
 }
 
 /* the additional info for systems on map.php */

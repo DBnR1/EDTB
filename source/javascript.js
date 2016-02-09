@@ -432,9 +432,23 @@ function update_values(editurl, deleteid)
 			{
 				if (document.getElementById(id).type == "checkbox")
 				{
-					if (value !== 0)
+					if (value === "1")
 					{
-						document.getElementById(id).checked = "true";
+						$("#" + id).prop("checked", true);
+					}
+
+					if (id == "pinned")
+					{
+						if (value === "1")
+						{
+							$("#pin_click").html("&nbsp;Pinned to top");
+							$("#weight").show();
+						}
+						else
+						{
+							$("#pin_click").html("&nbsp;Pin to top");
+							$("#weight").hide();
+						}
 					}
 				}
 				else if (document.getElementById(id).type == "select")
@@ -445,7 +459,6 @@ function update_values(editurl, deleteid)
 				{
 					$("#" + id).val(value);
 				}
-
 			});
 		}
 	});
@@ -664,7 +677,9 @@ function confirmation(delid, what)
  */
 function toggle_log(logsystem)
 {
-	$("#log_form").trigger("reset");
+	$("#log_form")[0].reset();
+	$("#pin_click").html("&nbsp;Pin to top");
+	$("#weight").hide();
 	$("#edit_id").val("");
 
 	if (logsystem === "")
@@ -674,7 +689,7 @@ function toggle_log(logsystem)
 	}
 	else
 	{
-		document.getElementById("system_1").value = logsystem;
+		$("#system_1").val(logsystem);
 	}
 
 	tofront("addlog");
@@ -703,11 +718,12 @@ function get_mi(system)
 {
 	if (last_system == system)
 	{
-		document.getElementById("report").style.display = "none";
+		$("#report").hide();
+		last_system = "";
 	}
 	else
 	{
-		document.getElementById("report").style.display = "block";
+		$("#report").show();
 		$.ajax(
 		{
 			url: "/get/getMapData.php?system=" + system,

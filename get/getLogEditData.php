@@ -38,7 +38,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 $log_id = 0 + $_GET["logid"];
 
 $log_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT user_log.id, user_log.system_id, user_log.system_name AS log_system_name,
-														user_log.station_id, user_log.log_entry, user_log.stardate,
+														user_log.station_id, user_log.log_entry, user_log.stardate, user_log.title,
+														user_log.weight, user_log.pinned, user_log.type,
 														edtb_systems.name AS system_name,
 														edtb_stations.name AS station_name
 														FROM user_log
@@ -53,5 +54,9 @@ $data["edit_id"] = $log_arr["id"];
 $data["system_1"] = $log_arr["system_name"] == "" ? $log_arr["log_system_name"] : $log_arr["system_name"];
 $data["statname"] = $log_arr["station_name"];
 $data["html"] = $log_arr["log_entry"];
+$data["log_type"] = $log_arr["type"];
+$data["title"] = $log_arr["title"];
+$data["pinned"] = $log_arr["pinned"];
+$data["weight"] = $log_arr["weight"];
 
 echo json_encode($data);

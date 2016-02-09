@@ -43,6 +43,12 @@ if (isset($_GET["do"]))
 
 	$l_system_name = $data["system_name"];
 	$l_station_name = $data["station_name"];
+	$l_entry = $data["log_entry"];
+	$l_id = $data["edit_id"];
+	$l_type = $data["log_type"];
+	$l_pinned = $data["pinned"] == "1" ? "1" : "0";
+	$l_weight = $data["weight"];
+	$l_title = $data["title"];
 
 	// get system id
 	$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id AS system_id
@@ -67,16 +73,17 @@ if (isset($_GET["do"]))
 		$l_system_name = "";
 	}
 
-	$l_entry = $data["log_entry"];
-	$l_id = $data["edit_id"];
-
 	if ($l_id != "")
 	{
 		mysqli_query($GLOBALS["___mysqli_ston"], "	UPDATE user_log SET
 													system_id = '" . $l_system . "',
 													system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $l_system_name) . "',
 													station_id = '" . $l_station . "',
-													log_entry = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $l_entry) . "'
+													log_entry = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $l_entry) . "',
+													title = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $l_title) . "',
+													type = '" . $l_type . "',
+													weight = '" . $l_weight . "',
+													pinned = '" . $l_pinned . "'
 													WHERE id = '" . $l_id . "'
 													LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]));
 	}
@@ -88,12 +95,17 @@ if (isset($_GET["do"]))
 	}
 	else
 	{
-		mysqli_query($GLOBALS["___mysqli_ston"], "	INSERT INTO user_log (system_id, system_name, station_id, log_entry)
+		mysqli_query($GLOBALS["___mysqli_ston"], "	INSERT INTO user_log (system_id, system_name, station_id, log_entry, title, weight, pinned, type)
 													VALUES
 													('" . $l_system . "',
 													'" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $l_system_name) . "',
 													'" . $l_station . "',
-													'" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $l_entry) . "')") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]));
+													'" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $l_entry) . "',
+													'" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $l_title) . "',
+													'" . $l_weight . "',
+													'" . $l_pinned . "',
+													'" . $l_type . "')")
+													or write_log(mysqli_error($GLOBALS["___mysqli_ston"]));
 	}
 
 	exit;
@@ -103,41 +115,134 @@ if (isset($_GET["do"]))
 <div class="input" id="addlog">
 	<form method="post" id="log_form" action="log.php">
 		<div class="input-inner">
-			<div class="suggestions" id="suggestions_41" style="margin-left:400px;margin-top:79px"></div>
-			<div class="suggestions" id="suggestions_1" style="margin-left:10px;margin-top:79px"></div>
+			<div class="suggestions" id="suggestions_1" style="margin-left:8px;margin-top:128px"></div>
+			<div class="suggestions" id="suggestions_41" style="margin-left:402px;margin-top:128px"></div>
 			<table>
-				<tr>
-					<td class="heading" colspan="2">Add/Edit Log Entry
-						<span class="right">
-							<a href="javascript:void(0)" onclick="tofront('addlog');$('.addstations').toggle()" title="Close form">
-								<img src="/style/img/close.png" class="icon" alt="X" />
+				<thead>
+					<tr>
+						<td class="heading" colspan="2">Add/Edit Log Entry
+							<span class="right">
+								<a href="javascript:void(0)" id="close_form" title="Close form">
+									<img src="/style/img/close.png" class="icon" alt="X" />
+								</a>
+							</span>
+						</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="dark" style="text-align:left;white-space:nowrap">
+							<input type="hidden" name="edit_id" id="edit_id" />
+							<select class="selectbox" name="log_type" id="log_type">
+								<option value="system">Type: System log</option>
+								<option value="general">Type: General log</option>
+								<option value="personal">Type: System log (Personal)</option>
+							</select>
+							<fieldset>
+								<input type="checkbox" id="pinned" name="pinned" value="1" />
+								<label for="pinned" id="label"></label>
+								<span id="pin_click" style="vertical-align:middle">
+									&nbsp;Pin to top
+								</span>&nbsp;&nbsp;
+								<select class="selectbox" id="weight" name="weight" style="display:none">
+									<?php
+									for ($i = -30; $i < 31; $i++)
+									{
+										$selected = $i == 0 ? ' selected="selected"' : "";
+										echo '<option value="' . $i . '"' . $selected . '>Weight ' . $i . '</option>';
+									}
+									?>
+								</select>
+							</fieldset>
+						</td>
+						<td class="dark" style="text-align:right;width:50%">
+							<input class="textbox" type="text" name="title" id="title" placeholder="Log title (optional)" style="width:96%;margin-left:0" />
+						</td>
+					</tr>
+					<tr>
+						<td class="dark" style="text-align:left;width:50%">
+							<input class="textbox" type="text" name="system_name" placeholder="System name" id="system_1" style="width:96%;margin-left:0" oninput="showResult(this.value, '1')" />
+						</td>
+						<td class="dark" style="text-align:right;width:50%">
+							<input class="textbox" type="text" name="station_name" placeholder="Station name (optional)" id="statname" style="width:96%" oninput="showResult(this.value, '41', 'no', 'yes', 'no', $('#system_1').val())" />
+						</td>
+					</tr>
+					<tr>
+						<td class="dark" colspan="2">
+							<textarea id="html" name="log_entry" placeholder="Log entry" rows="10" cols="40"></textarea>
+						</td>
+					</tr>
+					<tr>
+						<td class="dark" colspan="2">
+							<a href="javascript:void(0)">
+								<div class="button" id="submit_log">Submit log entry</div>
 							</a>
-						</span>
-					</td>
-				</tr>
-				<tr>
-					<td class="dark">
-						<input type="hidden" name="edit_id" id="edit_id" />
-						<input class="textbox" type="text" name="system_name" placeholder="System name (leave empty for general log entry)" id="system_1" style="width:96%;margin-left:0" oninput="showResult(this.value, '1')" />
-					</td>
-					<td class="dark">
-						<input class="textbox" type="text" name="station_name" placeholder="Station name (optional)" id="statname" style="width:96%" oninput="showResult(this.value, '41', 'no', 'yes', 'no', document.getElementById('system_1').value)" />
-					</td>
-				</tr>
-				<tr>
-					<td class="dark" colspan="2">
-						<textarea id="html" name="log_entry" placeholder="Log entry" rows="10" cols="40"></textarea>
-					</td>
-				</tr>
-				<tr>
-					<td class="dark" colspan="2">
-						<a href="javascript:void(0)">
-							<div class="button" onclick="update_data('log_form', '/add/log.php?do', true);tofront('null', true);$('#log_form').trigger('reset');return false">Submit log entry</div>
-						</a>
-						<span id="delete"></span>
-					</td>
-				</tr>
+							<span id="delete"></span>
+						</td>
+					</tr>
+				</tbody>
 			</table>
 		</div>
 	</form>
 </div>
+<script>
+	$("#pin_click").click(function()
+	{
+		if ($("#pinned").is(":checked"))
+		{
+			$("#pinned").prop("checked", false);
+			$("#pin_click").html("&nbsp;Pin to top");
+		}
+		else
+		{
+			$("#pinned").prop("checked", true);
+			$("#pin_click").html("&nbsp;Pinned to top");
+		}
+		$("#weight").toggle();
+		$("#weight").val("0");
+	});
+
+	$("#close_form").click(function()
+	{
+		tofront("addlog");
+		$(".addstations").toggle();
+		$("#log_form")[0].reset();
+	});
+
+	$("#submit_log").click(function()
+	{
+		update_data("log_form", "/add/log.php?do", true);
+		tofront("null", true);
+		$("#log_form")[0].reset();
+		return false
+	});
+</script>
+<script>
+	$("#log_type").change(function ()
+	{
+		$("#log_type option:selected").each(function()
+		{
+			var value = $(this).val();
+			if (value == "general")
+			{
+				$("#system_1").val("");
+				$("#system_1").hide();
+				$("#statname").val("");
+				$("#statname").hide();
+			}
+			else if (value == "system")
+			{
+				$("#statname").show();
+				$("#system_1").show();
+				get_cs("system_1");
+				$("#system_1").attr("placeholder", "System name");
+			}
+			else if (value == "personal")
+			{
+				$("#statname").show();
+				$("#system_1").show();
+				get_cs("system_1");
+			}
+		});
+	}).change();
+</script>

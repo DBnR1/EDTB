@@ -62,6 +62,7 @@ if (!empty($curSys["name"]))
 		$log_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT SQL_CACHE
 																user_log.id, user_log.system_name AS log_system_name, user_log.station_id,
 																user_log.log_entry, user_log.stardate,
+																user_log.title, user_log.pinned, user_log.type,
 																edtb_systems.name AS system_name,
 																edtb_stations.name AS station_name
 																FROM user_log
@@ -79,6 +80,7 @@ if (!empty($curSys["name"]))
 		$log_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT SQL_CACHE
 																user_log.id, user_log.system_name AS log_system_name, user_log.station_id,
 																user_log.log_entry, user_log.stardate,
+																user_log.title, user_log.pinned, user_log.type,
 																sqrt(pow((IFNULL(edtb_systems.x, user_systems_own.x)-(" . $usex . ")),2)
 																+pow((IFNULL(edtb_systems.y, user_systems_own.y)-(" . $usey . ")),2)
 																+pow((IFNULL(edtb_systems.z, user_systems_own.z)-(" . $usez . ")),2)) AS distance,
@@ -100,6 +102,7 @@ if (!empty($curSys["name"]))
 		$log_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT SQL_CACHE
 																user_log.id, user_log.system_id, user_log.system_name AS log_system_name,
 																user_log.station_id, user_log.log_entry, user_log.stardate,
+																user_log.title, user_log.pinned, user_log.type,
 																sqrt(pow((IFNULL(edtb_systems.x, user_systems_own.x)-(" . $usex . ")),2)
 																+pow((IFNULL(edtb_systems.y, user_systems_own.y)-(" . $usey . ")),2)
 																+pow((IFNULL(edtb_systems.z, user_systems_own.z)-(" . $usez . ")),2)) AS distance,
@@ -118,7 +121,7 @@ if (!empty($curSys["name"]))
 																AND " . $usez . "+" . $settings["log_range"] . "
 																OR
 																user_log.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'
-																ORDER BY user_log.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "' DESC,
+																ORDER BY -user_log.pinned ASC, user_log.weight, user_log.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "' DESC,
 																distance ASC,
 																user_log.stardate " . $ssort . "
 																LIMIT 10") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
@@ -163,20 +166,31 @@ if (!empty($curSys["name"]))
 						$sortable = '<span class="right"><a href="/index.php?slog_sort=' . $sssort . '" title="Sort by date asc/desc"><img class="icon" src="/style/img/sort.png" alt="Sort" style="margin-right:0" /></a></span>';
 					}
 
-					// check if system has screenshots
+						// check if system has screenshots
 					$screenshots = has_screenshots($system_name) ? '<a href="/Gallery.php?spgmGal=' . urlencode($system_name) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;margin-right:3px;vertical-align:top" /></a>' : "";
 
 					$logdata .= '<header><h2><img class="icon" src="/style/img/system_log.png" alt="log" />System log for <a href="/System.php?system_name=' . urlencode($system_name) . '">' . $system_name . '</a>' . $screenshots . '' . $add . '' . $sortable . '</h2></header>';
 					$logdata .= '<hr>';
 				}
 
-				$logdata .= '<h3>
+				// check if log is pinned
+				$pinned = $log_arr["pinned"] == "1" ? '<img class="icon" src="/style/img/pinned.png" alt="Pinned" style="margin-right:3px" />' : "";
+
+				// check if log is personal
+				$personal = $log_arr["type"] == "personal" ? '<img class="icon" src="/style/img/user.png" alt="Personal" style="margin-right:3px" />' : "";
+
+				$log_title = !empty($log_arr["title"]) ? '&nbsp;&ndash;&nbsp;' . $log_arr["title"] : "";
+
+				$logdata .= '<h3>' . $pinned . $personal . '
 								<a href="javascript:void(0)" onclick="toggle_log_edit(\'' . $log_arr["id"] . '\')" style="color:inherit" title="Edit entry">';
 				$logdata .= date_format($log_added, "j M Y, H:i");
+
 				if (!empty($log_station_name))
 				{
 					$logdata .= '&nbsp;[Station: ' . htmlspecialchars($log_station_name) . ']';
 				}
+
+				$logdata .= $log_title;
 				$logdata .= '</a></h3>';
 				$logdata .= '<pre class="entriespre" style="margin-bottom:20px">';
 				$logdata .= $log_text;
@@ -209,9 +223,9 @@ else
 }
 
 $glog_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT SQL_CACHE
-														id, log_entry, stardate
+														id, log_entry, stardate, pinned, title
 														FROM user_log WHERE system_id = '' AND system_name = ''
-														ORDER BY stardate " . $sort . "
+														ORDER BY -pinned, weight, stardate " . $sort . "
 														LIMIT 5") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 $gnum = mysqli_num_rows($glog_res);
 
@@ -238,12 +252,19 @@ if ($gnum > 0)
 		$glog_text = $glog_arr["log_entry"];
 		$gdate = date_create($glog_arr["stardate"]);
 		$glog_added = date_modify($gdate, "+1286 years");
-		$logdata .= '<h3>
+
+		// check if log is pinned
+		$pinned = $glog_arr["pinned"] == "1" ? '<img class="icon" src="/style/img/pinned.png" alt="Pinned" style="margin-right:3px" />' : "";
+
+		$log_title = !empty($glog_arr["title"]) ? '&nbsp;&ndash;&nbsp;' . $glog_arr["title"] : "";
+
+		$logdata .= '<h3>' . $pinned . '
 						<a href="javascript:void(0)"
 						onclick="tofront(\'addlog\');update_values(\'/get/getLogEditData.php?logid=' . $glog_arr["id"] . '\',\'' . $glog_arr["id"] . '\')"
 						style="color:inherit"
 						title="Edit entry">';
 		$logdata .= date_format($glog_added, "j M Y, H:i");
+		$logdata .= $log_title;
 		$logdata .= '</a></h3><pre class="entriespre">';
 		$logdata .= $glog_text;
 		$logdata .= '</pre>';
