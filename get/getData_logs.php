@@ -69,7 +69,7 @@ if (!empty($curSys["name"]))
 																LEFT JOIN edtb_systems ON user_log.system_id = edtb_systems.id
 																LEFT JOIN edtb_stations ON user_log.station_id = edtb_stations.id
 																WHERE user_log.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'
-																ORDER BY user_log.stardate " . $ssort . "")
+																ORDER BY -user_log.pinned ASC, user_log.weight, user_log.stardate " . $ssort . "")
 																or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 	}
 	/**
@@ -91,7 +91,7 @@ if (!empty($curSys["name"]))
 																LEFT JOIN edtb_stations ON user_log.station_id = edtb_stations.id
 																LEFT JOIN user_systems_own ON user_log.system_name = user_systems_own.name
 																WHERE user_log.system_name != ''
-																ORDER BY user_log.stardate " . $ssort . "")
+																ORDER BY -user_log.pinned ASC, user_log.weight, user_log.stardate " . $ssort . "")
 																or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 	}
 	/**
@@ -169,7 +169,7 @@ if (!empty($curSys["name"]))
 						// check if system has screenshots
 					$screenshots = has_screenshots($system_name) ? '<a href="/Gallery.php?spgmGal=' . urlencode($system_name) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;margin-right:3px;vertical-align:top" /></a>' : "";
 
-					$logdata .= '<header><h2><img class="icon" src="/style/img/system_log.png" alt="log" />System log for <a href="/System.php?system_name=' . urlencode($system_name) . '">' . $system_name . '</a>' . $screenshots . '' . $add . '' . $sortable . '</h2></header>';
+					$logdata .= '<header><h2><img class="icon" src="/style/img/system_log.png" alt="log" />System log for <a href="/System.php?system_name=' . urlencode($system_name) . '">' . $system_name . '</a>' . $screenshots . $add . $sortable . '</h2></header>';
 					$logdata .= '<hr>';
 				}
 
