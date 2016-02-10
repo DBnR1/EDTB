@@ -65,6 +65,8 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 			<script src="/source/Vendor/wiselinks-1.2.2.min.js"></script>
 			<!-- clipboard -->
 			<script src="/source/Vendor/clipboard.min.js"></script>
+			<!-- audio recorder -->
+			<script src="/source/Vendor/Recordmp3js/recordmp3.js"></script>
 
 			<?php
 			if ($_SERVER["PHP_SELF"] == "/GalMap.php")
@@ -257,7 +259,7 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 			</div>
 			<div class="rightpanel-top">
 				<!-- elite emblem and add logs -->
-				<a href="javascript:void(0)" id="toggle" onclick="toggle_log('')" title="Add log entry">
+				<a href="javascript:void(0)" id="toggle" title="Add log entry">
 					<img src="/style/img/elite.png" alt="Add log" class="elite_emb" />
 				</a>
 

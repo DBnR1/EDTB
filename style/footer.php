@@ -249,6 +249,12 @@
 						$("#map_legend2").fadeToggle("fast");
 					}
 				});
+
+				$("#toggle").click(function()
+				{
+					//start_audio();
+					toggle_log('');
+				});
 			});
 		</script>
 
@@ -262,7 +268,6 @@
 				container.push($("#ext_links"));
 				container.push($("#cmdr_status_mi"));
 				container.push($("#ship_status_mi"));
-				container.push($("#map_legend2"));
 				container.push($("#edsm_comment"));
 				// container.push($("#edsm_comment"));
 				// container.push($("#edsm_comment"));

@@ -1211,7 +1211,7 @@ function imgurUpload(file, fileurl)
 		{
 			var url = result.data.link;
 
-			$("#uploaded").html('Image succesfully uploaded!<br /><a target="_BLANK" href="' + url + '">Link to your image on imgur.com<img	 class="ext_icon" src="/style/img/external_link.png" alt="ext" /></a>');
+			$("#uploaded").html('Image succesfully uploaded!<br /><a target="_BLANK" href="' + url + '">Link to your image on imgur.com<img	class="ext_icon" src="/style/img/external_link.png" alt="ext" /></a>');
 
 			// write to file so we can retrieve url later
 			$.ajax(
@@ -1536,4 +1536,135 @@ function minmax(style)
 	document.cookie="style=" + style + "; expires=Thu, 18 Dec 2069 12:00:00 UTC; path=/admin";
 	location.reload();
 	get_data(true);
+}
+
+/**
+ * Audio record log
+ *
+ * @author nusofthq
+ */
+function __log(e, data)
+{
+	$("#audio_log").html(e);
+}
+
+var audio_context;
+var recorder;
+
+/**
+ * Audio record start media
+ *
+ * @author nusofthq
+ */
+function startUserMedia(stream)
+{
+	var input = audio_context.createMediaStreamSource(stream);
+	//__log('Media stream created.' );
+	//__log("input sample rate " +input.context.sampleRate);
+
+	// Feedback!
+	//input.connect(audio_context.destination);
+	//__log('Input connected to audio context destination.');
+
+	recorder = new Recorder(input,
+	{
+		numChannels: 1
+	});
+	//__log('Recorder initialised.');
+}
+
+/**
+ * Audio start recording
+ *
+ * @author nusofthq
+ */
+function startRecording(button)
+{
+	recorder && recorder.record();
+	//button.disabled = true;
+	//button.nextElementSibling.disabled = false;
+	__log('Recording...');
+}
+
+/**
+ * Audio stop recording
+ *
+ * @author nusofthq
+ */
+function stopRecording(button)
+{
+	recorder && recorder.stop();
+	//button.disabled = true;
+	//button.previousElementSibling.disabled = false;
+	__log('Stopped recording<br />Wait while the audio file is created');
+
+	// create WAV download link using audio data blob
+	createDownloadLink();
+
+	recorder.clear();
+}
+
+/**
+ * Audio create download link
+ *
+ * @author nusofthq
+ */
+function createDownloadLink()
+{
+	recorder && recorder.exportWAV(function(blob)
+	{
+		/*var url = URL.createObjectURL(blob);
+		var li = document.createElement('li');
+		var au = document.createElement('audio');
+		var hf = document.createElement('a');
+
+		au.controls = true;
+		au.src = url;
+		hf.href = url;
+		hf.download = new Date().toISOString() + '.wav';
+		hf.innerHTML = hf.download;
+		li.appendChild(au);
+		li.appendChild(hf);
+		recordingslist.appendChild(li);*/
+	});
+}
+
+/**
+ * Audio start audio
+ *
+ * @author nusofthq
+ */
+function start_audio()
+{
+	try
+	{
+		// webkit shim
+		window.AudioContext = window.AudioContext || window.webkitAudioContext;
+		navigator.getUserMedia = ( navigator.getUserMedia ||
+		navigator.webkitGetUserMedia ||
+		navigator.mozGetUserMedia ||
+		navigator.msGetUserMedia);
+		window.URL = window.URL || window.webkitURL;
+
+		audio_context = new AudioContext;
+		//__log('Audio context set up.');
+		//__log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not present!'));
+	}
+	catch (e)
+	{
+		__log('No web audio support in this browser!');
+	}
+
+	var go = true;
+	navigator.getUserMedia({audio: true}, startUserMedia, function(e)
+	{
+		__log('<strong>No live audio input</strong><br /><br />If you <em>do have</em> a microphone connected, your browser might not<br />be allowing the microphone to be connected from "insecure" sources.<br /><br />In order to record audio logs from this source,<br />use https and port 3002 to access ED ToolBox.');
+		go = false;
+	});
+
+	if (go === false)
+	{
+		$("#record_click").hide();
+		$("#stop_click").hide();
+	}
 }

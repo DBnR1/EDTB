@@ -49,6 +49,7 @@ if (isset($_GET["do"]))
 	$l_pinned = $data["pinned"] == "1" ? "1" : "0";
 	$l_weight = $data["weight"];
 	$l_title = $data["title"];
+	$l_audiofiles = $data["audiofiles"];
 
 	// get system id
 	$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id AS system_id
@@ -83,7 +84,8 @@ if (isset($_GET["do"]))
 													title = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $l_title) . "',
 													type = '" . $l_type . "',
 													weight = '" . $l_weight . "',
-													pinned = '" . $l_pinned . "'
+													pinned = '" . $l_pinned . "',
+													audio = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $l_audiofiles) . "'
 													WHERE id = '" . $l_id . "'
 													LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]));
 	}
@@ -95,7 +97,7 @@ if (isset($_GET["do"]))
 	}
 	else
 	{
-		mysqli_query($GLOBALS["___mysqli_ston"], "	INSERT INTO user_log (system_id, system_name, station_id, log_entry, title, weight, pinned, type)
+		mysqli_query($GLOBALS["___mysqli_ston"], "	INSERT INTO user_log (system_id, system_name, station_id, log_entry, title, weight, pinned, type, audio)
 													VALUES
 													('" . $l_system . "',
 													'" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $l_system_name) . "',
@@ -104,7 +106,8 @@ if (isset($_GET["do"]))
 													'" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $l_title) . "',
 													'" . $l_weight . "',
 													'" . $l_pinned . "',
-													'" . $l_type . "')")
+													'" . $l_type . "',
+													'" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $l_audiofiles) . "')")
 													or write_log(mysqli_error($GLOBALS["___mysqli_ston"]));
 	}
 
@@ -139,7 +142,7 @@ if (isset($_GET["do"]))
 								<option value="personal">Type: System log (Personal)</option>
 							</select>
 							<fieldset>
-								<input type="checkbox" id="pinned" name="pinned" value="1" />
+								<input type="checkbox" id="pinned" name="pinned" value="1" disabled="disabled" />
 								<label for="pinned" id="label"></label>
 								<span id="pin_click" style="vertical-align:middle">
 									&nbsp;Pin to top
@@ -173,6 +176,24 @@ if (isset($_GET["do"]))
 						</td>
 					</tr>
 					<tr>
+						<td class="dark" colspan="2" style="vertical-align:middle">
+							<span id="audio_log" class="left" style="text-align:left;margin-left:6px"></span>
+							<span class="right">
+								<a href="javascript:void(0)" title="Enable audio log" id="enable_audio">
+									Enable audio
+								</a>
+								<a href="javascript:void(0)" title="Start recording audio" id="record_click" style="display:none">
+									<img class="icon24" src="/style/img/record.png" id="record" style="margin-top:10px;margin-bottom:10px" />
+								</a>
+								<a href="javascript:void(0)" title="Stop recording audio" id="stop_click" style="display:none">
+									<img class="icon24" src="/style/img/stop.png" id="stop" style="margin-top:10px;margin-bottom:10px" />
+								</a>
+							</span>
+							<ul id="recordingslist"></ul>
+							<input id="audiofiles" type="hidden" name="audiofiles" value="" />
+						</td>
+					</tr>
+					<tr>
 						<td class="dark" colspan="2">
 							<a href="javascript:void(0)">
 								<div class="button" id="submit_log">Submit log entry</div>
@@ -186,6 +207,28 @@ if (isset($_GET["do"]))
 	</form>
 </div>
 <script>
+	$("#enable_audio").click(function()
+	{
+		$("#enable_audio").hide();
+		$("#record_click").show();
+		//$("#stop_click").show();
+		start_audio();
+	});
+
+	$("#record_click").click(function()
+	{
+		startRecording(this);
+		$("#record_click").hide();
+		$("#stop_click").show();
+		//$("#stop").attr("src", "/style/img/stop.png");
+	});
+
+	$("#stop_click").click(function()
+	{
+		stopRecording(this);
+		$("#stop_click").hide();
+	});
+
 	$("#pin_click").click(function()
 	{
 		if ($("#pinned").is(":checked"))
@@ -214,6 +257,7 @@ if (isset($_GET["do"]))
 		update_data("log_form", "/add/log.php?do", true);
 		tofront("null", true);
 		$("#log_form")[0].reset();
+		$("#recordingslist").html("");
 		return false
 	});
 </script>
@@ -246,3 +290,4 @@ if (isset($_GET["do"]))
 		});
 	}).change();
 </script>
+

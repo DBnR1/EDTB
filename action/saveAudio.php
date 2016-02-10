@@ -1,6 +1,6 @@
 <?php
 /**
- * Ajax backend file to fetch log edit data
+ * Ajax backend file to save audio logs
  *
  * No description
  *
@@ -30,34 +30,44 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
+/** @require config */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
 /** @require functions */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 /** @require MySQL */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 
-$log_id = 0 + $_GET["logid"];
+$data = substr($_POST["data"], strpos($_POST["data"], ",") + 1);
+$decodedData = base64_decode($data);
 
-$log_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT user_log.id, user_log.system_id, user_log.system_name AS log_system_name,
-														user_log.station_id, user_log.log_entry, user_log.stardate, user_log.title,
-														user_log.weight, user_log.pinned, user_log.type, user_log.audio,
-														edtb_systems.name AS system_name,
-														edtb_stations.name AS station_name
-														FROM user_log
-														LEFT JOIN edtb_systems ON user_log.system_id = edtb_systems.id
-														LEFT JOIN edtb_stations ON user_log.station_id = edtb_stations.id
-														WHERE user_log.id = '" . $log_id . "'
-														LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-$log_arr = mysqli_fetch_assoc($log_res);
+$audiodir = $_SERVER["DOCUMENT_ROOT"] . "/audio_logs";
 
-$data = array();
-$data["edit_id"] = $log_arr["id"];
-$data["system_1"] = $log_arr["system_name"] == "" ? $log_arr["log_system_name"] : $log_arr["system_name"];
-$data["statname"] = $log_arr["station_name"];
-$data["html"] = $log_arr["log_entry"];
-$data["log_type"] = $log_arr["type"];
-$data["title"] = $log_arr["title"];
-$data["pinned"] = $log_arr["pinned"];
-$data["weight"] = $log_arr["weight"];
-$data["audiofiles"] = $log_arr["audio"];
+if (!is_dir($audiodir))
+{
+	if (!mkdir($audiodir, 0775, true))
+	{
+		$error = error_get_last();
+		write_log("Error: " . $error["message"], __FILE__, __LINE__);
+	}
+}
 
-echo json_encode($data);
+$filename = $audiodir . "/" . $_POST["fname"];
+
+if (!$fp = fopen($filename, 'wb'))
+{
+	$error = error_get_last();
+	write_log("Error: " . $error["message"], __FILE__, __LINE__);
+	exit;
+}
+else
+{
+	fwrite($fp, $decodedData);
+	fclose($fp);
+	?>
+	<script>
+		$("#audiofiles").html("ddd");
+		$("#audiofiles").append(<?php echo $_POST["fname"];?>);
+		$("#audiofiles").append("ddd");
+	</script>
+	<?php
+}

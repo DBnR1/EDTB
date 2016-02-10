@@ -1178,8 +1178,8 @@ a.poid:hover
 {
 	border-radius:4px;
 	font-family:Sintony;
-	color:#fffffa;
 	font-size:12px;
+	color:#fffffa;
 	resize:none;
 	background-color:#41545e;
 	border:1px solid #1b2133;
@@ -1194,9 +1194,14 @@ a.poid:hover
 .textbox:hover
 {
 	text-shadow:1px 1px 4px #bcafab;
-	color:#fffffa;
-	font-size:12px;
 	background-color:#4e6470;
+}
+
+.textbox:focus
+{
+	border:2px solid #4e6470;
+	padding:2px;
+	padding-left:4px;
 }
 
 input[type=checkbox]
@@ -1854,6 +1859,18 @@ div.tooltip
 	color:#c26b6c;
 }
 
+#recordingslist li
+{
+	list-style-type:none;
+	float:right;
+}
+
+.audio
+{
+	padding:5px;
+	padding-left:0;
+	margin-bottom:10px;
+}
 /* -------------------------------------------------------------------------- */
 /* SVG loader (from ED3D Galaxy Map) */
 /* -------------------------------------------------------------------------- */
