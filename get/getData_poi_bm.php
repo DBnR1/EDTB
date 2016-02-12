@@ -238,7 +238,7 @@ function maketable($res, $type)
 																	LEFT JOIN edtb_systems ON user_bookmarks.system_name = edtb_systems.name
 																	LEFT JOIN user_bm_categories ON user_bookmarks.category_id = user_bm_categories.id
 																	LEFT JOIN user_systems_own ON user_bookmarks.system_name = user_systems_own.name
-																	ORDER BY -(sqrt(pow((item_coordx-(" . $usex . ")),2)+pow((item_coordy-(" . $usey . ")),2)+pow((item_coordz-(" . $usez . ")),2))) DESC, system_name")
+																	ORDER BY -(sqrt(pow((item_coordx-(" . $usex . ")),2)+pow((item_coordy-(" . $usey . ")),2)+pow((item_coordz-(" . $usez . ")),2))) DESC, system_name, user_bookmarks.added_on DESC")
 																	or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 			$i = 0;
 			echo maketable($bm_res, "Bm");
