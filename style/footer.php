@@ -55,17 +55,17 @@
 				?>
 				<!-- initialize textareas -->
 				<script>
-					if ($('#html'))
+					if ($('#html').length)
 					{
 						$('#html').markItUp(html_textarea);
 					}
 
-					if ($('#poi_text'))
+					if ($('#poi_text').length)
 					{
 						$('#poi_text').markItUp(poi_bm);
 					}
 
-					if ($('#bm_text'))
+					if ($('#bm_text').length)
 					{
 						$('#bm_text').markItUp(poi_bm);
 					}
@@ -73,11 +73,17 @@
 				<!-- calculate distances -->
 				<div class="input" id="distance" style="text-align:center">
 					<div class="input-inner">
-						<div class="suggestions" id="suggestions_2" style="margin-left:8px;margin-top:115px"></div>
-						<div class="suggestions" id="suggestions_6" style="margin-left:8px;margin-top:237px"></div>
+						<div class="suggestions" id="suggestions_2" style="margin-left:8px;margin-top:116px"></div>
+						<div class="suggestions" id="suggestions_6" style="margin-left:8px;margin-top:238px"></div>
 						<table>
 							<tr>
-								<td class="heading" colspan="2">Calculate Distances<span class="right"><a href="javascript:void(0)" onclick="tofront('distance')"><img src="/style/img/close.png" class="icon" alt="X" /></a></span></td>
+								<td class="heading" colspan="2">Calculate Distances
+									<span class="right">
+										<a href="javascript:void(0)" onclick="tofront('distance')" title="Close form">
+											<img src="/style/img/close.png" class="icon" alt="X" />
+										</a>
+									</span>
+								</td>
 							</tr>
 							<tr>
 								<td class="dark" style="width:99%">
@@ -106,7 +112,7 @@
 							</tr>
 							<tr>
 								<td colspan="2" class="dark">
-									<input class="button" type="submit" value="Calculate distance" onclick='calcDist(document.getElementById("coordsx_2").value, document.getElementById("coordsy_2").value, document.getElementById("coordsz_2").value, document.getElementById("coordsx_6").value, document.getElementById("coordsy_6").value,document.getElementById("coordsz_6").value,  document.getElementById("system_2").value, document.getElementById("system_6").value);' />
+									<input class="button" type="submit" value="Calculate distance" id="calc_click" />
 								</td>
 							</tr>
 						</table>
@@ -119,7 +125,13 @@
 						<div class="suggestions" id="suggestions_9" style="margin-left:223px;margin-top:79px"></div>
 						<table>
 							<tr>
-								<td class="heading" colspan="2">Search Systems and Stations<span class="right"><a href="javascript:void(0)" onclick="tofront('search_system')" title="Close form"><img src="/style/img/close.png" class="icon" alt="X" /></a></span></td>
+								<td class="heading" colspan="2">Search Systems and Stations
+									<span class="right">
+										<a href="javascript:void(0)" onclick="tofront('search_system')" title="Close form">
+											<img src="/style/img/close.png" class="icon" alt="X" />
+										</a>
+									</span>
+								</td>
 							</tr>
 							<tr>
 								<td class="dark" style="width:200px">
@@ -151,7 +163,8 @@
 			<img class="callout" alt="co" src="/style/img/callout_black.gif" style="top:-14px;left:20px" />Click the system name to calculate distances
 		</div>
 		<div class="tooltip" id="help_links" style="position:fixed;top:120px;left:260px">
-			<img class="callout" alt="co" src="/style/img/callout_black.gif" style="top:-14px;left:20px" />Click the date and time to open external links<br />You can edit these from the <a href="/admin/settings.php?cat_id=5">settings</a>
+			<img class="callout" alt="co" src="/style/img/callout_black.gif" style="top:-14px;left:20px" />Click the date and time to open external links<br />
+			You can edit these from the <a href="/admin/settings.php?cat_id=5">settings</a>
 		</div>
 		<!-- Wiselinks -->
 		<script>
@@ -254,6 +267,11 @@
 				{
 					//start_audio();
 					toggle_log('');
+				});
+
+				$("#calc_click").click(function()
+				{
+					 calcDist(document.getElementById("coordsx_2").value, document.getElementById("coordsy_2").value, document.getElementById("coordsz_2").value, document.getElementById("coordsx_6").value, document.getElementById("coordsy_6").value,document.getElementById("coordsz_6").value,  document.getElementById("system_2").value, document.getElementById("system_6").value);
 				});
 			});
 		</script>

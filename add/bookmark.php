@@ -88,12 +88,10 @@ if (isset($_GET["do"]))
 					</td>
 				</tr>
 				<tr>
-					<td class="dark">
+					<td class="dark" style="text-align:left">
 						<input type="hidden" name="bm_edit_id" id="bm_edit_id">
 						<input type="hidden" name="bm_system_id" id="bm_system_id">
-						<div>
-							<input class="textbox" type="text" name="bm_system_name" placeholder="System name" id="bm_system_name" style="width:400px" oninput="showResult(this.value, '3', 'no', 'no', 'no', 'yes')" />
-						</div>
+						<input class="textbox" type="text" name="bm_system_name" placeholder="System name" id="bm_system_name" style="width:410px" oninput="showResult(this.value, '3', 'no', 'no', 'no', 'yes')" />
 					</td>
 					<td class="dark">
 						<select class="selectbox" name="bm_catid" id="bm_catid" style="width:140px">
@@ -116,7 +114,7 @@ if (isset($_GET["do"]))
 				</tr>
 				<tr>
 					<td colspan="2" class="dark">
-						<a href="/Poi.php" data-replace="true" data-target=".entries"><div class="button" onclick="update_data('bm_form', '/add/bookmark.php?do', true);tofront('null', true)">Add Bookmark</div></a>
+						<a href="javascript:void(0)"><div class="button" id="add_bm_click">Add Bookmark</div></a>
 						<span id="delete_bm"></span>
 					</td>
 				</tr>
@@ -124,3 +122,10 @@ if (isset($_GET["do"]))
 		</div>
 	</form>
 </div>
+<script>
+	$("#add_bm_click").click(function()
+	{
+		update_data('bm_form', '/add/bookmark.php?do', true);
+		tofront('null', true);
+	});
+</script>

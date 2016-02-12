@@ -43,15 +43,15 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 		{
 			if ($_GET["removed"] != "1")
 			{
-				echo "<div class='notify_success'>Screenshot succesfully deleted</div>";
+				echo '<div class="notify_success">Screenshot succesfully deleted</div>';
 			}
 			else
 			{
-				echo "<div class='notify_deleted'>Screenshot deletion failed.</div>";
+				echo '<div class="notify_deleted">Screenshot deletion failed.</div>';
 			}
 		}
 
-		if (is_dir($settings['old_screendir']) && $settings['old_screendir'] != "C:\Users" && $settings['old_screendir'] != "C:\Users\\")
+		if (is_dir($settings["old_screendir"]) && $settings["old_screendir"] != "C:\Users" && $settings["old_screendir"] != "C:\Users\\")
 		{
 			?>
 			<table id="wrapper">

@@ -1189,6 +1189,8 @@ function spgm_DisplayGalleryNavibar($strGalleryId, $strFilterFlags, $mixPictureI
 {
     global $spgm_cfg;
 
+	require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+
     spgm_Trace('<p>function spgm_DisplayGalleryNavibar</p>' . "\n" . 'strGalleryId: ' . $strGalleryId . '<br />' . "\n" . 'strFilterFlags: ' . $strFilterFlags . '<br />' . "\n" . 'mixPictureId: ' . $mixPictureId . '<br />' . "\n");
 
     $arrExplodedPathToGallery = explode('/', $strGalleryId);
@@ -1234,10 +1236,10 @@ function spgm_DisplayGalleryNavibar($strGalleryId, $strFilterFlags, $mixPictureI
         print ' &raquo; ';
 
 		// check if system is logged
-		$loglink = is_logged($arrExplodedPathToGallery[$i]) ? '<a href="log.php?system=' . urlencode($arrExplodedPathToGallery[$i]) . '" style="color:inherit" title="System has log entries"><img src="/style/img/log.png" alt="Log" style="margin-left:5px" /></a>' : "";
+		$loglink = is_logged($arrExplodedPathToGallery[$i]) ? '<a href="/Log.php?system=' . urlencode($arrExplodedPathToGallery[$i]) . '" style="color:inherit" title="System has log entries"><img src="/style/img/log.png" class="icon" alt="Log" style="margin-left:5px" /></a>' : "";
 
 		// show link if system exists
-		$sysinfo_link = system_exists($arrExplodedPathToGallery[$i]) ? '<a href="System.php?system_name=' . urlencode($arrExplodedPathToGallery[$i]) . '" style="color:inherit" title="System info"><img src="/style/img/info.png" alt="Info" style="margin-left:5px" /></a>' : "";
+		$sysinfo_link = system_exists($arrExplodedPathToGallery[$i]) ? '<a href="/System.php?system_name=' . urlencode($arrExplodedPathToGallery[$i]) . '" style="color:inherit" title="System info"><img src="/style/img/info.png" class="icon" alt="Info" style="margin-left:6px" /></a>' : "";
 
         if ($i < ($_max - 1))
         {

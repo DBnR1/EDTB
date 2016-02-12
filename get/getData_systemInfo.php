@@ -69,12 +69,12 @@ if ($_GET["system_id"] != "undefined" || $_GET["system_name"] != "undefined")
 
 	$si_system_arr = mysqli_fetch_assoc($si_system_res);
 
-	$si_system_name = $si_system_arr["name"];
+	$si_system_name = !empty($si_system_arr["name"]) ? $si_system_arr["name"] : $_GET["system_name"];
 
 	$si_system_display_name = $si_system_name;
 	$curSys["simbad_ref"] = $si_system_arr["simbad_ref"];
 
-	if ($curSys["simbad_ref"] != "")
+	if (!empty($curSys["simbad_ref"]))
 	{
 		$si_system_display_name = '<a href="http://simbad.u-strasbg.fr/simbad/sim-id?Ident=' . urlencode($si_system_name) . '" target="_BLANK" title="View on Simbad">' . $si_system_name . '</a><img src="/style/img/external_link.png" class="ext_link" alt="ext" style="margin-left:5px" />';
 	}

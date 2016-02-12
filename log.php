@@ -53,7 +53,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 																FROM user_log
 																LEFT JOIN edtb_stations ON edtb_stations.id = user_log.station_id
 																WHERE user_log.system_id = '" . $logsystem_id . "'
-																OR user_log.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $logsystem) . "'
+																OR user_log.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], urldecode($logsystem)) . "'
 																ORDER BY -user_log.pinned, user_log.weight, user_log.stardate DESC") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]));
 		$num = mysqli_num_rows($log_res);
 
@@ -63,8 +63,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 		}
 		else
 		{
-			echo "<h2>No log entries for " . $logsystem . "</h2><br />
-					<a href=\"javascript:void(0);\" id=\"toggle\" onclick=\"toggle_log('" . addslashes($logsystem) . "');\" title=\"Add log entry\" style=\"color:inherit;\">Click here to add one</a>";
+			echo '<h2>No log entries for ' . $logsystem . '</h2><br />';
+			echo '<a href="javascript:void(0)" id="toggle" onclick="toggle_log(\'' . addslashes($logsystem) . '\')" title="Add log entry" style="color:inherit">Click here to add one</a>';
 		}
 		?>
 	</div>

@@ -56,8 +56,8 @@ if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"]))
 	</table>
 	<div class="entries_inner" style="overflow:hidden !important">
 		<div id="container"></div>
-		<div id="report" onclick='$("#report").fadeToggle("fast")'></div>
-		<div id="disclaimer" onclick='$("#disclaimer").fadeToggle("fast")'></div>
+		<div id="report" onclick="$('#report').fadeToggle('fast')"></div>
+		<div id="disclaimer" onclick="$('#disclaimer').fadeToggle('fast')"></div>
 		<div id="map_legend">Legend</div>
 		<div id="map_legend2">
 			<table style="padding:5px">
@@ -158,5 +158,23 @@ if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"]))
 		</div>
 	</div>
 </div>
+<!-- Hide divs by clicking outside of them -->
+<script>
+	$(document).mouseup(function (e)
+	{
+		var container = new Array();
+		container.push($("#disclaimer"));
+		container.push($("#map_legend2"));
+
+		$.each(container, function(key, value)
+		{
+			if (!$(value).is(e.target) // if the target of the click isn't the container...
+				&& $(value).has(e.target).length === 0) // ... nor a descendant of the container
+			{
+				$(value).fadeOut("fast");
+			}
+		});
+	});
+</script>
 <?php
 require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");

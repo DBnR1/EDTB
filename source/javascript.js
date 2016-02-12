@@ -117,7 +117,6 @@ function update_map()
 		dataType: "html",
 		success: function()
 		{
-
 			log("Requested /get/getMapPoints.json.php succesfully");
 		},
 		error: function()
@@ -206,7 +205,7 @@ function get_data(override)
 				}
 
 				// if we're on the system info page
-				if (document.getElementById("system_page"))
+				if ($("#system_page").length)
 				{
 					$("#si_name").html(result.si_name);
 					$("#si_stations").html(result.si_stations);
@@ -217,7 +216,7 @@ function get_data(override)
 					//log(result.si_detailed);
 				}
 
-				if (document.getElementById("container"))
+				if ($("#container").length)
 				{
 					log("Updating Neighborhood Map");
 					var chart = $("#container").highcharts();
@@ -235,7 +234,7 @@ function get_data(override)
 					$("head").append(script);
 				}
 
-				if (document.getElementById("poi_bm"))
+				if ($("#poi_bm").length)
 				{
 					log("Updating Poi & BM");
 					update_poi_bm();
@@ -463,7 +462,7 @@ function update_values(editurl, deleteid)
 		}
 	});
 
-	if (document.getElementById("delete"))
+	if ($("#delete").length)
 	{
 		$("#delete").html("");
 		if (deleteid !== false)
@@ -472,7 +471,7 @@ function update_values(editurl, deleteid)
 		}
 	}
 
-	if (document.getElementById("delete_poi"))
+	if ($("#delete_poi").length)
 	{
 		$("#delete_poi").html("");
 		if (deleteid !== false)
@@ -481,7 +480,7 @@ function update_values(editurl, deleteid)
 		}
 	}
 
-	if (document.getElementById("delete_bm"))
+	if ($("#delete_bm").length)
 	{
 		$("#delete_bm").html("");
 		if (deleteid !== false)
@@ -597,16 +596,16 @@ function startTime()
 	m = addZero(m);
 	s = addZero(s);
 
-	if (document.getElementById("hrs"))
+	if ($("#hrs").length)
 	{
 		$("#hrs").html(h + ":" + m + ":" + s);
 	}
-	else if (document.getElementById("hrsns"))
+	if ($("#hrsns").length)
 	{
 		$("#hrsns").html(h + ":" + m);
 	}
 
-	if (document.getElementById("date"))
+	if ($("#date").length)
 	{
 		$("#date").html(d + " " + mo + " " + year);
 	}
@@ -652,8 +651,6 @@ function confirmation(delid, what)
 				{
 					if (what == "screenshot")
 					{
-						//var url = result;
-						//log(url);
 						window.location = result;
 					}
 					update_map();
@@ -759,11 +756,11 @@ function showResult(str, divid, link, station, idlink, sysid, dp)
 
 	if (str.length >= 1)
 	{
-		document.getElementById("suggestions_" + divid).style.display = "block";
+		$("#suggestions_" + divid).show();
 	}
 	else
 	{
-		document.getElementById("suggestions_" + divid).style.display = "none";
+		$("#suggestions_" + divid).hide();
 	}
 
 	if (window.XMLHttpRequest)
@@ -832,7 +829,7 @@ function setResult(result, coordinates, divid)
 	$("#coordsx_" + divid).val(x);
 	$("#coordsy_" + divid).val(y);
 	$("#coordsz_" + divid).val(z);
-	document.getElementById("suggestions_" + divid).style.display = "none";
+	$("#suggestions_" + divid).hide();
 }
 
 /**
@@ -849,7 +846,7 @@ function setbm(name, sysid)
 	$("#bm_edit_id").val("");
 	$("#bm_text").val("");
 	$("#bm_catid").val("0");
-	document.getElementById("suggestions_3").style.display = "none";
+	$("#suggestions_3").hide();
 }
 
 /**
@@ -862,7 +859,7 @@ function setbm(name, sysid)
 function setl(name, stationid)
 {
 	$("#statname").val(name);
-	document.getElementById("suggestions_41").style.display = "none";
+	$("#suggestions_41").hide();
 }
 
 /**
@@ -882,7 +879,7 @@ function setdp(name, coordinates, systemid)
 	$("#x").val(x);
 	$("#y").val(y);
 	$("#z").val(z);
-	document.getElementById("suggestions_37").style.display = "none";
+	$("#suggestions_37").hide();
 }
 
 /*
@@ -1072,16 +1069,16 @@ function calcDist(coord_fromx, coord_fromy, coord_fromz, coord_tox, coord_toy, c
 	{
 		if (to === "")
 		{
-			document.getElementById("dist_display").value = "Missing information, try again";
+			$("#dist_display").val("Missing information, try again");
 		}
 		else
 		{
-			document.getElementById("dist_display").value = "The distance from " + from + " to " + to + " is " + Math.round(Math.sqrt(Math.pow((x1-(x2)),2) + Math.pow((y1-(y2)),2) + Math.pow((z1-(z2)),2))) + " ly";
+			$("#dist_display").val("The distance from " + from + " to " + to + " is " + Math.round(Math.sqrt(Math.pow((x1-(x2)), 2) + Math.pow((y1-(y2)), 2) + Math.pow((z1-(z2)),2))) + " ly");
 		}
 	}
 	else
 	{
-		document.getElementById("dist_display").value = "Missing information, try again";
+		$("#dist_display").val("Missing information, try again");
 	}
 }
 
@@ -1094,7 +1091,7 @@ function calcDist(coord_fromx, coord_fromy, coord_fromz, coord_tox, coord_toy, c
  */
 function addstation(station, station_id)
 {
-	document.getElementById("statname").value = station;
+	$("#statname").val(station);
 }
 
 /**
@@ -1105,7 +1102,7 @@ function addstation(station, station_id)
  */
 function savelog(log)
 {
-	var data = document.getElementById("logtext").value;
+	var data = $("#logtext").val();
 	$.ajax(
 	{
 	  type: "POST",
@@ -1114,12 +1111,12 @@ function savelog(log)
 	})
 	.done(function(msg)
 	{
-		$("#seslogsuccess").html('<img src="/style/img/check.png" class="icon" style="margin-right:5px" alt="Done">');
+		$("#seslogsuccess").html('<img src="/style/img/check.png" class="icon" alt="Done">');
 
 		// display check.png for 3,5 seconds
 		setTimeout(function()
 		{
-			if ($("#seslogsuccess").html('<img src="/style/img/check.png" class="icon" style="margin-right:5px" alt="Done">'))
+			if ($("#seslogsuccess").html('<img src="/style/img/check.png" class="icon" alt="Done">'))
 			{
 				$("#seslogsuccess").html($("#old_val").html());
 			}
@@ -1135,7 +1132,7 @@ function savelog(log)
  */
 function showsave()
 {
-	$("#seslogsuccess").html('<a href="javascript:void(0)" onclick="savelog()" title="Save session log"><img src="/style/img/save.png" class="icon" style="margin-right:5px" alt="Save"></a>');
+	$("#seslogsuccess").html('<a href="javascript:void(0)" onclick="savelog()" title="Save session log"><img src="/style/img/save.png" class="icon" alt="Save"></a>');
 }
 
 /**
@@ -1532,8 +1529,8 @@ function enlarge(img, og_width)
  */
 function minmax(style)
 {
-	document.cookie="style=" + style + "; expires=Thu, 18 Dec 2069 12:00:00 UTC; path=/";
-	document.cookie="style=" + style + "; expires=Thu, 18 Dec 2069 12:00:00 UTC; path=/admin";
+	document.cookie = "style=" + style + "; expires=Thu, 18 Dec 2069 12:00:00 UTC; path=/";
+	document.cookie = "style=" + style + "; expires=Thu, 18 Dec 2069 12:00:00 UTC; path=/admin";
 	location.reload();
 	get_data(true);
 }

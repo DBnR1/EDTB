@@ -1016,6 +1016,8 @@ function reference_systems($standard = false)
  */
 function make_log_entries($log_res, $type)
 {
+	global $system_time;
+
 	$this_system = "";
 	$this_id = "";
 	$i = 0;
