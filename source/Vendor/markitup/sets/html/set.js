@@ -23,7 +23,7 @@ html_textarea = {
 		{name:'Ol', openWith:'<ol>\n', closeWith:'</ol>\n' },
 		{name:'Li', openWith:'<li>', closeWith:'</li>' },
 		{separator:'---------------' },
-		{name:'Picture', key:'P', replaceWith:'<img class="log_img" src="[![Source:!:http://]!]" alt="[![Alternative text]!]" />' },
+		{name:'Picture', key:'P', replaceWith:'<img class="log_img" src="[![Source:!:http://]!]" alt="picture" />' },
 		{name:'Thumbnail', key:'Y', replaceWith:'<img class="thumbnail_img" src="[![Source:!:http://]!]" alt="thumbnail" style="width:480px;height:auto" onclick="enlarge(this, \'480\')" />' },
 		{name:'Link', key:'L', openWith:'<a href="[![Link:!:http://]!]"(!( title="[![Title]!]")!)>', closeWith:'</a>', placeHolder:'Your text to link...' },
 		{separator:'---------------' },
