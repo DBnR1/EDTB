@@ -54,10 +54,11 @@ if (is_dir($settings["log_dir"]))
 	{
 		$imported_files = file($imported_logs_file, FILE_IGNORE_NEW_LINES);
 	}
-
+	//print_r($imported_files);
 	foreach ($logfiles2 as $file)
 	{
-		if (!array_search($file, $imported_files))
+		//if (!array_search($file, $imported_files))
+		if (!in_array($file, $imported_files))
 		{
 			$size = filesize($file);
 			$total_size += $size;
@@ -71,9 +72,15 @@ if (is_dir($settings["log_dir"]))
 	}
 	$num = count($total_logfiles);
 
-	if ($total_size < $batch_limit && $batches_left == "")
+	if ($num == 0)
 	{
-		$text = 'Located ' . $num . ' netLog files totaling ' . FileSizeConvert($total_size) . '. Do you want to import them?<br /><br /><a href="import.php?import">Import logs</a>';
+		$text = 'No unimported netLog files located.';
+		echo notice($text, "Import Logs");
+	}
+	elseif ($total_size < $batch_limit && $batches_left == "")
+	{
+		$text = 'Located ' . $num . ' netLog files totaling ' . FileSizeConvert($total_size) . '.';
+		$text .= 'Do you want to import them?<br /><br /><a href="import.php?import">Import logs</a>';
 		echo notice($text, "Import Logs");
 	}
 	else
@@ -82,17 +89,32 @@ if (is_dir($settings["log_dir"]))
 		$numss = $_GET["num"];
 		if ($batches_left == "1")
 		{
-			$text = 'Located ' . $num . ' netLog files totaling ' . FileSizeConvert($total_size) . '. Due to the size of the logs, they need to be imported in batches of ' . FileSizeConvert($batch_limit) . '.<br />Do you want to import them?<br /><br /><div id="text" style="text-align:center;"><a href="import.php?import&num=' . $numss . '" onclick="document.getElementById(\'loadin\').style.display=\'block\';document.getElementById(\'text\').style.display=\'none\';">Import logs, last batch</a></div><div id="loadin" style="text-align:center;display:none;"><img src="/style/img/loading.gif" alt="Loading..." \></div>';
+			$text = 'Located ' . $num . ' netLog files totaling ' . FileSizeConvert($total_size) . '.';
+			$text .= 'Due to the size of the logs, they need to be imported in batches of ' . FileSizeConvert($batch_limit) . '.<br />';
+			$text .= 'Do you want to import them?<br /><br />';
+			$text .= '<div id="text" style="text-align:center">';
+			$text .= '<a href="import.php?import&num=' . $numss . '" onclick="$(\'#loadin\').show();$(\'#text\').hide()">Import logs, last batch</a></div>';
+			$text .= '<div id="loadin" style="text-align:center;display:none"><img src="/style/img/loading.gif" alt="Loading..." \></div>';
 			echo notice($text, "Import Logs");
 		}
 		elseif ($batches_left == "")
 		{
-			$text = 'Located ' . $num . ' netLog files totaling ' . FileSizeConvert($total_size) . '. Due to the size of the logs, they need to be imported in batches of ' . FileSizeConvert($batch_limit) . '.<br />Do you want to import them?<br /><br /><div id="text" style="text-align:center;"><a href="import.php?import&batches_left=' . $batches . '&num=' . $numss . '"  onclick="document.getElementById(\'loadin\').style.display=\'block\';document.getElementById(\'text\').style.display=\'none\';">Import logs, patch 1 of ' . $batches . '</a></div><div id="loadin" style="text-align:center;display:none;"><img src="/style/img/loading.gif" alt="Loading..." \></div>';
+			$text = 'Located ' . $num . ' netLog files totaling ' . FileSizeConvert($total_size) . '.';
+			$text .= 'Due to the size of the logs, they need to be imported in batches of ' . FileSizeConvert($batch_limit) . '.<br />';
+			$text .= 'Do you want to import them?<br /><br /><div id="text" style="text-align:center">';
+			$text .= '<a href="import.php?import&batches_left=' . $batches . '&num=' . $numss . '" onclick="$(\'#loadin\').show();$(\'#text\').hide()">';
+			$text .= 'Import logs, patch 1 of ' . $batches . '</a></div>';
+			$text .= '<div id="loadin" style="text-align:center;display:none"><img src="/style/img/loading.gif" alt="Loading..." \></div>';
 			echo notice($text, "Import Logs");
 		}
 		else
 		{
-			$text = '' . $num . ' netLog files totaling ' . FileSizeConvert($total_size) . ' remaining.<br />Do you want to import the next batch?<br /><br /><div id="text" style="text-align:center;"><a href="import.php?import&batches_left=' . $batches_left . '&num=' . $numss . '" onclick="document.getElementById(\'loadin\').style.display=\'block\';document.getElementById(\'text\').style.display=\'none\';">Import logs, ' . $batches . ' batches left</a></div><div id="loadin" style="text-align:center;display:none;"><img src="/style/img/loading.gif" alt="Loading..." \></div>';
+			$text = $num . ' netLog files totaling ' . FileSizeConvert($total_size) . ' remaining.<br />';
+			$text .= 'Do you want to import the next batch?<br /><br />';
+			$text .= '<div id="text" style="text-align:center;">';
+			$text .= '<a href="import.php?import&batches_left=' . $batches_left . '&num=' . $numss . '" onclick="$(\'#loadin\').show();$(\'#text\').hide()">';
+			$text .= 'Import logs, ' . $batches . ' batches left</a></div>';
+			$text .= '<div id="loadin" style="text-align:center;display:none"><img src="/style/img/loading.gif" alt="Loading..." \></div>';
 			echo notice($text, "Import Logs");
 		}
 	}
@@ -103,7 +125,7 @@ if (is_dir($settings["log_dir"]))
 		$current_sys = "";
 		foreach ($logfiles as $newest_file)
 		{
-			if (!array_search($newest_file, $imported_files))
+			if (!in_array($newest_file, $imported_files))
 			{
 				// read first line to get date
 				$fline = fgets(fopen($newest_file, 'r'));
@@ -111,7 +133,7 @@ if (is_dir($settings["log_dir"]))
 				$sub = substr($fline, 0, 8);
 				$sub = explode("-", $sub);
 
-				$year = "20". $sub[0];
+				$year = "20" . $sub[0];
 				$month = $sub[1];
 				$day = $sub[2];
 
@@ -173,13 +195,29 @@ if (is_dir($settings["log_dir"]))
 		{
 			$num_tot = $_GET["num"] + $i ;
 			$nums = isset($_GET["num"]) ? $num_tot : $i;
-			header('Location: /index.php?import_done&num=' . $nums);
+			if (!headers_sent())
+			{
+				exit(header('Location: /index.php?import_done&num=' . $nums));
+			}
+			else
+			{
+				?>
+				<script> location.replace("/index.php?import_done&num=<?php echo $nums;?>"); </script>
+				<!--<script type="text/javascript">
+					update_map();
+				</script>
+				<meta http-equiv="Location" content=>-->
+				<?php
+				//echo notice("Succesfully added " . number_format($nums) . " visited systems to the database.<br /><br />You may continue using ED ToolBox.", "Logs imported");
+				//require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");
+				exit();
+			}
 		}
 		else
 		{
 			$nums = $_GET["num"] + $i;
 			$batches_left = $_GET["batches_left"] - 1;
-			header('Location: /admin/import.php?batches_left=' . $batches_left . '&num=' . $nums);
+			exit(header('Location: /admin/import.php?batches_left=' . $batches_left . '&num=' . $nums));
 		}
 	}
 }
