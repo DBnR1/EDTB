@@ -758,7 +758,7 @@ $count = mysqli_num_rows($res);
 										</td>
 										<td class="<?php echo $tdclass?>">
 											<a class="send" href="javascript:void(0)" data-send="<?php echo $system?>" data-id="<?php echo $system_id?>">
-												<img class="icon" src="/style/img/magic.png" alt="Send" style="margin-bottom:7px;margin-right:0" onmouseover="to_view('sysinfo')" onmouseout="$('#sysinfo').fadeToggle('fast')" />
+												<img class="icon" src="/style/img/magic.png" alt="Send" style="margin-bottom:7px;margin-right:0" onmouseover="to_view('sysinfo', event)" onmouseout="$('#sysinfo').fadeToggle('fast')" />
 											</a>
 											<a href="System.php?system_id=<?php echo $system_id?>">
 												<?php echo $system?>
@@ -891,14 +891,15 @@ $count = mysqli_num_rows($res);
 													}
 												});
 											});
-											$("#minfo<?php echo $station_id;?>").click(function()
+											$("#minfo<?php echo $station_id;?>").click(function(e)
 											{
 												if ($("#si_statinfo").is(":hidden"))
 												{
 													$("#si_statinfo").fadeToggle("fast");
-													$("#si_statinfo").css({
-														left: event.pageX+5,
-														top: event.pageY
+													$("#si_statinfo").css(
+													{
+														left: e.pageX + 5,
+														top: e.pageY
 													});
 													$("#si_statinfo").html("<?php echo addslashes($info);?>");
 												}

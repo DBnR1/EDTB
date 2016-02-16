@@ -211,12 +211,6 @@ if ($newSystem !== false || $request == 0)
 	 */
 
 	$data['renew'] = "true";
-
-	/**
-	 * update last_access time
-	 */
-
-	//update_last_access();
 }
 else
 {
