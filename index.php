@@ -38,14 +38,18 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 
 if (isset($_GET["import_done"]))
 {
-	echo '<div class="entries"><div class="entries_inner">';
 	?>
-	<script type="text/javascript">
-		update_map();
-	</script>
+	<div class="entries">
+		<div class="entries_inner">
+			<script type="text/javascript">
+				update_map();
+			</script>
+			<?php
+			echo notice("Succesfully added " . number_format($_GET["num"]) . " visited systems to the database.<br /><br />You may now continue using ED ToolBox.", "Logs imported");
+			?>
+		</div>
+	</div>
 	<?php
-	echo notice("Succesfully added " . number_format($_GET["num"]) . " visited systems to the database.", "Logs imported");
-	echo '</div></div>';
 	require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");
 	exit;
 }

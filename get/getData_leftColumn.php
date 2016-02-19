@@ -84,7 +84,7 @@ if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow")
 		$class = "poid";
 	}
 
-	$data['system_title'] .= '<a class="' . $class . '" href="javascript:void(0)" id="system_title" onmouseover="slide()" onmouseout="slideout()" title="Calculate distances">';
+	$data['system_title'] .= '<a class="' . $class . '" href="javascript:void(0)" id="system_title" onclick="tofront(\'distance\');get_cs(\'system_2\', \'coords_2\');$(\'#system_6\').focus()" onmouseover="slide()" onmouseout="slideout()" title="Calculate distances">';
 
 	if (isset($curSys["name"]) && !empty($curSys["name"]))
 	{

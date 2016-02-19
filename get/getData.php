@@ -51,7 +51,8 @@ if ($action == "onlycoordinates")
 elseif ($action == "onlysystem")
 {
 	echo $curSys["name"];
-
+	// make screenshot gallery
+	make_gallery($curSys["name"]);
 	exit;
 }
 elseif ($action == "onlyid")
@@ -136,7 +137,7 @@ if ($newSystem !== false || $request == 0)
 	{
 		// fetch last update start time
 		$last_data_update_start = edtb_common("last_data_update_start", "unixtime");
-		$start_time_frame = time()-120;
+		$start_time_frame = time()-160;
 
 		// run update script
 		if ($last_data_update_start < $start_time_frame)

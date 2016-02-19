@@ -153,132 +153,148 @@ function get_data(override)
 
 	var slog_sort = getUrlVars().slog_sort;
 	var glog_sort = getUrlVars().glog_sort;
-
+	var page_sys = $("#system_title").html();
 	/**
 	 * fetch info for left panel, system.php and maps
 	 */
 	$.ajax(
 	{
-		url: "/get/getData.php?request=" + requestno + "&system_id=" + system_id + "&system_name=" + system_name + "&slog_sort=" + slog_sort + "&glog_sort=" + glog_sort,
+		url: "/get/getData.php?action=onlysystem",
 		cache: false,
-		dataType: "json",
-		success: function(result)
+		success: function(onlysystem)
 		{
-			var returnedvalue = result;
-
-			$("#nowplaying").html(result.now_playing);
-
-			if (result.renew != "false")
+			if (onlysystem != page_sys)
 			{
-				log("Refreshing data (renew=true)");
-
-				$("#t1").html(result.system_title);
-				$("#systeminfo").html(result.system_info);
-				$("#scrollable").html(result.log_data);
-				$("#stations").html(result.station_data);
-
-				if (result.notifications != "false")
+				requestno = 0;
+				$.ajax(
 				{
-					$("#notifications").html(result.notifications);
-					if (result.notifications_data != "false")
+					url: "/get/getData.php?request=" + requestno + "&system_id=" + system_id + "&system_name=" + system_name + "&slog_sort=" + slog_sort + "&glog_sort=" + glog_sort,
+					cache: false,
+					dataType: "json",
+					success: function(result)
 					{
-						$("#notice_new").html(result.notifications_data);
-					}
-				}
+						var returnedvalue = result;
 
-				if (result.update_in_progress != "false")
-				{
-					$("#notifications").html(result.update_notification);
-					if (result.update_notification_data != "false")
+						$("#nowplaying").html(result.now_playing);
+
+						log("Refreshing data (renew=true)");
+
+						$("#t1").html(result.system_title);
+						$("#systeminfo").html(result.system_info);
+						$("#scrollable").html(result.log_data);
+						$("#stations").html(result.station_data);
+
+						if (result.notifications != "false")
+						{
+							$("#notifications").html(result.notifications);
+							if (result.notifications_data != "false")
+							{
+								$("#notice_new").html(result.notifications_data);
+							}
+						}
+
+						if (result.update_in_progress != "false")
+						{
+							$("#notifications").html(result.update_notification);
+							if (result.update_notification_data != "false")
+							{
+								$("#notice").html(result.update_notification_data);
+							}
+						}
+
+						// clear reference distances if we're in a new system
+						if (result.new_sys != "false")
+						{
+							$("#ref_1_dist").val("");
+							$("#ref_2_dist").val("");
+							$("#ref_3_dist").val("");
+							$("#ref_4_dist").val("");
+						}
+
+						// if we're on the system info page
+						if ($("#system_page").length)
+						{
+							$("#si_name").html(result.si_name);
+							$("#si_stations").html(result.si_stations);
+							$("#si_detailed").html(result.si_detailed);
+
+							//log(result.si_name);
+							log(result.si_stations);
+							//log(result.si_detailed);
+						}
+
+						if ($("#container").length)
+						{
+							log("Updating Neighborhood Map");
+							var chart = $("#container").highcharts();
+
+							if (chart)
+							{
+								$("#container").highcharts().destroy();
+							}
+							var mode = getUrlVars().mode;
+							var maxdistance = getUrlVars().maxdistance;
+							var script = document.createElement("script");
+							script.type = "text/javascript";
+							script.src = "/get/getMapPoints.js.php?mode=" + mode + "&maxdistance=" + maxdistance;
+
+							$("head").append(script);
+						}
+
+						if ($("#poi_bm").length)
+						{
+							log("Updating Poi & BM");
+							update_poi_bm();
+						}
+
+						if (result.update_map != "false")
+						{
+							log("Calling update_map()");
+							update_map();
+						}
+
+						if (override === true)
+						{
+							update_api(time, "false", "false", "true");
+						}
+						else
+						{
+							update_api(time, "false", "true");
+						}
+						requestno = 1;
+						//log("Success: requesting /get/getData.php ok");
+					},
+					error: function()
 					{
-						$("#notice").html(result.update_notification_data);
+						log("Error: requesting /get/getData.php failed");
 					}
-				}
-
-				// clear reference distances if we're in a new system
-				if (result.new_sys != "false")
-				{
-					$("#ref_1_dist").val("");
-					$("#ref_2_dist").val("");
-					$("#ref_3_dist").val("");
-					$("#ref_4_dist").val("");
-				}
-
-				// if we're on the system info page
-				if ($("#system_page").length)
-				{
-					$("#si_name").html(result.si_name);
-					$("#si_stations").html(result.si_stations);
-					$("#si_detailed").html(result.si_detailed);
-
-					//log(result.si_name);
-					log(result.si_stations);
-					//log(result.si_detailed);
-				}
-
-				if ($("#container").length)
-				{
-					log("Updating Neighborhood Map");
-					var chart = $("#container").highcharts();
-
-					if (chart)
-					{
-						$("#container").highcharts().destroy();
-					}
-					var mode = getUrlVars().mode;
-					var maxdistance = getUrlVars().maxdistance;
-					var script = document.createElement("script");
-					script.type = "text/javascript";
-					script.src = "/get/getMapPoints.js.php?mode=" + mode + "&maxdistance=" + maxdistance;
-
-					$("head").append(script);
-				}
-
-				if ($("#poi_bm").length)
-				{
-					log("Updating Poi & BM");
-					update_poi_bm();
-				}
-
-				if (result.update_map != "false")
-				{
-					log("Calling update_map()");
-					update_map();
-				}
-				update_api(time, "true");
+				});
 			}
-			else
-			{
-				log("getData called but no need to refresh");
-			}
-			requestno = 1;
-			//log("Success: requesting /get/getData.php ok");
-		},
-		error: function()
-		{
-			log("Error: requesting /get/getData.php failed");
+			log("getData called but no need to refresh");
 		}
 	});
 }
 
 /**
- * Updata data from FD API
+ * Update data from FD API
  *
  * @param int wait
  * @param bool newsys
  * @param bool override
+ * @param bool force_update
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function update_api(wait, newsys, override)
+function update_api(wait, newsys, override, force_update)
 {
 	wait = wait | 0;
 	newsys = newsys | "false";
 	override = override | "false";
+	force_update = force_update | "false";
 	setTimeout(function()
 	{
 		$.ajax(
 		{
-			url: "/get/getData_status.php?newsys=" + newsys + "&override=" + override,
+			url: "/get/getData_status.php?newsys=" + newsys + "&override=" + override + "&force_update=" + force_update,
 			cache: false,
 			dataType: "json",
 			success: function(result)
@@ -429,7 +445,7 @@ function update_values(editurl, deleteid)
 		{
 			jQuery.each(result, function(id, value)
 			{
-				if (document.getElementById(id).type == "checkbox")
+				if ($("#" + id).attr("type") == "checkbox")
 				{
 					if (value === "1")
 					{
@@ -450,7 +466,7 @@ function update_values(editurl, deleteid)
 						}
 					}
 				}
-				else if (document.getElementById(id).type == "select")
+				else if ($("#" + id).attr("type") == "select")
 				{
 					document.getElementById(id).getElementsByTagName("option")[value].selected = "selected";
 				}
@@ -562,6 +578,12 @@ function update_data(formid, file, update_map)
 				log("success");
 			}
 		});
+	}
+	get_data(true);
+	if ($("#poi_bm").length)
+	{
+		log("Updating Poi & BM");
+		update_poi_bm();
 	}
 }
 
@@ -1073,7 +1095,8 @@ function calcDist(coord_fromx, coord_fromy, coord_fromz, coord_tox, coord_toy, c
 		}
 		else
 		{
-			$("#dist_display").val("The distance from " + from + " to " + to + " is " + Math.round(Math.sqrt(Math.pow((x1-(x2)), 2) + Math.pow((y1-(y2)), 2) + Math.pow((z1-(z2)),2))) + " ly");
+			var distance = numeral(Math.round(Math.sqrt(Math.pow((x1-(x2)), 2) + Math.pow((y1-(y2)), 2) + Math.pow((z1-(z2)),2)))).format("0,0");
+			$("#dist_display").val("The distance from " + from + " to " + to + " is " + distance + " ly");
 		}
 	}
 	else
@@ -1346,7 +1369,7 @@ function refresh_api()
 		}
 	});
 
-	$("#api_refresh").html('<img src="/style/img/check_24.png" alt="Refresh done" class="icon24" />');
+	$("#api_refresh").html('<img class="icon24" src="/style/img/check_24.png" alt="Refresh done" style="margin-right:10px" />');
 
 	// wait a couple of seconds before updating data
 	setTimeout(function()
@@ -1356,7 +1379,7 @@ function refresh_api()
 
 	setTimeout(function()
 	{
-		$("#api_refresh").html('<img src="/style/img/refresh_24.png" alt="Refresh" class="icon24" />');
+		$("#api_refresh").html('<img class="icon24" src="/style/img/refresh_24.png" alt="Refresh" style="margin-right:10px" />');
 	}, 30000);
 }
 
@@ -1479,11 +1502,12 @@ function set_reference_systems(standard)
  * @param string div_id
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function to_view(div_id)
+function to_view(div_id, e)
 {
-	$("#" + div_id).css({
-		left: event.pageX,
-		top: event.pageY+15
+	$("#" + div_id).css(
+	{
+		left: e.pageX,
+		top: e.pageY + 15
 	});
 
 	setTimeout(function()
@@ -1664,4 +1688,599 @@ function start_audio()
 		$("#record_click").hide();
 		$("#stop_click").hide();
 	}
+}
+
+/**
+ * Create a uniqu id
+ *
+ * http://stackoverflow.com/questions/14044178/js-or-jquery-create-unique-span-id
+ *
+ * @param
+ * @author elclanrs
+ */
+function uniqId()
+{
+	return Math.round(new Date().getTime() + (Math.random() * 100));
+}
+
+/**
+ * Shuffle Array
+ *
+ * http://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+ *
+ * @param array array
+ * @author ChristopheD
+ */
+function shuffle(array)
+{
+	var currentIndex = array.length, temporaryValue, randomIndex;
+
+	// While there remain elements to shuffle...
+	while (0 !== currentIndex)
+	{
+		// Pick a remaining element...
+		randomIndex = Math.floor(Math.random() * currentIndex);
+		currentIndex -= 1;
+
+		// And swap it with the current element.
+		temporaryValue = array[currentIndex];
+		array[currentIndex] = array[randomIndex];
+		array[randomIndex] = temporaryValue;
+	}
+
+	return array;
+}
+
+/**
+ * Calculate approximate value of system
+ *
+ * @author Mauri Kujala <contact@edtb.xyz>
+ */
+function update_price()
+{
+	var new_minvalue = "";
+	var new_maxvalue = "";
+
+	$(".draggable").each(function(i, obj)
+	{
+		new_maxvalue = new_maxvalue * 1 + $(this).data("max-value-calc") * 1;
+		new_minvalue = new_minvalue * 1 + $(this).data("min-value-calc") * 1;
+	});
+
+	if (new_maxvalue !== "0" && new_maxvalue !== "")
+	{
+		$("#value").fadeIn("fast");
+		$("#minval").html(numeral(new_minvalue).format("0,0") + " CR");
+		$("#minvaln").html(new_minvalue);
+		$("#dash").html("&ndash;");
+		$("#maxval").html(numeral(new_maxvalue).format("0,0") + " CR");
+		$("#maxvaln").html(new_maxvalue);
+	}
+	else
+	{
+		$("#value").fadeOut("fast");
+	}
+}
+
+/**
+ * Observe changes in .panzoom and update url accordingly
+ *
+ * @author Mauri Kujala <contact@edtb.xyz>
+ */
+function update_url()
+{
+	var newurl = "";
+
+	if ($(".panzoom .draggable").length)
+	{
+		$(".panzoom .draggable").each(function(i, obj)
+		{
+			var bodyid = $(this).data("bodyid");
+			var imgid = $(this).data("imgid");
+			var datauniqid = $(this).data("uniqid");
+			var dataposleft = ($(this).position().left) / gridsize;
+			var datapostop = ($(this).position().top) / gridsize;
+			var divwidth = $(this).css("width").replace("px", "");
+
+			/*if (divwidth == $(this).data("width"))
+			{
+				divwidth = "d";
+			}*/
+
+			var divid = $(this).attr("id");
+
+			var pringed = "";
+			var firstdisc = "";
+			var scanned = "";
+			var landable = "";
+
+			if ($("#ring_" + datauniqid).is(":checked"))
+			{
+				pringed = "1";
+			}
+			else
+			{
+				pringed = "0";
+			}
+
+			if ($("#first_" + datauniqid).is(":checked"))
+			{
+				firstdisc = "1";
+			}
+			else
+			{
+				firstdisc = "0";
+			}
+
+			if ($("#scanned_" + datauniqid).is(":checked"))
+			{
+				scanned = "1";
+			}
+			else
+			{
+				scanned = "0";
+			}
+
+			if ($("#landable_" + datauniqid).is(":checked"))
+			{
+				landable = "1";
+			}
+			else
+			{
+				landable = "0";
+			}
+
+			newurl = newurl + imgid + 'i' + dataposleft + 'i' + datapostop + 'i' + divwidth + 'i' + pringed + firstdisc + scanned + landable + 'i' + bodyid + 'l';
+
+			history.replaceState("", "", "test_explorer.php?b=" + newurl);
+		});
+	}
+	else
+	{
+		history.replaceState("", "", "test_explorer.php");
+	}
+}
+
+/**
+ * Add body
+ *
+ * @param array options
+ * @author Mauri Kujala <contact@edtb.xyz>
+ */
+function add_body(options)
+{
+	/**
+	 * define position for the new element
+	 */
+	var last_position = "";
+	var posleft = "";
+	var postop = "";
+	var last_type = $(".panzoom .draggable:last").data("type");
+
+	if (options.pos_left === false)
+	{
+		var left_offset = "";
+		var top_offset = "";
+
+		if (options.width == "150")
+		{
+			left_offset = 0;
+			top_offset = 0;
+		}
+		else
+		{
+			var diff = (150 - (options.width * 1)) / 2;
+			left_offset = diff;
+			top_offset = diff;
+		}
+
+		if ($(".panzoom .draggable").length)
+		{
+			last_position = $(".panzoom .draggable:last").position();
+			var last_width = $(".panzoom .draggable:last").width();
+			var last_height = $(".panzoom .draggable:last").height();
+
+			if (options.type == "planet" && last_type == "star")
+			{
+				if (last_width > options.width)
+				{
+					postop = Math.round((last_position.top + top_offset) / gridsize) * gridsize;
+				}
+				else
+				{
+					postop = Math.round((last_position.top - top_offset) / gridsize) * gridsize;
+				}
+				posleft = Math.round((last_position.left + last_width + 120) / gridsize) * gridsize;
+			}
+			else if (options.type == "planet" && last_type == "planet")
+			{
+				if ($(".panzoom .draggable_img_star").length)
+				{
+					var last_star_pos = $(".panzoom .draggable_img_star:last").parent().position();
+
+					postop = Math.round((last_star_pos.top + top_offset) / gridsize) * gridsize;
+					posleft = Math.round((last_position.left + last_width + 120) / gridsize) * gridsize;
+				}
+				else
+				{
+					postop = Math.round((last_position.top) / gridsize) * gridsize;
+					posleft = Math.round((last_position.left + last_width + 120) / gridsize) * gridsize;
+				}
+			}
+			else if (options.type == "star" && last_type == "star")
+			{
+				postop = Math.round((last_position.top + last_height + 80) / gridsize) * gridsize;
+				posleft = Math.round((185 + left_offset) / gridsize) * gridsize;
+			}
+			else if (options.type == "star" && last_type == "planet")
+			{
+				postop = Math.round((last_position.top + last_height + 80) / gridsize) * gridsize;
+				posleft = Math.round((185 + left_offset) / gridsize) * gridsize;
+			}
+			else
+			{
+				postop = Math.round((last_position.top) / gridsize) * gridsize;
+				posleft = Math.round((last_position.left + last_width + 90) / gridsize) * gridsize;
+			}
+		}
+		else
+		{
+			if (left_offset > 0)
+			{
+				if (options.width == 150)
+				{
+					posleft = Math.round((185 + left_offset * 2) / gridsize) * gridsize;
+				}
+				else
+				{
+					posleft = Math.round((185 + left_offset) / gridsize) * gridsize;
+				}
+			}
+			else
+			{
+				posleft = Math.round(185 / gridsize) * gridsize;
+			}
+			postop = Math.round(125 / gridsize) * gridsize;
+		}
+	}
+	else
+	{
+		posleft = options.pos_left;
+		postop = options.pos_top;
+	}
+
+	/**
+	 * create a unique id
+	 */
+	var uniqid = uniqId();
+
+	/**
+	 * create and append div element
+	 */
+	var newhtml = 	'<div id="id_' + uniqid + '" class="draggable resizeable" data-imgid="' + options.imgid + '"' +
+					'data-bodyid="' + options.bodyid + '" data-width="' + options.width + '" data-uniqid="' + uniqid + '"' +
+					'data-min-value-calc="' + options.min_value + '" data-min-value="' + options.min_value +  '"' +
+					'data-max-value="' + options.max_value + '" data-max-value-calc="' + options.max_value + '"' +
+					'data-name="' + options.name + '" data-type="' + options.type + '" data-id="' + options.bid + '">' +
+					'<img id="' + uniqid + '" class="draggable_img_' + options.type + '" src="' + options.src + '" alt="' + options.name + '" />' +
+					'<div class="name">' + options.name + '</div>' +
+					'</div>';
+
+	$(".panzoom").append(newhtml);
+
+	/**
+	 * set position for new element
+	 */
+	$(".panzoom .draggable:last").css("left", posleft);
+	$(".panzoom .draggable:last").css("top", postop);
+
+	/**
+	 * if body type is star or planet...
+	 */
+	if (options.type == "star" || options.type == "planet")
+	{
+		/**
+		 * set width, height and id
+		 */
+		$(".panzoom .draggable:last").css("width", options.width + "px");
+		$(".panzoom .draggable:last").css("height", "auto");
+		$(".panzoom .draggable:last .draggable_img_" + options.type).prop("id", uniqid);
+		$(".panzoom .draggable:last").prop("id", "id_" + uniqid);
+
+		/**
+		 * highlight images with color from image
+		 */
+		if (document.getElementById(uniqid))
+		{
+			var colorThief = new ColorThief();
+			var colors = colorThief.getColor(document.getElementById(uniqid));
+
+			$("#id_" + uniqid).mouseover(function()
+			{
+				$("#" + uniqid).css("box-shadow", "0px 0px 20px 10px rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")");
+				$("#" + uniqid).css("border-radius", "100%");
+			}).mouseout(function()
+			{
+				$("#" + uniqid).css("box-shadow", "none");
+			});
+		}
+
+		/**
+		 * append info panel
+		 */
+		var append ='<div class="addinfo" id="info_' + uniqid + '" data-source="' + options.source + '" style="display:none">' +
+					'<input class="scanned" id="scanned_' + uniqid + '" name="scanned" type="checkbox" value="1" /> Scanned with ADS<br />' +
+					'<input class="first" id="first_' + uniqid + '" name="first" type="checkbox" value="1" /> First discovery<br />' +
+					'<input class="ring" id="ring_' + uniqid + '" name="ring" type="checkbox" value="1" /> Ringed<br />' +
+					'<input class="landable" id="landable_' + uniqid + '" name="landable" type="checkbox" value="1" /> Landable<br />' +
+					'<input id="remove_' + uniqid + '" class="button" type="button" value="Remove" />' +
+					'</div>';
+
+		$(".panzoom").append(append);
+
+		/**
+		 * add/remove ring from body
+		 */
+		$("#ring_" + uniqid).click(function()
+		{
+			if ($("#ring_" + uniqid).is(":checked"))
+			{
+				var width2 = $("#"+uniqid).prop("width");
+				var ring_width = Math.ceil(1.93 * width2);
+				var ring_offset = Math.ceil(0.455555 * width2);
+
+				var rings = ["ring_1.png", "ring_2.png", "ring_3.png"];
+				shuffle(rings);
+				var ring = rings[0];
+
+				$("#id_" + uniqid).append('<img class="ring" id="ring_img_' + uniqid + '" src="/style/img/bodies/' + ring + '" style="position:absolute;top:-' + ring_offset + 'px;left:-' + ring_offset + 'px;width:' + ring_width + 'px;height:auto" />');
+			}
+			else
+			{
+				$("#ring_img_" + uniqid).remove();
+			}
+
+			if (options.source == "php")
+			{
+				update_url();
+			}
+		});
+
+		if (options.ringed == 1)
+		{
+			$("#ring_" + uniqid).trigger("click");
+		}
+
+		/**
+		 * add/remove landable icon
+		 */
+		$("#landable_" + uniqid).click(function()
+		{
+			if ($("#landable_" + uniqid).is(":checked"))
+			{
+				var width = $("#"+uniqid).prop("width");
+				var ringwidth = Math.ceil(1.5625 * width);
+				var ringoffset = Math.ceil(0.44444444444444 * width);
+
+				$("#id_" + uniqid).append('<img class="landable" id="landable_img_' + uniqid + '" src="/style/img/bodies/landable.png" style="position:absolute;top:-' + ringoffset + 'px;left:-' + ringoffset + 'px;width:' + ringwidth + 'px;height:auto" />');
+			}
+			else
+			{
+				$("#landable_img_" + uniqid).remove();
+			}
+
+			if (options.source == "php")
+			{
+				update_url();
+			}
+		});
+
+		if (options.landable == 1)
+		{
+			$("#landable_" + uniqid).trigger("click");
+		}
+
+		/**
+		 * add/remove first discovery bonus
+		 */
+		$("#first_" + uniqid).click(function()
+		{
+			if ($("#scanned_" + uniqid).is(":checked"))
+			{
+				if ($("#first_" + uniqid).is(":checked"))
+				{
+					$("#id_" + uniqid).data("min-value-calc", options.min_value * 1.5);
+					$("#id_" + uniqid).data("max-value-calc", options.max_value * 1.5);
+				}
+				else
+				{
+					$("#id_" + uniqid).data("min-value-calc", options.min_value);
+					$("#id_" + uniqid).data("max-value-calc", options.max_value);
+				}
+			}
+			else
+			{
+				$("#id_" + uniqid).data("min-value-calc", 500);
+				$("#id_" + uniqid).data("max-value-calc", 500);
+			}
+
+			if (options.source == "php")
+			{
+				update_price();
+				update_url();
+			}
+		});
+
+		if (options.firstdisc == 1)
+		{
+			$("#first_" + uniqid).prop("checked", true);
+			$("#id_" + uniqid).data("min-value-calc", options.min_value * 1.5);
+			$("#id_" + uniqid).data("max-value-calc", options.max_value * 1.5);
+			update_price();
+		}
+
+		/**
+		 * add/remove scan bonus
+		 */
+		$("#scanned_" + uniqid).click(function()
+		{
+			if ($("#scanned_" + uniqid).is(":checked"))
+			{
+				$("#id_" + uniqid).data("min-value-calc", $("#id_" + uniqid).data("min-value"));
+				$("#id_" + uniqid).data("max-value-calc", $("#id_" + uniqid).data("max-value"));
+			}
+			else
+			{
+				$("#id_" + uniqid).data("min-value-calc", 500);
+				$("#id_" + uniqid).data("max-value-calc", 500);
+			}
+
+			if (options.source == "php")
+			{
+				update_price();
+				update_url();
+			}
+		});
+		if (options.scanned == 1)
+		{
+			$("#scanned_" + uniqid).trigger("click");
+			$("#scanned_" + uniqid).prop("checked", true);
+		}
+	}
+	/**
+	 * if type is something else...
+	 */
+	else
+	{
+		/**
+		 * set width, height and id
+		 */
+		$(".panzoom .draggable:last").css("width", options.width + "px");
+		$(".panzoom .draggable:last").css("height", "auto");
+		$(".panzoom .draggable:last .draggable_img_other").prop("id", uniqid);
+		$(".panzoom .draggable:last").prop("id", "id_" + uniqid);
+
+		/**
+		 * append info panel
+		 */
+		var append ='<div class="addinfo" id="info_' + uniqid + '" style="display:none">' +
+					'<input id="remove_' + uniqid + '" class="button" type="button" value="Remove" />' +
+					'</div>';
+
+		$(".panzoom").append(append);
+	}
+
+	/**
+	 * remove body
+	 */
+	$("#remove_" + uniqid).click(function()
+	{
+		$("#id_" + uniqid).data("min-value-calc", 0);
+		$("#id_" + uniqid).data("max-value-calc", 0);
+
+		$("#id_" + uniqid).remove();
+		$("#info_" + uniqid).remove();
+
+		update_url();
+		update_price();
+	});
+
+	/**
+	 * show info panel
+	 */
+	$("#id_" + uniqid).click(function(e)
+	{
+		if ($(this).hasClass("noclick"))
+		{
+			$(this).removeClass("noclick");
+		}
+		else
+		{
+			if ($("#info_" + uniqid).is(":hidden"))
+			{
+				$("#info_" + uniqid).fadeToggle("fast");
+				$("#info_" + uniqid).css("position", "absolute");
+				$("#info_" + uniqid).css("left", e.pageX - 248);
+				$("#info_" + uniqid).css("top", e.pageY - 50);
+			}
+		}
+	});
+
+	/**
+	 * start resizeable and draggable element
+	 */
+	$(function()
+	{
+		$(".resizeable").resizable(
+		{
+			resize: function(e, ui)
+			{
+				if (("#" + ui.element[0].id + " .landable").length)
+				{
+					var og_width = ui.element[0].clientWidth;
+					var new_ringwidth = Math.ceil(1.5625 * og_width);
+					var new_ringoffset = Math.ceil(0.44444444444444 * og_width);
+
+					$("#" + ui.element[0].id + " .landable").css("top", "-" + new_ringoffset + "px");
+					$("#" + ui.element[0].id + " .landable").css("left", "-" + new_ringoffset + "px");
+					$("#" + ui.element[0].id + " .landable").css("width", + new_ringwidth + "px");
+				}
+
+				if (("#" + ui.element[0].id + " .ring").length)
+				{
+					var og_width2 = ui.element[0].clientWidth;
+					var new_ring_width = Math.ceil(1.93 * og_width2);
+					var new_ring_offset = Math.ceil(0.455555 * og_width2);
+
+					$("#" + ui.element[0].id + " .ring").css("top", "-" + new_ring_offset + "px");
+					$("#" + ui.element[0].id + " .ring").css("left", "-" + new_ring_offset + "px");
+					$("#" + ui.element[0].id + " .ring").css("width", + new_ring_width + "px");
+				}
+
+				var imgheight = $("#" + ui.element[0].id + " img").height();
+
+				if (imgheight == 190)
+				{
+					$(".resizeable").resizable("option", "maxHeight", ui.element[0].clientHeight);
+					$(".resizeable").resizable("option", "maxWidth", ui.element[0].clientWidth);
+				}
+			},
+			stop: function(e, ui)
+			{
+				update_url();
+			},
+			containment: ".panzoom",
+			aspectRatio: true,
+			autoHide: true
+		});
+
+		$(".draggable").draggable(
+		{
+			start: function(e, ui)
+			{
+				$(this).addClass("noclick");
+			},
+			stop: function(e, ui)
+			{
+				update_url();
+			},
+			grid: [gridsize, gridsize]
+		});
+	});
+
+	/**
+	 * stop panning if dragging elements
+	 */
+	$(".panzoom div").not(".ui-resizable-handle").on("mousedown touchstart", function(e)
+	{
+		e.stopPropagation();
+	});
+
+	update_price();
+
+	if (options.do_update === true)
+	{
+		update_url();
+	}
+	options.source = "php";
 }

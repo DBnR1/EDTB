@@ -269,9 +269,16 @@
 					toggle_log('');
 				});
 
+				// $("#toggle").click(function()
+				// {
+					// tofront("distance");
+					// get_cs("system_2", "coords_2");
+					// $("#system_6").focus();
+				// });
+
 				$("#calc_click").click(function()
 				{
-					 calcDist(document.getElementById("coordsx_2").value, document.getElementById("coordsy_2").value, document.getElementById("coordsz_2").value, document.getElementById("coordsx_6").value, document.getElementById("coordsy_6").value,document.getElementById("coordsz_6").value,  document.getElementById("system_2").value, document.getElementById("system_6").value);
+					calcDist(document.getElementById("coordsx_2").value, document.getElementById("coordsy_2").value, document.getElementById("coordsz_2").value, document.getElementById("coordsx_6").value, document.getElementById("coordsy_6").value,document.getElementById("coordsz_6").value,  document.getElementById("system_2").value, document.getElementById("system_6").value);
 				});
 			});
 		</script>

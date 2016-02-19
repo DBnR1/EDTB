@@ -137,10 +137,10 @@ if (isset($_GET["do"]))
 
 		$context = stream_context_create($opts);
 
-		$result = file_get_contents('http://www.edsm.net/api-v1/submit-distances', false, $context);
+		$result = file_get_contents("http://www.edsm.net/api-v1/submit-distances", false, $context);
+		$result_j = json_decode($result, true);
 
-		//write_log($json_string, __FILE__, __LINE__);
-		write_log($result, __FILE__, __LINE__);
+		write_log("EDSM message: " . $result_j["basesystem"]["msg"], __FILE__, __LINE__);
 	}
 	else
 	{
@@ -151,14 +151,11 @@ if (isset($_GET["do"]))
 }
 ?>
 <script>
-	var clipboard = new Clipboard('.btn');
+	var clipboard = new Clipboard(".btn");
 
-	clipboard.on('success', function(e) {
-		//console.log(e);
-	});
-
-	clipboard.on('error', function(e) {
-		//console.log(e);
+	clipboard.on("error", function(e)
+	{
+		console.log(e);
 	});
 </script>
 <div class="input" id="calculate" style="text-align:center">

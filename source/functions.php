@@ -445,6 +445,15 @@ function usable_coords()
 
 		$usable["current"] = false;
 	}
+
+	if (!valid_coordinates($usable["x"], $usable["y"], $usable["z"]))
+	{
+		$usable["x"] = "0";
+		$usable["y"] = "0";
+		$usable["z"] = "0";
+
+		$usable["current"] = false;
+	}
 	return $usable;
 }
 
@@ -734,13 +743,21 @@ function edtb_common($name, $field, $update = false, $value = "")
  */
 function make_gallery($gallery_name)
 {
-	global $settings;
+	global $settings, $system_time;
 
 	if (isset($settings["old_screendir"]) && $settings["old_screendir"] != "C:\Users" && $settings["old_screendir"] != "C:\Users\\")
 	{
 		if (is_dir($settings["old_screendir"]) && is_writable($settings["old_screendir"]))
 		{
-			// move screenshots
+			$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT visit
+																FROM user_visited_systems
+																WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $gallery_name) . "'
+																ORDER BY visit DESC
+																LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+			$arr = mysqli_fetch_assoc($res);
+
+			$visit_time = strtotime($arr["visit"]);
+
 			if (!$screenshots = scandir($settings["old_screendir"]))
 			{
 				$error = error_get_last();
@@ -748,6 +765,9 @@ function make_gallery($gallery_name)
 			}
 			else
 			{
+				$invalid_chars = array("*", "\\", "/", "?", "\"", "<", ">", "|");
+				$gallery_name = str_replace($invalid_chars, "_", $gallery_name);
+
 				$newscreendir = $settings["new_screendir"] . "/" . $gallery_name;
 
 				$added = 0;
@@ -755,44 +775,93 @@ function make_gallery($gallery_name)
 				{
 					if (substr($file, -3) == "bmp")
 					{
-						if (!is_dir($newscreendir))
+						$filetime = filemtime($settings["old_screendir"] . "/" . $file);
+						$filetime = $filetime + ($system_time*60*60);
+
+						if ($filetime > $visit_time)
 						{
-							if (!mkdir($newscreendir, 0775, true))
+							if (!is_dir($newscreendir))
 							{
-								$error = error_get_last();
-								write_log("Error: " . $error["message"], __FILE__, __LINE__);
+								if (!mkdir($newscreendir, 0775, true))
+								{
+									$error = error_get_last();
+									write_log("Error: " . $error["message"], __FILE__, __LINE__);
+									break;
+								}
+							}
+							$old_file_bmp = $settings["old_screendir"] . "/" . $file;
+							$old_file_og = $settings["old_screendir"] . "/originals/" . $file;
+							$edited = date("Y-m-d_H-i-s", filemtime($old_file_bmp));
+							$new_filename = $edited . "-" . $gallery_name . ".jpg";
+							$new_file_jpg = $settings["old_screendir"] . "/" . $new_filename;
+							$new_screenshot = $newscreendir . "/" . $new_filename;
+
+							// convert from bmp to jpg
+							if (file_exists($old_file_bmp))
+							{
+								exec("\"" . $settings["install_path"] . "/bin/ImageMagick/convert\" \"" . $old_file_bmp . "\" \"" . $new_file_jpg . "\"", $out);
+
+								if (!empty($out))
+								{
+									$error = json_encode($out);
+									write_log("Error: " . $error, __FILE__, __LINE__);
+								}
+							}
+
+							if ($settings["keep_og"] == "false")
+							{
+								if (!unlink($old_file_bmp))
+								{
+									$error = error_get_last();
+									write_log("Error: " . $error["message"], __FILE__, __LINE__);
+								}
+							}
+							else
+							{
+								if (!is_dir($settings["old_screendir"] . "/originals"))
+								{
+									if (!mkdir($settings["old_screendir"] . "/originals", 0775, true))
+									{
+										$error = error_get_last();
+										write_log("Error: " . $error["message"], __FILE__, __LINE__);
+										break;
+									}
+								}
+								if (file_exists($old_file_og))
+								{
+									$old_file_og = $settings["old_screendir"] . "/originals/" . $filetime  . "_" .  $file;
+								}
+
+								if (!rename($old_file_bmp, $old_file_og))
+								{
+									$error = error_get_last();
+									write_log("Error: " . $error["message"], __FILE__, __LINE__);
+								}
+							}
+							// move to new screenshot folder
+							if (file_exists($new_file_jpg))
+							{
+								if (!rename($new_file_jpg, $new_screenshot))
+								{
+									$error = error_get_last();
+									write_log("Error: " . $error["message"], __FILE__, __LINE__);
+								}
+							}
+							$added++;
+
+							/**
+							 * add no more than 15 at a time
+							 */
+
+							if ($added > 15)
+							{
 								break;
-							}
-						}
-						$old_file_bmp = $settings["old_screendir"] . "/" . $file;
-						$old_file_og = $settings["old_screendir"] . "/originals/" . $file;
-						$edited = date("Y-m-d_H-i-s", filemtime($old_file_bmp));
-						$new_filename = $edited . "-" . $gallery_name . ".jpg";
-						$new_file_jpg = $settings["old_screendir"] . "/" . $new_filename;
-						$new_screenshot = $newscreendir . "/" . $new_filename;
-
-						// convert from bmp to jpg
-						if (file_exists($old_file_bmp))
-						{
-							exec("\"" . $settings["install_path"] . "/bin/ImageMagick/convert\" \"" . $old_file_bmp . "\" \"" . $new_file_jpg . "\"", $out);
-
-							if (!empty($out))
-							{
-								$error = json_encode($out);
-								write_log("Error: " . $error, __FILE__, __LINE__);
-							}
-						}
-
-						if ($settings["keep_og"] == "false")
-						{
-							if (!unlink($old_file_bmp))
-							{
-								$error = error_get_last();
-								write_log("Error: " . $error["message"], __FILE__, __LINE__);
 							}
 						}
 						else
 						{
+							$old_file_bmp = $settings["old_screendir"] . "/" . $file;
+							$old_file_og = $settings["old_screendir"] . "/originals/" . $file;
 							if (!is_dir($settings["old_screendir"] . "/originals"))
 							{
 								if (!mkdir($settings["old_screendir"] . "/originals", 0775, true))
@@ -802,30 +871,15 @@ function make_gallery($gallery_name)
 									break;
 								}
 							}
+							if (file_exists($old_file_og))
+							{
+								$old_file_og = $settings["old_screendir"] . "/originals/" . $filetime . "_" .  $file;
+							}
 							if (!rename($old_file_bmp, $old_file_og))
 							{
 								$error = error_get_last();
 								write_log("Error: " . $error["message"], __FILE__, __LINE__);
 							}
-						}
-						// move to new screenshot folder
-						if (file_exists($new_file_jpg))
-						{
-							if (!rename($new_file_jpg, $new_screenshot))
-							{
-								$error = error_get_last();
-								write_log("Error: " . $error["message"], __FILE__, __LINE__);
-							}
-						}
-						$added++;
-
-						/**
-						 * add no more than 15 at a time
-						 */
-
-						if ($added > 15)
-						{
-							break;
 						}
 					}
 				}

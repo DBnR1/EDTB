@@ -39,6 +39,8 @@ require_once("config_ini.inc.php");
 require_once($settings["install_path"] . "/data/server_config.inc.php");
 /** @require MySQL */
 require_once("MySQL.php");
+/** @require functions */
+require_once("functions_safe.php");
 
 /**
  * Expand the $settings global variable with stuff from the database
@@ -149,11 +151,21 @@ $profile_file = $_SERVER["DOCUMENT_ROOT"] . "/profile.json";
 if (file_exists($profile_file))
 {
 	$profile_file = file_get_contents($profile_file);
-	$profile = json_decode($profile_file, true);
 
-	$api["commander"] = $profile["commander"];
-	$api["ship"] = $profile["ship"];
-	$api["stored_ships"] = $profile["ships"];
+	if ($profile_file == "no_data")
+	{
+		$api["commander"] = "no_data";
+		$api["ship"] = "no_data";
+		$api["stored_ships"] = "no_data";
+	}
+	else
+	{
+		$profile = json_decode($profile_file, true);
+
+		$api["commander"] = $profile["commander"];
+		$api["ship"] = $profile["ship"];
+		$api["stored_ships"] = $profile["ships"];
+	}
 }
 
 global $api;

@@ -30,6 +30,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
+/** @require installer script */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/install_script.php");
 /** @require config */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
 /** @require functions */
@@ -67,6 +69,7 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 			<script src="/source/Vendor/clipboard.min.js"></script>
 			<!-- audio recorder -->
 			<script src="/source/Vendor/Recordmp3js/recordmp3.js"></script>
+			<script src="/source/Vendor/adamwdraper-Numeral-js-7487acb/numeral.js"></script>
 
 			<?php
 			if ($_SERVER["PHP_SELF"] == "/GalMap.php")
@@ -265,9 +268,11 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 
 				<!-- page title and search systems & stations -->
 				<div class="rightpanel-pagetitle">
-					<a href="javascript:void(0)" onclick="tofront('search_system');$('#system_22').focus()" title="Search for a system" id="pagetitle">
+					<span class="titletext">
+						<a href="javascript:void(0)" onclick="tofront('search_system');$('#system_22').focus()" title="Search for a system" id="pagetitle">
 						CMDR <?php echo $settings["cmdr_name"];?>
-					</a>
+						</a>
+					</span>
 					<?php
 					/**
 					 * User ranks from FD API
@@ -293,11 +298,11 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 					if (!empty($settings["edsm_api_key"]) && !empty($settings["edsm_cmdr_name"]))
 					{
 						?>
-						<span>
+						<div style="display:inline-block;margin-left:5px">
 							<a id="edsm_cmnt_pic" href="javascript:void(0)" title="Add private comment to EDSM">
 								<img src="/style/img/comment.png" class="icon24" alt="EDSM" id="edsm_click" />
 							</a>
-						</span>
+						</div>
 						<?php
 					}
 					?>
@@ -333,7 +338,7 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 				}
 				?>
 				<!-- icons & ships status -->
-				<div class="right" style="display:inline-block;margin-right:10px;margin-top:15px">
+				<div class="right" style="display:inline-block;margin-right:10px;margin-top:14px;font-size:0;height:60px;width:auto;white-space:nowrap">
 					<?php
 					/**
 					 * show ship status
@@ -353,25 +358,30 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
 					}
 					?>
 					<!-- notifications appear here -->
-					<span id="notifications"></span>
-					<?php
-					/**
-					 * show refresh button
-					 */
+					<div id="notifications" style="display:inline-block;margin-right:6px"></div>
 
-					if (isset($api["commander"]) || isset($api["ship"]))
-					{
-						echo '<a id="api_refresh" href="javascript:void(0)" onclick="refresh_api()" title="Refresh API data">';
-						echo '	<img class="icon24" src="/style/img/refresh_24.png" alt="Refresh" />';
-						echo '</a>';
-					}
-					?>
-					<a href="javascript:void(0)" title="About ED ToolBox" id="about_click">
-						<img class="icon24" src="/style/img/about.png" style="height:26px;width:26px" alt="About" />
-					</a>
-					<a href="javascript:void(0)" title="Settings Panel" id="settings_click">
-						<img class="icon24" src="/style/img/settings.png" style="height:26px;width:26px" alt="Settings" />
-					</a>
+					<div style="display:inline-block">
+						<?php
+						/**
+						 * show refresh button
+						 */
+
+						if (isset($api["commander"]) || isset($api["ship"]))
+						{
+							?>
+							<a id="api_refresh" href="javascript:void(0)" onclick="refresh_api()" title="Refresh API data">
+								<img class="icon24" src="/style/img/refresh_24.png" alt="Refresh" style="margin-right:10px" />
+							</a>
+							<?php
+						}
+						?>
+						<a href="javascript:void(0)" title="About ED ToolBox" id="about_click">
+							<img class="icon24" src="/style/img/about.png" style="height:26px;width:26px;margin-right:10px" alt="About" />
+						</a>
+						<a href="javascript:void(0)" title="Settings Panel" id="settings_click">
+							<img class="icon24" src="/style/img/settings.png" style="height:26px;width:26px" alt="Settings" />
+						</a>
+					</div>
 				</div>
 
 				<!-- notices for new releases or old data -->

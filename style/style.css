@@ -423,7 +423,7 @@ a.poid:hover
 	width:135px;
 	text-align:right;
 	line-height:2;
-	background-color:#2a3c45;
+	background-image:linear-gradient(#2a3c45, #2D3B42);
 	border:1px solid #000000;
 	border-right:none;
 	border-top:none;
@@ -529,7 +529,7 @@ a.poid:hover
 	line-height:2;
 	padding:8px;
 	max-width:400px;
-	background-color:#2a3c45;
+	background-image:linear-gradient(#2a3c45, #2D3B42);
 	border:1px solid #000000;
 	color:#fffffa;
 	text-shadow:1px 1px 1px #000000;
@@ -550,7 +550,7 @@ a.poid:hover
 	line-height:2;
 	padding:8px;
 	max-width:500px;
-	background-color:#2a3c45;
+	background-image:linear-gradient(#2a3c45, #2D3B42);
 	border:1px solid #000000;
 	color:#fffffa;
 	text-shadow:1px 1px 1px #000000;
@@ -567,7 +567,7 @@ a.poid:hover
 	text-align:center;
 	padding:8px;
 	margin-top:6px;
-	background-color:#2a3c45;
+	background-image:linear-gradient(#2a3c45, #2D3B42);
 	border:1px solid #000000;
 	color:#fffffa;
 	text-shadow:1px 1px 1px #000000;
@@ -582,7 +582,7 @@ a.poid:hover
 	left:600px;
 	line-height:1.5;
 	padding:8px;
-	background-color:#2a3c45;
+	background-image:linear-gradient(#2a3c45, #2D3B42);
 	border:1px solid #000000;
 	color:#fffffa;
 	text-shadow:1px 1px 1px #000000;
@@ -603,7 +603,7 @@ a.poid:hover
 	font-weight:normal;
 	line-height:1.5;
 	padding:8px;
-	background-color:#2a3c45;
+	background-image:linear-gradient(#2a3c45, #2D3B42);
 	border:1px solid #000000;
 	color:#fffffa;
 	text-shadow:1px 1px 1px #000000;
@@ -767,6 +767,11 @@ a.poid:hover
 	right:0;
 	left:353px;
 	z-index:10000;
+	font-size:0;
+}
+
+.titletext
+{
 	font-family:Eurocaps;
 	color:#3f3f3f;
 	font-size:23px;
@@ -776,7 +781,7 @@ a.poid:hover
 	text-align:left;
 }
 
-.rightpanel-top a
+.titletext a
 {
 	z-index:10002;
 	font-family:Eurocaps;
@@ -787,7 +792,7 @@ a.poid:hover
 	text-shadow:1px 1px 6px #efefef;
 }
 
-.rightpanel-top a:hover
+.titletext a:hover
 {
 	color:#3f3f3f;
 	font-size:23px;
@@ -841,14 +846,11 @@ a.poid:hover
 .status_ranks
 {
 	display:inline-block;
-	position:relative;
 	margin-left:10px;
+	margin-bottom:4px;
 	white-space:nowrap;
-	font-family:Sintony;
 	vertical-align:middle;
 	z-index:100000;
-	color:#fffffa;
-	font-size:14px;
 	opacity:0.97;
 }
 
@@ -915,9 +917,8 @@ a.poid:hover
 	font-size:14px;
 	text-shadow:none;
 	font-weight:normal;
-	margin-right:10px;
-	margin-top:2px;
-	line-height:1.5;
+	margin-right:14px;
+	margin-bottom:3px;
 	opacity:0.9;
 }
 
@@ -1222,9 +1223,6 @@ a.poid:hover
 	margin-top:5px;
 	outline:0;
 	cursor:url(/style/img/cursor.png), auto;
-    -webkit-appearance:none !important;
-    -moz-appearance:none !important;
-    appearance:none !important;
 }
 
 .selectbox:hover
@@ -1262,6 +1260,7 @@ a.poid:hover
 input[type=checkbox]
 {
 	display:none;
+	cursor:url(/style/img/cursor.png), auto;
 }
 
 input[type=checkbox] + label
@@ -1271,6 +1270,7 @@ input[type=checkbox] + label
 	display:inline-block;
 	background-image:url(/style/img/pinned_not.png);
 	background-repeat:no-repeat;
+	cursor:url(/style/img/cursor.png), auto;
 }
 
 input[type=checkbox]:checked + label
@@ -1280,11 +1280,18 @@ input[type=checkbox]:checked + label
 	display:inline-block;
 	background-image:url(/style/img/pinned.png);
 	background-repeat:no-repeat;
+	cursor:url(/style/img/cursor.png), auto;
 }
 
 #pin_click:hover
 {
 	text-shadow:1px 1px 4px #bcafab;
+}
+
+.addinfo input[type=checkbox]
+{
+	display:inline-block;
+	cursor:url(/style/img/cursor.png), auto;
 }
 
 select::-ms-expand
@@ -1872,6 +1879,196 @@ div.tooltip
 	padding-left:0;
 	margin-bottom:10px;
 }
+
+/**
+ * for exploration
+ */
+
+.explor_entries
+{
+	position:absolute;
+	bottom:0;
+	top:0;
+	left:262px;
+	right:0;
+	overflow:hidden;
+	height:auto;
+	width:auto;
+}
+
+.cat_name
+{
+	font-size:14px;
+	display:inline-block;
+	vertical-align:top;
+	padding:5px;
+	margin-right:3px;
+	text-align:center;
+	width:70px;
+}
+
+.draggable
+{
+	position:absolute;
+	text-align:center;
+	width:auto;
+	height:auto;
+	align-items:stretch;
+	-webkit-align-items:stretch; /* Safari 7.0+ */
+}
+
+.panzoom
+{
+	background-image:repeating-linear-gradient(0deg, transparent, transparent 20px, #333333 20px, #333333 21px), repeating-linear-gradient(-90deg, transparent, transparent 20px, #333333 20px, #333333 21px);
+	background-size:21px 21px;
+}
+
+.top
+{
+	text-align:left;
+	background-image:linear-gradient(#333333, #0e0e11);
+	position:absolute;
+	top:1px;
+	right:0;
+	left:90px;
+	width:auto;
+	padding:10px;
+	padding-left:20px;
+	vertical-align:middle;
+	z-index:1000002;
+	font-size:0;
+}
+
+.text
+{
+	color:#fffffa;
+	font-size:13px;
+}
+
+#value
+{
+	padding:5px;
+	color:#fffffa;
+	font-size:13px;
+}
+
+.stars_planets
+{
+	position:absolute;
+	left:0;
+	top:46px;
+	right:0;
+	padding:5px;
+	color:#fffffa;
+	background:#333333;
+	z-index:1000002;
+	vertical-align:top;
+	width:auto;
+	opacity:0.93;
+}
+
+.categories
+{
+	display:inline-block;
+	padding:5px;
+	padding-right:10px;
+	padding-left:10px;
+	border-left:1px solid #333;
+	text-transform:uppercase;
+	text-align:center;
+	white-space:nowrap;
+}
+
+.categories:hover, .categories:active
+{
+	text-shadow:1px 1px 4px #000;
+	background-color:#333;
+	background-image:linear-gradient(#0e0e11, #333333);
+	cursor:url(/style/img/cursor.png), auto;
+}
+
+.add
+{
+	padding:5px;
+}
+
+.add_img_star, .add_img_planet, .add_img_other
+{
+	width:50px;
+	height:auto;
+	border-radius:100%;
+	border:1px solid transparent;
+}
+
+.add_img_star:hover, .add_img_planet:hover, .add_img_other:hover
+{
+	border-radius:100%;
+	border:1px solid #cccccc;
+}
+
+.draggable_img_star
+{
+	max-width:100%;
+	max-height:100%;
+	margin:auto;
+	margin-bottom:8px;
+	display:block;
+}
+
+.draggable_img_planet
+{
+	max-width:100%;
+	max-height:100%;
+	margin:auto;
+	margin-bottom:8px;
+	display:block;
+}
+
+.draggable_img_other
+{
+	max-width:100%;
+	max-height:100%;
+	margin:auto;
+	display:block;
+}
+
+.addinfo
+{
+	display:none;
+	position:fixed;
+	font-family:Sintony;
+	color:#fffffa;
+	font-size:12px;
+	letter-spacing:normal;
+	font-weight:normal;
+	line-height:1.5;
+	padding:8px;
+	background-image:linear-gradient(#2a3c45, #2D3B42);
+	border:1px solid #000000;
+	color:#fffffa;
+	text-shadow:1px 1px 1px #000000;
+	z-index:100000;
+	overflow:auto;
+	white-space:nowrap;
+	opacity:1;
+	text-align:left;
+}
+
+.ring
+{
+	z-index:1;
+}
+
+.landable
+{
+	z-index:0;
+}
+
+.name
+{
+	text-align:center;
+}
+
 /* -------------------------------------------------------------------------- */
 /* SVG loader (from ED3D Galaxy Map) */
 /* -------------------------------------------------------------------------- */
@@ -2673,4 +2870,9 @@ a.mte_head
 	width:100%;
 	height:100%;
 	position:relative;
+}
+
+.close:hover > img
+{
+	opacity:0.8;
 }
