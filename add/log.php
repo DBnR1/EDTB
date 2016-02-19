@@ -91,6 +91,29 @@ if (isset($_GET["do"]))
 	}
 	elseif (isset($_GET["deleteid"]))
 	{
+		$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT audio
+															FROM user_log
+															WHERE id = '" . $_GET["deleteid"] . "'
+															LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+		$arr = mysqli_fetch_assoc($res);
+
+		$audio = $arr["audio"];
+		$audio_files = explode(", ", $audio);
+
+		foreach ($audio_files as $audio_file)
+		{
+			$file = $_SERVER["DOCUMENT_ROOT"] . "/audio_logs/" . $audio_file;
+
+			if (file_exists($file))
+			{
+				if (!unlink($file))
+				{
+					$error = error_get_last();
+					write_log("Error: " . $error["message"], __FILE__, __LINE__);
+				}
+			}
+		}
+
 		mysqli_query($GLOBALS["___mysqli_ston"], "	DELETE FROM user_log
 													WHERE id = '" . $_GET["deleteid"] . "'
 													LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]));
