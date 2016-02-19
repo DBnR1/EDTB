@@ -89,7 +89,7 @@ if (is_dir($settings["log_dir"]))
 		$numss = $_GET["num"];
 		if ($batches_left == "1")
 		{
-			$text = 'Located ' . $num . ' netLog files totaling ' . FileSizeConvert($total_size) . '.';
+			$text = 'Located ' . $num . ' netLog files totaling ' . FileSizeConvert($total_size) . '.<br />';
 			$text .= 'Due to the size of the logs, they need to be imported in batches of ' . FileSizeConvert($batch_limit) . '.<br />';
 			$text .= 'Do you want to import them?<br /><br />';
 			$text .= '<div id="text" style="text-align:center">';
@@ -99,7 +99,7 @@ if (is_dir($settings["log_dir"]))
 		}
 		elseif ($batches_left == "")
 		{
-			$text = 'Located ' . $num . ' netLog files totaling ' . FileSizeConvert($total_size) . '.';
+			$text = 'Located ' . $num . ' netLog files totaling ' . FileSizeConvert($total_size) . '.<br />';
 			$text .= 'Due to the size of the logs, they need to be imported in batches of ' . FileSizeConvert($batch_limit) . '.<br />';
 			$text .= 'Do you want to import them?<br /><br /><div id="text" style="text-align:center">';
 			$text .= '<a href="import.php?import&batches_left=' . $batches . '&num=' . $numss . '" onclick="$(\'#loadin\').show();$(\'#text\').hide()">';
@@ -156,11 +156,14 @@ if (is_dir($settings["log_dir"]))
 						if ($current_sys != $cssystemname)
 						{
 							// check if the visit is already improted
-							$exists = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id
-																								FROM user_visited_systems
-																								WHERE system_name = '" . $cssystemname . "'
-																								AND visit = '" . $visited_on . "'
-																								LIMIT 1"));
+							$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id
+																				FROM user_visited_systems
+																				WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $cssystemname) . "'
+																				AND visit = '" . $visited_on . "'
+																				LIMIT 1")
+																				or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+
+							$exists = mysqli_num_rows($res);
 
 							if ($exists == 0)
 							{
@@ -202,14 +205,10 @@ if (is_dir($settings["log_dir"]))
 			else
 			{
 				?>
-				<script> location.replace("/index.php?import_done&num=<?php echo $nums;?>"); </script>
-				<!--<script type="text/javascript">
-					update_map();
+				<script>
+					location.replace("/index.php?import_done&num=<?php echo $nums;?>");
 				</script>
-				<meta http-equiv="Location" content=>-->
 				<?php
-				//echo notice("Succesfully added " . number_format($nums) . " visited systems to the database.<br /><br />You may continue using ED ToolBox.", "Logs imported");
-				//require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");
 				exit();
 			}
 		}
@@ -217,7 +216,19 @@ if (is_dir($settings["log_dir"]))
 		{
 			$nums = $_GET["num"] + $i;
 			$batches_left = $_GET["batches_left"] - 1;
-			exit(header('Location: /admin/import.php?batches_left=' . $batches_left . '&num=' . $nums));
+			if (!headers_sent())
+			{
+				exit(header('Location: /admin/import.php?batches_left=' . $batches_left . '&num=' . $nums));
+			}
+			else
+			{
+				?>
+				<script>
+					location.replace("/admin/import.php?batches_left=<?php echo $batches_left;?>&num=<?php echo $nums;?>");
+				</script>
+				<?php
+				exit();
+			}
 		}
 	}
 }
