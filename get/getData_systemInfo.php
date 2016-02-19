@@ -278,7 +278,7 @@ else
 $c_rares_data .= "</div>";
 
 // check if system has screenshots
-$si_screenshots = has_screenshots($si_system_name) ? '<a href="/Gallery.php?spgmGal=' . urlencode($si_system_name) . '" title="View image gallery"><img src="/style/img/image.png" class="icon" alt="Gallery" style="margin-left:5px;vertical-align:top" /></a>' : "";
+$si_screenshots = has_screenshots($si_system_name) ? '<a href="/Gallery.php?spgmGal=' . urlencode(strip_invalid_dos_chars($si_system_name)) . '" title="View image gallery"><img src="/style/img/image.png" class="icon" alt="Gallery" style="margin-left:5px;vertical-align:top" /></a>' : "";
 
 // check if system is logged
 $si_loglink = is_logged($si_system_name) ? '<a href="log.php?system=' . urlencode($si_system_name) . '" style="color:inherit" title="System has log entries"><img src="/style/img/log.png" class="icon" style="margin-left:5px" /></a>' : "";
