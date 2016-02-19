@@ -55,6 +55,15 @@ else
 
 	$is_unknown = " *";
 }
+
+if (!valid_coordinates($ucoordx, $ucoordy, $ucoordz))
+{
+	$ucoordx = "0";
+	$ucoordy = "0";
+	$ucoordz = "0";
+
+	$is_unknown = " *";
+}
 ?>
 <div style="display:none" id="curx"><?php echo $ucoordx?></div>
 <div style="display:none" id="cury"><?php echo $ucoordy?></div>

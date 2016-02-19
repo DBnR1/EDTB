@@ -82,6 +82,15 @@ else
 	$is_unknown = " *";
 }
 
+if (!valid_coordinates($usex, $usey, $usez))
+{
+	$usex = "0";
+	$usey = "0";
+	$usez = "0";
+
+	$is_unknown = " *";
+}
+
 $ship_name = isset($_GET["ship_name"]) ? $_GET["ship_name"] : "";
 $facility = isset($_GET["facility"]) ? $_GET["facility"] : "";
 $only = isset($_GET["allegiance"]) ? $_GET["allegiance"] : "";

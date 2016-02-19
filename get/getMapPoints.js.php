@@ -66,6 +66,15 @@ else
 	$disclaimer = "";
 }
 
+if (!valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"]))
+{
+	$curSys["x"] = "0";
+	$curSys["y"] = "0";
+	$curSys["z"] = "0";
+
+	$disclaimer = "<p><strong>Current location unknown, Sol used.</strong></p>";
+}
+
 $data = "";
 $last_row = "";
 
