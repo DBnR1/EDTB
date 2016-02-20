@@ -488,7 +488,7 @@ function valid_coordinates($x, $y, $z)
 function has_screenshots($system_name)
 {
 	global $settings;
-    
+
     $system_name = strip_invalid_dos_chars($system_name);
 
 	if (empty($system_name))
@@ -771,7 +771,7 @@ function make_gallery($gallery_name)
 																LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 			$arr = mysqli_fetch_assoc($res);
 
-			$visit_time = strtotime($arr["visit"]);
+			$visit_time = isset($arr["visit"]) ? strtotime($arr["visit"]) : time();
 
 			if (!$screenshots = scandir($settings["old_screendir"]))
 			{

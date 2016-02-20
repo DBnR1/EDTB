@@ -1,6 +1,9 @@
 ED ToolBox
 ==========
 
+- The ED ToolBox installer installs a basic web server on the user's computer (Apache, PHP and MySQL)
+
+
 INSTALLATION:
 -------------
 
