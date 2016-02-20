@@ -239,7 +239,7 @@ function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
 	elseif (strpos($key, "system_name") !== false && $value != "0" || $key == "name" && $table == "edtb_systems")
 	{
 		// check if system has screenshots
-		$screenshots = has_screenshots($value) ? '<a href="/Gallery.php?spgmGal=' . urlencode($value) . '" title="View image gallery"><img src="/style/img/image.png" class="icon" alt="Gallery" style="vertical-align:top;margin-left:5px;margin-right:0" /></a>' : "";
+		$screenshots = has_screenshots($value) ? '<a href="/Gallery.php?spgmGal=' . urlencode(strip_invalid_dos_chars($value)) . '" title="View image gallery"><img src="/style/img/image.png" class="icon" alt="Gallery" style="vertical-align:top;margin-left:5px;margin-right:0" /></a>' : "";
 
 		// check if system is logged
 		$loglink = is_logged($value) ? '<a href="log.php?system=' . urlencode($value) . '" style="color:inherit" title="System has log entries"><img src="/style/img/log.png" class="icon" alt="Log" style="vertical-align:top;margin-left:5px;margin-right:0" /></a>' : "";
@@ -488,6 +488,8 @@ function valid_coordinates($x, $y, $z)
 function has_screenshots($system_name)
 {
 	global $settings;
+    
+    $system_name = strip_invalid_dos_chars($system_name);
 
 	if (empty($system_name))
 	{
@@ -736,6 +738,19 @@ function edtb_common($name, $field, $update = false, $value = "")
 }
 
 /**
+ * Remove invalid dos characters
+ *
+ * @param string $source_string directory/file name to check for invalid chars
+ * @author David Marshall <contact@edtb.xyz>
+ */
+function strip_invalid_dos_chars($source_string)
+{
+    $invalid_chars = array('*','\\','/',':','?','"','<','>','|'); // Invalid chars according to Windows 10
+    $ret_value = str_replace($invalid_chars, "_", $source_string);
+    return $ret_value;
+}
+
+/**
  * Convert screenshots to jpg and move to screenhot folder
  *
  * @param string $gallery_name name of the gallery to create
@@ -765,8 +780,7 @@ function make_gallery($gallery_name)
 			}
 			else
 			{
-				$invalid_chars = array("*", "\\", "/", "?", "\"", "<", ">", "|");
-				$gallery_name = str_replace($invalid_chars, "_", $gallery_name);
+				$gallery_name = strip_invalid_dos_chars($gallery_name);
 
 				$newscreendir = $settings["new_screendir"] . "/" . $gallery_name;
 
@@ -1111,7 +1125,7 @@ function make_log_entries($log_res, $type)
 				}
 
 				// check if system has screenshots
-				$screenshots = has_screenshots($system_name) ? '<a href="/Gallery.php?spgmGal=' . urlencode($system_name) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;margin-right:3px;vertical-align:top" /></a>' : "";
+				$screenshots = has_screenshots($system_name) ? '<a href="/Gallery.php?spgmGal=' . urlencode(strip_invalid_dos_chars($system_name)) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;margin-right:3px;vertical-align:top" /></a>' : "";
 
 				$logdata .= '<header><h2><img class="icon" src="/style/img/system_log.png" alt="log" />System log for <a href="/System.php?system_name=' . urlencode($system_name) . '">' . $system_name . '</a>' . $screenshots . $add . $sortable . '</h2></header>';
 				$logdata .= '<hr>';

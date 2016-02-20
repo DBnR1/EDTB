@@ -740,7 +740,7 @@ $count = mysqli_num_rows($res);
 								$station_name = $arr["station_name"];
 
 								// check if system has screenshots
-								$screenshots = has_screenshots($system) ? '<a href="/Gallery.php?spgmGal=' . urlencode($system) . '" title="View image gallery"><img src="/style/img/image.png" class="icon" alt="Gallery" style="margin-left:0" /></a>' : "";
+								$screenshots = has_screenshots($system) ? '<a href="/Gallery.php?spgmGal=' . urlencode(strip_invalid_dos_chars($system)) . '" title="View image gallery"><img src="/style/img/image.png" class="icon" alt="Gallery" style="margin-left:0" /></a>' : "";
 
 								// check if system is logged
 								$loglink = is_logged($system_id, true) ? '<a href="log.php?system=' . urlencode($system) . '" style="color:inherit" title="System has log entries"><img src="/style/img/log.png" class="icon" style="margin-left:0" /></a>' : "";

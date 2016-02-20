@@ -88,7 +88,7 @@ function makeitem($arr, $type, &$i)
 	$tdclass = $i % 2 ? "dark" : "light";
 
 	// check if system has screenshots
-	$screenshots = has_screenshots($item_system_name) ? '<a href="/Gallery.php?spgmGal=' . urlencode($item_system_name) . '" title="View image gallery"><img src="/style/img/image.png" class="icon" alt="Gallery" style="margin-left:5px;margin-right:0;vertical-align:top" /></a>' : "";
+	$screenshots = has_screenshots($item_system_name) ? '<a href="/Gallery.php?spgmGal=' . urlencode(strip_invalid_dos_chars($item_system_name)) . '" title="View image gallery"><img src="/style/img/image.png" class="icon" alt="Gallery" style="margin-left:5px;margin-right:0;vertical-align:top" /></a>' : "";
 
 	// check if system is logged
 	$loglink = is_logged($item_system_name) ? '<a href="/Log.php?system=' . urlencode($item_system_name) . '" style="color:inherit" title="System has log entries"><img src="/style/img/log.png" class="icon" style="margin-left:5px;margin-right:0;vertical-align:top" /></a>' : "";
