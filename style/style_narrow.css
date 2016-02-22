@@ -97,20 +97,14 @@
 
 /*  */
 
-.rightpanel-top
+.rightpanel-top, .rightpanel
 {
 	left:63px;
 }
 
-.input-inner
-{
-	left:87px;
-	top:100px;
-}
-
 .entries_inner
 {
-	margin-left:87px;
+	margin-left:17px;
 	margin-top:14px;
 	margin-right:14px;
 }
@@ -120,13 +114,6 @@
 	left:380px;
 }
 
-/* the additional info for systems on map.php */
-#report
-{
-	left:93px;
-	top:68px;
-}
-
 /**
  * ed map
  */
@@ -134,18 +121,13 @@
 .edmap
 {
 	position:absolute;
-	left:63px;
+	left:0;
 	right:0;
 	top:0;
 	bottom:0;
 	width:auto;
 	height:auto;
 	z-index:5;
-}
-
-.edmap_table
-{
-	margin-left:90px;
 }
 
 /**

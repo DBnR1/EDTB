@@ -31,18 +31,23 @@
  */
 
 /** @var new is the system new */
+$new = "false";
 if (isset($_GET["newsys"]))
 {
 	$new = $_GET["newsys"] == "true" ? "true" : "false";
 }
-else
-{
-	$new = "false";
-}
 /** @var override override the default minimum time between refreshes */
-$override = $_GET["override"] == "true" ? "true" : "false";
+$override = "false";
+if (isset($_GET["override"]))
+{
+	$override = $_GET["override"] == "true" ? "true" : "false";
+}
 /** @var force_update */
-$force_update = $_GET["force_update"] == "true" ? "true" : "false";
+$force_update = "false";
+if (isset($_GET["force_update"]))
+{
+	$force_update = $_GET["force_update"] == "true" ? "true" : "false";
+}
 
 /** @require api update */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/action/updateAPIdata.php");

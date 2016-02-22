@@ -479,17 +479,17 @@ $count = mysqli_num_rows($res);
 		<div class="info" id="sysinfo" style="position:fixed">
 			Send system name to Elite Dangerous client.<br />Have the textbox in the Galaxy Map targeted before clicking.
 		</div>
-		<table id="nscontent" style="margin-top:16px;width:100%;margin-bottom:20px">
+		<table style="margin-left:5px;margin-bottom:0;width:100%">
 			<tr>
-				<td class="heading" style="width:25%;white-space:nowrap">Nearest stations</td>
-				<td class="heading" style="width:25%;white-space:nowrap">Nearest Allegiances</td>
-				<td class="heading" style="width:25%;white-space:nowrap">Nearest Powers</td>
-				<td class="heading" style="width:25%;white-space:nowrap">Selling Modules</td>
-				<td class="heading" style="width:25%;white-space:nowrap">Ships & Facilities</td>
+				<td class="heading" style="white-space:nowrap;width:20%">Nearest stations</td>
+				<td class="heading" style="white-space:nowrap;width:20%">Nearest Allegiances</td>
+				<td class="heading" style="white-space:nowrap;width:20%">Nearest Powers</td>
+				<td class="heading" style="white-space:nowrap;width:20%">Selling Modules</td>
+				<td class="heading" style="white-space:nowrap;width:20%">Ships & Facilities</td>
 			</tr>
 			<tr>
 				<!-- station allegiances -->
-				<td class="transparent" style="vertical-align:top;width:25%;white-space:nowrap">
+				<td class="transparent" style="vertical-align:top;width:20%;white-space:nowrap">
 					<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?allegiance=Empire<?php echo $addtolink2;?>" title="Empire">
 						<img src="style/img/empire.png" class="allegiance_icon" alt="Empire" />
 					</a>&nbsp;
@@ -513,7 +513,7 @@ $count = mysqli_num_rows($res);
 					</div>
 				</td>
 				<!-- allegiances -->
-				<td class="transparent" style="vertical-align:top;width:25%;white-space:nowrap">
+				<td class="transparent" style="vertical-align:top;width:20%;white-space:nowrap">
 					<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?system_allegiance=Empire<?php echo $addtolink2;?>" title="Empire">
 						<img src="style/img/empire.png" class="allegiance_icon" alt="Empire" />
 					</a>&nbsp;
@@ -529,7 +529,7 @@ $count = mysqli_num_rows($res);
 					<br /><br />
 				</td>
 				<!-- powers -->
-				<td class="transparent" style="vertical-align:top;width:25%;white-space:nowrap">
+				<td class="transparent" style="vertical-align:top;width:20%;white-space:nowrap">
 					<?php
 					$p_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT name
 																		FROM edtb_powers
@@ -551,7 +551,7 @@ $count = mysqli_num_rows($res);
 					?>
 				</td>
 				<!-- modules -->
-				<td class="transparent" style="vertical-align:top;width:25%;white-space:nowrap">
+				<td class="transparent" style="vertical-align:top;width:20%;white-space:nowrap">
 					<form method="get" action="<?php echo $_SERVER['PHP_SELF'];?>" name="go" data-push="true" data-target="#nscontent" data-include-blank-url-params="true" data-optimize-url-params="false">
 						<?php
 						echo $hidden_inputs;
@@ -620,7 +620,7 @@ $count = mysqli_num_rows($res);
 					</form>
 				</td>
 				<!-- ships & facilities -->
-				<td class="transparent" style="vertical-align:top;width:25%;white-space:nowrap">
+				<td class="transparent" style="vertical-align:top;width:20%;white-space:nowrap">
 					<!-- ships -->
 					<form method="get" action="<?php echo $_SERVER['PHP_SELF'];?>" name="go" id="ships" data-push="true" data-target="#nscontent" data-include-blank-url-params="true" data-optimize-url-params="false">
 						<?php
@@ -683,6 +683,8 @@ $count = mysqli_num_rows($res);
 					</form>
 				</td>
 			</tr>
+		</table>
+		<table id="nscontent"  style="margin-left:5px;margin-bottom:20px;width:100%">
 			<tr>
 				<td class="transparent" colspan="5">
 					<header><h2><img class="icon" src="/style/img/find.png" alt="Find" /><?php echo $text?></h2></header>
@@ -907,8 +909,8 @@ $count = mysqli_num_rows($res);
 													$("#si_statinfo").fadeToggle("fast");
 													$("#si_statinfo").css(
 													{
-														left: e.pageX + 5,
-														top: e.pageY
+														left: e.pageX - 330,
+														top: e.pageY - 40
 													});
 													$("#si_statinfo").html("<?php echo addslashes($info);?>");
 												}

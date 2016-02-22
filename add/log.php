@@ -104,7 +104,7 @@ if (isset($_GET["do"]))
 		{
 			$file = $_SERVER["DOCUMENT_ROOT"] . "/audio_logs/" . $audio_file;
 
-			if (file_exists($file))
+			if (file_exists($file) && is_file($file))
 			{
 				if (!unlink($file))
 				{
@@ -141,8 +141,8 @@ if (isset($_GET["do"]))
 <div class="input" id="addlog">
 	<form method="post" id="log_form" action="log.php">
 		<div class="input-inner">
-			<div class="suggestions" id="suggestions_1" style="margin-left:8px;margin-top:128px"></div>
-			<div class="suggestions" id="suggestions_41" style="margin-left:402px;margin-top:128px"></div>
+			<div class="suggestions" id="suggestions_1" style="margin-left:8px;margin-top:130px"></div>
+			<div class="suggestions" id="suggestions_41" style="margin-left:402px;margin-top:130px"></div>
 			<table>
 				<thead>
 					<tr>

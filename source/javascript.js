@@ -163,7 +163,7 @@ function get_data(override)
 		cache: false,
 		success: function(onlysystem)
 		{
-			if (onlysystem != page_sys)
+			if (onlysystem != page_sys || override === true)
 			{
 				requestno = 0;
 				$.ajax(
@@ -557,7 +557,6 @@ function update_data(formid, file, update_map)
 		}
 		else
 		{
-			var system_requests = 0;
 			$("#seslogsuccess").html('<img src="/style/img/check.png" class="icon" style="margin-right:5px" alt="Done">');
 			setTimeout(function()
 			{
@@ -579,7 +578,12 @@ function update_data(formid, file, update_map)
 			}
 		});
 	}
-	get_data(true);
+
+	$(function()
+	{
+		get_data(true);
+	});
+
 	if ($("#poi_bm").length)
 	{
 		log("Updating Poi & BM");

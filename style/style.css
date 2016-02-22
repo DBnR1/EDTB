@@ -135,7 +135,7 @@ body, html
 	height:100%;
 	background-color:#3d3d3d;
     margin:auto;
-	overflow:hidden;
+	overflow:auto;
 }
 
 body
@@ -751,9 +751,12 @@ a.poid:hover
 
 .rightpanel
 {
-	position:relative;
+	position:absolute;
 	z-index:1;
 	height:100%;
+	left:352px;
+	right:0;
+	width:auto;
 	background-color:#000000;
 	background-image:url(/style/img/backg.jpg);
 	background-size:cover;
@@ -1000,7 +1003,7 @@ a.poid:hover
 .input-inner
 {
 	position:absolute;
-	left:420px;
+	left:30px;
 	top:100px;
 	width:500px;
 	text-align:center;
@@ -1011,7 +1014,9 @@ a.poid:hover
 {
 	position:absolute;
 	margin-top:60px;
-	width:100%;
+	right:0;
+	left:0;
+	width:auto;
 	height:80%;
 	text-align:left;
 	z-index:0;
@@ -1024,7 +1029,7 @@ a.poid:hover
 	font-size:12px;
 	width:auto;
 	letter-spacing:normal;
-	margin-left:375px;
+	margin-left:17px;
 	margin-top:14px;
 	margin-right:14px;
 }
@@ -1381,7 +1386,7 @@ fieldset
 {
 	display:none;
 	position:absolute;
-	left:373px;
+	left:20px;
 	top:68px;
 	line-height:1.5;
 	background-color:#ffffff;
@@ -1419,12 +1424,6 @@ fieldset
 	font-family:Sintony;
 	color:#fffffa;
 	font-size:11px;
-}
-
-.system_table
-{
-	height:auto;
-	width:100%;
 }
 
 .systeminfo_system
@@ -2851,7 +2850,7 @@ a.mte_head
 .edmap
 {
 	position:absolute;
-	left:353px;
+	left:0;
 	right:0;
 	top:0;
 	bottom:0;
@@ -2862,7 +2861,7 @@ a.mte_head
 
 .edmap_table
 {
-	margin-left:370px;
+	margin-left:17px;
 }
 
 .panzoom
