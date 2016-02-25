@@ -55,7 +55,7 @@ $usez = $usable["z"];
  */
 function makeitem($arr, $type, &$i)
 {
-	global $usex, $usey, $usez;
+	global $usex, $usey, $usez, $system_time;
 
 	$item_id = $arr["id"];
 	$item_text = $arr["text"];
@@ -63,6 +63,21 @@ function makeitem($arr, $type, &$i)
 	$item_system_name = $arr["system_name"];
 	$item_system_id = $arr["system_id"];
 	$item_cat_name = $arr["catname"];
+	$item_added_on = $arr["added_on"];
+
+	if (!empty($item_added_on))
+	{
+		$item_added_ago = get_timeago($item_added_on, false);
+
+		$item_added_on = new DateTime(date("Y-m-d\TH:i:s\Z", ($item_added_on + $system_time * 60 * 60)));
+		$item_added_on = date_modify($item_added_on, "+1286 years");
+		$item_added_on = $item_added_on->format("j M Y, H:i");
+	}
+	else
+	{
+		$item_added_ago = "";
+		$item_added_on = "";
+	}
 
 	$item_coordx = $arr["item_coordx"];
 	$item_coordy = $arr["item_coordy"];
@@ -70,7 +85,7 @@ function makeitem($arr, $type, &$i)
 
 	if (valid_coordinates($item_coordx, $item_coordy, $item_coordz))
 	{
-		$distance = number_format(sqrt(pow(($item_coordx-($usex)), 2)+pow(($item_coordy-($usey)), 2)+pow(($item_coordz-($usez)), 2)), 1)." ly";
+		$distance = number_format(sqrt(pow(($item_coordx-($usex)), 2)+pow(($item_coordy-($usey)), 2)+pow(($item_coordz-($usez)), 2)), 1) . " ly";
 	}
 	else
 	{
@@ -123,6 +138,11 @@ function makeitem($arr, $type, &$i)
 	}
 
 	echo '</a>' . $loglink . $screenshots . '<span class="right" style="margin-left:5px">' . $item_cat_name . '</span><br />';
+
+	if (!empty($item_added_on))
+	{
+		echo 'Added: ' . $item_added_on . ' (' . $item_added_ago . ')<br /><br />';
+	}
 
 	echo nl2br($item_text);
 	echo '		</div>';
@@ -210,7 +230,7 @@ function maketable($res, $type)
 			<?php
 			// get poi in correct order
 			$poi_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT SQL_CACHE user_poi.id, user_poi.poi_name AS item_name,
-																	user_poi.system_name, user_poi.text,
+																	user_poi.system_name, user_poi.text, user_poi.added_on,
 																	IFNULL(user_poi.x, user_systems_own.x) AS item_coordx,
 																	IFNULL(user_poi.y, user_systems_own.y) AS item_coordy,
 																	IFNULL(user_poi.z, user_systems_own.z) AS item_coordz,

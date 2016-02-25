@@ -79,12 +79,13 @@ if (isset($_GET["do"]))
 	}
 	else
 	{
-		mysqli_query($GLOBALS["___mysqli_ston"], "	INSERT INTO user_poi (poi_name, system_name, text, category_id, x, y, z)
+		mysqli_query($GLOBALS["___mysqli_ston"], "	INSERT INTO user_poi (poi_name, system_name, text, category_id, x, y, z, added_on)
 													VALUES
 														('" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $p_name) . "',
 														'" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $p_system) . "',
 														'" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $p_entry) . "',
-														'" . $category_id . "'" . $addb . ")") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+														'" . $category_id . "'" . $addb . ",
+														UNIX_TIMESTAMP())") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 	}
 
 	exit;

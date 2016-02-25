@@ -223,9 +223,9 @@ function get_timeago($ptime, $diff = true, $format = false)
 
 	if ($diff === true)
 	{
-		$ptime = $ptime-($system_time*60*60);
+		$ptime = $ptime - ($system_time * 60 * 60);
 	}
-	$etime = time()-$ptime;
+	$etime = time() - $ptime;
 
 	if ($etime < 1)
 	{
@@ -290,7 +290,7 @@ function is_dir_empty($dir)
  */
 function write_log($msg, $file = "", $line = "", $debug_override = false)
 {
-	global $settings;
+	global $settings, $system_time;
 
 	if (isset($settings["debug"]) && $settings["debug"] == "true" || $debug_override !== false)
 	{
@@ -321,7 +321,7 @@ function write_log($msg, $file = "", $line = "", $debug_override = false)
 			$where = "[" . $file . "" . $on_line . "] ";
 		}
 
-		$str = "[" . date("d.m.Y H:i:s", time()) . "]" . $where . $msg;
+		$str = "[" . date("d.m.Y H:i:s", (time() + $system_time * 60 * 60)) . "]" . $where . $msg;
 
 		fwrite($fd, $str . PHP_EOL);
 		fclose($fd);
