@@ -58,7 +58,7 @@ if (isset($_GET["import_done"]))
 				$sys_name = $arr["system_name"];
 				$sys_id = $arr["id"];
 
-				if ($sys_name == $this_s)
+				if ($sys_name == $this_s && $sys_id != "1")
 				{
 					mysqli_query($GLOBALS["___mysqli_ston"], "	DELETE FROM user_visited_systems
 																WHERE id = '" . $sys_id  . "'

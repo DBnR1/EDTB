@@ -1032,7 +1032,7 @@ function reference_systems($standard = false)
 																AND z NOT BETWEEN (" . $start_z . " - " . $fuzziness . ") AND (" . $start_z . " + " . $fuzziness . ")
 																AND sqrt(pow((x-(" . $start_x . ")), 2)+pow((y-(" . $start_y . ")), 2)+pow((z-(" . $start_z . ")), 2)) > " . $fuzziness . "
 																AND name != '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $start_name) . "'
-																ORDER BY sqrt(pow((x-(" . $start_x . ")), 2)+pow((y-(" . $start_y . ")), 2)+pow((z-(" . $start_z . ")), 2)) ASC LIMIT 300")
+																ORDER BY sqrt(pow((x-(" . $start_x . ")), 2)+pow((y-(" . $start_y . ")), 2)+pow((z-(" . $start_z . ")), 2)) ASC LIMIT 500")
 																or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 		}
 
@@ -1059,6 +1059,20 @@ function reference_systems($standard = false)
 
 		Utility::orderBy($pool, 'x ASC');
 		$references[$pool[0]["name"]] = $pool[0]["x"] . "," . $pool[0]["y"] . "," . $pool[0]["z"];
+
+		$count = count($references);
+
+		if ($count < 4)
+		{
+			$add = 4 - $count;
+
+			Utility::orderBy($pool, 'x DESC');
+
+			for ($i = 1; $i <= $add; $i++)
+			{
+				$references[$pool[0]["name"]] = $pool[0]["x"] . "," . $pool[0]["y"] . "," . $pool[0]["z"];
+			}
+		}
 	}
 	/**
 	 *  If start point is not set, use standard set of references
@@ -1109,12 +1123,12 @@ function make_log_entries($log_res, $type)
 				{
 					if (isset($_GET["slog_sort"]) && $_GET["slog_sort"] != "undefined")
 					{
-						if ($_GET['slog_sort'] == 'asc') $sssort = 'desc';
-						if ($_GET['slog_sort'] == 'desc') $sssort = 'asc';
+						if ($_GET["slog_sort"] == "asc") $sssort = "desc";
+						if ($_GET["slog_sort"] == "desc") $sssort = "asc";
 					}
 					else
 					{
-						$sssort = 'asc';
+						$sssort = "asc";
 					}
 
 					$sortable = '<span class="right"><a href="/index.php?slog_sort=' . $sssort . '" title="Sort by date asc/desc"><img class="icon" src="/style/img/sort.png" alt="Sort" style="margin-right:0" /></a></span>';
@@ -1127,7 +1141,10 @@ function make_log_entries($log_res, $type)
 				// check if system has screenshots
 				$screenshots = has_screenshots($system_name) ? '<a href="/Gallery.php?spgmGal=' . urlencode(strip_invalid_dos_chars($system_name)) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;margin-right:3px;vertical-align:top" /></a>' : "";
 
-				$logdata .= '<header><h2><img class="icon" src="/style/img/system_log.png" alt="log" />System log for <a href="/System.php?system_name=' . urlencode($system_name) . '">' . $system_name . '</a>' . $screenshots . $add . $sortable . '</h2></header>';
+				$logdata .= '<header><h2><img class="icon" src="/style/img/system_log.png" alt="log" />';
+				$logdata .= 'System log for <a href="/System.php?system_name=' . urlencode($system_name) . '">';
+				$logdata .= $system_name;
+				$logdata .= '</a>' . $screenshots . $add . $sortable . '</h2></header>';
 				$logdata .= '<hr>';
 			}
 			elseif ($type == "general" && $i == 0)
@@ -1135,12 +1152,12 @@ function make_log_entries($log_res, $type)
 				$sortable = "";
 				if (isset($_GET["glog_sort"]) && $_GET["glog_sort"] != "undefined")
 				{
-					if ($_GET['glog_sort'] == 'asc') $gssort = 'desc';
-					if ($_GET['glog_sort'] == 'desc') $gssort = 'asc';
+					if ($_GET["glog_sort"] == "asc") $gssort = "desc";
+					if ($_GET["glog_sort"] == "desc") $gssort = "asc";
 				}
 				else
 				{
-					$gssort = 'asc';
+					$gssort = "asc";
 				}
 
 				$sortable = '<span class="right"><a href="/index.php?glog_sort=' . $gssort . '" title="Sort by date asc/desc"><img class="icon" src="/style/img/sort.png" alt="Sort" style="margin-right:0" /></a></span>';

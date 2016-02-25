@@ -75,9 +75,11 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 
 						$parts = explode(" on line ", $data[1]);
 						$error_line = $parts[1];
+						$error_line = empty($error_line) ? "n/a" : $error_line;
 
 						$file = str_replace("[", "", $parts[0]);
 						$file = str_replace($settings["install_path"] . "\EDTB\\", "", $file);
+						$file = empty($file) ? "n/a" : $file;
 
 						$error = array_slice($data, 2);
 						$error = implode("", $error);
