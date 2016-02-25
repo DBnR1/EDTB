@@ -1880,7 +1880,7 @@ div.tooltip
 }
 
 /**
- * for exploration
+ * for System Map
  */
 
 .explor_entries
@@ -1888,7 +1888,7 @@ div.tooltip
 	position:absolute;
 	bottom:0;
 	top:0;
-	left:262px;
+	left:0;
 	right:0;
 	overflow:hidden;
 	height:auto;
@@ -1900,10 +1900,10 @@ div.tooltip
 	font-size:14px;
 	display:inline-block;
 	vertical-align:top;
-	padding:5px;
-	margin-right:3px;
+	padding:3px;
 	text-align:center;
-	width:70px;
+	min-width:70px;
+	max-width:90px;
 }
 
 .draggable
@@ -1929,7 +1929,7 @@ div.tooltip
 	position:absolute;
 	top:1px;
 	right:0;
-	left:90px;
+	left:0;
 	width:auto;
 	padding:10px;
 	padding-left:20px;
@@ -1988,7 +1988,7 @@ div.tooltip
 
 .add
 {
-	padding:5px;
+	padding:3px;
 }
 
 .add_img_star, .add_img_planet, .add_img_other
@@ -2034,7 +2034,7 @@ div.tooltip
 .addinfo
 {
 	display:none;
-	position:fixed;
+	position:absolute;
 	font-family:Sintony;
 	color:#fffffa;
 	font-size:12px;
@@ -2053,6 +2053,34 @@ div.tooltip
 	text-align:left;
 }
 
+.in
+{
+	display:inline-block;
+	margin-left:4px;
+}
+
+.delete_body
+{
+	border-radius:4px;
+	font-family:Sintony;
+	color:#fffffa;
+	text-align:center;
+	font-size:12px;
+	background-color:#964d4d;
+	border:1px solid #131722;
+	resize:none;
+	font-weight:700;
+	width:200px;
+	letter-spacing:normal;
+	padding:5px;
+	margin-top:10px;
+	right:8px;
+	bottom:8px;
+	outline:0;
+	cursor:url(/style/img/cursor.png), auto;
+	text-transform:uppercase;
+}
+
 .ring
 {
 	z-index:1;
@@ -2066,6 +2094,21 @@ div.tooltip
 .name
 {
 	text-align:center;
+}
+
+.panzoom
+{
+	width:100%;
+	height:100%;
+	position:relative;
+}
+
+.info_td
+{
+	font-weight:normal;
+	padding:4px;
+	padding-right:15px;
+	line-height:1.5;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2862,13 +2905,6 @@ a.mte_head
 .edmap_table
 {
 	margin-left:17px;
-}
-
-.panzoom
-{
-	width:100%;
-	height:100%;
-	position:relative;
 }
 
 .close:hover > img
