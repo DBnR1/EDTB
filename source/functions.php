@@ -1023,7 +1023,7 @@ function reference_systems($standard = false)
 
 		$num = mysqli_num_rows($res);
 
-		if ($num <= 4)
+		if ($num < 4)
 		{
 			$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT name, x, y, z
 																FROM edtb_systems
@@ -1048,22 +1048,32 @@ function reference_systems($standard = false)
 			$i++;
 		}
 
+		$lastname = "";
 		Utility::orderBy($pool, 'z DESC');
-		$references[$pool[0]["name"]] = $pool[0]["x"] . "," . $pool[0]["y"] . "," . $pool[0]["z"];
+		$num = $lastname == $pool[0]["name"] ? 1 : 0;
+		$references[$pool[$num]["name"]] = $pool[$num]["x"] . "," . $pool[$num]["y"] . "," . $pool[$num]["z"];
+		$lastname = $pool[$num]["name"];
 
 		Utility::orderBy($pool, 'z ASC');
-		$references[$pool[0]["name"]] = $pool[0]["x"] . "," . $pool[0]["y"] . "," . $pool[0]["z"];
+		$num = $lastname == $pool[0]["name"] ? 1 : 0;
+		$references[$pool[$num]["name"]] = $pool[$num]["x"] . "," . $pool[$num]["y"] . "," . $pool[$num]["z"];
+		$lastname = $pool[$num]["name"];
 
 		Utility::orderBy($pool, 'x DESC');
-		$references[$pool[0]["name"]] = $pool[0]["x"] . "," . $pool[0]["y"] . "," . $pool[0]["z"];
+		$num = $lastname == $pool[0]["name"] ? 1 : 0;
+		$references[$pool[$num]["name"]] = $pool[$num]["x"] . "," . $pool[$num]["y"] . "," . $pool[$num]["z"];
+		$lastname = $pool[$num]["name"];
 
 		Utility::orderBy($pool, 'x ASC');
-		$references[$pool[0]["name"]] = $pool[0]["x"] . "," . $pool[0]["y"] . "," . $pool[0]["z"];
+		$num = $lastname == $pool[0]["name"] ? 1 : 0;
+		$references[$pool[$num]["name"]] = $pool[$num]["x"] . "," . $pool[$num]["y"] . "," . $pool[$num]["z"];
+		$lastname = $pool[$num]["name"];
 
 		$count = count($references);
 
-		if ($count < 4)
+		/*if ($count < 4)
 		{
+			//
 			$add = 4 - $count;
 
 			Utility::orderBy($pool, 'x DESC');
@@ -1072,7 +1082,7 @@ function reference_systems($standard = false)
 			{
 				$references[$pool[0]["name"]] = $pool[0]["x"] . "," . $pool[0]["y"] . "," . $pool[0]["z"];
 			}
-		}
+		}*/
 	}
 	/**
 	 *  If start point is not set, use standard set of references
