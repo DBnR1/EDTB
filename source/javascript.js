@@ -177,7 +177,14 @@ function get_data(override)
 
 						$("#nowplaying").html(result.now_playing);
 
-						log("Refreshing data (renew=true)");
+						if (onlysystem != page_sys)
+						{
+							log("Refreshing data (system changed)");
+						}
+						else if (override === true)
+						{
+							log("Refreshing data (override)");
+						}
 
 						$("#t1").html(result.system_title);
 						$("#systeminfo").html(result.system_info);
@@ -219,7 +226,7 @@ function get_data(override)
 							$("#si_detailed").html(result.si_detailed);
 
 							//log(result.si_name);
-							log(result.si_stations);
+							//log(result.si_stations);
 							//log(result.si_detailed);
 						}
 
