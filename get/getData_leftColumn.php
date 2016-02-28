@@ -104,10 +104,6 @@ if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow")
 
 	$data['system_title'] .= '</div>';
 }
-else
-{
-	$data['system_title'] .= '<div style="display:none" id="system_title">' . $curSys["name"] . '</div>';
-}
 
 /**
  * User balance from FD API
