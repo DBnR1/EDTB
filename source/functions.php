@@ -1023,7 +1023,7 @@ function reference_systems($standard = false)
 
 		$num = mysqli_num_rows($res);
 
-		if ($num < 4)
+		if ($num <= 4)
 		{
 			$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT name, x, y, z
 																FROM edtb_systems
@@ -1048,41 +1048,43 @@ function reference_systems($standard = false)
 			$i++;
 		}
 
+		$orders = array("z DESC", "z ASC", "x DESC", "x ASC");
+
 		$lastname = "";
-		Utility::orderBy($pool, 'z DESC');
-		$num = $lastname == $pool[0]["name"] ? 1 : 0;
-		$references[$pool[$num]["name"]] = $pool[$num]["x"] . "," . $pool[$num]["y"] . "," . $pool[$num]["z"];
-		$lastname = $pool[$num]["name"];
+		foreach ($orders as $order)
+		{
+			Utility::orderBy($pool, $order);
 
-		Utility::orderBy($pool, 'z ASC');
-		$num = $lastname == $pool[0]["name"] ? 1 : 0;
-		$references[$pool[$num]["name"]] = $pool[$num]["x"] . "," . $pool[$num]["y"] . "," . $pool[$num]["z"];
-		$lastname = $pool[$num]["name"];
-
-		Utility::orderBy($pool, 'x DESC');
-		$num = $lastname == $pool[0]["name"] ? 1 : 0;
-		$references[$pool[$num]["name"]] = $pool[$num]["x"] . "," . $pool[$num]["y"] . "," . $pool[$num]["z"];
-		$lastname = $pool[$num]["name"];
-
-		Utility::orderBy($pool, 'x ASC');
-		$num = $lastname == $pool[0]["name"] ? 1 : 0;
-		$references[$pool[$num]["name"]] = $pool[$num]["x"] . "," . $pool[$num]["y"] . "," . $pool[$num]["z"];
-		$lastname = $pool[$num]["name"];
+			if (!array_key_exists($pool[0]["name"], $references))
+			{
+				$references[$pool[0]["name"]] = $pool[0]["x"] . "," . $pool[0]["y"] . "," . $pool[0]["z"];
+			}
+			elseif (!array_key_exists($pool[1]["name"], $references))
+			{
+				$references[$pool[1]["name"]] = $pool[1]["x"] . "," . $pool[1]["y"] . "," . $pool[1]["z"];
+			}
+			elseif (!array_key_exists($pool[2]["name"], $references))
+			{
+				$references[$pool[2]["name"]] = $pool[2]["x"] . "," . $pool[2]["y"] . "," . $pool[2]["z"];
+			}
+		}
 
 		$count = count($references);
 
-		/*if ($count < 4)
+		if ($count < 4)
 		{
 			//
 			$add = 4 - $count;
 
-			Utility::orderBy($pool, 'x DESC');
+			Utility::orderBy($pool, 'z ASC');
 
 			for ($i = 1; $i <= $add; $i++)
 			{
-				$references[$pool[0]["name"]] = $pool[0]["x"] . "," . $pool[0]["y"] . "," . $pool[0]["z"];
+				$num = $lastname == $pool[0]["name"] ? 1 : 0;
+				$references[$pool[$num]["name"]] = $pool[$num]["x"] . "," . $pool[$num]["y"] . "," . $pool[$num]["z"];
+				$lastname = $pool[$num]["name"];
 			}
-		}*/
+		}
 	}
 	/**
 	 *  If start point is not set, use standard set of references
