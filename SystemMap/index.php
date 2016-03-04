@@ -31,17 +31,13 @@
  */
 
 require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
-
-// http://jqueryui.com/
-// http://timmywil.github.io/jquery.panzoom/
-// https://github.com/timmywil/jquery.panzoom/blob/master/demo/index.html
-// https://drive.google.com/folderview?id=0BxPJjQlFk_gNdm1OdFU0VTQ2cW8&usp=sharing_eid&invite=CMfB2_MG&ts=56be1ab1
 ?>
 <link type="text/css" href="/source/Vendor/jquery-ui-1.11.4/jquery-ui.min.css" rel="stylesheet" />
 <script src="/source/Vendor/timmywil-jquery-panzoom/panzoom.js"></script>
 <script src="/source/Vendor/jquery-ui-1.11.4/jquery-ui.min.js"></script>
 <script src="/source/Vendor/color-thief.js"></script>
-<script src="javascript.js"></script>
+<script src="SystemMap.js"></script>
+
 <section id="focal">
 	<div class="entries explor_entries">
 		<div class="top">
@@ -106,25 +102,25 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 
 									?>
 									<script>
-									var options<?php echo $id . $imgid;?> = [];
-									options<?php echo $id . $imgid;?>["id"] = "<?php echo $id;?>";
-									options<?php echo $id . $imgid;?>["type"] = "<?php echo $type;?>";
-									options<?php echo $id . $imgid;?>["name"] = "<?php echo $name;?>";
-									options<?php echo $id . $imgid;?>["src"] = "<?php echo $src;?>";
-									options<?php echo $id . $imgid;?>["imgid"] = "<?php echo $imgid;?>";
-									options<?php echo $id . $imgid;?>["width"] = "<?php echo $width;?>";
-									options<?php echo $id . $imgid;?>["min_value"] = "<?php echo $min_value;?>";
-									options<?php echo $id . $imgid;?>["max_value"] = "<?php echo $max_value;?>";
-									options<?php echo $id . $imgid;?>["bid"] = "<?php echo $bid;?>";
-									options<?php echo $id . $imgid;?>["bodyid"] = "<?php echo $id;?>";
-									options<?php echo $id . $imgid;?>["landable"] = 0;
-									options<?php echo $id . $imgid;?>["ringed"] = 0;
-									options<?php echo $id . $imgid;?>["scanned"] = 1;
-									options<?php echo $id . $imgid;?>["firstdisc"] = 0;
-									options<?php echo $id . $imgid;?>["do_update"] = true;
-									options<?php echo $id . $imgid;?>["pos_top"] = false;
-									options<?php echo $id . $imgid;?>["pos_left"] = false;
-									options<?php echo $id . $imgid;?>["source"] = "php";
+										var options<?php echo $id . $imgid;?> = [];
+										options<?php echo $id . $imgid;?>["id"] = "<?php echo $id;?>";
+										options<?php echo $id . $imgid;?>["type"] = "<?php echo $type;?>";
+										options<?php echo $id . $imgid;?>["name"] = "<?php echo $name;?>";
+										options<?php echo $id . $imgid;?>["src"] = "<?php echo $src;?>";
+										options<?php echo $id . $imgid;?>["imgid"] = "<?php echo $imgid;?>";
+										options<?php echo $id . $imgid;?>["width"] = "<?php echo $width;?>";
+										options<?php echo $id . $imgid;?>["min_value"] = "<?php echo $min_value;?>";
+										options<?php echo $id . $imgid;?>["max_value"] = "<?php echo $max_value;?>";
+										options<?php echo $id . $imgid;?>["bid"] = "<?php echo $bid;?>";
+										options<?php echo $id . $imgid;?>["bodyid"] = "<?php echo $id;?>";
+										options<?php echo $id . $imgid;?>["landable"] = 0;
+										options<?php echo $id . $imgid;?>["ringed"] = 0;
+										options<?php echo $id . $imgid;?>["scanned"] = 1;
+										options<?php echo $id . $imgid;?>["firstdisc"] = 0;
+										options<?php echo $id . $imgid;?>["do_update"] = true;
+										options<?php echo $id . $imgid;?>["pos_top"] = false;
+										options<?php echo $id . $imgid;?>["pos_left"] = false;
+										options<?php echo $id . $imgid;?>["source"] = "php";
 									</script>
 									<div class="add" onclick="add_body(options<?php echo $id . $imgid;?>)">
 										<img class="add_img_<?php echo $type;?>" src="<?php echo $src?>" alt="<?php echo $name;?>" />
@@ -272,7 +268,6 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 
 					add_body(options);
 				}
-				update_price();
 			});
 
 			if (show_grid == "0")
@@ -294,6 +289,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 
 	$(document).ready(function()
 	{
+		update_price();
 		$("#star_click").mouseover(function()
 		{
 			if ($("#star").is(":hidden"))

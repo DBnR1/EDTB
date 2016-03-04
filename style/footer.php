@@ -265,8 +265,7 @@
 
 				$("#toggle").click(function()
 				{
-					//start_audio();
-					toggle_log('');
+					toggle_log("");
 				});
 
 				// $("#toggle").click(function()
@@ -278,7 +277,7 @@
 
 				$("#calc_click").click(function()
 				{
-					calcDist(document.getElementById("coordsx_2").value, document.getElementById("coordsy_2").value, document.getElementById("coordsz_2").value, document.getElementById("coordsx_6").value, document.getElementById("coordsy_6").value,document.getElementById("coordsz_6").value,  document.getElementById("system_2").value, document.getElementById("system_6").value);
+					calcDist($("#coordsx_2").val(), $("#coordsy_2").val(), $("#coordsz_2").val(), $("#coordsx_6").val(), $("#coordsy_6").val(),$("#coordsz_6").val(), $("#system_2").val(), $("#system_6").val());
 				});
 			});
 		</script>

@@ -479,7 +479,7 @@ $count = mysqli_num_rows($res);
 		<div class="info" id="sysinfo" style="position:fixed">
 			Send system name to Elite Dangerous client.<br />Have the textbox in the Galaxy Map targeted before clicking.
 		</div>
-		<table style="margin-left:5px;margin-bottom:0;width:100%">
+		<table style="margin-bottom:0;width:100%">
 			<tr>
 				<td class="heading" style="white-space:nowrap;width:20%">Nearest stations</td>
 				<td class="heading" style="white-space:nowrap;width:20%">Nearest Allegiances</td>

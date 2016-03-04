@@ -327,10 +327,20 @@ function add_body(options)
 	 * create and append div element
 	 */
 
+	if (options.firstdisc == "1")
+	{
+		calc_val_max = options.max_value * 1.5;
+		calc_val_min = options.min_value * 1.5;
+	}
+	else
+	{
+		calc_val_max = options.max_value;
+		calc_val_min = options.min_value;
+	}
 	var newhtml = 	'<div id="id_' + uniqid + '" class="draggable resizeable" data-imgid="' + options.imgid + '"' +
 					'data-bodyid="' + options.bodyid + '" data-width="' + options.width + '" data-uniqid="' + uniqid + '"' +
-					'data-min-value-calc="' + options.min_value + '" data-min-value="' + options.min_value +  '"' +
-					'data-max-value="' + options.max_value + '" data-max-value-calc="' + options.max_value + '"' +
+					'data-min-value-calc="' + calc_val_min + '" data-min-value="' + options.min_value +  '"' +
+					'data-max-value="' + options.max_value + '" data-max-value-calc="' + calc_val_max + '"' +
 					'data-name="' + options.name + '" data-type="' + options.type + '" data-id="' + options.bid + '">' +
 					'<img id="' + uniqid + '" class="draggable_img_' + options.type + '" src="' + options.src + '" alt="' + options.name + '" />' +
 					'<div class="name">' + options.name + '</div>' +
@@ -514,9 +524,11 @@ function add_body(options)
 		if (options.firstdisc == "1")
 		{
 			$("#first_" + uniqid).prop("checked", true);
-			$("#id_" + uniqid).data("min-value-calc", options.min_value * 1.5);
-			$("#id_" + uniqid).data("max-value-calc", options.max_value * 1.5);
-			update_price();
+			// $("#id_" + uniqid).data("min-value-calc", options.min_value * 1.5);
+			// $("#id_" + uniqid).data("max-value-calc", options.max_value * 1.5);
+			// console.log(options.min_value * 1.5);
+			//update_price();
+			//$("#first_" + uniqid).trigger("click");
 		}
 
 		/**
