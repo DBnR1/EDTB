@@ -2,7 +2,9 @@
 /**
  * Nearest systems & stations
  *
- * No description
+ * This page displays the nearest systems and stations based on the user's location
+ * or a specified location. Results can be filtered by system/station allegiance,
+ * system power, type of modules or ships sold at the station + more.
  *
  * @package EDTB\Main
  * @author Mauri Kujala <contact@edtb.xyz>
@@ -35,15 +37,21 @@ $pagetitle = "Nearest Systems&nbsp;&nbsp;&&nbsp;&nbsp;Stations";
 /** @require header file */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 
-$addtolink = "";
-$addtolink2 = "";
+/** @var power_params parameters to add to Power links*/
+$power_params = "";
+
+/** @var allegiance_params parameters to add to Allegiance links*/
+$allegiance_params = "";
+
 $system = isset($_GET["system"]) ? $_GET["system"] : "";
 $text = "Nearest";
 
 $add = "";
 $hidden_inputs = "";
 
-//  determine what coordinates to use
+/**
+ * determine what coordinates to use
+ */
 if (!empty($system))
 {
 	$sys_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT name, id, x, y, z
@@ -60,8 +68,8 @@ if (!empty($system))
 	$usez = $sys_arr["z"];
 
 	$text .= " (to <a href='System.php?system_id=" . $sys_id . "'>" . $sys_name . "</a>) ";
-	$addtolink .= "&system=" . $system;
-	$addtolink2 .= "&system=" . $system;
+	$power_params .= "&system=" . $system;
+	$allegiance_params .= "&system=" . $system;
 	$hidden_inputs .= '<input type="hidden" name="system" value="' . $sys_id . '" />';
 }
 elseif (valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"]) && empty($system))
@@ -103,7 +111,6 @@ $stations = true;
 /**
  * specific power
  */
-
 if ($power != "")
 {
 	$stations = false;
@@ -111,14 +118,13 @@ if ($power != "")
     $add .= " AND edtb_systems.power = '" . $power . "'";
 	$text .= " " . $power . " systems";
 	$hidden_inputs .= '<input type="hidden" name="power" value="' . $power . '" />';
-	$addtolink .= "&power=" . urlencode($power);
-	$addtolink2 .= "&power=" . urlencode($power);
+	$power_params .= "&power=" . urlencode($power);
+	$allegiance_params .= "&power=" . urlencode($power);
 }
 
 /**
  * specific station allegiance
  */
-
 if ($only != "")
 {
 	$stations = true;
@@ -146,13 +152,12 @@ if ($only != "")
 	}
 
 	$hidden_inputs .= '<input type="hidden" name="allegiance" value="' . $only . '" />';
-	$addtolink .= "&allegiance=" . $only;
+	$power_params .= "&allegiance=" . $only;
 }
 
 /**
  * specific system allegiance
  */
-
 if ($system_allegiance != "")
 {
 	$stations = false;
@@ -160,13 +165,12 @@ if ($system_allegiance != "")
     $add .= " AND edtb_systems.allegiance = '" . $system_allegiance . "'";
 	$text .= " " . str_replace('None', 'Non-allied', $system_allegiance) . " systems";
 	$hidden_inputs .= '<input type="hidden" name="system_allegiance" value="' . $system_allegiance . '" />';
-	$addtolink .= "&system_allegiance=" . $system_allegiance;
+	$power_params .= "&system_allegiance=" . $system_allegiance;
 }
 
 /**
  * if we're searching facilities
  */
-
 if (!empty($facility))
 {
 	$stations = true;
@@ -190,14 +194,13 @@ if (!empty($facility))
 
 	$text .= " stations with " . $article . " " . $f_name . " facility";
 	$hidden_inputs .= '<input type="hidden" name="facility" value="' . $facility . '" />';
-	$addtolink .= "&facility=" . $facility;
-	$addtolink2 .= "&facility=" . $facility;
+	$power_params .= "&facility=" . $facility;
+	$allegiance_params .= "&facility=" . $facility;
 }
 
 /**
  * landing pad size
  */
-
 if ($pad != "")
 {
 	$stations = true;
@@ -206,14 +209,13 @@ if ($pad != "")
 	$padsize = $pad == "L" ? "Large" : "Medium";
 	$text .= "  stations with " . $padsize . " sized landing pads";
 	$hidden_inputs .= '<input type="hidden" name="pad" value="' . $pad . '" />';
-	$addtolink .= "&pad=" . $pad;
-	$addtolink2 .= "&pad=" . $pad;
+	$power_params .= "&pad=" . $pad;
+	$allegiance_params .= "&pad=" . $pad;
 }
 
 /**
  * nearest stations....
  */
-
 if ($stations !== false)
 {
 	$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT edtb_stations.system_id AS system_id, edtb_stations.name AS station_name,
@@ -247,7 +249,6 @@ if ($stations !== false)
 /**
  * ...or nearest systems
  */
-
 else
 {
 	$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT edtb_systems.name AS system, edtb_systems.allegiance,
@@ -268,7 +269,6 @@ else
 /**
  * if we're searching modules
  */
-
 if (!empty($group_id))
 {
 	$class = isset($_GET["class"]) ? $_GET["class"] : "";
@@ -299,14 +299,14 @@ if (!empty($group_id))
 	{
 		$ratings = " " . $_GET["rating"] . " rated ";
 		$hidden_inputs .= '<input type="hidden" name="rating" value="' . $rating . '" />';
-		$addtolink .= "&rating=" . $rating;
+		$power_params .= "&rating=" . $rating;
 	}
 
 	if (!empty($class))
 	{
 		$classes = " class " . $_GET["class"] . " ";
 		$hidden_inputs .= '<input type="hidden" name="class" value="' . $class . '" />';
-		$addtolink .= "&class=" . $class;
+		$power_params .= "&class=" . $class;
 	}
 
 	if (!empty($class) && !empty($rating))
@@ -324,8 +324,8 @@ if (!empty($group_id))
 
 	$text .= " stations selling " . $ratings . "" . $classes . "" . $group_name . "" . $price;
 	$hidden_inputs .= '<input type="hidden" name="group_id" value="' . $group_id . '" />';
-	$addtolink .= "&group_id=" . $group_id;
-	$addtolink2 .= "&group_id=" . $group_id;
+	$power_params .= "&group_id=" . $group_id;
+	$allegiance_params .= "&group_id=" . $group_id;
 
 	$module_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id
 																FROM edtb_modules
@@ -376,7 +376,6 @@ if (!empty($group_id))
 /**
  * if we're searching ships
  */
-
 if (!empty($ship_name))
 {
 	$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT edtb_stations.system_id AS system_id, edtb_stations.name AS station_name,
@@ -422,8 +421,8 @@ if (!empty($ship_name))
 	$stations = true;
 	$text .= " stations selling the " . $ship_name . $s_price;
 	$hidden_inputs .= '<input type="hidden" name="ship_name" value="' . $ship_name . '" />';
-	$addtolink .= "&ship_name=" . $ship_name;
-	$addtolink2 .= "&ship_name=" . $ship_name;
+	$power_params .= "&ship_name=" . $ship_name;
+	$allegiance_params .= "&ship_name=" . $ship_name;
 }
 
 if ($text == "Nearest")
@@ -490,16 +489,16 @@ $count = mysqli_num_rows($res);
 			<tr>
 				<!-- station allegiances -->
 				<td class="transparent" style="vertical-align:top;width:20%;white-space:nowrap">
-					<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?allegiance=Empire<?php echo $addtolink2;?>" title="Empire">
+					<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?allegiance=Empire<?php echo $allegiance_params;?>" title="Empire">
 						<img src="style/img/empire.png" class="allegiance_icon" alt="Empire" />
 					</a>&nbsp;
-					<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?allegiance=Alliance<?php echo $addtolink2;?>" title="Alliance">
+					<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?allegiance=Alliance<?php echo $allegiance_params;?>" title="Alliance">
 						<img src="style/img/alliance.png" class="allegiance_icon" alt="Alliance" />
 					</a>&nbsp;
-					<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?allegiance=Federation<?php echo $addtolink2;?>" title="Federation">
+					<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?allegiance=Federation<?php echo $allegiance_params;?>" title="Federation">
 						<img src="style/img/federation.png" class="allegiance_icon" alt="Federation" />
 					</a>&nbsp;
-						<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?allegiance=Independent<?php echo $addtolink2;?>" title="Independent">
+						<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?allegiance=Independent<?php echo $allegiance_params;?>" title="Independent">
 					<img src="style/img/system.png" class="allegiance_icon" alt="Independent" />
 					</a>
 					<!-- search systems and stations-->
@@ -514,16 +513,16 @@ $count = mysqli_num_rows($res);
 				</td>
 				<!-- allegiances -->
 				<td class="transparent" style="vertical-align:top;width:20%;white-space:nowrap">
-					<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?system_allegiance=Empire<?php echo $addtolink2;?>" title="Empire">
+					<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?system_allegiance=Empire<?php echo $allegiance_params;?>" title="Empire">
 						<img src="style/img/empire.png" class="allegiance_icon" alt="Empire" />
 					</a>&nbsp;
-					<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?system_allegiance=Alliance<?php echo $addtolink2;?>" title="Alliance">
+					<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?system_allegiance=Alliance<?php echo $allegiance_params;?>" title="Alliance">
 						<img src="style/img/alliance.png" class="allegiance_icon" alt="Alliance" />
 					</a>&nbsp;
-					<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?system_allegiance=Federation<?php echo $addtolink2;?>" title="Federation">
+					<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?system_allegiance=Federation<?php echo $allegiance_params;?>" title="Federation">
 						<img src="style/img/federation.png" class="allegiance_icon" alt="Federation" />
 					</a>&nbsp;
-					<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?system_allegiance=None<?php echo $addtolink2;?>" title="None allied">
+					<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?system_allegiance=None<?php echo $allegiance_params;?>" title="None allied">
 						<img src="style/img/system.png" class="allegiance_icon" alt="None allied" />
 					</a>
 					<br /><br />
@@ -542,17 +541,17 @@ $count = mysqli_num_rows($res);
 
 						if (isset($power))
 						{
-							$addtolink = str_replace("&power=", "", $addtolink);
-							$addtolink = str_replace("?power=", "", $addtolink);
-							$addtolink = str_replace(urlencode($power), "", $addtolink);
+							$power_params = str_replace("&power=", "", $power_params);
+							$power_params = str_replace("?power=", "", $power_params);
+							$power_params = str_replace(urlencode($power), "", $power_params);
 						}
-						echo '<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?power=' . urlencode($power_name) . $addtolink . '" title="' . $power_name . '">' . $power_name . '</a><br />';
+						echo '<a data-replace="true" data-target="#nscontent" href="/NearestSystems.php?power=' . urlencode($power_name) . $power_params . '" title="' . $power_name . '">' . $power_name . '</a><br />';
 					}
 					?>
 				</td>
 				<!-- modules -->
 				<td class="transparent" style="vertical-align:top;width:20%;white-space:nowrap">
-					<form method="get" action="<?php echo $_SERVER['PHP_SELF'];?>" name="go" data-push="true" data-target="#nscontent" data-include-blank-url-params="true" data-optimize-url-params="false">
+					<form method="get" action="<?php echo $_SERVER['PHP_SELF'];?>" name="go">
 						<?php
 						echo $hidden_inputs;
 						if (isset($group_id) && $group_id != "0")
