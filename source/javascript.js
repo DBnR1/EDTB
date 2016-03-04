@@ -154,6 +154,7 @@ function get_data(override)
 	var slog_sort = getUrlVars().slog_sort;
 	var glog_sort = getUrlVars().glog_sort;
 	var page_sys = $("#system_title").html();
+
 	/**
 	 * fetch info for left panel, system.php and maps
 	 */
@@ -586,10 +587,10 @@ function update_data(formid, file, update_map)
 		});
 	}
 
-	$(function()
+	setTimeout(function()
 	{
 		get_data(true);
-	});
+	}, 1200);
 
 	if ($("#poi_bm").length)
 	{
@@ -1204,7 +1205,7 @@ function tofront(divid, toback)
 	}
 
 	var index;
-	for (index = 0; index < divs.length; index+= 1)
+	for (index = 0; index < divs.length; index += 1)
 	{
 		if (document.getElementById(divs[index]) && divs[index] != divid)
 		{
@@ -1269,7 +1270,7 @@ function imgurUpload(file, fileurl)
  */
 function setActive(id, num)
 {
-	for (i = 0; i <= num; i+= 1)
+	for (i = 0; i <= num; i += 1)
 	{
 		if (document.getElementById("link_" + i))
 		{
@@ -1484,16 +1485,24 @@ function edsm_comment(comment, send)
  *
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function set_reference_systems(standard)
+function set_reference_systems(standard, force)
 {
+	force = force || false;
+
+	add = "";
+	if (force === true)
+	{
+		add = "?force";
+	}
+
 	var urli = "";
 	if (standard !== false)
 	{
-		urli = "/get/getReferenceSystems.php?standard=true";
+		urli = "/get/getReferenceSystems.php?standard=true" + add;
 	}
 	else
 	{
-		urli = "/get/getReferenceSystems.php";
+		urli = "/get/getReferenceSystems.php" + add;
 	}
 
 	$.ajax(
@@ -1566,6 +1575,7 @@ function minmax(style)
 {
 	document.cookie = "style=" + style + "; expires=Thu, 18 Dec 2069 12:00:00 UTC; path=/";
 	document.cookie = "style=" + style + "; expires=Thu, 18 Dec 2069 12:00:00 UTC; path=/admin";
+	document.cookie = "style=" + style + "; expires=Thu, 18 Dec 2069 12:00:00 UTC; path=/SystemMap";
 	location.reload();
 	get_data(true);
 }

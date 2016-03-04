@@ -998,7 +998,7 @@ function fuzziness()
  * @return array $references name => coordinates
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function reference_systems($standard = false)
+function reference_systems($standard = false, $used = array())
 {
 	$start_point = fuzziness();
 
@@ -1051,21 +1051,18 @@ function reference_systems($standard = false)
 		$orders = array("z DESC", "z ASC", "x DESC", "x ASC");
 
 		$lastname = "";
+		$references = array();
 		foreach ($orders as $order)
 		{
 			Utility::orderBy($pool, $order);
 
-			if (!array_key_exists($pool[0]["name"], $references))
+			for ($is = 0; $is <= 4; $is++)
 			{
-				$references[$pool[0]["name"]] = $pool[0]["x"] . "," . $pool[0]["y"] . "," . $pool[0]["z"];
-			}
-			elseif (!array_key_exists($pool[1]["name"], $references))
-			{
-				$references[$pool[1]["name"]] = $pool[1]["x"] . "," . $pool[1]["y"] . "," . $pool[1]["z"];
-			}
-			elseif (!array_key_exists($pool[2]["name"], $references))
-			{
-				$references[$pool[2]["name"]] = $pool[2]["x"] . "," . $pool[2]["y"] . "," . $pool[2]["z"];
+				if (!array_key_exists($pool[$is]["name"], $references) && !in_array($pool[$is]["name"], $used))
+				{
+					$references[$pool[$is]["name"]] = $pool[$is]["x"] . "," . $pool[$is]["y"] . "," . $pool[$is]["z"];
+					break;
+				}
 			}
 		}
 

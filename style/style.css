@@ -1029,8 +1029,8 @@ a.poid:hover
 	font-size:12px;
 	width:auto;
 	letter-spacing:normal;
-	margin-left:17px;
-	margin-top:14px;
+	margin-left:25px;
+	margin-top:20px;
 	margin-right:14px;
 }
 
@@ -1442,6 +1442,22 @@ fieldset
 {
 	overflow-y:auto;
 	overflow-x:hidden;
+}
+
+.systeminfo_st
+{
+	 vertical-align:top;
+	 position:absolute;
+	 right:280px;
+	 left:25px;
+}
+
+.systeminfo_sy
+{
+	 vertical-align:top;
+	 position:absolute;
+	 right:14px;
+	 left:auto;
 }
 
 .systeminfo_station
@@ -1912,8 +1928,6 @@ div.tooltip
 	text-align:center;
 	width:auto;
 	height:auto;
-	align-items:stretch;
-	-webkit-align-items:stretch; /* Safari 7.0+ */
 }
 
 .panzoom
