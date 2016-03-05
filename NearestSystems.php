@@ -37,10 +37,10 @@ $pagetitle = "Nearest Systems&nbsp;&nbsp;&&nbsp;&nbsp;Stations";
 /** @require header file */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 
-/** @var power_params parameters to add to Power links*/
+/** @var power_params parameters to add to Power links */
 $power_params = "";
 
-/** @var allegiance_params parameters to add to Allegiance links*/
+/** @var allegiance_params parameters to add to Allegiance links */
 $allegiance_params = "";
 
 $system = isset($_GET["system"]) ? $_GET["system"] : "";
@@ -740,11 +740,10 @@ $count = mysqli_num_rows($res);
 
 								$station_name = $arr["station_name"];
 
-								// check if system has screenshots
-								$screenshots = has_screenshots($system) ? '<a href="/Gallery.php?spgmGal=' . urlencode(strip_invalid_dos_chars($system)) . '" title="View image gallery"><img src="/style/img/image.png" class="icon" alt="Gallery" style="margin-left:0" /></a>' : "";
-
-								// check if system is logged
-								$loglink = is_logged($system_id, true) ? '<a href="log.php?system=' . urlencode($system) . '" style="color:inherit" title="System has log entries"><img src="/style/img/log.png" class="icon" style="margin-left:0" /></a>' : "";
+								/**
+								 * provide crosslinks to screenshot gallery, log page, etc
+								 */
+								$ns_crosslinks = crosslinks($system);
 
 								$ss_coordx = $arr["coordx"];
 								$ss_coordy = $arr["coordy"];
@@ -773,7 +772,7 @@ $count = mysqli_num_rows($res);
 											<a href="System.php?system_id=<?php echo $system_id?>">
 												<?php echo $system?>
 											</a>
-											<?php echo $loglink . $screenshots;?>
+											<?php echo $ns_crosslinks;?>
 										</td>
 										<td class="<?php echo $tdclass?>"><?php echo $sys_population?></td>
 										<td class="<?php echo $tdclass?>"><?php echo $sys_economy?></td>

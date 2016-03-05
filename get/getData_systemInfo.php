@@ -251,7 +251,7 @@ if ($rares_closeby > 0)
 			$c_rares_data .= "&nbsp;(";
 			$c_rares_data .= number_format($rare_arr["price"]);
 			$c_rares_data .= "&nbsp;CR)";
-			$c_rares_data .= "<br /><span style='font-weight:normal;'>";
+			$c_rares_data .= "<br /><span style='font-weight:normal'>";
 			$c_rares_data .= "<a href='/System.php?system_name=" . urlencode($rare_arr["system_name"]) . "'>";
 			$c_rares_data .= $rare_arr["system_name"];
 			$c_rares_data .= "</a>&nbsp;(";
@@ -277,11 +277,17 @@ else
 
 $c_rares_data .= "</div>";
 
-// check if system has screenshots
-$si_screenshots = has_screenshots($si_system_name) ? '<a href="/Gallery.php?spgmGal=' . urlencode(strip_invalid_dos_chars($si_system_name)) . '" title="View image gallery"><img src="/style/img/image.png" class="icon" alt="Gallery" style="margin-left:5px;vertical-align:top" /></a>' : "";
+/**
+ * provide crosslinks to screenshot gallery, log page, etc
+ */
+$si_crosslinks = crosslinks($si_system_name);
 
-// check if system is logged
-$si_loglink = is_logged($si_system_name) ? '<a href="log.php?system=' . urlencode($si_system_name) . '" style="color:inherit" title="System has log entries"><img src="/style/img/log.png" class="icon" style="margin-left:5px" /></a>' : "";
+if (!is_mapped($si_system_name))
+{
+	$si_crosslinks .= '<a href="/SystemMap/?system=' . urlencode($si_system_name) . '" style="color:inherit" title="Map this system">';
+	$si_crosslinks .= '<img src="/style/img/grid_g.png" class="icon" style="margin-left:5px;margin-right:0" />';
+	$si_crosslinks .= '</a>';
+}
 
 $num_visits = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id
 																		FROM user_visited_systems
@@ -292,7 +298,7 @@ if ($actual_num_res > 0 && valid_coordinates($curSys["x"], $curSys["y"], $curSys
 	$rare_text = "&nbsp;&nbsp;<span onclick='$(\"#rares\").fadeToggle(\"fast\");'><a href='javascript:void(0);' title'Click for more info'>[ Rares within " . $settings["rare_range"] . " ly: " . $actual_num_res . " ]</a>" . $c_rares_data . "</span>";
 }
 
-$data['si_name'] .= "" . $si_system_display_name . "" . $si_loglink.$si_screenshots . " <span style='font-size:11px;text-transform:uppercase;vertical-align:middle;'>[ State: " . $si_system_state . " - Security: " . $si_system_security . " - Visits: " . $num_visits . " ]" . $rare_text . "" . $user_dists . "</span>";
+$data['si_name'] .= $si_system_display_name . $si_crosslinks . " <span style='font-size:11px;text-transform:uppercase;vertical-align:middle;'>[ State: " . $si_system_state . " - Security: " . $si_system_security . " - Visits: " . $num_visits . " ]" . $rare_text . $user_dists . "</span>";
 
 /**
  * station info for System.php

@@ -102,18 +102,17 @@ function makeitem($arr, $type, &$i)
 
 	$tdclass = $i % 2 ? "dark" : "light";
 
-	// check if system has screenshots
-	$screenshots = has_screenshots($item_system_name) ? '<a href="/Gallery.php?spgmGal=' . urlencode(strip_invalid_dos_chars($item_system_name)) . '" title="View image gallery"><img src="/style/img/image.png" class="icon" alt="Gallery" style="margin-left:5px;margin-right:0;vertical-align:top" /></a>' : "";
-
-	// check if system is logged
-	$loglink = is_logged($item_system_name) ? '<a href="/Log.php?system=' . urlencode($item_system_name) . '" style="color:inherit" title="System has log entries"><img src="/style/img/log.png" class="icon" style="margin-left:5px;margin-right:0;vertical-align:top" /></a>' : "";
+	/**
+	 * provide crosslinks to screenshot gallery, log page, etc
+	 */
+	$item_crosslinks = crosslinks($item_system_name);
 
 	echo '<tr>
 			<td class="' . $tdclass . '" style="min-width:420px;max-width:500px">
 				<div class="poi"' . $style_override . '>
 					<a href="javascript:void(0)" onclick="update_values(\'/get/get' . $type . 'EditData.php?' . $type . '_id=' . $item_id . '\',\'' . $item_id . '\');tofront(\'add' . $type . '\')" style="color:inherit" title="Click to edit entry">';
 
-	echo '' . $distance . ' &ndash;';
+	echo $distance . ' &ndash;';
 
 	if (!empty($item_system_id))
 	{
@@ -137,7 +136,7 @@ function makeitem($arr, $type, &$i)
 		echo $item_name;
 	}
 
-	echo '</a>' . $loglink . $screenshots . '<span class="right" style="margin-left:5px">' . $item_cat_name . '</span><br />';
+	echo '</a>' . $item_crosslinks . '<span class="right" style="margin-left:5px">' . $item_cat_name . '</span><br />';
 
 	if (!empty($item_added_on))
 	{

@@ -2125,6 +2125,17 @@ div.tooltip
 	line-height:1.5;
 }
 
+.sm_system
+{
+	position:absolute;
+	left:40%;
+	top:47px;
+	background-image:linear-gradient(#333333, #0e0e11);
+	border:1px solid #000;
+	border-top:0;
+	padding:6px;
+}
+
 /* -------------------------------------------------------------------------- */
 /* SVG loader (from ED3D Galaxy Map) */
 /* -------------------------------------------------------------------------- */

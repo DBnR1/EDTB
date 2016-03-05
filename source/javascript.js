@@ -634,6 +634,7 @@ function startTime()
 	{
 		$("#hrs").html(h + ":" + m + ":" + s);
 	}
+
 	if ($("#hrsns").length)
 	{
 		$("#hrsns").html(h + ":" + m);

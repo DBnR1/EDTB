@@ -1235,11 +1235,10 @@ function spgm_DisplayGalleryNavibar($strGalleryId, $strFilterFlags, $mixPictureI
 
         print ' &raquo; ';
 
-		// check if system is logged
-		$loglink = is_logged($arrExplodedPathToGallery[$i]) ? '<a href="/Log.php?system=' . urlencode($arrExplodedPathToGallery[$i]) . '" style="color:inherit" title="System has log entries"><img src="/style/img/log.png" class="icon" alt="Log" style="margin-left:5px" /></a>' : "";
-
-		// show link if system exists
-		$sysinfo_link = system_exists($arrExplodedPathToGallery[$i]) ? '<a href="/System.php?system_name=' . urlencode($arrExplodedPathToGallery[$i]) . '" style="color:inherit" title="System info"><img src="/style/img/info.png" class="icon" alt="Info" style="margin-left:6px" /></a>' : "";
+		/**
+		* provide crosslinks to screenshot gallery, log page, etc
+		*/
+		$g_crosslinks = crosslinks($arrExplodedPathToGallery[$i], false, true);
 
         if ($i < ($_max - 1))
         {
@@ -1268,7 +1267,7 @@ function spgm_DisplayGalleryNavibar($strGalleryId, $strFilterFlags, $mixPictureI
                 print $strHtmlGalleryName;
             }
         }
-		print $sysinfo_link.$loglink;
+		print $g_crosslinks;
     }
 
     // Notify if we are in "new picture mode"
@@ -1525,13 +1524,15 @@ function spgm_DisplayGalleryHierarchy($strGalleryId, $iGalleryDepth, $strFilterF
             if ($spgm_cfg['conf']['galleryCaptionPos'] == BOTTOM)
                 print '		 </tr>' . "\n" . '		<tr>' . "\n";
 
-			// check if system is logged
-			$loglink = is_logged($strHtmlGalleryName) ? '<a href="log.php?system=' . urlencode($strHtmlGalleryName) . '" style="color:inherit" title="System has log entries"><img src="/style/img/log.png" alt="Log" style="margin-left:5px" /></a>' : "";
+			/**
+			 * provide crosslinks to screenshot gallery, log page, etc
+			 */
+			$g2_crosslinks = crosslinks($strHtmlGalleryName, false, false);
 
             // display the gallery title
             print '		 <td class="' . CLASS_TD_GALITEM_TITLE . '">' . "\n";
             print '			 ' . spgm_BuildLink($strHtmlGalleryName, CLASS_TD_GALITEM_TITLE, '', $strPathToSubGallery, -1, -1, $filters);
-            print ' ' . $loglink.$strHtmlPictureNumber . ' ' . "\n";
+            print ' ' . $g2_crosslinks . $strHtmlPictureNumber . ' ' . "\n";
             print '		 </td>' . "\n";
             print '		 </tr>' . "\n";
 

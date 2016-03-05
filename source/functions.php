@@ -221,7 +221,7 @@ function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
 		if (valid_coordinates($d_x, $d_y, $d_z))
 		{
 			$distance = number_format(sqrt(pow(($d_x-($usex)), 2)+pow(($d_y-($usey)), 2)+pow(($d_z-($usez)), 2)), 2);
-			$this_row .= '<td style="padding:10px;white-space:nowrap;vertical-align:middle">' . $distance . '' . $exact . '</td>';
+			$this_row .= '<td style="padding:10px;white-space:nowrap;vertical-align:middle">' . $distance . $exact . '</td>';
 		}
 		else
 		{
@@ -233,18 +233,21 @@ function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
 	// make a link for systems with an id
 	if ($key == "system_id" && $value != "0")
 	{
-		$this_row .= '<td style="padding:10px;vertical-align:middle"><a href="/System.php?system_id=' . $value . '">' . $value . '</a></td>';
+		$this_row .= '<td style="padding:10px;vertical-align:middle">';
+		$this_row .= '<a href="/System.php?system_id=' . $value . '">' . $value . '</a>';
+		$this_row .= '</td>';
 	}
 	// make a link for systems with system name
 	elseif (strpos($key, "system_name") !== false && $value != "0" || $key == "name" && $table == "edtb_systems")
 	{
-		// check if system has screenshots
-		$screenshots = has_screenshots($value) ? '<a href="/Gallery.php?spgmGal=' . urlencode(strip_invalid_dos_chars($value)) . '" title="View image gallery"><img src="/style/img/image.png" class="icon" alt="Gallery" style="vertical-align:top;margin-left:5px;margin-right:0" /></a>' : "";
+		/**
+		 * provide crosslinks to screenshot gallery, log page, etc
+		 */
+		$item_crosslinks = crosslinks($value);
 
-		// check if system is logged
-		$loglink = is_logged($value) ? '<a href="log.php?system=' . urlencode($value) . '" style="color:inherit" title="System has log entries"><img src="/style/img/log.png" class="icon" alt="Log" style="vertical-align:top;margin-left:5px;margin-right:0" /></a>' : "";
-
-		$this_row .= '<td style="padding:10px;vertical-align:middle"><a href="/System.php?system_name=' . urlencode($value) . '">' . $value . '' . $loglink.$screenshots . '</a></td>';
+		$this_row .= '<td style="padding:10px;vertical-align:middle">';
+		$this_row .= '<a href="/System.php?system_name=' . urlencode($value) . '">' . $value . $item_crosslinks . '</a>';
+		$this_row .= '</td>';
 	}
 	// number format some values
 	elseif (strpos($key, "price") !== false || strpos($key, "ls") !== false || strpos($key, "population") !== false || strpos($key, "distance") !== false)
@@ -269,7 +272,9 @@ function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
 		{
 			$urli = $value;
 		}
-		$this_row .= '<td style="padding:10px;vertical-align:middle">' . preg_replace($reg_exUrl, "<a href='" . $url[0] . "' target='_BLANK'>" . $urli . "</a> ", $value) . '</td>';
+		$this_row .= '<td style="padding:10px;vertical-align:middle">';
+		$this_row .= preg_replace($reg_exUrl, "<a href='" . $url[0] . "' target='_BLANK'>" . $urli . "</a> ", $value);
+		$this_row .= '</td>';
 	}
 	// make 0,1 human readable
 	elseif ($enum !== false)
@@ -382,7 +387,7 @@ function get_station_icon($type, $planetary = "0", $style = "")
 			$station_icon = '<img src="/style/img/spaceports/planetary.png" class="icon" alt="Planetary" style="' . $style . '" />';
 			break;
 		default:
-		$station_icon = '<img src="/style/img/spaceports/unknown.png" class="icon" alt="Unknown" style="' . $style . '" />';
+			$station_icon = '<img src="/style/img/spaceports/unknown.png" class="icon" alt="Unknown" style="' . $style . '" />';
 	}
 
 	return $station_icon;
@@ -409,7 +414,7 @@ function get_allegiance_icon($allegiance)
 			$allegiance_icon = "federation.png";
 			break;
 		default:
-        $allegiance_icon = "system.png";
+			$allegiance_icon = "system.png";
 	}
 
 	return $allegiance_icon;
@@ -469,6 +474,38 @@ function usable_coords()
 function valid_coordinates($x, $y, $z)
 {
 	if (is_numeric($x) && is_numeric($y) && is_numeric($z))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+/**
+ * Check if system is mapped in System map
+ *
+ * @param string $system_name
+ * @return bool
+ * @author Mauri Kujala <contact@edtb.xyz>
+ */
+function is_mapped($system_name)
+{
+	global $settings;
+
+	if (empty($system_name))
+	{
+		return false;
+	}
+
+	$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id
+														FROM user_system_map
+														WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system_name) . "'
+														LIMIT 1");
+	$num = mysqli_num_rows($res);
+
+	if ($num > 0)
 	{
 		return true;
 	}
@@ -1243,4 +1280,49 @@ function make_log_entries($log_res, $type)
 	}
 
 	return $logdata;
+}
+
+/**
+ * Return links to screenshots, system log or system map
+ *
+ * @param string $system
+ * @return string $return
+ * @author Mauri Kujala <contact@edtb.xyz>
+ */
+function crosslinks($system, $show_screens = true, $show_system = false)
+{
+	$return = "";
+	// check if system has screenshots
+	if ($show_screens === true && has_screenshots($system))
+	{
+		$return .= '<a href="/Gallery.php?spgmGal=' . urlencode(strip_invalid_dos_chars($system)) . '" title="View image gallery">';
+		$return .= '<img src="/style/img/image.png" class="icon" alt="Gallery" style="margin-left:5px;margin-right:0;vertical-align:top" />';
+		$return .= '</a>';
+	}
+
+	// check if system is logged
+	if (is_logged($system))
+	{
+		$return .= '<a href="/log.php?system=' . urlencode($system) . '" style="color:inherit" title="System has log entries">';
+		$return .= '<img src="/style/img/log.png" class="icon" style="margin-left:5px;margin-right:0" />';
+		$return .= '</a>';
+	}
+
+	// check if system is mapped
+	if (is_mapped($system))
+	{
+		$return .= '<a href="/SystemMap/?system=' . urlencode($system) . '" style="color:inherit" title="System map">';
+		$return .= '<img src="/style/img/grid.png" class="icon" style="margin-left:5px;margin-right:0" />';
+		$return .= '</a>';
+	}
+
+	// show link if system exists
+	if ($show_system === true && system_exists($system))
+	{
+		$return .= '<a href="/System.php?system_name=' . urlencode($system) . '" style="color:inherit" title="System info">';
+		$return .= '<img src="/style/img/info.png" class="icon" alt="Info" style="margin-left:5px;margin-right:0" />';
+		$return .= '</a>';
+	}
+
+	return $return;
 }

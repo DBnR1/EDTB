@@ -109,6 +109,7 @@ function update_price()
 function update_url()
 {
 	var newurl = "";
+	var system = $("#smsys").html();
 
 	if ($(".panzoom .draggable").length)
 	{
@@ -120,11 +121,6 @@ function update_url()
 			var dataposleft = ($(this).position().left) / gridsize;
 			var datapostop = ($(this).position().top) / gridsize;
 			var divwidth = $(this).css("width").replace("px", "");
-
-			/*if (divwidth == $(this).data("width"))
-			{
-				divwidth = "d";
-			}*/
 
 			var divid = $(this).attr("id");
 
@@ -192,11 +188,38 @@ function update_url()
 
 		newurl = newurl + 'c' + grid + bg + names;
 
-		history.replaceState("", "", "?v1=" + newurl);
+		//history.replaceState("", "", "?v1=" + newurl);
+		$.ajax(
+		{
+			url: "/add/systemMap.php?string=" + newurl + "&system=" + system,
+			cache: false,
+			dataType: "html",
+			success: function()
+			{
+				log("Requested /add/systemMap.php succesfully");
+			},
+			error: function()
+			{
+				log("Error occured when requesting /add/systemMap.php");
+			}
+		});
 	}
 	else
 	{
-		history.replaceState("", "", "");
+		$.ajax(
+		{
+			url: "/add/systemMap.php?string=delete&system=" + system,
+			cache: false,
+			dataType: "html",
+			success: function()
+			{
+				log("Requested /add/systemMap.php succesfully");
+			},
+			error: function()
+			{
+				log("Error occured when requesting /add/systemMap.php");
+			}
+		});
 	}
 }
 

@@ -31,6 +31,25 @@
  */
 
 require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
+
+$system = $curSys["name"];
+if (isset($_GET["system"]))
+{
+	$system = $_GET["system"];
+}
+
+/**
+ * get string if system already mapped
+ */
+$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT string
+													FROM user_system_map
+													WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system) . "'
+													LIMIT 1");
+$arr = mysqli_fetch_assoc($res);
+
+$string = $arr["string"];
+
+$link_map = !empty($string) ? '&nbsp;&ndash;&nbsp;<a href="http://map.edtb.xyz?v1=' . $string . '" target="_BLANK" title="View on map.edtb.xyz">View on map.edtb.xyz</a>' : "";
 ?>
 <link type="text/css" href="/source/Vendor/jquery-ui-1.11.4/jquery-ui.min.css" rel="stylesheet" />
 <script src="/source/Vendor/timmywil-jquery-panzoom/panzoom.js"></script>
@@ -48,6 +67,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 				<span class="text" id="maxval"></span><span id="maxvaln" style="display:none"></span>&nbsp;
 				( Very experimental )
 			</span>
+			<div class="sm_system">System map for: <?php echo $system . $link_map;?></div>
+			<div id="smsys" style="display:none"><?php echo $system;?></div>
 			<span class="text" style="margin-right:20px">Add bodies :</span>
 			<?php
 			$types = array("star", "planet", "other");
@@ -202,7 +223,22 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 		/**
 		 * add bodies according to url parameters
 		 */
-		var url_vars = getUrlVars().v1;
+		var url_vars = "";
+
+		<?php
+		if (!empty($string))
+		{
+		?>
+			url_vars = "<?php echo $string?>";
+		<?php
+		}
+		else
+		{
+		?>
+			url_vars = getUrlVars().v1;
+		<?php
+		}
+		?>
 
 		if (url_vars)
 		{
