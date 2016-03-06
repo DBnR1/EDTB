@@ -188,7 +188,6 @@ function update_url()
 
 		newurl = newurl + 'c' + grid + bg + names;
 
-		//history.replaceState("", "", "?v1=" + newurl);
 		$.ajax(
 		{
 			url: "/add/systemMap.php?string=" + newurl + "&system=" + system,
@@ -203,6 +202,15 @@ function update_url()
 				log("Error occured when requesting /add/systemMap.php");
 			}
 		});
+
+		if ($("#mlink").html() != "")
+		{
+			$("#maplink").attr("href", "http://map.edtb.xyz?v1=" + newurl);
+		}
+		else
+		{
+			$("#mlink").html('&nbsp;&ndash;&nbsp;<a href="http://map.edtb.xyz?v1=' + newurl + '" target="_BLANK" id="maplink" title="View on map.edtb.xyz">View on map.edtb.xyz</a>');
+		}
 	}
 	else
 	{
@@ -220,6 +228,7 @@ function update_url()
 				log("Error occured when requesting /add/systemMap.php");
 			}
 		});
+		$("#mlink").html('');
 	}
 }
 

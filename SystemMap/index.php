@@ -49,7 +49,7 @@ $arr = mysqli_fetch_assoc($res);
 
 $string = $arr["string"];
 
-$link_map = !empty($string) ? '&nbsp;&ndash;&nbsp;<a href="http://map.edtb.xyz?v1=' . $string . '" target="_BLANK" title="View on map.edtb.xyz">View on map.edtb.xyz</a>' : "";
+$link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http://map.edtb.xyz?v1=' . $string . '" target="_BLANK" id="maplink" title="View on map.edtb.xyz">View on map.edtb.xyz</a></span>' : '<span id="mlink"></span>';
 ?>
 <link type="text/css" href="/source/Vendor/jquery-ui-1.11.4/jquery-ui.min.css" rel="stylesheet" />
 <script src="/source/Vendor/timmywil-jquery-panzoom/panzoom.js"></script>

@@ -130,7 +130,7 @@ function data_is_old($time)
 {
 	global $settings;
 
-	$old = $settings["data_notify_age"]*24*60*60;
+	$old = $settings["data_notify_age"] * 24 * 60 * 60;
 	$since = time()-$old;
 
 	if (empty($time))
@@ -827,7 +827,7 @@ function make_gallery($gallery_name)
 					if (substr($file, -3) == "bmp")
 					{
 						$filetime = filemtime($settings["old_screendir"] . "/" . $file);
-						$filetime = $filetime + ($system_time*60*60);
+						$filetime = $filetime + ($system_time * 60 * 60);
 
 						if ($filetime > $visit_time)
 						{
@@ -954,7 +954,7 @@ function make_gallery($gallery_name)
 				if (!empty($out3))
 				{
 					$error = json_encode($out3);
-					write_log("Error: ". $error, __FILE__, __LINE__);
+					write_log("Error: " . $error, __FILE__, __LINE__);
 				}
 			}
 		}
@@ -1177,20 +1177,25 @@ function make_log_entries($log_res, $type)
 						$sssort = "asc";
 					}
 
-					$sortable = '<span class="right"><a href="/index.php?slog_sort=' . $sssort . '" title="Sort by date asc/desc"><img class="icon" src="/style/img/sort.png" alt="Sort" style="margin-right:0" /></a></span>';
+					$sortable = '<span class="right">';
+					$sortable .= '<a href="/index.php?slog_sort=' . $sssort . '" title="Sort by date asc/desc">';
+					$sortable .= '<img class="icon" src="/style/img/sort.png" alt="Sort" style="margin-right:0" />';
+					$sortable .= '</a></span>';
 				}
 				if ($type == "log")
 				{
 					$sortable = "";
 				}
 
-				// check if system has screenshots
-				$screenshots = has_screenshots($system_name) ? '<a href="/Gallery.php?spgmGal=' . urlencode(strip_invalid_dos_chars($system_name)) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" style="margin-left:5px;margin-right:3px;vertical-align:top" /></a>' : "";
+				/**
+				 * provide crosslinks to screenshot gallery, log page, etc
+				 */
+				$l_crosslinks = crosslinks($system_name, true, false, false);
 
 				$logdata .= '<header><h2><img class="icon" src="/style/img/system_log.png" alt="log" />';
 				$logdata .= 'System log for <a href="/System.php?system_name=' . urlencode($system_name) . '">';
 				$logdata .= $system_name;
-				$logdata .= '</a>' . $screenshots . $add . $sortable . '</h2></header>';
+				$logdata .= '</a>' . $l_crosslinks . $add . $sortable . '</h2></header>';
 				$logdata .= '<hr>';
 			}
 			elseif ($type == "general" && $i == 0)
@@ -1206,7 +1211,10 @@ function make_log_entries($log_res, $type)
 					$gssort = "asc";
 				}
 
-				$sortable = '<span class="right"><a href="/index.php?glog_sort=' . $gssort . '" title="Sort by date asc/desc"><img class="icon" src="/style/img/sort.png" alt="Sort" style="margin-right:0" /></a></span>';
+				$sortable = '<span class="right">';
+				$sortable .= '<a href="/index.php?glog_sort=' . $gssort . '" title="Sort by date asc/desc">';
+				$sortable .= '<img class="icon" src="/style/img/sort.png" alt="Sort" style="margin-right:0" />';
+				$sortable .= '</a></span>';
 
 				$logdata .= '<header><h2><img class="icon" src="/style/img/log.png" alt="log" />Commander\'s Log' . $sortable . '</h2></header>';
 				$logdata .= '<hr>';
@@ -1286,10 +1294,14 @@ function make_log_entries($log_res, $type)
  * Return links to screenshots, system log or system map
  *
  * @param string $system
+ * @param bool $show_screens
+ * @param bool $show_system
+ * @param bool $show_logs
+ * @param bool $show_map
  * @return string $return
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function crosslinks($system, $show_screens = true, $show_system = false)
+function crosslinks($system, $show_screens = true, $show_system = false, $show_logs = true, $show_map = true)
 {
 	$return = "";
 	// check if system has screenshots
@@ -1301,7 +1313,7 @@ function crosslinks($system, $show_screens = true, $show_system = false)
 	}
 
 	// check if system is logged
-	if (is_logged($system))
+	if ($show_logs === true && is_logged($system))
 	{
 		$return .= '<a href="/log.php?system=' . urlencode($system) . '" style="color:inherit" title="System has log entries">';
 		$return .= '<img src="/style/img/log.png" class="icon" style="margin-left:5px;margin-right:0" />';
@@ -1309,7 +1321,7 @@ function crosslinks($system, $show_screens = true, $show_system = false)
 	}
 
 	// check if system is mapped
-	if (is_mapped($system))
+	if ($show_map === true && is_mapped($system))
 	{
 		$return .= '<a href="/SystemMap/?system=' . urlencode($system) . '" style="color:inherit" title="System map">';
 		$return .= '<img src="/style/img/grid.png" class="icon" style="margin-left:5px;margin-right:0" />';
