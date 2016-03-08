@@ -40,15 +40,15 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 
 if (isset($_POST["code"]))
 {
-	$code = $_POST["code"];
-	if (file_put_contents($ini_file, $code))
-	{
-		$notify = "<div class='notify_success'>Settings succesfully edited.</div>";
-	}
-	else
-	{
-		$notify = "<div class='notify_deleted'>Edit unsuccesfull.</div>";
-	}
+    $code = $_POST["code"];
+    if (file_put_contents($ini_file, $code))
+    {
+        $notify = "<div class='notify_success'>Settings succesfully edited.</div>";
+    }
+    else
+    {
+        $notify = "<div class='notify_deleted'>Edit unsuccesfull.</div>";
+    }
 }
 
 $ini = file_get_contents($ini_file);
@@ -60,23 +60,23 @@ $ini = file_get_contents($ini_file);
 
 <?php echo $notify;?>
 <div class="entries">
-	<div class="entries_inner" style="margin-bottom:20px">
-	<h2>
-		<img src="/style/img/settings.png" alt="Settings" class="icon24" />Edit .ini file
-	</h2>
-	<hr>
-		<form method="post" action="ini_editor.php">
-			<textarea id="codes" name="code"><?php echo $ini?></textarea>
-			<input type="submit" class="button" value="Submit changes" />
-		</form>
-		<script type="text/javascript">
-			var editor = CodeMirror.fromTextArea(document.getElementById("codes"),
-			{
-				lineNumbers: true,
-				mode: "text/x-ini"
-			});
-		</script>
-	</div>
+    <div class="entries_inner" style="margin-bottom:20px">
+    <h2>
+        <img src="/style/img/settings.png" alt="Settings" class="icon24" />Edit .ini file
+    </h2>
+    <hr>
+        <form method="post" action="ini_editor.php">
+            <textarea id="codes" name="code"><?php echo $ini?></textarea>
+            <input type="submit" class="button" value="Submit changes" />
+        </form>
+        <script type="text/javascript">
+            var editor = CodeMirror.fromTextArea(document.getElementById("codes"),
+            {
+                lineNumbers: true,
+                mode: "text/x-ini"
+            });
+        </script>
+    </div>
 </div>
 <?php
 require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");

@@ -44,30 +44,32 @@ $pagetitle = "ED ToolBox";
 require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 ?>
 <div class="entries">
-	<div class="entries_inner">
-		<?php
-		// get system-specific log
-		$log_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT user_log.id, user_log.station_id, user_log.system_name, user_log.log_entry, user_log.stardate,
-																user_log.pinned, user_log.type, user_log.title, user_log.audio,
-																edtb_stations.name AS station_name
-																FROM user_log
-																LEFT JOIN edtb_stations ON edtb_stations.id = user_log.station_id
-																WHERE user_log.system_id = '" . $logsystem_id . "'
-																OR user_log.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], urldecode($logsystem)) . "'
-																ORDER BY -user_log.pinned, user_log.weight, user_log.stardate DESC") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]));
-		$num = mysqli_num_rows($log_res);
+    <div class="entries_inner">
+        <?php
+        // get system-specific log
+        $log_res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT user_log.id, user_log.station_id, user_log.system_name, user_log.log_entry, user_log.stardate,
+                                                                user_log.pinned, user_log.type, user_log.title, user_log.audio,
+                                                                edtb_stations.name AS station_name
+                                                                FROM user_log
+                                                                LEFT JOIN edtb_stations ON edtb_stations.id = user_log.station_id
+                                                                WHERE user_log.system_id = '" . $logsystem_id . "'
+                                                                OR user_log.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], urldecode($logsystem)) . "'
+                                                                ORDER BY -user_log.pinned, user_log.weight, user_log.stardate DESC")
+                                                                or write_log(mysqli_error($GLOBALS["___mysqli_ston"]));
+        $num = mysqli_num_rows($log_res);
 
-		if ($num > 0)
-		{
-			echo make_log_entries($log_res, "log");
-		}
-		else
-		{
-			echo '<h2>No log entries for ' . $logsystem . '</h2><br />';
-			echo '<a href="javascript:void(0)" id="toggle" onclick="toggle_log(\'' . addslashes($logsystem) . '\')" title="Add log entry" style="color:inherit">Click here to add one</a>';
-		}
-		?>
-	</div>
+        if ($num > 0)
+        {
+            echo make_log_entries($log_res, "log");
+        }
+        else
+        {
+            echo '<h2>No log entries for ' . $logsystem . '</h2><br />';
+            echo '<a href="javascript:void(0)" id="toggle" onclick="toggle_log(\'' . addslashes($logsystem) . '\')" title="Add log entry" style="color:inherit">';
+            echo 'Click here to add one</a>';
+        }
+        ?>
+    </div>
 </div>
 <?php
 require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");

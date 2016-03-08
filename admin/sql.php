@@ -39,64 +39,66 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 
 if (isset($_POST["code"]))
 {
-	$code = $_POST["code"];
+    $code = $_POST["code"];
 
-	$blacklist = array(
-				"DROP",
-				"DELETE",
-				"ROUTINE",
-				"EXECUTE",
-				"DATABASE",
-				"SERVER",
-				"EMPTY",
-				"TRUNCATE",
-				"TRIGGER");
+    $blacklist = array
+                (
+                    "DROP",
+                    "DELETE",
+                    "ROUTINE",
+                    "EXECUTE",
+                    "DATABASE",
+                    "SERVER",
+                    "EMPTY",
+                    "TRUNCATE",
+                    "TRIGGER"
+                );
 
-	$continue = true;
+    $continue = true;
 
-	$pattern = '/"(.*?)"/';
-	$haystack = preg_replace($pattern, "", $code);
-	$pattern = "/'(.*?)'/";
-	$haystack = preg_replace($pattern, "", $haystack);
-	$pattern = "/`(.*?)`/";
-	$haystack = preg_replace($pattern, "", $haystack);
+    $pattern = '/"(.*?)"/';
+    $haystack = preg_replace($pattern, "", $code);
+    $pattern = "/'(.*?)'/";
+    $haystack = preg_replace($pattern, "", $haystack);
+    $pattern = "/`(.*?)`/";
+    $haystack = preg_replace($pattern, "", $haystack);
 
-	foreach ($blacklist as $find)
-	{
-		if (strripos($haystack, $find))
-		{
-			$continue = false;
-			$notify = '<div class="notify_deleted">Query contains a forbidden command.</div>';
-			break;
-		}
-	}
+    foreach ($blacklist as $find)
+    {
+        if (strripos($haystack, $find))
+        {
+            $continue = false;
+            $notify = '<div class="notify_deleted">Query contains a forbidden command.</div>';
+            break;
+        }
+    }
 
-	if ($continue !== false)
-	{
-		$queries = explode(">>BREAK<<", $code);
+    if ($continue !== false)
+    {
+        $queries = explode(">>BREAK<<", $code);
 
-		foreach ($queries as $query)
-		{
-			if (!mysqli_query($GLOBALS["___mysqli_ston"], "" . $query . ""))
-			{
-				$error = mysqli_error($GLOBALS["___mysqli_ston"]);
-				$notify = '<div class="notify_deleted">Execution failed:<br />' . $error . '</div>';
-			}
-			else
-			{
-				if ($rows = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "" . $query . "")))
-				{
-					$error = mysqli_info($GLOBALS["___mysqli_ston"]);
-					$notify = '<div class="notify_success">Query succesfully executed.<br />' . $error . '<br />Rows: ' . number_format($rows) . '</div>';
-				}
-				else
-				{
-					$error = mysqli_info($GLOBALS["___mysqli_ston"]);
-					$notify = '<div class="notify_success">Query succesfully executed.<br />' . $error . '</div>';
-				}
-			}
-		}
-	}
+        foreach ($queries as $query)
+        {
+            if (!mysqli_query($GLOBALS["___mysqli_ston"], "" . $query . ""))
+            {
+                $error = mysqli_error($GLOBALS["___mysqli_ston"]);
+                $notify = '<div class="notify_deleted">Execution failed:<br />' . $error . '</div>';
+            }
+            else
+            {
+                if ($rows = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "" . $query . "")))
+                {
+                    $error = mysqli_info($GLOBALS["___mysqli_ston"]);
+                    $notify = '<div class="notify_success">Query succesfully executed.<br />' . $error . '<br />Rows: ' . number_format($rows) . '</div>';
+                }
+                else
+                {
+                    $error = mysqli_info($GLOBALS["___mysqli_ston"]);
+                    $notify = '<div class="notify_success">Query succesfully executed.<br />' . $error . '</div>';
+                }
+            }
+        }
+    }
 }
 ?>
 <!-- codemirror -->
@@ -107,46 +109,46 @@ if (isset($_POST["code"]))
 <script type="text/javascript" src="/source/Vendor/codemirror/mode/sql/sql.js"></script>
 
 <div class="entries">
-	<div class="entries_inner" style="margin-bottom:20px">
-	<h2>
-		<img src="/style/img/sql24.png" alt="Settings" class="icon24" />Execute SQL
-	</h2>
-	<hr>
-	<?php echo $notify;?>
-	<div style="padding:5px;margin-bottom:10px">
-	You can use this form to perform SQL statements. Certain commands, such as<br />
-	<strong>DELETE</strong>, <strong>TRUNCATE</strong> and <strong>DROP</strong> are not available here.<br />
-	 To do multiple statements, use <code>>>BREAK<<</code> to separate statements<br /><br />
+    <div class="entries_inner" style="margin-bottom:20px">
+    <h2>
+        <img src="/style/img/sql24.png" alt="Settings" class="icon24" />Execute SQL
+    </h2>
+    <hr>
+    <?php echo $notify;?>
+    <div style="padding:5px;margin-bottom:10px">
+        You can use this form to perform SQL statements. Certain commands, such as<br />
+        <strong>DELETE</strong>, <strong>TRUNCATE</strong> and <strong>DROP</strong> are not available here.<br />
+         To do multiple statements, use <code>>>BREAK<<</code> to separate statements<br /><br />
 
-	For more complete database management, use the included db manager (<a href="/admin/">Adminer</a>)<br />
-	or a database manager of your choice.
-	</div>
-		<form method="post" action="sql.php">
-			<textarea id="codes" name="code">
+        For more complete database management, use the included db manager (<a href="/admin/">Adminer</a>)<br />
+        or a database manager of your choice.
+    </div>
+        <form method="post" action="sql.php">
+            <textarea id="codes" name="code">
 <?php
 if (isset($_POST["code"]))
 {
-	echo $code;
+    echo $code;
 }
 else
 {
-	echo '/*
-* 	     SQL statement goes here...
+    echo '/*
+*        SQL statement goes here...
 */
 ';
 }
 ?>
 </textarea>
-			<input type="submit" class="button" value="Submit" />
-		</form>
-		<script type="text/javascript">
-			var editor = CodeMirror.fromTextArea(document.getElementById("codes"),
-			{
-				lineNumbers: true,
-				mode: "text/x-mysql"
-			});
-		</script>
-	</div>
+            <input type="submit" class="button" value="Submit" />
+        </form>
+        <script type="text/javascript">
+            var editor = CodeMirror.fromTextArea(document.getElementById("codes"),
+            {
+                lineNumbers: true,
+                mode: "text/x-mysql"
+            });
+        </script>
+    </div>
 </div>
 <?php
 require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");

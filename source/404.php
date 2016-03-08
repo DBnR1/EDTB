@@ -36,8 +36,8 @@ $pagetitle = "Page Not Found!";
 /** @require header file */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 ?>
-<div class="entries" style="position:fixed;bottom:0;background-image:url(/style/img/404.jpg);background-position:center bottom;background-repeat:no-repeat;">
-	<div class="entries_inner">&nbsp;</div>
+<div class="entries" style="position:fixed;bottom:0;background-image:url(/style/img/404.jpg);background-position:center bottom;background-repeat:no-repeat">
+    <div class="entries_inner">&nbsp;</div>
 </div>
 <?php
 require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");

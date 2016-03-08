@@ -2,7 +2,8 @@
 /**
  * System information
  *
- * No description
+ * Front-end file for System information.
+ * The back-end file is /get/getData_systemInfo.php
  *
  * @package EDTB\Main
  * @author Mauri Kujala <contact@edtb.xyz>
@@ -37,17 +38,17 @@ $pagetitle = "System Information";
 require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 ?>
 <div class="entries">
-	<div class="entries_inner" id="system_page">
-		<h2 id="si_name"></h2><hr>
-		<div class="systeminfo_st">
-			<!-- STATIONS -->
-			<div class="systeminfo_stations" id="si_stations"></div>
-		</div>
-		<div class="systeminfo_sy">
-			<!-- SYSTEM INFO -->
-			<div class="systeminfo_system" id="si_detailed"></div>
-		</div>
-	</div>
+    <div class="entries_inner" id="system_page">
+        <h2 id="si_name"></h2><hr>
+        <div class="systeminfo_st">
+            <!-- STATIONS -->
+            <div class="systeminfo_stations" id="si_stations"></div>
+        </div>
+        <div class="systeminfo_sy">
+            <!-- SYSTEM INFO -->
+            <div class="systeminfo_system" id="si_detailed"></div>
+        </div>
+    </div>
 </div>
 <?php
 require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");

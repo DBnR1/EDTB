@@ -39,7 +39,8 @@ function adminer_object()
     include_once "plugin.php";
 
     // autoloader
-    foreach (glob("adminer_plugins/*.php") as $filename) {
+    foreach (glob("adminer_plugins/*.php") as $filename)
+    {
         include_once "./$filename";
     }
 

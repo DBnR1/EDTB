@@ -37,57 +37,55 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 
 if (isset($_GET["group_id"]) && !empty($_GET["group_id"]))
 {
-	$group_id = $_GET["group_id"];
+    $group_id = $_GET["group_id"];
 
-	/**
-	 * set class
-	 */
+    /**
+     * set class
+     */
+    $data["classv"] .= '<option value="0">Class</option>';
+    $res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT DISTINCT class
+                                                        FROM edtb_modules
+                                                        WHERE class != ''
+                                                        AND group_id = '" . $group_id . "'
+                                                        ORDER BY class") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
-	$data['classv'] .= '<option value="0">Class</option>';
-	$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT DISTINCT class
-														FROM edtb_modules
-														WHERE class != ''
-														AND group_id = '" . $group_id . "'
-														ORDER BY class") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+    $found = mysqli_num_rows($res);
 
-	$found = mysqli_num_rows($res);
+    if ($found > 0)
+    {
+        while ($arr = mysqli_fetch_assoc($res))
+        {
+            $data["classv"] .= '<option value="' . $arr["class"] . '">Class ' . $arr["class"] . '</option>';
+        }
+    }
 
-	if ($found > 0)
-	{
-		while ($arr = mysqli_fetch_assoc($res))
-		{
-			$data['classv'] .= '<option value="' . $arr["class"] . '">Class ' . $arr["class"] . '</option>';
-		}
-	}
+    /**
+     * set rating
+     */
+    $class_name = $_GET["class_name"] == "" ? "" : $_GET["class_name"];
 
-	/**
-	 * set rating
-	 */
+    $also_class = "";
+    if ($class_name != "")
+    {
+        $also_class = " AND class='" . $class_name . "'";
+    }
 
-	$class_name = $_GET["class_name"] == "" ? "" : $_GET["class_name"];
+    $data["rating"] .= '<option value="0">Rating</option>';
+    $rating_res = mysqli_query($GLOBALS["___mysqli_ston"], "    SELECT DISTINCT rating
+                                                                FROM edtb_modules
+                                                                WHERE class != ''" . $also_class . "
+                                                                AND group_id = '" . $group_id . "'
+                                                                ORDER BY rating") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
-	$also_class = "";
-	if ($class_name != "")
-	{
-		$also_class = " AND class='" . $class_name . "'";
-	}
+    $found_rating = mysqli_num_rows($rating_res);
 
-	$data['rating'] .= '<option value="0">Rating</option>';
-	$rating_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT DISTINCT rating
-																FROM edtb_modules
-																WHERE class != ''" . $also_class . "
-																AND group_id = '" . $group_id . "'
-																ORDER BY rating") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-
-	$found_rating = mysqli_num_rows($rating_res);
-
-	if ($found_rating > 0)
-	{
-		while ($rating_arr = mysqli_fetch_assoc($rating_res))
-		{
-			$data['rating'] .= '<option value="' . $rating_arr["rating"] . '">Rating ' . $rating_arr["rating"] . '</option>';
-		}
-	}
+    if ($found_rating > 0)
+    {
+        while ($rating_arr = mysqli_fetch_assoc($rating_res))
+        {
+            $data["rating"] .= '<option value="' . $rating_arr["rating"] . '">Rating ' . $rating_arr["rating"] . '</option>';
+        }
+    }
 }
 
 echo json_encode($data);

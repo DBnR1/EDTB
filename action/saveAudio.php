@@ -44,30 +44,30 @@ $audiodir = $_SERVER["DOCUMENT_ROOT"] . "/audio_logs";
 
 if (!is_dir($audiodir))
 {
-	if (!mkdir($audiodir, 0775, true))
-	{
-		$error = error_get_last();
-		write_log("Error: " . $error["message"], __FILE__, __LINE__);
-	}
+    if (!mkdir($audiodir, 0775, true))
+    {
+        $error = error_get_last();
+        write_log("Error: " . $error["message"], __FILE__, __LINE__);
+    }
 }
 
 $filename = $audiodir . "/" . $_POST["fname"];
 
 if (!$fp = fopen($filename, 'wb'))
 {
-	$error = error_get_last();
-	write_log("Error: " . $error["message"], __FILE__, __LINE__);
-	exit;
+    $error = error_get_last();
+    write_log("Error: " . $error["message"], __FILE__, __LINE__);
+    exit;
 }
 else
 {
-	fwrite($fp, $decodedData);
-	fclose($fp);
-	?>
-	<script>
-		$("#audiofiles").html("ddd");
-		$("#audiofiles").append(<?php echo $_POST["fname"];?>);
-		$("#audiofiles").append("ddd");
-	</script>
-	<?php
+    fwrite($fp, $decodedData);
+    fclose($fp);
+    ?>
+    <script>
+        $("#audiofiles").html("ddd");
+        $("#audiofiles").append(<?php echo $_POST["fname"];?>);
+        $("#audiofiles").append("ddd");
+    </script>
+    <?php
 }

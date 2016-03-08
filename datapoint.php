@@ -56,9 +56,9 @@ $tabledit->pass = $pwd;
 $tabledit->database_connect();
 $tabledit->table = $data_table;
 
-$colres = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT COLUMN_NAME, COLUMN_COMMENT
-														FROM INFORMATION_SCHEMA.COLUMNS
-														WHERE table_name = '" . $data_table . "'");
+$colres = mysqli_query($GLOBALS["___mysqli_ston"], "    SELECT COLUMN_NAME, COLUMN_COMMENT
+                                                        FROM INFORMATION_SCHEMA.COLUMNS
+                                                        WHERE table_name = '" . $data_table . "'");
 
 $output = array();
 $showt = array();
@@ -72,26 +72,18 @@ $tabledit->links_to_db = $settings["data_view_table"];
 
 $tabledit->skip = $settings["data_view_ignore"][$data_table];
 
-/**
- * @var primary_key the primary key of the table (must be AUTO_INCREMENT)
- */
+/** @var primary_key the primary key of the table (must be AUTO_INCREMENT) */
 $tabledit->primary_key = "id";
 
-/**
- * @var fields_in_list_view the fields you want to see in "list view"
- */
+/** @var fields_in_list_view the fields you want to see in "list view" */
 $tabledit->fields_in_list_view = $output;
 
 $tabledit->language = "en";
 
-/**
- * @var num_rows_list_view numbers of rows/records in "list view"
- */
+/** @var num_rows_list_view numbers of rows/records in "list view" */
 $tabledit->num_rows_list_view = 10;
 
-/**
- * @var fields_required required fields in edit or add record
- */
+/** @var fields_required required fields in edit or add record */
 //$tabledit->fields_required = array('name');
 
 $tabledit->url_base = "/source/Vendor/MySQL_table_edit/";
@@ -100,18 +92,16 @@ $tabledit->show_text = $showt;
 
 $tabledit->width_editor = "100%";
 
-/**
- * @var no_htaccess_warning warning no .htacces ('on' or 'off')
- */
+/** @var no_htaccess_warning warning no .htacces ('on' or 'off') */
 $tabledit->no_htaccess_warning = "off";
 
 ?>
 <div class="entries">
-	<div class="entries_inner">
-		<?php
-		$tabledit->do_it();
-		?>
-	</div>
+    <div class="entries_inner">
+        <?php
+        $tabledit->do_it();
+        ?>
+    </div>
 </div>
 <?php
 require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");

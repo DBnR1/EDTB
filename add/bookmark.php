@@ -32,100 +32,100 @@
 
 if (isset($_GET["do"]))
 {
-	/** @require functions */
-	require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
-	/** @require MySQL */
-	require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
+    /** @require functions */
+    require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+    /** @require MySQL */
+    require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 
-	$data = json_decode($_REQUEST["input"], true);
+    $data = json_decode($_REQUEST["input"], true);
 
-	$bm_system_id = $data["bm_system_id"];
-	$bm_system_name = $data["bm_system_name"];
-	$bm_catid = $data["bm_catid"];
-	$bm_entry = $data["bm_text"];
-	$bm_id = $data["bm_edit_id"];
+    $bm_system_id = $data["bm_system_id"];
+    $bm_system_name = $data["bm_system_name"];
+    $bm_catid = $data["bm_catid"];
+    $bm_entry = $data["bm_text"];
+    $bm_id = $data["bm_edit_id"];
 
-	if ($bm_id != "")
-	{
-		mysqli_query($GLOBALS["___mysqli_ston"], "	UPDATE user_bookmarks SET
-													comment = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $bm_entry) . "',
-													system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $bm_system_name) . "',
-													category_id = '" . $bm_catid . "'
-													WHERE id = '" . $bm_id . "' LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-	}
-	elseif (isset($_GET["deleteid"]))
-	{
-		mysqli_query($GLOBALS["___mysqli_ston"], "	DELETE FROM user_bookmarks
-													WHERE id = '" . $_GET["deleteid"] . "'
-													LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-	}
-	else
-	{
-		mysqli_query($GLOBALS["___mysqli_ston"], "	INSERT INTO user_bookmarks (system_id, system_name, comment, category_id, added_on)
-													VALUES
-													('" . $bm_system_id . "',
-													'" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $bm_system_name) . "',
-													'" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $bm_entry) . "',
-													'" . $bm_catid . "',
-													UNIX_TIMESTAMP())") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-	}
+    if ($bm_id != "")
+    {
+        mysqli_query($GLOBALS["___mysqli_ston"], "  UPDATE user_bookmarks SET
+                                                    comment = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $bm_entry) . "',
+                                                    system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $bm_system_name) . "',
+                                                    category_id = '" . $bm_catid . "'
+                                                    WHERE id = '" . $bm_id . "' LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+    }
+    elseif (isset($_GET["deleteid"]))
+    {
+        mysqli_query($GLOBALS["___mysqli_ston"], "  DELETE FROM user_bookmarks
+                                                    WHERE id = '" . $_GET["deleteid"] . "'
+                                                    LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+    }
+    else
+    {
+        mysqli_query($GLOBALS["___mysqli_ston"], "  INSERT INTO user_bookmarks (system_id, system_name, comment, category_id, added_on)
+                                                    VALUES
+                                                    ('" . $bm_system_id . "',
+                                                    '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $bm_system_name) . "',
+                                                    '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $bm_entry) . "',
+                                                    '" . $bm_catid . "',
+                                                    UNIX_TIMESTAMP())") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+    }
 
-	exit;
+    exit;
 }
 ?>
 <div class="input" id="addBm">
-	<form method="post" id="bm_form" action="bookmark.php">
-		<div class="input-inner">
-			<div class="suggestions" id="suggestions_3" style="margin-top:79px;margin-left:14px"></div>
-			<table>
-				<tr>
-					<td class="heading" colspan="2">Add/edit bookmark
-						<span class="right">
-							<a href="javascript:void(0)" onclick="tofront('addBm')" title="Close form">
-								<img src="/style/img/close.png" class="icon" alt="X" />
-							</a>
-						</span>
-					</td>
-				</tr>
-				<tr>
-					<td class="dark" style="text-align:left">
-						<input type="hidden" name="bm_edit_id" id="bm_edit_id">
-						<input type="hidden" name="bm_system_id" id="bm_system_id">
-						<input class="textbox" type="text" name="bm_system_name" placeholder="System name" id="bm_system_name" style="width:410px" oninput="showResult(this.value, '3', 'no', 'no', 'no', 'yes')" />
-					</td>
-					<td class="dark">
-						<select class="selectbox" name="bm_catid" id="bm_catid" style="width:140px">
-							<option value="0">Category (optional)</option>
-							<?php
-							$cat_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id, name FROM user_bm_categories ORDER BY name");
+    <form method="post" id="bm_form" action="bookmark.php">
+        <div class="input-inner">
+            <div class="suggestions" id="suggestions_3" style="margin-top:79px;margin-left:14px"></div>
+            <table>
+                <tr>
+                    <td class="heading" colspan="2">Add/edit bookmark
+                        <span class="right">
+                            <a href="javascript:void(0)" onclick="tofront('addBm')" title="Close form">
+                                <img src="/style/img/close.png" class="icon" alt="X" />
+                            </a>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="dark" style="text-align:left">
+                        <input type="hidden" name="bm_edit_id" id="bm_edit_id">
+                        <input type="hidden" name="bm_system_id" id="bm_system_id">
+                        <input class="textbox" type="text" name="bm_system_name" placeholder="System name" id="bm_system_name" style="width:410px" oninput="showResult(this.value, '3', 'no', 'no', 'no', 'yes')" />
+                    </td>
+                    <td class="dark">
+                        <select class="selectbox" name="bm_catid" id="bm_catid" style="width:140px">
+                            <option value="0">Category (optional)</option>
+                            <?php
+                            $cat_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id, name FROM user_bm_categories ORDER BY name");
 
-							while ($cat_arr = mysqli_fetch_assoc($cat_res))
-							{
-								echo '<option value="' . $cat_arr["id"] . '">' . $cat_arr["name"] . '</option>';
-							}
-							?>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="2" class="dark">
-						<textarea id="bm_text" name="bm_text" placeholder="Comment (optional)" rows="10" cols="40"></textarea>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="2" class="dark">
-						<a href="javascript:void(0)"><div class="button" id="add_bm_click">Add Bookmark</div></a>
-						<span id="delete_bm"></span>
-					</td>
-				</tr>
-			</table>
-		</div>
-	</form>
+                            while ($cat_arr = mysqli_fetch_assoc($cat_res))
+                            {
+                                echo '<option value="' . $cat_arr["id"] . '">' . $cat_arr["name"] . '</option>';
+                            }
+                            ?>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="dark">
+                        <textarea id="bm_text" name="bm_text" placeholder="Comment (optional)" rows="10" cols="40"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="dark">
+                        <a href="javascript:void(0)"><div class="button" id="add_bm_click">Add Bookmark</div></a>
+                        <span id="delete_bm"></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </form>
 </div>
 <script>
-	$("#add_bm_click").click(function()
-	{
-		update_data('bm_form', '/add/bookmark.php?do', true);
-		tofront('null', true);
-	});
+    $("#add_bm_click").click(function()
+    {
+        update_data('bm_form', '/add/bookmark.php?do', true);
+        tofront('null', true);
+    });
 </script>

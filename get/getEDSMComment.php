@@ -37,12 +37,12 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 
 if (isset($_GET["system_name"]))
 {
-	$system = urlencode($_GET["system_name"]);
+    $system = urlencode($_GET["system_name"]);
 }
 else
 {
-	write_log("Error: System name not set", __FILE__, __LINE__);
-	exit;
+    write_log("Error: System name not set", __FILE__, __LINE__);
+    exit;
 }
 
 /**
@@ -52,24 +52,24 @@ $result = "";
 
 if (!empty($settings["edsm_api_key"]) && !empty($settings["edsm_cmdr_name"]))
 {
-	if ($get_comment = file_get_contents("http://www.edsm.net/api-logs-v1/get-comment?systemName=" . $system . "&commanderName=" . urlencode($settings["edsm_cmdr_name"]) . "&apiKey=" . $settings["edsm_api_key"]))
-	{
-		$json_d = json_decode($get_comment, true);
+    if ($get_comment = file_get_contents("http://www.edsm.net/api-logs-v1/get-comment?systemName=" . $system . "&commanderName=" . urlencode($settings["edsm_cmdr_name"]) . "&apiKey=" . $settings["edsm_api_key"]))
+    {
+        $json_d = json_decode($get_comment, true);
 
-		if (!empty($json_d["comment"]))
-		{
-			$result = $json_d["comment"];
-		}
-	}
-	else
-	{
-		$error = error_get_last();
-		write_log("Error: " . $error["message"], __FILE__, __LINE__);
-	}
+        if (!empty($json_d["comment"]))
+        {
+            $result = $json_d["comment"];
+        }
+    }
+    else
+    {
+        $error = error_get_last();
+        write_log("Error: " . $error["message"], __FILE__, __LINE__);
+    }
 }
 else
 {
-	write_log("Error: EDSM API key or commander name not set", __FILE__, __LINE__);
+    write_log("Error: EDSM API key or commander name not set", __FILE__, __LINE__);
 }
 
 echo $result;

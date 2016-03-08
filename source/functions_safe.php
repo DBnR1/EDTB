@@ -11,23 +11,23 @@
  */
 
  /*
- *  ED ToolBox, a companion web app for the video game Elite Dangerous
- *  (C) 1984 - 2016 Frontier Developments Plc.
- *  ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+ * ED ToolBox, a companion web app for the video game Elite Dangerous
+ * (C) 1984 - 2016 Frontier Developments Plc.
+ * ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
  *
- *  This program is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU General Public License
- *  as published by the Free Software Foundation; either version 2
- *  of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
 /** @require ini config */
@@ -43,12 +43,12 @@ require_once("config_ini.inc.php");
  */
 function notice($msg, $title = "Notice")
 {
-	$notice = '<div class="notice">';
-	$notice .= '<div class="notice_title"><img src="/style/img/notice_b.png" alt="Notice" class="icon" style="margin-bottom:3px" />' . $title . '</div>';
-	$notice .= '<div class="notice_text">' . $msg . '</div>';
-	$notice .= '</div>';
+    $notice = '<div class="notice">';
+    $notice .= '<div class="notice_title"><img src="/style/img/notice_b.png" alt="Notice" class="icon" style="margin-bottom:3px" />' . $title . '</div>';
+    $notice .= '<div class="notice_text">' . $msg . '</div>';
+    $notice .= '</div>';
 
-	return $notice;
+    return $notice;
 }
 
 $u_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : "";
@@ -69,15 +69,15 @@ function getBrowser()
 
     //First get the platform?
     if (preg_match('/linux/i', $u_agent))
-	{
+    {
         $platform = 'linux';
     }
     elseif (preg_match('/macintosh|mac os x/i', $u_agent))
-	{
+    {
         $platform = 'mac';
     }
     elseif (preg_match('/windows|win32/i', $u_agent))
-	{
+    {
         $platform = 'windows';
     }
 
@@ -118,35 +118,35 @@ function getBrowser()
     $pattern = '#(?<browser>' . join('|', $known) .
     ')[/ ]+(?<version>[0-9.|a-zA-Z.]*)#';
     if (!preg_match_all($pattern, $u_agent, $matches))
-	{
+    {
         // we have no matching number just continue
     }
 
     // see how many we have
     $i = count($matches['browser']);
     if ($i != 1)
-	{
+    {
         //we will have two since we are not using 'other' argument yet
         //see if version is before or after the name
         if (strripos($u_agent, "Version") < strripos($u_agent, $ub))
-		{
+        {
             $version= $matches['version'][0];
         }
         else
-		{
+        {
             $version= $matches['version'][1];
         }
     }
     else
-	{
+    {
         $version= $matches['version'][0];
     }
 
     // check if we have a number
     if ($version == null || $version == "")
-	{
-		$version = "?";
-	}
+    {
+        $version = "?";
+    }
 
     return array(
         'userAgent' => $u_agent,
@@ -196,9 +196,9 @@ function getOS()
                         );
 
     foreach ($os_array as $regex => $value)
-	{
+    {
         if (preg_match($regex, $u_agent))
-		{
+        {
             $os_platform = $value;
         }
     }
@@ -217,53 +217,53 @@ function getOS()
  */
 function get_timeago($ptime, $diff = true, $format = false)
 {
-	global $system_time;
+    global $system_time;
 
-	$ptime_og = $ptime;
+    $ptime_og = $ptime;
 
-	if ($diff === true)
-	{
-		$ptime = $ptime - ($system_time * 60 * 60);
-	}
-	$etime = time() - $ptime;
+    if ($diff === true)
+    {
+        $ptime = $ptime - ($system_time * 60 * 60);
+    }
+    $etime = time() - $ptime;
 
-	if ($etime < 1)
-	{
-		return 'less than ' . $etime . ' second ago';
-	}
+    if ($etime < 1)
+    {
+        return 'less than ' . $etime . ' second ago';
+    }
 
-	$a = array( 12 * 30 * 24 * 60 * 60  =>  'year',
-				30 * 24 * 60 * 60       =>  'month',
-				24 * 60 * 60            =>  'day',
-				60 * 60             	=>  'hour',
-				60                  	=>  'minute',
-				1                   	=>  'second'
-	);
+    $a = array( 12 * 30 * 24 * 60 * 60  =>  'year',
+                30 * 24 * 60 * 60       =>  'month',
+                24 * 60 * 60            =>  'day',
+                60 * 60                 =>  'hour',
+                60                      =>  'minute',
+                1                       =>  'second'
+    );
 
-	foreach ($a as $secs => $str)
-	{
-		$d = $etime / $secs;
+    foreach ($a as $secs => $str)
+    {
+        $d = $etime / $secs;
 
-		if ($d >= 1)
-		{
-			$r = round($d);
-			if ($format !== true)
-			{
-				return $r . ' ' . $str . ($r > 1 ? 's' : '') . ' ago';
-			}
-			else
-			{
-				if (data_is_old($ptime_og))
-				{
-					return '<span class="old_data">' . $r . ' ' . $str . ($r > 1 ? 's' : '') . ' ago</span>';
-				}
-				else
-				{
-					return $r . ' ' . $str . ($r > 1 ? 's' : '') . ' ago';
-				}
-			}
-		}
-	}
+        if ($d >= 1)
+        {
+            $r = round($d);
+            if ($format !== true)
+            {
+                return $r . ' ' . $str . ($r > 1 ? 's' : '') . ' ago';
+            }
+            else
+            {
+                if (data_is_old($ptime_og))
+                {
+                    return '<span class="old_data">' . $r . ' ' . $str . ($r > 1 ? 's' : '') . ' ago</span>';
+                }
+                else
+                {
+                    return $r . ' ' . $str . ($r > 1 ? 's' : '') . ' ago';
+                }
+            }
+        }
+    }
 }
 
 /**
@@ -275,8 +275,8 @@ function get_timeago($ptime, $diff = true, $format = false)
  */
 function is_dir_empty($dir)
 {
-	if (!is_readable($dir)) return null;
-	return (count(scandir($dir)) == 2);
+    if (!is_readable($dir)) return null;
+    return (count(scandir($dir)) == 2);
 }
 
 /**
@@ -290,40 +290,40 @@ function is_dir_empty($dir)
  */
 function write_log($msg, $file = "", $line = "", $debug_override = false)
 {
-	global $settings, $system_time;
+    global $settings, $system_time;
 
-	if (isset($settings["debug"]) && $settings["debug"] == "true" || $debug_override !== false)
-	{
-		// write user info file if not exists
-		$lfile = $_SERVER["DOCUMENT_ROOT"] . "/edtb_log_info.txt";
-		if (!file_exists($lfile))
-		{
-			$ua = getBrowser();
-			$debug_info = "Browser: " . $ua['name'] . " " . $ua['version'] . " (" .$ua['platform'] . ")" . PHP_EOL;
-			$debug_info .= "Platform: " . getOS() . PHP_EOL;
-			$debug_info .= "Reported as: " . $_SERVER["HTTP_USER_AGENT"] . PHP_EOL;
-			$debug_info .= "HTTP_HOST: " . $_SERVER["HTTP_HOST"] . PHP_EOL;
-			$debug_info .= "SERVER_SOFTWARE: " . $_SERVER["SERVER_SOFTWARE"] . PHP_EOL;
-			$debug_info .= "SERVER_NAME: " . $_SERVER["SERVER_NAME"] . PHP_EOL;
-			$debug_info .= "SERVER_ADDR: " . $_SERVER["SERVER_ADDR"] . PHP_EOL;
-			$debug_info .= "SERVER_PORT: " . $_SERVER["SERVER_PORT"] . PHP_EOL;
-			$debug_info .= "DOCUMENT_ROOT: " . $_SERVER["DOCUMENT_ROOT"] . PHP_EOL;
+    if (isset($settings["debug"]) && $settings["debug"] == "true" || $debug_override !== false)
+    {
+        // write user info file if not exists
+        $lfile = $_SERVER["DOCUMENT_ROOT"] . "/edtb_log_info.txt";
+        if (!file_exists($lfile))
+        {
+            $ua = getBrowser();
+            $debug_info = "Browser: " . $ua['name'] . " " . $ua['version'] . " (" .$ua['platform'] . ")" . PHP_EOL;
+            $debug_info .= "Platform: " . getOS() . PHP_EOL;
+            $debug_info .= "Reported as: " . $_SERVER["HTTP_USER_AGENT"] . PHP_EOL;
+            $debug_info .= "HTTP_HOST: " . $_SERVER["HTTP_HOST"] . PHP_EOL;
+            $debug_info .= "SERVER_SOFTWARE: " . $_SERVER["SERVER_SOFTWARE"] . PHP_EOL;
+            $debug_info .= "SERVER_NAME: " . $_SERVER["SERVER_NAME"] . PHP_EOL;
+            $debug_info .= "SERVER_ADDR: " . $_SERVER["SERVER_ADDR"] . PHP_EOL;
+            $debug_info .= "SERVER_PORT: " . $_SERVER["SERVER_PORT"] . PHP_EOL;
+            $debug_info .= "DOCUMENT_ROOT: " . $_SERVER["DOCUMENT_ROOT"] . PHP_EOL;
 
-			file_put_contents($lfile, $debug_info);
-		}
+            file_put_contents($lfile, $debug_info);
+        }
 
-		$logfile = $_SERVER["DOCUMENT_ROOT"] . "/edtb_log.txt";
-		$fd = fopen($logfile, "a");
+        $logfile = $_SERVER["DOCUMENT_ROOT"] . "/edtb_log.txt";
+        $fd = fopen($logfile, "a");
 
-		if (isset($file))
-		{
-			$on_line = $line == "" ? "" : " on line " . $line;
-			$where = "[" . $file . "" . $on_line . "] ";
-		}
+        if (isset($file))
+        {
+            $on_line = $line == "" ? "" : " on line " . $line;
+            $where = "[" . $file . "" . $on_line . "] ";
+        }
 
-		$str = "[" . date("d.m.Y H:i:s", (time() + $system_time * 60 * 60)) . "]" . $where . $msg;
+        $str = "[" . date("d.m.Y H:i:s", (time() + $system_time * 60 * 60)) . "]" . $where . $msg;
 
-		fwrite($fd, $str . PHP_EOL);
-		fclose($fd);
-	}
+        fwrite($fd, $str . PHP_EOL);
+        fclose($fd);
+    }
 }

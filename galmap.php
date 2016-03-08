@@ -2,7 +2,8 @@
 /**
  * Galaxy map
  *
- * No description
+ * Front-end file for Galaxy map
+ * The back-end file is /get/getMapPoints.json.php
  *
  * @package EDTB\Backend
  * @author Mauri Kujala <contact@edtb.xyz>
@@ -40,29 +41,29 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 
 if (valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"]))
 {
-	$ucoordx = $curSys["x"];
-	$ucoordy = $curSys["y"];
-	$ucoordz = -$curSys["z"];
+    $ucoordx = $curSys["x"];
+    $ucoordy = $curSys["y"];
+    $ucoordz = -$curSys["z"];
 }
 else
 {
-	// get last known coordinates
-	$last_coords = last_known_system();
+    // get last known coordinates
+    $last_coords = last_known_system();
 
-	$ucoordx = $last_coords["x"];
-	$ucoordy = $last_coords["y"];
-	$ucoordz = -$last_coords["z"];
+    $ucoordx = $last_coords["x"];
+    $ucoordy = $last_coords["y"];
+    $ucoordz = -$last_coords["z"];
 
-	$is_unknown = " *";
+    $is_unknown = " *";
 }
 
 if (!valid_coordinates($ucoordx, $ucoordy, $ucoordz))
 {
-	$ucoordx = "0";
-	$ucoordy = "0";
-	$ucoordz = "0";
+    $ucoordx = "0";
+    $ucoordy = "0";
+    $ucoordz = "0";
 
-	$is_unknown = " *";
+    $is_unknown = " *";
 }
 ?>
 <div style="display:none" id="curx"><?php echo $ucoordx?></div>
@@ -73,31 +74,31 @@ if (!valid_coordinates($ucoordx, $ucoordy, $ucoordz))
 <div style="display:none" id="rcurz"><?php echo round($ucoordz)?></div>
 
 <div class="entries" style="position:absolute;bottom:0;top:0;height:auto">
-	<table class="edmap_table">
-		<tbody>
-			<tr>
-				<th style="text-align: center">
-					<ul class="pagination">
-						<li class="actives"><a href="/GalMap.php">Galaxy Map</a></li>
-						<li><a href="/Map.php">Neighborhood Map</a></li>
-					</ul>
-				</th>
-			</tr>
-		</tbody>
-	</table>
-	<div class="edmap" id="edmap"></div>
-	<!-- Launch ED3Dmap -->
-	<script type="text/javascript">
-		Ed3d.init({
-			basePath: '../source/Vendor/ED3D-Galaxy-Map/',
-			container: 'edmap',
-			jsonPath: '/map_points.json',
-			withHudPanel: true,
-			startAnim: false,
-			effectScaleSystem: [15,50],
-			playerPos: [<?php echo $ucoordx;?>,<?php echo $ucoordy;?>,<?php echo $ucoordz;?>]
-		});
-	</script>
+    <table class="edmap_table">
+        <tbody>
+            <tr>
+                <th style="text-align: center">
+                    <ul class="pagination">
+                        <li class="actives"><a href="/GalMap.php">Galaxy Map</a></li>
+                        <li><a href="/Map.php">Neighborhood Map</a></li>
+                    </ul>
+                </th>
+            </tr>
+        </tbody>
+    </table>
+    <div class="edmap" id="edmap"></div>
+    <!-- Launch ED3Dmap -->
+    <script type="text/javascript">
+        Ed3d.init({
+            basePath: '../source/Vendor/ED3D-Galaxy-Map/',
+            container: 'edmap',
+            jsonPath: '/map_points.json',
+            withHudPanel: true,
+            startAnim: false,
+            effectScaleSystem: [15,50],
+            playerPos: [<?php echo $ucoordx;?>,<?php echo $ucoordy;?>,<?php echo $ucoordz;?>]
+        });
+    </script>
 </div>
 <?php
 require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");

@@ -37,47 +37,47 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
 
 if (isset($_GET["nowplaying"]))
 {
-	// VLC contents supercedes file contents if enabled.
+    // VLC contents supercedes file contents if enabled.
 
-	$nowplaying = "";
+    $nowplaying = "";
 
-	if (isset($settings["nowplaying_file"]) && $settings["nowplaying_file"] != "")
-	{
-		$nowplaying = file_get_contents($settings["nowplaying_file"]);
-	}
+    if (isset($settings["nowplaying_file"]) && $settings["nowplaying_file"] != "")
+    {
+        $nowplaying = file_get_contents($settings["nowplaying_file"]);
+    }
 
-	if (isset($settings["nowplaying_vlc_password"]) && $settings["nowplaying_vlc_password"] != "")
-	{
-		$username = "";
-		$password = $settings["nowplaying_vlc_password"];
-		$url = $settings["nowplaying_vlc_url"];
+    if (isset($settings["nowplaying_vlc_password"]) && $settings["nowplaying_vlc_password"] != "")
+    {
+        $username = "";
+        $password = $settings["nowplaying_vlc_password"];
+        $url = $settings["nowplaying_vlc_url"];
 
-		$opts = array(
-		  'http' => array(
-			'method' => "GET",
-			'header' => "Authorization: Basic " . base64_encode("$username:$password")
-		  )
-		);
+        $opts = array(
+          'http' => array(
+            'method' => "GET",
+            'header' => "Authorization: Basic " . base64_encode("$username:$password")
+          )
+        );
 
-		$context = stream_context_create($opts);
+        $context = stream_context_create($opts);
 
-		if (!$result = file_get_contents($url, false, $context))
-		{
-			$error = error_get_last();
-			write_log("Error: " . $error["message"], __FILE__, __LINE__);
-		}
+        if (!$result = file_get_contents($url, false, $context))
+        {
+            $error = error_get_last();
+            write_log("Error: " . $error["message"], __FILE__, __LINE__);
+        }
 
-		$json_data = json_decode($result, true);
+        $json_data = json_decode($result, true);
 
-		$nowplaying = $json_data["information"]["category"]["meta"]["now_playing"];
-	}
+        $nowplaying = $json_data["information"]["category"]["meta"]["now_playing"];
+    }
 
-	if (empty($nowplaying))
-	{
-		$nowplaying = "Not playing";
-	}
+    if (empty($nowplaying))
+    {
+        $nowplaying = "Not playing";
+    }
 
-	echo tts_override($nowplaying);
+    echo tts_override($nowplaying);
 
-	exit();
+    exit();
 }

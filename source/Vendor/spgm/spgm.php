@@ -338,7 +338,7 @@ function spgm_DispSPGMLink()
     spgm_Trace('<p>function spgm_DispSPGMLink</p>' . "\n");
 
     // multi-language support
-    $spgm_cfg['locale']['spgmLink'] = str_replace(PATTERN_SPGM_LINK, '<a href="http://spgm.sourceforge.net" target="_BLANK" class="' . CLASS_A_SPGM_LINK . '">SPGM</a>', $spgm_cfg['locale']['spgmLink']);
+    $spgm_cfg['locale']['spgmLink'] = str_replace(PATTERN_SPGM_LINK, '<a href="http://spgm.sourceforge.net" target="_blank" class="' . CLASS_A_SPGM_LINK . '">SPGM</a>', $spgm_cfg['locale']['spgmLink']);
 
     print $spgm_cfg['locale']['spgmLink'];
 }
@@ -353,8 +353,8 @@ function spgm_DropShadowsBeginWrap($offset = '')
     if ($spgm_cfg['conf']['enableDropShadows'])
     {
         print $offset . '<table class="' . CLASS_TABLE_SHADOWS . '">' . "\n";
-        print $offset . '	 <tr>' . "\n";
-        print $offset . '		 <td class="' . CLASS_TD_SHADOWS_MAIN . '">' . "\n";
+        print $offset . '    <tr>' . "\n";
+        print $offset . '        <td class="' . CLASS_TD_SHADOWS_MAIN . '">' . "\n";
     }
 
 }
@@ -368,13 +368,13 @@ function spgm_DropShadowsEndWrap($offset = '')
     // if drop shadows are enabled, draw the end of the table
     if ($spgm_cfg['conf']['enableDropShadows'])
     {
-        print $offset . '		 </td>' . "\n";
-        print $offset . '		 <td class="' . CLASS_TD_SHADOWS_RIGHT . '">&nbsp;</td>' . "\n";
-        print $offset . '	 </tr>' . "\n";
-        print $offset . '	 <tr>' . "\n";
-        print $offset . '		 <td class="' . CLASS_TD_SHADOWS_BOTTOM . '">&nbsp;</td>' . "\n";
-        print $offset . '		 <td class="' . CLASS_TD_SHADOWS_BOTTOMRIGHT . '">&nbsp;</td>' . "\n";
-        print $offset . '	 </tr>' . "\n";
+        print $offset . '        </td>' . "\n";
+        print $offset . '        <td class="' . CLASS_TD_SHADOWS_RIGHT . '">&nbsp;</td>' . "\n";
+        print $offset . '    </tr>' . "\n";
+        print $offset . '    <tr>' . "\n";
+        print $offset . '        <td class="' . CLASS_TD_SHADOWS_BOTTOM . '">&nbsp;</td>' . "\n";
+        print $offset . '        <td class="' . CLASS_TD_SHADOWS_BOTTOMRIGHT . '">&nbsp;</td>' . "\n";
+        print $offset . '    </tr>' . "\n";
         print $offset . '</table>' . "\n";
     }
 }
@@ -424,14 +424,14 @@ function spgm_IsPicture($strPictureFileName, $strGalleryId)
 
     // check filename patterns
     //if (PREF_THUMB != '' AND preg_match('^' . PREF_THUMB . '*', $strPictureFileName))
-	if (PREF_THUMB != '' AND strripos($strPictureFileName, PREF_THUMB))
+    if (PREF_THUMB != '' AND strripos($strPictureFileName, PREF_THUMB))
         return false;
     $validated = false;
     $extnb     = count($spgm_cfg['global']['supportedExtensions']);
     for ($i = 0; $i < $extnb; $i++)
     {
         //if (preg_match($spgm_cfg['global']['supportedExtensions'][$i] . '$', $strPictureFileName))
-		if (strripos($strPictureFileName, $spgm_cfg['global']['supportedExtensions'][$i]) !== false)
+        if (strripos($strPictureFileName, $spgm_cfg['global']['supportedExtensions'][$i]) !== false)
         {
             $validated = true;
             break;
@@ -823,7 +823,7 @@ function spgm_PostInitCheck()
         $_lblAlt         = $arrIconInfo[$i][1];
         $_lblClass       = $arrIconInfo[$i][2];
         $_lblNa          = $arrIconInfo[$i][3];
-		$strIconFileName2 = DIR_THEMES . $spgm_cfg['conf']['theme'] . '/' . $spgm_cfg['theme'][$_key];
+        $strIconFileName2 = DIR_THEMES . $spgm_cfg['conf']['theme'] . '/' . $spgm_cfg['theme'][$_key];
         $strIconFileName = DIR_THEMES . $spgm_cfg['conf']['theme'] . '/' . rawurlencode($spgm_cfg['theme'][$_key]);
 
         if ($spgm_cfg['theme'][$_key] != '' && spgm_CheckPerms($strIconFileName))
@@ -947,9 +947,9 @@ function spgm_CallbackCompareMTime($strFilePath1, $strFilePath2)
 # Creates a sorted array containing first level sub-galleries of a given gallery
 # $galid - the gallery ID to introspect
 # $display - boolean indicating that galleries will be rendered and that sort
-#			 options consequently have to be turned on
+#            options consequently have to be turned on
 # returns: a sorted array containing the sub-gallery filenames for the given
-#			 gallery
+#            gallery
 
 function spgm_CreateGalleryArray($strGalleryId, $bToBeDisplayed)
 {
@@ -1029,7 +1029,7 @@ function spgm_CreateGalleryArray($strGalleryId, $bToBeDisplayed)
 # $galid - the gallery ID (must be always valid)
 # $filter - the filter that defines the pictures to include in the list
 # $display - boolean indicating that thumbnails will be rendered and that sort
-#			 options consequently have to be turned on
+#            options consequently have to be turned on
 # returns: a sorted array containing the thumbnails' basenames of the gallery
 
 function spgm_CreatePictureArray($strGalleryId, $strFilterFlags, $bForDisplayPurpose)
@@ -1152,7 +1152,7 @@ function spgm_DisplayThumbnailNavibar($iCurrentPageIndex, $iPageNumber, $strGall
     else
     {
         print ' ' . $spgm_cfg['theme']['nextPageIconNot'];
-        print '	 ' . $spgm_cfg['theme']['lastPageIconNot'];
+        print '  ' . $spgm_cfg['theme']['lastPageIconNot'];
     }
 }
 
@@ -1189,13 +1189,13 @@ function spgm_DisplayGalleryNavibar($strGalleryId, $strFilterFlags, $mixPictureI
 {
     global $spgm_cfg;
 
-	require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+    require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 
     spgm_Trace('<p>function spgm_DisplayGalleryNavibar</p>' . "\n" . 'strGalleryId: ' . $strGalleryId . '<br />' . "\n" . 'strFilterFlags: ' . $strFilterFlags . '<br />' . "\n" . 'mixPictureId: ' . $mixPictureId . '<br />' . "\n");
 
     $arrExplodedPathToGallery = explode('/', $strGalleryId);
 
-    print '	 <div class="' . CLASS_DIV_GALHEADER . '">' . "\n";
+    print '  <div class="' . CLASS_DIV_GALHEADER . '">' . "\n";
 
     // display main gallery link
     $filters = '';
@@ -1235,10 +1235,10 @@ function spgm_DisplayGalleryNavibar($strGalleryId, $strFilterFlags, $mixPictureI
 
         print ' &raquo; ';
 
-		/**
-		* provide crosslinks to screenshot gallery, log page, etc
-		*/
-		$g_crosslinks = crosslinks($arrExplodedPathToGallery[$i], false, true);
+        /**
+        * provide crosslinks to screenshot gallery, log page, etc
+        */
+        $g_crosslinks = crosslinks($arrExplodedPathToGallery[$i], false, true);
 
         if ($i < ($_max - 1))
         {
@@ -1267,7 +1267,7 @@ function spgm_DisplayGalleryNavibar($strGalleryId, $strFilterFlags, $mixPictureI
                 print $strHtmlGalleryName;
             }
         }
-		print $g_crosslinks;
+        print $g_crosslinks;
     }
 
     // Notify if we are in "new picture mode"
@@ -1286,7 +1286,7 @@ function spgm_DisplayGalleryNavibar($strGalleryId, $strFilterFlags, $mixPictureI
     }
 
 
-    print "\n" . '		</div>' . "\n";
+    print "\n" . '      </div>' . "\n";
 
 }
 
@@ -1408,18 +1408,18 @@ function spgm_DisplayGalleryHierarchy($strGalleryId, $iGalleryDepth, $strFilterF
             if ($iGalleryDepth <= 1)
             {
                 if (($i % $spgm_cfg['conf']['galleryListingCols'] == 0) && ($i != 0))
-                    print '		 </tr>' . "\n" . '		<tr>' . "\n";
-                print '	 <td class="' . CLASS_TD_GALLISTING_CELL . '">' . "\n";
+                    print '      </tr>' . "\n" . '      <tr>' . "\n";
+                print '  <td class="' . CLASS_TD_GALLISTING_CELL . '">' . "\n";
             }
 
-            print '	 <table class="' . CLASS_TABLE_GALITEM . '">' . "\n";
-            print '		 <tr>' . "\n";
+            print '  <table class="' . CLASS_TABLE_GALITEM . '">' . "\n";
+            print '      <tr>' . "\n";
 
             // display the gallery icon
             $iRowSpan = ($spgm_cfg['conf']['galleryCaptionPos'] == BOTTOM) ? 1 : 2;
-            print '		 <td rowspan="' . $iRowSpan . '" style="vertical-align:top" class="' . CLASS_TD_GALITEM_ICON . '">' . "\n";
+            print '      <td rowspan="' . $iRowSpan . '" style="vertical-align:top" class="' . CLASS_TD_GALITEM_ICON . '">' . "\n";
             if ($strHtmlOffset != '')
-                print '		 ' . $strHtmlOffset . "\n";
+                print '      ' . $strHtmlOffset . "\n";
 
             // look for the icon...
             $strHtmlIcon               = '';
@@ -1512,42 +1512,42 @@ function spgm_DisplayGalleryHierarchy($strGalleryId, $iGalleryDepth, $strFilterF
             {
                 $filters = str_replace(PARAM_VALUE_FILTER_SLIDESHOW, '', str_replace(PARAM_VALUE_FILTER_NEW, '', $strFilterFlags));
             }
-            print '			 ' . spgm_BuildLink($strHtmlIcon, CLASS_TD_GALITEM_TITLE, '', $strPathToSubGallery, -1, -1, $filters) . "\n";
+            print '          ' . spgm_BuildLink($strHtmlIcon, CLASS_TD_GALITEM_TITLE, '', $strPathToSubGallery, -1, -1, $filters) . "\n";
 
             if ($bNeedDropShadows == true)
             {
                 spgm_DropShadowsEndWrap();
             }
 
-            print '		 </td>' . "\n";
+            print '      </td>' . "\n";
 
             if ($spgm_cfg['conf']['galleryCaptionPos'] == BOTTOM)
-                print '		 </tr>' . "\n" . '		<tr>' . "\n";
+                print '      </tr>' . "\n" . '      <tr>' . "\n";
 
-			/**
-			 * provide crosslinks to screenshot gallery, log page, etc
-			 */
-			$g2_crosslinks = crosslinks($strHtmlGalleryName, false, false);
+            /**
+             * provide crosslinks to screenshot gallery, log page, etc
+             */
+            $g2_crosslinks = crosslinks($strHtmlGalleryName, false, false);
 
             // display the gallery title
-            print '		 <td class="' . CLASS_TD_GALITEM_TITLE . '">' . "\n";
-            print '			 ' . spgm_BuildLink($strHtmlGalleryName, CLASS_TD_GALITEM_TITLE, '', $strPathToSubGallery, -1, -1, $filters);
+            print '      <td class="' . CLASS_TD_GALITEM_TITLE . '">' . "\n";
+            print '          ' . spgm_BuildLink($strHtmlGalleryName, CLASS_TD_GALITEM_TITLE, '', $strPathToSubGallery, -1, -1, $filters);
             print ' ' . $g2_crosslinks . $strHtmlPictureNumber . ' ' . "\n";
-            print '		 </td>' . "\n";
-            print '		 </tr>' . "\n";
+            print '      </td>' . "\n";
+            print '      </tr>' . "\n";
 
             // display the gallery caption
-            print '		 <tr>' . "\n";
-            print '		 <td class="' . CLASS_TD_GALITEM_CAPTION . '">' . "\n";
+            print '      <tr>' . "\n";
+            print '      <td class="' . CLASS_TD_GALITEM_CAPTION . '">' . "\n";
             $strPathToGalleryCaption = $strPathToGallery . '/' . $strGalleryName . '/' . FILE_GAL_CAPTION;
             if (spgm_CheckPerms($strPathToGalleryCaption)) // check perms
             {
-                print '			 ';
+                print '          ';
                 include($strPathToGalleryCaption);
             }
-            print '		 </td>' . "\n";
-            print '		 </tr>' . "\n";
-            print '	 </table>' . "\n";
+            print '      </td>' . "\n";
+            print '      </tr>' . "\n";
+            print '  </table>' . "\n";
         }
 
         // TODO check this: one test ?
@@ -1561,7 +1561,7 @@ function spgm_DisplayGalleryHierarchy($strGalleryId, $iGalleryDepth, $strFilterF
         }
 
         if ($iGalleryDepth <= 1)
-            print '	 </td>' . "\n";
+            print '  </td>' . "\n";
 
     } // endfor
 
@@ -1585,7 +1585,7 @@ function spgm_DisplayPicture($strGalleryId, $iPictureId, $strFilterFlags)
     $_strFileExtension   = strrchr($strPictureFilename, '.');
     $strPictureBasename  = substr($strPictureFilename, 0, -strlen($_strFileExtension));
     $strPictureURL       = $strPathToPictures . rawurlencode($strPictureFilename);
-	$strPictureURL2      = $strPathToPictures . $strPictureFilename;
+    $strPictureURL2      = $strPathToPictures . $strPictureFilename;
     $strCaptionURL       = $strPictureURL . EXT_PIC_CAPTION; // DEPRECATED
     $strGalleryName      = str_replace('_', ' ', $strGalleryId);
     $strGalleryName      = str_replace('/', ' &raquo; ', $strGalleryName);
@@ -1637,7 +1637,7 @@ function spgm_DisplayPicture($strGalleryId, $iPictureId, $strFilterFlags)
         if (!$bSlideshowMode)
         {
             print ' <tr>' . "\n";
-            print '	<td class="' . CLASS_TD_PICTURE_NAVI . '"><a id="' . ID_PICTURE_NAVI . '"></a>' . "\n";
+            print ' <td class="' . CLASS_TD_PICTURE_NAVI . '"><a id="' . ID_PICTURE_NAVI . '"></a>' . "\n";
 
             if ($iPreviousPictureId >= 0)
             {
@@ -1658,7 +1658,7 @@ function spgm_DisplayPicture($strGalleryId, $iPictureId, $strFilterFlags)
         // Client side zoom buttons
         if (count($spgm_cfg['conf']['zoomFactors']) > 0)
         {
-            print '</tr>' . "\n" . '<tr>' . "\n" . '	<td class="' . CLASS_TD_ZOOM_FACTORS . '">' . "\n";
+            print '</tr>' . "\n" . '<tr>' . "\n" . '    <td class="' . CLASS_TD_ZOOM_FACTORS . '">' . "\n";
             for ($i = 0; $i < count($spgm_cfg['conf']['zoomFactors']); $i++)
             {
                 $iHeight = (int) ($arrPictureDim[1] * $spgm_cfg['conf']['zoomFactors'][$i] / 100);
@@ -1668,7 +1668,7 @@ function spgm_DisplayPicture($strGalleryId, $iPictureId, $strFilterFlags)
                 print 'document.getElementById(' . "'" . ID_PICTURE . "'" . ').setAttribute(' . "'" . 'width' . "'" . ', ' . $iWidth . '); ';
                 print 'document.getElementById(' . "'" . ID_PICTURE_NAVI . "'" . ').scrollIntoView()">' . "\n";
             }
-            print "\n" . '	</td>' . "\n" . '</tr>' . "\n";
+            print "\n" . '  </td>' . "\n" . '</tr>' . "\n";
         }
 
         // EXIF data
@@ -1699,7 +1699,7 @@ function spgm_DisplayPicture($strGalleryId, $iPictureId, $strFilterFlags)
                 {
                     $_strPictureCaption = $spgm_cfg['captions'][$arrPictureFilenames[$i]];
                 }
-                print '	 addPicture(\'' . $_strPicturePath . '\', \'' . addslashes($_strPictureCaption) . '\', ' . $_dim[0] . ', ' . $_dim[1] . ');' . "\n";
+                print '  addPicture(\'' . $_strPicturePath . '\', \'' . addslashes($_strPictureCaption) . '\', ' . $_dim[0] . ', ' . $_dim[1] . ');' . "\n";
             }
             print '</script>' . "\n";
         }
@@ -1730,10 +1730,10 @@ function spgm_DisplayPicture($strGalleryId, $iPictureId, $strFilterFlags)
 
         // Eventually display the picture
         print '<tr>' . "\n";
-        print '	 <td class="' . CLASS_TD_PICTURE_PIC . '">' . "\n";
+        print '  <td class="' . CLASS_TD_PICTURE_PIC . '">' . "\n";
 
         // Overlib hidden span for EXIF data
-        print '	 <div id="overDiv" style="position:absolute; visibility:hidden; z-index:1000"></div>' . "\n";
+        print '  <div id="overDiv" style="position:absolute; visibility:hidden; z-index:1000"></div>' . "\n";
 
         spgm_DropShadowsBeginWrap();
 
@@ -1755,7 +1755,7 @@ function spgm_DisplayPicture($strGalleryId, $iPictureId, $strFilterFlags)
                     $iPopupHeight   = $arrPictureDim[1];
                     $strJustPicture = 'true';
                 }
-                print '		 <a id="spgmPicture" target="_BLANK" href="' . $strPictureURL . '">';
+                print '      <a id="spgmPicture" target="_blank" href="' . $strPictureURL . '">';
                 print $strHtmlPicture;
                 print '</a>' . "\n";
             }
@@ -1771,7 +1771,7 @@ function spgm_DisplayPicture($strGalleryId, $iPictureId, $strFilterFlags)
 
         spgm_DropShadowsEndWrap();
 
-        print '	 </td>' . "\n";
+        print '  </td>' . "\n";
         print '</tr>' . "\n";
 
         $file = base64_encode(file_get_contents("" . BASE_DIR . "/" . $strPictureURL2 . ""));
@@ -1800,13 +1800,13 @@ function spgm_DisplayPicture($strGalleryId, $iPictureId, $strFilterFlags)
 
         // display the caption
         print '<tr>' . "\n";
-        print '	 <td id="' . ID_PICTURE_CAPTION . '" class="' . CLASS_TD_PICTURE_CAPTION . '">&nbsp;' . "\n";
+        print '  <td id="' . ID_PICTURE_CAPTION . '" class="' . CLASS_TD_PICTURE_CAPTION . '">&nbsp;' . "\n";
         if (isset($spgm_cfg['captions'][$strPictureFilename]))
         {
             print $spgm_cfg['captions'][$strPictureFilename];
         }
 
-        print '	 </td>' . "\n";
+        print '  </td>' . "\n";
         print '</tr>' . "\n";
         print '</table>' . "\n";
 
@@ -1861,7 +1861,7 @@ function spgm_DisplayThumbnails($strGalleryId, $arrPictureFilenames, $iPictureId
     global $spgm_cfg;
 
     $strPathToPictures = DIR_GAL . rawurlencode($strGalleryId) . '/';
-	$strPathToPictures2 = DIR_GAL . $strGalleryId . '/';
+    $strPathToPictures2 = DIR_GAL . $strGalleryId . '/';
     $iPictureNumber    = count($arrPictureFilenames);
     $iPageNumber       = $iPictureNumber / $spgm_cfg['conf']['thumbnailsPerPage'];
     if ($iPageNumber > (int) ($iPictureNumber / $spgm_cfg['conf']['thumbnailsPerPage']))
@@ -1896,7 +1896,7 @@ function spgm_DisplayThumbnails($strGalleryId, $arrPictureFilenames, $iPictureId
     {
         print '<table class="' . CLASS_TABLE_ORIENTATION . '">' . "\n";
         print '<tr>' . "\n";
-        print '	 <td class="' . CLASS_TD_ORIENTATION_LEFT . '">' . "\n\n";
+        print '  <td class="' . CLASS_TD_ORIENTATION_LEFT . '">' . "\n\n";
     }
 
 
@@ -1911,15 +1911,15 @@ function spgm_DisplayThumbnails($strGalleryId, $arrPictureFilenames, $iPictureId
         $_strFileExtension    = strrchr($strPictureFilename, '.');
         $strPictureBasename   = substr($strPictureFilename, 0, -strlen($_strFileExtension));
         $strPictureURL        = $strPathToPictures . $strPictureFilename;
-		$strPictureURL2        = $strPathToPictures2 . $strPictureFilename;
+        $strPictureURL2        = $strPathToPictures2 . $strPictureFilename;
         $strThumbnailFilename = PREF_THUMB . $arrPictureFilenames[$i];
         if (defined('DIR_THUMBS'))
         {
             $strThumbnailFilename = DIR_THUMBS . PREF_THUMB . rawurlencode($arrPictureFilenames[$i]);
-			$strThumbnailFilename2 = DIR_THUMBS . PREF_THUMB . $arrPictureFilenames[$i];
+            $strThumbnailFilename2 = DIR_THUMBS . PREF_THUMB . $arrPictureFilenames[$i];
         }
         $strThumbnailURL        = $strPathToPictures . $strThumbnailFilename;
-		$strThumbnailURL2       = $strPathToPictures2 . $strThumbnailFilename2;
+        $strThumbnailURL2       = $strPathToPictures2 . $strThumbnailFilename2;
         $arrThumbnailDim        = getimagesize($strThumbnailURL2);
         $iCurrentPictureIndex   = $i + 1; // index that is displayed
         $strClassThumbnailThumb = CLASS_TD_THUMBNAILS_THUMB;
@@ -1938,7 +1938,7 @@ function spgm_DisplayThumbnails($strGalleryId, $arrPictureFilenames, $iPictureId
 
         // TD opening for XHTML compliance when MODE_TRACE is on
         // TODO: valign=top does not work when new pictures reside amongst old ones
-        print '	 <td style="vertical-align:top" class="' . $strClassThumbnailThumb . '">' . "\n";
+        print '  <td style="vertical-align:top" class="' . $strClassThumbnailThumb . '">' . "\n";
         // ...
 
         if (spgm_IsNew($strPictureURL) && !strstr($strFilterFlags, PARAM_VALUE_FILTER_NEW))
@@ -1959,7 +1959,7 @@ function spgm_DisplayThumbnails($strGalleryId, $arrPictureFilenames, $iPictureId
         $arrPictureDim = getimagesize($strPictureURL2);
 
         // ...
-        print '	 ' . $strHtmlNew . "\n";
+        print '  ' . $strHtmlNew . "\n";
 
         spgm_DropShadowsBeginWrap();
 
@@ -1989,14 +1989,14 @@ function spgm_DisplayThumbnails($strGalleryId, $arrPictureFilenames, $iPictureId
                 $strJustPicture = 'true';
             }
 
-            print '	 <a href="#?" onclick="popupPicture(\'' . $strURL . '\', ' . $iWidth . ', ' . $iHeight . ', ' . $strJustPicture . ')">';
+            print '  <a href="#?" onclick="popupPicture(\'' . $strURL . '\', ' . $iWidth . ', ' . $iHeight . ', ' . $strJustPicture . ')">';
             print $strHtmlThumbnail;
             print '</a>' . "\n";
 
         }
         else
         {
-            print '	 ' . spgm_BuildLink($strHtmlThumbnail, 'yui3-pjax', ANCHOR_PICTURE, $strGalleryId, -1, $i, str_replace(PARAM_VALUE_FILTER_SLIDESHOW, '', $strFilterFlags));
+            print '  ' . spgm_BuildLink($strHtmlThumbnail, 'yui3-pjax', ANCHOR_PICTURE, $strGalleryId, -1, $i, str_replace(PARAM_VALUE_FILTER_SLIDESHOW, '', $strFilterFlags));
         }
 
         spgm_DropShadowsEndWrap();
@@ -2019,7 +2019,7 @@ function spgm_DisplayThumbnails($strGalleryId, $arrPictureFilenames, $iPictureId
         {
             if (isset($spgm_cfg['captions'][PREF_THUMB . $strPictureFilename]))
             {
-                print '		 <div class="' . CLASS_DIV_THUMBNAILS_CAPTION . '">';
+                print '      <div class="' . CLASS_DIV_THUMBNAILS_CAPTION . '">';
                 print $spgm_cfg['captions'][PREF_THUMB . $strPictureFilename];
                 print '</div>' . "\n";
             }
@@ -2027,14 +2027,14 @@ function spgm_DisplayThumbnails($strGalleryId, $arrPictureFilenames, $iPictureId
             {
                 if (isset($spgm_cfg['captions'][$strPictureFilename]))
                 {
-                    print "\n" . '	<div class="' . CLASS_DIV_THUMBNAILS_CAPTION . '">';
+                    print "\n" . '  <div class="' . CLASS_DIV_THUMBNAILS_CAPTION . '">';
                     print $spgm_cfg['captions'][$strPictureFilename];
                     print '</div>' . "\n";
                 }
             }
         }
 
-        print '	 </td>' . "\n";
+        print '  </td>' . "\n";
     }
 
     // navi bar generation
@@ -2042,7 +2042,7 @@ function spgm_DisplayThumbnails($strGalleryId, $arrPictureFilenames, $iPictureId
     {
         print '</tr>' . "\n";
         print '<tr>' . "\n";
-        print '	 <td colspan="' . $spgm_cfg['conf']['thumbnailsPerRow'] . '" class="' . CLASS_TD_THUMBNAILS_NAVI . '">';
+        print '  <td colspan="' . $spgm_cfg['conf']['thumbnailsPerRow'] . '" class="' . CLASS_TD_THUMBNAILS_NAVI . '">';
         // display "thumbnail navi" if all the thumbs are not displayed on the same page
         spgm_DisplayThumbnailNavibar($iPageIndex, $iPageNumber, $strGalleryId, $strFilterFlags);
 
@@ -2164,7 +2164,7 @@ else
     {
         spgm_DisplayPicture($strParamGalleryId, $strParamPictureId, $strParamFilterFlags);
     }
-    print '	 </td>' . "\n";
+    print '  </td>' . "\n";
 }
 
 print ' </tr>' . "\n";
@@ -2172,6 +2172,6 @@ print ' </tr>' . "\n";
 //display the link to SPGM website
 print ' <tr>' . "\n" . '  <td colspan="' . $spgm_cfg['conf']['galleryListingCols'] . '" class="' . CLASS_TD_SPGM_LINK . '">' . "\n";
 spgm_DispSPGMLink();
-print '	 </td>' . "\n" . ' </tr>' . "\n";
+print '  </td>' . "\n" . ' </tr>' . "\n";
 
 print '</table>' . "\n" . '<!-- end table wrapper -->' . "\n\n";

@@ -42,173 +42,173 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"]))
 {
     // select the newest file
     if (!$files = scandir($settings["log_dir"], SCANDIR_SORT_DESCENDING))
-	{
-		$error = error_get_last();
-		write_log("Error: " . $error["message"], __FILE__, __LINE__);
-	}
+    {
+        $error = error_get_last();
+        write_log("Error: " . $error["message"], __FILE__, __LINE__);
+    }
     $newest_file = $files[0];
 
     // read file to an array
     if (!$line = file($settings["log_dir"] . "/" . $newest_file))
-	{
-		$error = error_get_last();
-		write_log("Error: " . $error["message"], __FILE__, __LINE__);
-	}
-	else
-	{
-		// reverse array
-		$lines = array_reverse($line);
+    {
+        $error = error_get_last();
+        write_log("Error: " . $error["message"], __FILE__, __LINE__);
+    }
+    else
+    {
+        // reverse array
+        $lines = array_reverse($line);
 
-		foreach ($lines as $line_num => $line)
-		{
-			$pos = strpos($line, "System:");
-			// skip lines that contain "ProvingGround" because they are CQC systems
-			$pos2 = strrpos($line, "ProvingGround");
+        foreach ($lines as $line_num => $line)
+        {
+            $pos = strpos($line, "System:");
+            // skip lines that contain "ProvingGround" because they are CQC systems
+            $pos2 = strrpos($line, "ProvingGround");
 
-			if ($pos !== false && $pos2 === false)
-			{
-				preg_match_all("/\((.*?)\) B/", $line, $matches);
-				$cssystemname = $matches[1][0];
-				$curSys["name"] = $cssystemname;
+            if ($pos !== false && $pos2 === false)
+            {
+                preg_match_all("/\((.*?)\) B/", $line, $matches);
+                $cssystemname = $matches[1][0];
+                $curSys["name"] = $cssystemname;
 
-				preg_match_all("/\{(.*?)\} System:/", $line, $matches2);
-				$visited_time = $matches2[1][0];
+                preg_match_all("/\{(.*?)\} System:/", $line, $matches2);
+                $visited_time = $matches2[1][0];
 
-				$curSys["name"] = isset($curSys["name"]) ? $curSys["name"] : "";
+                $curSys["name"] = isset($curSys["name"]) ? $curSys["name"] : "";
 
-				// define defaults
-				$curSys["coordinates"] = "";
-				$curSys["x"] = "";
-				$curSys["y"] = "";
-				$curSys["z"] = "";
-				$curSys["id"] = -1;
-				$curSys["population"] = "";
-				$curSys["allegiance"] = "";
-				$curSys["economy"] = "";
-				$curSys["government"] = "";
-				$curSys["ruling_faction"] = "";
-				$curSys["state"] = "unknown";
-				$curSys["security"] = "unknown";
-				$curSys["power"] = "";
-				$curSys["power_state"] = "";
-				$curSys["needs_permit"] = "";
-				$curSys["updated_at"] = "";
-				$curSys["simbad_ref"] = "";
+                // define defaults
+                $curSys["coordinates"] = "";
+                $curSys["x"] = "";
+                $curSys["y"] = "";
+                $curSys["z"] = "";
+                $curSys["id"] = -1;
+                $curSys["population"] = "";
+                $curSys["allegiance"] = "";
+                $curSys["economy"] = "";
+                $curSys["government"] = "";
+                $curSys["ruling_faction"] = "";
+                $curSys["state"] = "unknown";
+                $curSys["security"] = "unknown";
+                $curSys["power"] = "";
+                $curSys["power_state"] = "";
+                $curSys["needs_permit"] = "";
+                $curSys["updated_at"] = "";
+                $curSys["simbad_ref"] = "";
 
-				$res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT id, x, y, z, ruling_faction, population, government, allegiance, state,
-																	security, economy, power, power_state, needs_permit, updated_at, simbad_ref
-																	FROM edtb_systems
-																	WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'
-																	LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-				$exists = mysqli_num_rows($res);
+                $res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT id, x, y, z, ruling_faction, population, government, allegiance, state,
+                                                                    security, economy, power, power_state, needs_permit, updated_at, simbad_ref
+                                                                    FROM edtb_systems
+                                                                    WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'
+                                                                    LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+                $exists = mysqli_num_rows($res);
 
-				if ($exists > 0)
-				{
-					$arr = mysqli_fetch_assoc($res);
+                if ($exists > 0)
+                {
+                    $arr = mysqli_fetch_assoc($res);
 
-					$curSys["coordinates"] = $arr['x'] . "," . $arr['y'] . "," . $arr['z'];
-					$curSys["id"] = $arr["id"];
-					$curSys["population"] = $arr["population"];
-					$curSys["allegiance"] = $arr["allegiance"];
-					$curSys["economy"] = $arr["economy"];
-					$curSys["government"] = $arr["government"];
-					$curSys["ruling_faction"] = $arr["ruling_faction"];
-					$curSys["state"] = $arr["state"];
-					$curSys["security"] = $arr["security"];
-					$curSys["power"] = $arr["power"];
-					$curSys["power_state"] = $arr["power_state"];
-					$curSys["needs_permit"] = $arr["needs_permit"];
-					$curSys["updated_at"] = $arr["updated_at"];
-					$curSys["simbad_ref"] = $arr["simbad_ref"];
+                    $curSys["coordinates"] = $arr['x'] . "," . $arr['y'] . "," . $arr['z'];
+                    $curSys["id"] = $arr["id"];
+                    $curSys["population"] = $arr["population"];
+                    $curSys["allegiance"] = $arr["allegiance"];
+                    $curSys["economy"] = $arr["economy"];
+                    $curSys["government"] = $arr["government"];
+                    $curSys["ruling_faction"] = $arr["ruling_faction"];
+                    $curSys["state"] = $arr["state"];
+                    $curSys["security"] = $arr["security"];
+                    $curSys["power"] = $arr["power"];
+                    $curSys["power_state"] = $arr["power_state"];
+                    $curSys["needs_permit"] = $arr["needs_permit"];
+                    $curSys["updated_at"] = $arr["updated_at"];
+                    $curSys["simbad_ref"] = $arr["simbad_ref"];
 
-					$curSys["x"] = $arr["x"];
-					$curSys["y"] = $arr["y"];
-					$curSys["z"] = $arr["z"];
-				}
-				else
-				{
-					$cres = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT x, y, z
-																		FROM user_systems_own
-																		WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'
-																		LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+                    $curSys["x"] = $arr["x"];
+                    $curSys["y"] = $arr["y"];
+                    $curSys["z"] = $arr["z"];
+                }
+                else
+                {
+                    $cres = mysqli_query($GLOBALS["___mysqli_ston"], "  SELECT x, y, z
+                                                                        FROM user_systems_own
+                                                                        WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'
+                                                                        LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
-					$oexists = mysqli_num_rows($cres);
+                    $oexists = mysqli_num_rows($cres);
 
-					if ($oexists > 0)
-					{
-						$carr = mysqli_fetch_assoc($cres);
+                    if ($oexists > 0)
+                    {
+                        $carr = mysqli_fetch_assoc($cres);
 
-						$curSys["x"] = $carr["x"] == "" ? "" : $carr["x"];
-						$curSys["y"] = $carr["y"] == "" ? "" : $carr["y"];
-						$curSys["z"] = $carr["z"] == "" ? "" : $carr["z"];
-						$curSys["coordinates"] = $curSys["x"] . "," . $curSys["y"] . "," . $curSys["z"];
-					}
-					else
-					{
-						$curSys["coordinates"] = "";
-						$curSys["x"] = "";
-						$curSys["y"] = "";
-						$curSys["z"] = "";
-					}
-				}
+                        $curSys["x"] = $carr["x"] == "" ? "" : $carr["x"];
+                        $curSys["y"] = $carr["y"] == "" ? "" : $carr["y"];
+                        $curSys["z"] = $carr["z"] == "" ? "" : $carr["z"];
+                        $curSys["coordinates"] = $curSys["x"] . "," . $curSys["y"] . "," . $curSys["z"];
+                    }
+                    else
+                    {
+                        $curSys["coordinates"] = "";
+                        $curSys["x"] = "";
+                        $curSys["y"] = "";
+                        $curSys["z"] = "";
+                    }
+                }
 
-				// fetch previous system
-				$prev_system = edtb_common("last_system", "value");
+                // fetch previous system
+                $prev_system = edtb_common("last_system", "value");
 
-				if ($prev_system != $cssystemname && !empty($cssystemname))
-				{
-					// add system to user_visited_systems
-					$rows = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT system_name
-																		FROM user_visited_systems
-																		ORDER BY id
-																		DESC LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-					$vs_arr = mysqli_fetch_assoc($rows);
+                if ($prev_system != $cssystemname && !empty($cssystemname))
+                {
+                    // add system to user_visited_systems
+                    $rows = mysqli_query($GLOBALS["___mysqli_ston"], "  SELECT system_name
+                                                                        FROM user_visited_systems
+                                                                        ORDER BY id
+                                                                        DESC LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+                    $vs_arr = mysqli_fetch_assoc($rows);
 
-					$visited_on = date("Y-m-d") . " " . $visited_time;
+                    $visited_on = date("Y-m-d") . " " . $visited_time;
 
-					if ($vs_arr["system_name"] != $curSys["name"] && !empty($curSys["name"]))
-					{
-						mysqli_query($GLOBALS["___mysqli_ston"], "	INSERT INTO user_visited_systems (system_name, visit)
-																	VALUES
-																	('" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "',
-																	'" . $visited_on . "')") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+                    if ($vs_arr["system_name"] != $curSys["name"] && !empty($curSys["name"]))
+                    {
+                        mysqli_query($GLOBALS["___mysqli_ston"], "  INSERT INTO user_visited_systems (system_name, visit)
+                                                                    VALUES
+                                                                    ('" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "',
+                                                                    '" . $visited_on . "')") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
-						// export to EDSM
-						if ($settings["edsm_api_key"] != "" && $settings["edsm_export"] == "true" && $settings["edsm_cmdr_name"] != "")
-						{
-							$visited_on_utc = date("Y-m-d H:i:s");
-							$export = file_get_contents("http://www.edsm.net/api-logs-v1/set-log?commanderName=" . urlencode($settings["edsm_cmdr_name"]) . "&apiKey=" . $settings["edsm_api_key"] . "&systemName=" . urlencode($curSys["name"]) . "&dateVisited=" . urlencode($visited_on_utc) . "");
+                        // export to EDSM
+                        if ($settings["edsm_api_key"] != "" && $settings["edsm_export"] == "true" && $settings["edsm_cmdr_name"] != "")
+                        {
+                            $visited_on_utc = date("Y-m-d H:i:s");
+                            $export = file_get_contents("http://www.edsm.net/api-logs-v1/set-log?commanderName=" . urlencode($settings["edsm_cmdr_name"]) . "&apiKey=" . $settings["edsm_api_key"] . "&systemName=" . urlencode($curSys["name"]) . "&dateVisited=" . urlencode($visited_on_utc) . "");
 
-							$exports = json_decode($export, true);
+                            $exports = json_decode($export, true);
 
-							if ($exports["msgnum"] != "100")
-							{
-								write_log($export, __FILE__, __LINE__);
-							}
-						}
+                            if ($exports["msgnum"] != "100")
+                            {
+                                write_log($export, __FILE__, __LINE__);
+                            }
+                        }
 
-						$newSystem = true;
-						//write_log($prev_system . " new: " . $cssystemname);
-					}
+                        $newSystem = true;
+                        //write_log($prev_system . " new: " . $cssystemname);
+                    }
 
-					// update latest system
-					edtb_common("last_system", "value", true, $curSys["name"]);
+                    // update latest system
+                    edtb_common("last_system", "value", true, $curSys["name"]);
 
-					$newSystem = true;
-				}
-				else
-				{
-					$newSystem = false;
-				}
+                    $newSystem = true;
+                }
+                else
+                {
+                    $newSystem = false;
+                }
 
-				global $curSys, $newSystem;
+                global $curSys, $newSystem;
 
-				break;
-			}
-		}
-	}
+                break;
+            }
+        }
+    }
 }
 else
 {
-	write_log("Error: " . $settings["log_dir"] . " doesn't exist or is not readable", __FILE__, __LINE__);
+    write_log("Error: " . $settings["log_dir"] . " doesn't exist or is not readable", __FILE__, __LINE__);
 }

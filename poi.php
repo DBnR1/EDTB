@@ -2,7 +2,8 @@
 /**
  * Points of Interest and Bookmarks
  *
- * No description
+ * Front-end file for Points of interest and Bookmarks.
+ * The back-end file is /get/getData_poi_bm.php
  *
  * @package EDTB\Main
  * @author Mauri Kujala <contact@edtb.xyz>
@@ -38,8 +39,9 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/add/Poi.php");
 ?>
 <div class="entries">
-	<div class="entries_inner" id="poi_bm">
-	</div>
+    <!-- points of interest and bookmarks are rendered here -->
+    <div class="entries_inner" id="poi_bm">
+    </div>
 </div>
 <?php
 require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");

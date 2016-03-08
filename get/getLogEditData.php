@@ -37,16 +37,16 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 
 $log_id = 0 + $_GET["logid"];
 
-$log_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT user_log.id, user_log.system_id, user_log.system_name AS log_system_name,
-														user_log.station_id, user_log.log_entry, user_log.stardate, user_log.title,
-														user_log.weight, user_log.pinned, user_log.type, user_log.audio,
-														edtb_systems.name AS system_name,
-														edtb_stations.name AS station_name
-														FROM user_log
-														LEFT JOIN edtb_systems ON user_log.system_id = edtb_systems.id
-														LEFT JOIN edtb_stations ON user_log.station_id = edtb_stations.id
-														WHERE user_log.id = '" . $log_id . "'
-														LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+$log_res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT user_log.id, user_log.system_id, user_log.system_name AS log_system_name,
+                                                        user_log.station_id, user_log.log_entry, user_log.stardate, user_log.title,
+                                                        user_log.weight, user_log.pinned, user_log.type, user_log.audio,
+                                                        edtb_systems.name AS system_name,
+                                                        edtb_stations.name AS station_name
+                                                        FROM user_log
+                                                        LEFT JOIN edtb_systems ON user_log.system_id = edtb_systems.id
+                                                        LEFT JOIN edtb_stations ON user_log.station_id = edtb_stations.id
+                                                        WHERE user_log.id = '" . $log_id . "'
+                                                        LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 $log_arr = mysqli_fetch_assoc($log_res);
 
 $data = array();

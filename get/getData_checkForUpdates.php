@@ -31,53 +31,53 @@
  */
 
 /** @array $data */
-$data['notifications'] = '';
-$data['notifications_data'] = 'false';
+$data["notifications"] = "";
+$data["notifications_data"] = "false";
 
 $current_version = $settings["edtb_version"];
 $last_check = edtb_common("last_update_check", "unixtime");
-$time_frame = time()-5*60*60;
+$time_frame = time() - 5 * 60 * 60;
 
 if ($last_check < $time_frame)
 {
-	if ($json_file = file_get_contents("http://data.edtb.xyz/version.json"))
-	{
-		$json_data = json_decode($json_file, true);
+    if ($json_file = file_get_contents("http://data.edtb.xyz/version.json"))
+    {
+        $json_data = json_decode($json_file, true);
 
-		$newest_version = $json_data["currentVersion"];
+        $newest_version = $json_data["currentVersion"];
 
-		// update latest_version value
-		edtb_common("latest_version", "value", true, $newest_version);
-	}
-	else
-	{
-		$error = error_get_last();
-		write_log("Error: " . $error["message"], __FILE__, __LINE__);
-	}
-	// update last_update_check time
-	edtb_common("last_update_check", "unixtime", true, time());
+        // update latest_version value
+        edtb_common("latest_version", "value", true, $newest_version);
+    }
+    else
+    {
+        $error = error_get_last();
+        write_log("Error: " . $error["message"], __FILE__, __LINE__);
+    }
+    // update last_update_check time
+    edtb_common("last_update_check", "unixtime", true, time());
 }
 
 $newest_version = edtb_common("latest_version", "value");
 
 if (version_compare($current_version, $newest_version) < 0)
 {
-	// get last_update_check value
-	$ignore_version = edtb_common("last_update_check", "value");
+    // get last_update_check value
+    $ignore_version = edtb_common("last_update_check", "value");
 
-	if ($newest_version != $ignore_version)
-	{
-		if ($json_file = file_get_contents("http://data.edtb.xyz/version.json"))
-		{
-			$json_data = json_decode($json_file, true);
+    if ($newest_version != $ignore_version)
+    {
+        if ($json_file = file_get_contents("http://data.edtb.xyz/version.json"))
+        {
+            $json_data = json_decode($json_file, true);
 
-			$short_desc = $json_data["short"];
-			$long_desc = $json_data["versionInformation"];
-			$data['notifications'] .= '<a href="javascript:void(0)" title="New version available" onclick="$(\'#notice_new\').fadeToggle(\'fast\')"><img src="/style/img/upgrade.png" class="icon26" alt="Upgrade" /></a>';
-			$data['notifications_data'] = $short_desc . '<br /><br /><br />' . $long_desc;
-			$data['notifications_data'] .= '<br /><br /><strong><a href="javascript:void(0)" onclick="ignore_version(\'' . $newest_version . '\')">Click here if you want to ignore this version</a></strong>';
-		}
-	}
+            $short_desc = $json_data["short"];
+            $long_desc = $json_data["versionInformation"];
+            $data["notifications"] .= '<a href="javascript:void(0)" title="New version available" onclick="$(\'#notice_new\').fadeToggle(\'fast\')"><img src="/style/img/upgrade.png" class="icon26" alt="Upgrade" /></a>';
+            $data["notifications_data"] = $short_desc . '<br /><br /><br />' . $long_desc;
+            $data["notifications_data"] .= '<br /><br /><strong><a href="javascript:void(0)" onclick="ignore_version(\'' . $newest_version . '\')">Click here if you want to ignore this version</a></strong>';
+        }
+    }
 }
 
 /**
@@ -89,10 +89,10 @@ $now = time()-(7*24*60*60); // 7 days
 
 if ($now > $last_update && $last_update != "1")
 {
-	$data['notifications'] .= '<a href="javascript:void(0)" title="Notice" onclick="$(\'#notice\').fadeToggle(\'fast\')"><img src="/style/img/notice.png" style="height:26px;width:26px" alt="Notice" /></a>';
+    $data["notifications"] .= '<a href="javascript:void(0)" title="Notice" onclick="$(\'#notice\').fadeToggle(\'fast\')"><img src="/style/img/notice.png" style="height:26px;width:26px" alt="Notice" /></a>';
 }*/
 
-if ($data['notifications'] == "")
+if ($data["notifications"] == "")
 {
-	$data['notifications'] = 'false';
+    $data["notifications"] = "false";
 }

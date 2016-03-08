@@ -38,26 +38,26 @@ $file = isset($_GET["file"]) ? $_GET["file"] : "";
 
 if (!empty($file) && !empty($url))
 {
-	$path = $_SERVER["DOCUMENT_ROOT"] . "/screenshots/Imgur";
+    $path = $_SERVER["DOCUMENT_ROOT"] . "/screenshots/Imgur";
 
-	if (!is_dir($path))
-	{
-		if (!mkdir($path, 0775, true))
-		{
-			$error = error_get_last();
-			write_log("Error: " . $error["message"], __FILE__, __LINE__);
-		}
-	}
+    if (!is_dir($path))
+    {
+        if (!mkdir($path, 0775, true))
+        {
+            $error = error_get_last();
+            write_log("Error: " . $error["message"], __FILE__, __LINE__);
+        }
+    }
 
-	$filename = urldecode($file) . ".txt";
-	if (!file_put_contents($path . "/" . $filename, $url))
-	{
-		$error = error_get_last();
-		write_log("Error: " . $error["message"], __FILE__, __LINE__);
-	}
+    $filename = urldecode($file) . ".txt";
+    if (!file_put_contents($path . "/" . $filename, $url))
+    {
+        $error = error_get_last();
+        write_log("Error: " . $error["message"], __FILE__, __LINE__);
+    }
 }
 else
 {
-	write_log("Error: url or file not set", __FILE__, __LINE__);
+    write_log("Error: url or file not set", __FILE__, __LINE__);
 }
 

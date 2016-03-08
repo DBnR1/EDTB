@@ -34,134 +34,125 @@
  * System logs
  */
 
+$logdata = "";
 if (!empty($curSys["name"]))
 {
-	if (isset($_GET["slog_sort"]) && $_GET["slog_sort"] != "undefined")
-	{
-		if ($_GET['slog_sort'] == 'asc') $ssort = 'ASC';
-		if ($_GET['slog_sort'] == 'desc') $ssort = 'DESC';
-	}
-	else
-	{
-		$ssort = 'DESC';
-	}
+    if (isset($_GET["slog_sort"]) && $_GET["slog_sort"] != "undefined")
+    {
+        if ($_GET["slog_sort"] == "asc") $ssort = "ASC";
+        if ($_GET["slog_sort"] == "desc") $ssort = "DESC";
+    }
+    else
+    {
+        $ssort = "DESC";
+    }
 
-	// figure out what coords to calculate from
-	$usable_coords = usable_coords();
-	$usex = $usable_coords["x"];
-	$usey = $usable_coords["y"];
-	$usez = $usable_coords["z"];
-	$exact = $usable_coords["current"] === true ? "" : " *";
+    // figure out what coords to calculate from
+    $usable_coords = usable_coords();
+    $usex = $usable_coords["x"];
+    $usey = $usable_coords["y"];
+    $usez = $usable_coords["z"];
+    $exact = $usable_coords["current"] === true ? "" : " *";
 
-	/**
-	 * if log range is set to zero, only show logs from current system
-	 */
+    /**
+     * if log range is set to zero, only show logs from current system
+     */
 
-	if ($settings["log_range"] == 0)
-	{
-		$log_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT SQL_CACHE
-																user_log.id, user_log.system_name AS log_system_name, user_log.station_id,
-																user_log.log_entry, user_log.stardate,
-																user_log.title, user_log.pinned, user_log.type, user_log.audio,
-																edtb_systems.name AS system_name,
-																edtb_stations.name AS station_name
-																FROM user_log
-																LEFT JOIN edtb_systems ON user_log.system_id = edtb_systems.id
-																LEFT JOIN edtb_stations ON user_log.station_id = edtb_stations.id
-																WHERE user_log.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'
-																ORDER BY -user_log.pinned ASC, user_log.weight, user_log.stardate " . $ssort . "")
-																or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-	}
-	/**
-	 * if log range is set to -1, show all logs
-	 */
-	elseif ($settings["log_range"] == -1)
-	{
-		$log_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT SQL_CACHE
-																user_log.id, user_log.system_name AS log_system_name, user_log.station_id,
-																user_log.log_entry, user_log.stardate,
-																user_log.title, user_log.pinned, user_log.type, user_log.audio,
-																sqrt(pow((IFNULL(edtb_systems.x, user_systems_own.x)-(" . $usex . ")),2)
-																+pow((IFNULL(edtb_systems.y, user_systems_own.y)-(" . $usey . ")),2)
-																+pow((IFNULL(edtb_systems.z, user_systems_own.z)-(" . $usez . ")),2)) AS distance,
-																edtb_systems.name AS system_name,
-																edtb_stations.name AS station_name
-																FROM user_log
-																LEFT JOIN edtb_systems ON user_log.system_name = edtb_systems.name
-																LEFT JOIN edtb_stations ON user_log.station_id = edtb_stations.id
-																LEFT JOIN user_systems_own ON user_log.system_name = user_systems_own.name
-																WHERE user_log.system_name != ''
-																ORDER BY -user_log.pinned ASC, user_log.weight, user_log.stardate " . $ssort . "")
-																or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-	}
-	/**
-	 * in other cases, show logs from x ly away from last known location
-	 */
-	else
-	{
-		$log_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT SQL_CACHE
-																user_log.id, user_log.system_id, user_log.system_name AS log_system_name,
-																user_log.station_id, user_log.log_entry, user_log.stardate,
-																user_log.title, user_log.pinned, user_log.type, user_log.audio,
-																sqrt(pow((IFNULL(edtb_systems.x, user_systems_own.x)-(" . $usex . ")),2)
-																+pow((IFNULL(edtb_systems.y, user_systems_own.y)-(" . $usey . ")),2)
-																+pow((IFNULL(edtb_systems.z, user_systems_own.z)-(" . $usez . ")),2)) AS distance,
-																edtb_systems.name AS system_name,
-																edtb_stations.name AS station_name
-																FROM user_log
-																LEFT JOIN edtb_systems ON user_log.system_name = edtb_systems.name
-																LEFT JOIN edtb_stations ON user_log.station_id = edtb_stations.id
-																LEFT JOIN user_systems_own ON user_log.system_name = user_systems_own.name
-																WHERE
-																IFNULL(edtb_systems.x, user_systems_own.x) BETWEEN " . $usex . "-" . $settings["log_range"] . "
-																AND " . $usex . "+" . $settings["log_range"] . " &&
-																IFNULL(edtb_systems.y, user_systems_own.y) BETWEEN " . $usey . "-" . $settings["log_range"] . "
-																AND " . $usey . "+" . $settings["log_range"] . " &&
-																IFNULL(edtb_systems.z, user_systems_own.z) BETWEEN " . $usez . "-" . $settings["log_range"] . "
-																AND " . $usez . "+" . $settings["log_range"] . "
-																OR
-																user_log.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'
-																ORDER BY -user_log.pinned ASC, user_log.weight, user_log.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "' DESC,
-																distance ASC,
-																user_log.stardate " . $ssort . "
-																LIMIT 10") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-	}
-	$num = mysqli_num_rows($log_res);
+    if ($settings["log_range"] == 0)
+    {
+        $log_res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT SQL_CACHE
+                                                                user_log.id, user_log.system_name AS log_system_name, user_log.station_id,
+                                                                user_log.log_entry, user_log.stardate,
+                                                                user_log.title, user_log.pinned, user_log.type, user_log.audio,
+                                                                edtb_systems.name AS system_name,
+                                                                edtb_stations.name AS station_name
+                                                                FROM user_log
+                                                                LEFT JOIN edtb_systems ON user_log.system_id = edtb_systems.id
+                                                                LEFT JOIN edtb_stations ON user_log.station_id = edtb_stations.id
+                                                                WHERE user_log.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'
+                                                                ORDER BY -user_log.pinned ASC, user_log.weight, user_log.stardate " . $ssort . "")
+                                                                or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+    }
+    /**
+     * if log range is set to -1, show all logs
+     */
+    elseif ($settings["log_range"] == -1)
+    {
+        $log_res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT SQL_CACHE
+                                                                user_log.id, user_log.system_name AS log_system_name, user_log.station_id,
+                                                                user_log.log_entry, user_log.stardate,
+                                                                user_log.title, user_log.pinned, user_log.type, user_log.audio,
+                                                                sqrt(pow((IFNULL(edtb_systems.x, user_systems_own.x)-(" . $usex . ")),2)
+                                                                +pow((IFNULL(edtb_systems.y, user_systems_own.y)-(" . $usey . ")),2)
+                                                                +pow((IFNULL(edtb_systems.z, user_systems_own.z)-(" . $usez . ")),2)) AS distance,
+                                                                edtb_systems.name AS system_name,
+                                                                edtb_stations.name AS station_name
+                                                                FROM user_log
+                                                                LEFT JOIN edtb_systems ON user_log.system_name = edtb_systems.name
+                                                                LEFT JOIN edtb_stations ON user_log.station_id = edtb_stations.id
+                                                                LEFT JOIN user_systems_own ON user_log.system_name = user_systems_own.name
+                                                                WHERE user_log.system_name != ''
+                                                                ORDER BY -user_log.pinned ASC, user_log.weight, user_log.stardate " . $ssort . "")
+                                                                or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+    }
+    /**
+     * in other cases, show logs from x ly away from last known location
+     */
+    else
+    {
+        $log_res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT SQL_CACHE
+                                                                user_log.id, user_log.system_id, user_log.system_name AS log_system_name,
+                                                                user_log.station_id, user_log.log_entry, user_log.stardate,
+                                                                user_log.title, user_log.pinned, user_log.type, user_log.audio,
+                                                                sqrt(pow((IFNULL(edtb_systems.x, user_systems_own.x)-(" . $usex . ")),2)
+                                                                +pow((IFNULL(edtb_systems.y, user_systems_own.y)-(" . $usey . ")),2)
+                                                                +pow((IFNULL(edtb_systems.z, user_systems_own.z)-(" . $usez . ")),2)) AS distance,
+                                                                edtb_systems.name AS system_name,
+                                                                edtb_stations.name AS station_name
+                                                                FROM user_log
+                                                                LEFT JOIN edtb_systems ON user_log.system_name = edtb_systems.name
+                                                                LEFT JOIN edtb_stations ON user_log.station_id = edtb_stations.id
+                                                                LEFT JOIN user_systems_own ON user_log.system_name = user_systems_own.name
+                                                                WHERE
+                                                                IFNULL(edtb_systems.x, user_systems_own.x) BETWEEN " . $usex . "-" . $settings["log_range"] . "
+                                                                AND " . $usex . "+" . $settings["log_range"] . " &&
+                                                                IFNULL(edtb_systems.y, user_systems_own.y) BETWEEN " . $usey . "-" . $settings["log_range"] . "
+                                                                AND " . $usey . "+" . $settings["log_range"] . " &&
+                                                                IFNULL(edtb_systems.z, user_systems_own.z) BETWEEN " . $usez . "-" . $settings["log_range"] . "
+                                                                AND " . $usez . "+" . $settings["log_range"] . "
+                                                                OR
+                                                                user_log.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'
+                                                                ORDER BY -user_log.pinned ASC, user_log.weight, user_log.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "' DESC,
+                                                                distance ASC,
+                                                                user_log.stardate " . $ssort . "
+                                                                LIMIT 10") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+    }
+    $num = mysqli_num_rows($log_res);
 
-	$logdata = "";
-	if ($num > 0)
-	{
-		$logdata = make_log_entries($log_res, "system");
-	}
-}
-else
-{
-	$logdata = "";
+    $logdata = $num > 0 ? make_log_entries($log_res, "system") : "";
 }
 
 /**
-*    General log
+ *    General log
  */
 
+$sort = "DESC";
 if (isset($_GET["glog_sort"]) && $_GET["glog_sort"] != "undefined")
 {
-	if ($_GET['glog_sort'] == 'asc') $sort = 'ASC';
-	if ($_GET['glog_sort'] == 'desc') $sort = 'DESC';
-}
-else
-{
-	$sort = 'DESC';
+    if ($_GET["glog_sort"] == "asc") $sort = "ASC";
+    if ($_GET["glog_sort"] == "desc") $sort = "DESC";
 }
 
-$glog_res = mysqli_query($GLOBALS["___mysqli_ston"], "	SELECT SQL_CACHE
-														id, log_entry, stardate, pinned, title, audio
-														FROM user_log WHERE system_id = '' AND system_name = ''
-														ORDER BY -pinned, weight, stardate " . $sort . "
-														LIMIT 5") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+
+$glog_res = mysqli_query($GLOBALS["___mysqli_ston"], "  SELECT SQL_CACHE
+                                                        id, log_entry, stardate, pinned, title, audio
+                                                        FROM user_log WHERE system_id = '' AND system_name = ''
+                                                        ORDER BY -pinned, weight, stardate " . $sort . "
+                                                        LIMIT 5") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 $gnum = mysqli_num_rows($glog_res);
 
 if ($gnum > 0)
 {
-	$logdata .= make_log_entries($glog_res, "general");
+    $logdata .= make_log_entries($glog_res, "general");
 }
-$data['log_data'] = $logdata;
+$data["log_data"] = $logdata;

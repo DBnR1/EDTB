@@ -44,77 +44,77 @@ $request = isset($_GET["request"]) ? $_GET["request"] : 0;
 
 if ($action == "onlycoordinates")
 {
-	echo $curSys["coordinates"];
+    echo $curSys["coordinates"];
 
-	exit;
+    exit;
 }
 elseif ($action == "onlysystem")
 {
-	echo $curSys["name"];
-	// make screenshot gallery
-	make_gallery($curSys["name"]);
-	exit;
+    echo $curSys["name"];
+    // make screenshot gallery
+    make_gallery($curSys["name"]);
+    exit;
 }
 elseif ($action == "onlyid")
 {
-	echo $curSys["id"];
+    echo $curSys["id"];
 
-	exit;
+    exit;
 }
 
 $data = array();
 
 /**
-* 	Now Playing
+*   Now Playing
  */
 
-$data['now_playing'] = "";
+$data["now_playing"] = "";
 
 if ((isset($settings["nowplaying_file"]) && !empty($settings["nowplaying_file"])) or (isset($settings["nowplaying_vlc_password"]) && !empty($settings["nowplaying_vlc_password"])))
 {
-	$nowplaying = "";
+    $nowplaying = "";
 
-	/**
-	 *  from file
-	 */
+    /**
+     *  from file
+     */
 
-	if (isset($settings["nowplaying_file"]) && !empty($settings["nowplaying_file"]))
-	{
-		$nowplaying .= file_get_contents($settings["nowplaying_file"]);
-	}
+    if (isset($settings["nowplaying_file"]) && !empty($settings["nowplaying_file"]))
+    {
+        $nowplaying .= file_get_contents($settings["nowplaying_file"]);
+    }
 
-	/**
-	 *  from VLC (@author Travis)
-	 */
+    /**
+     *  from VLC (@author Travis)
+     */
 
-	if (isset($settings["nowplaying_vlc_password"]) && !empty($settings["nowplaying_vlc_password"]))
-	{
-		$username = "";
-		$password = $settings["nowplaying_vlc_password"];
-		$url = $settings["nowplaying_vlc_url"];
+    if (isset($settings["nowplaying_vlc_password"]) && !empty($settings["nowplaying_vlc_password"]))
+    {
+        $username = "";
+        $password = $settings["nowplaying_vlc_password"];
+        $url = $settings["nowplaying_vlc_url"];
 
-		$opts = array(
-			'http' => array(
-				'method' => "GET",
-				'header' => "Authorization: Basic " . base64_encode("$username:$password")
-			)
-		);
+        $opts = array(
+            'http' => array(
+                'method' => "GET",
+                'header' => "Authorization: Basic " . base64_encode("$username:$password")
+            )
+        );
 
-		$context = stream_context_create($opts);
-		$result = file_get_contents($url, false, $context);
+        $context = stream_context_create($opts);
+        $result = file_get_contents($url, false, $context);
 
-		$json_data = json_decode($result, true);
+        $json_data = json_decode($result, true);
 
-		$nowplaying .= $json_data["information"]["category"]["meta"]["now_playing"];
-	}
+        $nowplaying .= $json_data["information"]["category"]["meta"]["now_playing"];
+    }
 
-	if (empty($nowplaying))
-	{
-		$nowplaying = "Not playing";
-	}
+    if (empty($nowplaying))
+    {
+        $nowplaying = "Not playing";
+    }
 
-	$data['now_playing'] = '<img src="/style/img/music.png" class="icon" alt="Now playing" />';
-	$data['now_playing'] .= $nowplaying;
+    $data["now_playing"] = '<img src="/style/img/music.png" class="icon" alt="Now playing" />';
+    $data["now_playing"] .= $nowplaying;
 }
 
 /**
@@ -122,100 +122,103 @@ if ((isset($settings["nowplaying_file"]) && !empty($settings["nowplaying_file"])
  * are requesting page for the first time
  */
 
-$data['update_in_progress'] = "false";
-$data['update_notification_data'] = "false";
+$data["update_in_progress"] = "false";
+$data["update_notification_data"] = "false";
 if ($newSystem !== false || $request == 0)
 {
-	/**
-	 * update system and station data in the background if last update was more than 6 hours ago
-	 */
+    /**
+     * update system and station data in the background if last update was more than 6 hours ago
+     */
 
-	$last_update = edtb_common("last_data_update", "unixtime");
-	$time_frame = time()-6*60*60;
+    $last_update = edtb_common("last_data_update", "unixtime");
+    $time_frame = time()-6*60*60;
 
-	if ($last_update < $time_frame)
-	{
-		// fetch last update start time
-		$last_data_update_start = edtb_common("last_data_update_start", "unixtime");
-		$start_time_frame = time()-160;
+    if ($last_update < $time_frame)
+    {
+        // fetch last update start time
+        $last_data_update_start = edtb_common("last_data_update_start", "unixtime");
+        $start_time_frame = time()-160;
 
-		// run update script
-		if ($last_data_update_start < $start_time_frame)
-		{
-			$batch_file = $settings["install_path"] . "/bin/UpdateData/updatedata_bg.bat";
-			if (file_exists($batch_file))
-			{
-				edtb_common("last_data_update_start", "unixtime", true, time());
+        // run update script
+        if ($last_data_update_start < $start_time_frame)
+        {
+            $batch_file = $settings["install_path"] . "/bin/UpdateData/updatedata_bg.bat";
+            if (file_exists($batch_file))
+            {
+                edtb_common("last_data_update_start", "unixtime", true, time());
 
-				pclose(popen("start \"UpdateData\" /b \"" . $batch_file . "\"", "r"));
+                pclose(popen("start \"UpdateData\" /b \"" . $batch_file . "\"", "r"));
 
-				$data['update_in_progress'] = "true";
-				$data['update_notification'] .= '<a href="javascript:void(0)" title="Data update in progress" onclick="$(\'#notice\').fadeToggle(\'fast\')"><img src="/style/img/notice.png" class="icon26" alt="Update" /></a>';
-				$data['update_notification_data'] = 'System and station data is being updated in the background.<br /><br />You can continue using ED ToolBox normally.';
-			}
-			else
-			{
-				write_log("Error: " . $batch_file . " doesn't exist");
-			}
-		}
-	}
+                $data["update_in_progress"] = "true";
+                $data["update_notification"] .= '<a href="javascript:void(0)" title="Data update in progress" onclick="$(\'#notice\').fadeToggle(\'fast\')">';
+                $data["update_notification"] .= '<img src="/style/img/notice.png" class="icon26" alt="Update" />';
+                $data["update_notification"] .= '</a>';
+                $data["update_notification_data"] = 'System and station data is being updated in the background.<br /><br />';
+                $data["update_notification_data"] .= 'You can continue using ED ToolBox normally.';
+            }
+            else
+            {
+                write_log("Error: " . $batch_file . " doesn't exist");
+            }
+        }
+    }
 
-	/**
-	 * update galmap json if system is new or file doesn't exist
-	 * or if last update was more than an hour ago
-	 */
+    /**
+     * update galmap json if system is new or file doesn't exist
+     * or if last update was more than an hour ago
+     */
 
-	$data['update_map'] = "false";
-	$last_map_update = edtb_common("last_map_update", "unixtime");
-	$map_update_time_frame = time()-1*60*60;
+    $data["update_map"] = "false";
+    $last_map_update = edtb_common("last_map_update", "unixtime");
+    $map_update_time_frame = time() - 1 * 60 * 60;
 
-	if ($newSystem !== false || !file_exists($_SERVER["DOCUMENT_ROOT"] . "/map_points.json") || $last_map_update < $map_update_time_frame)
-	{
-		$data['update_map'] = "true";
-	}
+    if ($newSystem !== false || !file_exists($_SERVER["DOCUMENT_ROOT"] . "/map_points.json") || $last_map_update < $map_update_time_frame)
+    {
+        $data["update_map"] = "true";
+    }
 
-	$data['new_sys'] = "false";
-	if ($newSystem !== false)
-	{
-		$data['new_sys'] = "true";
-	}
+    $data["new_sys"] = "false";
+    if ($newSystem !== false)
+    {
+        $data["new_sys"] = "true";
+    }
 
-	$data['current_system_name'] = $curSys["name"];
-	$data['current_coordinates'] = $curSys["coordinates"];
+    $data["current_system_name"] = $curSys["name"];
+    $data["current_coordinates"] = $curSys["coordinates"];
 
-	/**
-	 * Data for the left column
-	 */
+    /**
+     * Data for the left column
+     */
 
-	require_once($_SERVER["DOCUMENT_ROOT"] . "/get/getData_leftColumn.php");
+    require_once($_SERVER["DOCUMENT_ROOT"] . "/get/getData_leftColumn.php");
 
-	/**
-	 * Stuff specifically for System.php
-	 */
+    /**
+     * Stuff specifically for System.php
+     */
 
-	require_once($_SERVER["DOCUMENT_ROOT"] . "/get/getData_systemInfo.php");
+    require_once($_SERVER["DOCUMENT_ROOT"] . "/get/getData_systemInfo.php");
 
-	/**
-	 * System and general logs
-	 */
+    /**
+     * System and general logs
+     */
 
-	require_once($_SERVER["DOCUMENT_ROOT"] . "/get/getData_logs.php");
+    require_once($_SERVER["DOCUMENT_ROOT"] . "/get/getData_logs.php");
 
-	/**
-	 * Check for updates
-	 */
+    /**
+     * Check for updates
+     */
 
-	require_once($_SERVER["DOCUMENT_ROOT"] . "/get/getData_checkForUpdates.php");
+    require_once($_SERVER["DOCUMENT_ROOT"] . "/get/getData_checkForUpdates.php");
 
-	/**
-	 * set data renew tag
-	 */
+    /**
+     * set data renew tag
+     */
 
-	$data['renew'] = "true";
+    $data["renew"] = "true";
 }
 else
 {
-	$data['renew'] = "false";
+    $data["renew"] = "false";
 }
 
 // make screenshot gallery

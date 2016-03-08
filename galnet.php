@@ -44,66 +44,67 @@ $html = __c("files")->get("galnet");
 
 if ($html == null)
 {
-	ob_start();
-	?>
-	<div class="entries">
-		<div class="entries_inner">
-		<h2><img class="icon24" src="/style/img/galnet.png" alt="GalNet" style="margin-right:6px" />Latest Galnet News</h2>
-		<hr>
-		<?php
-		$xml = xml2array($galnet_feed) or die("Error: Cannot create object");
+    ob_start();
+    ?>
+    <div class="entries">
+        <div class="entries_inner">
+            <h2><img class="icon24" src="/style/img/galnet.png" alt="GalNet" style="margin-right:6px" />Latest Galnet News</h2>
+            <hr>
+            <?php
+            $xml = xml2array($galnet_feed) or die("Error: Cannot create object");
 
-		$i = 0;
-		foreach ($xml["rss"]["channel"]["item"] as $data)
-		{
-			$title = $data["title"];
-			$link = $data["link"];
-			$text = $data["description"];
+            $i = 0;
+            foreach ($xml["rss"]["channel"]["item"] as $data)
+            {
+                $title = $data["title"];
+                $link = $data["link"];
+                $text = $data["description"];
 
-			// exclude stuff
-			$continue = true;
-			foreach ($settings["galnet_excludes"] as $exclude)
-			{
-				$find = $exclude;
-				$pos = strpos($title, $find);
+                // exclude stuff
+                $continue = true;
+                foreach ($settings["galnet_excludes"] as $exclude)
+                {
+                    $find = $exclude;
+                    $pos = strpos($title, $find);
 
-				if ($pos !== false)
-				{
-					$continue = false;
-					break 1;
-				}
-			}
+                    if ($pos !== false)
+                    {
+                        $continue = false;
+                        break 1;
+                    }
+                }
 
-			if ($continue !== false)
-			{
-				echo '<h3>';
-				echo '	<a href="javascript:void(0)" onclick="$(\'#'.$i.'\').fadeToggle()">';
-				echo '		<img class="icon" src="/style/img/plus.png" alt="expand" style="padding-bottom:3px" />' . $title;
-				echo '	</a>';
-				echo '</h3>';
-				echo '<p id="' . $i . '" style="display:none;padding-left:22px;max-width:800px">';
-				echo str_replace('<p><sub><i>-- Delivered by <a href="http://feed43.com/">Feed43</a> service</i></sub></p>', "", $text);
-				echo '<br /><br /><br />';
-				echo '<span style="margin-bottom:15px">';
-				echo '	<a href="' . $link . '" target="_BLANK">';
-				echo '		Read on elitedangerous.com';
-				echo '	</a><img class="ext_icon" src="style/img/external_link.png" style="margin-bottom:3px" alt="ext" />';
-				echo '</span>';
-				echo '</p>';
+                if ($continue !== false)
+                {
+                    ?>
+                    <h3>
+                      <a href="javascript:void(0)" onclick="$('#<?php echo $i;?>').fadeToggle()">
+                          <img class="icon" src="/style/img/plus.png" alt="expand" style="padding-bottom:3px" /><?php echo $title;?>
+                      </a>
+                    </h3>
+                    <p id="<?php echo $i;?>" style="display:none;padding-left:22px;max-width:800px">
+                    <?php echo str_replace('<p><sub><i>-- Delivered by <a href="http://feed43.com/">Feed43</a> service</i></sub></p>', "", $text); ?>
+                    <br /><br /><br />
+                    <span style="margin-bottom:15px">
+                      <a href="<?php echo $link;?>" target="_blank">
+                          Read on elitedangerous.com
+                      </a><img class="ext_icon" src="style/img/external_link.png" style="margin-bottom:3px" alt="ext" />
+                    </span>
+                    </p>
+                    <?php
+                    $i++;
+                }
+            }
+            ?>
+        </div>
+    </div>
+    <?php
+    $html = ob_get_contents();
+    // Save to Cache for 30 minutes
+    __c("files")->set("galnet", $html, 1800);
 
-				$i++;
-			}
-		}
-		?>
-		</div>
-	</div>
-	<?php
-	$html = ob_get_contents();
-	// Save to Cache for 30 minutes
-	__c("files")->set("galnet", $html, 1800);
-
-	require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");
-	exit;
+    require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");
+    exit;
 }
 echo $html;
 

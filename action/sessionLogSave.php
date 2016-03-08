@@ -39,9 +39,8 @@ $text = $_POST["logtext"];
 
 if (!file_put_contents($settings["install_path"] . "/data/sessionlog.txt", $text))
 {
-	$error = error_get_last();
-	write_log("Error: " . $error["message"], __FILE__, __LINE__);
+    $error = error_get_last();
+    write_log("Error: " . $error["message"], __FILE__, __LINE__);
 }
 
 echo $text;
-

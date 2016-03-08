@@ -41,109 +41,105 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
  * if data is older than 30 minutes, update
  */
 
-$ga_last_update = edtb_common("last_galnet_update", "unixtime") + 30*60; // 30 minutes
+$ga_last_update = edtb_common("last_galnet_update", "unixtime") + 30 * 60; // 30 minutes
 
 if ($ga_last_update < time())
 {
-	$xml2 = xml2array($galnet_feed);
+    $xml2 = xml2array($galnet_feed);
 
-	$in = 1;
-	foreach ($xml2["rss"]["channel"]["item"] as $dataga)
-	{
-		$gatitle = $dataga["title"];
-		$ga_title = explode(" - ", $gatitle);
-		$ga_title = $ga_title[0];
+    $in = 1;
+    foreach ($xml2["rss"]["channel"]["item"] as $dataga)
+    {
+        $gatitle = $dataga["title"];
+        $ga_title = explode(" - ", $gatitle);
+        $ga_title = $ga_title[0];
 
-		$text = $dataga["description"];
-		$text = str_replace('<p><sub><i>-- Delivered by <a href="http://feed43.com/">Feed43</a> service</i></sub></p>', "", $text);
-		$text = str_replace('<br />', PHP_EOL, $text);
-		$text = str_replace(' – ', ', ', $text);
-		$text = trim(strip_tags($text));
+        $text = $dataga["description"];
+        $text = str_replace('<p><sub><i>-- Delivered by <a href="http://feed43.com/">Feed43</a> service</i></sub></p>', "", $text);
+        $text = str_replace('<br />', PHP_EOL, $text);
+        $text = str_replace(' – ', ', ', $text);
+        $text = trim(strip_tags($text));
 
-		// exclude stuff
-		$continue = true;
-		foreach ($settings["galnet_excludes"] as $exclude)
-		{
-			$find = $exclude;
-			$pos = strpos($ga_title, $find);
+        // exclude stuff
+        $continue = true;
+        foreach ($settings["galnet_excludes"] as $exclude)
+        {
+            $find = $exclude;
+            $pos = strpos($ga_title, $find);
 
-			if ($pos !== false)
-			{
-				$continue = false;
-				break 1;
-			}
-		}
+            if ($pos !== false)
+            {
+                $continue = false;
+                break 1;
+            }
+        }
 
-		if ($continue !== false)
-		{
-			// write articles into txt files for VoiceAttack
-			$to_write = $ga_title . "\n\r" . $text;
+        if ($continue !== false)
+        {
+            /**
+             * write articles into txt files for VoiceAttack
+             */
+            $to_write = $ga_title . "\n\r" . $text;
 
-			if ($in <= $settings["galnet_articles"])
-			{
-				/**
-				 * write four of the latest articles to .txt files
-				 */
+            if ($in <= $settings["galnet_articles"])
+            {
+                /**
+                 * write x of the latest articles to .txt files
+                 */
+                $newfile = $_SERVER["DOCUMENT_ROOT"] . "/Marvin/galnet" . $in . ".txt";
 
-				$newfile = $_SERVER["DOCUMENT_ROOT"] . "/Marvin/galnet" . $in . ".txt";
+                $old_file = "";
+                if (file_exists($newfile))
+                {
+                    $old_file = file_get_contents($newfile);
+                }
 
-				$old_file = "";
-				if (file_exists($newfile))
-				{
-					$old_file = file_get_contents($newfile);
-				}
+                if (!file_put_contents($newfile, $to_write))
+                {
+                    $error = error_get_last();
+                    write_log("Error: " . $error["message"], __FILE__, __LINE__);
+                }
 
-				if (!file_put_contents($newfile, $to_write))
-				{
-					$error = error_get_last();
-					write_log("Error: " . $error["message"], __FILE__, __LINE__);
-				}
+                /**
+                 * compare to the latest to see if new articles have been posted since last check
+                 */
+                $new_file = "-1";
+                if (file_exists($newfile))
+                {
+                    $new_file = file_get_contents($newfile);
+                }
 
-				/**
-				 * compare to the latest to see if new articles have been posted since last check
-				 */
+                if ($new_file != $old_file)
+                {
+                    edtb_common("last_galnet_new", "unixtime", true, time());
+                }
+            }
+            $in++;
+        }
+    }
 
-				$new_file = "-1";
-				if (file_exists($newfile))
-				{
-					$new_file = file_get_contents($newfile);
-				}
-
-				if ($new_file != $old_file)
-				{
-					edtb_common("last_galnet_new", "unixtime", true, time());
-				}
-			}
-			$in++;
-		}
-	}
-
-	/**
-	 * update last_update time
-	 */
-
-	edtb_common("last_galnet_update", "unixtime", true, time());
+    /**
+     * update last_update time
+     */
+    edtb_common("last_galnet_update", "unixtime", true, time());
 }
 
 /**
  * fetch last check time and last new article time
  */
-
 $last_galnet_check = edtb_common("last_galnet_check", "unixtime");
 $last_galnet_new = edtb_common("last_galnet_new", "unixtime");
 
 if ($last_galnet_new < $last_galnet_check)
 {
-	echo "No new GalNet articles have been published since you last asked " . get_timeago($last_galnet_check, false) . ".";
+    echo "No new GalNet articles have been published since you last asked " . get_timeago($last_galnet_check, false) . ".";
 }
 else
 {
-	echo "New GalNet articles have been published since you last asked. Would you like me to read them to you?";
+    echo "New GalNet articles have been published since you last asked. Would you like me to read them to you?";
 }
 
 /**
  *  update last check time
  */
-
 edtb_common("last_galnet_check", "unixtime", true, time());
-

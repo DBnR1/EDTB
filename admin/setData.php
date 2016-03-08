@@ -39,9 +39,9 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 
 if (isset($_GET["ignore_version"]))
 {
-	$ignore = $_GET["ignore_version"];
+    $ignore = $_GET["ignore_version"];
 
-	edtb_common("last_update_check", "value", true, $ignore);
+    edtb_common("last_update_check", "value", true, $ignore);
 
-	exit;
+    exit;
 }
