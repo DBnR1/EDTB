@@ -38,35 +38,28 @@ require_once("functions.php");
 /** @array curSys */
 $curSys = array();
 
-if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"]))
-{
+if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"])) {
     // select the newest file
-    if (!$files = scandir($settings["log_dir"], SCANDIR_SORT_DESCENDING))
-    {
+    if (!$files = scandir($settings["log_dir"], SCANDIR_SORT_DESCENDING)) {
         $error = error_get_last();
         write_log("Error: " . $error["message"], __FILE__, __LINE__);
     }
     $newest_file = $files[0];
 
     // read file to an array
-    if (!$line = file($settings["log_dir"] . "/" . $newest_file))
-    {
+    if (!$line = file($settings["log_dir"] . "/" . $newest_file)) {
         $error = error_get_last();
         write_log("Error: " . $error["message"], __FILE__, __LINE__);
-    }
-    else
-    {
+    } else {
         // reverse array
         $lines = array_reverse($line);
 
-        foreach ($lines as $line_num => $line)
-        {
+        foreach ($lines as $line_num => $line) {
             $pos = strpos($line, "System:");
             // skip lines that contain "ProvingGround" because they are CQC systems
             $pos2 = strrpos($line, "ProvingGround");
 
-            if ($pos !== false && $pos2 === false)
-            {
+            if ($pos !== false && $pos2 === false) {
                 preg_match_all("/\((.*?)\) B/", $line, $matches);
                 $cssystemname = $matches[1][0];
                 $curSys["name"] = $cssystemname;
@@ -102,8 +95,7 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"]))
                                                                     LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
                 $exists = mysqli_num_rows($res);
 
-                if ($exists > 0)
-                {
+                if ($exists > 0) {
                     $arr = mysqli_fetch_assoc($res);
 
                     $curSys["coordinates"] = $arr['x'] . "," . $arr['y'] . "," . $arr['z'];
@@ -124,9 +116,7 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"]))
                     $curSys["x"] = $arr["x"];
                     $curSys["y"] = $arr["y"];
                     $curSys["z"] = $arr["z"];
-                }
-                else
-                {
+                } else {
                     $cres = mysqli_query($GLOBALS["___mysqli_ston"], "  SELECT x, y, z
                                                                         FROM user_systems_own
                                                                         WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'
@@ -134,17 +124,14 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"]))
 
                     $oexists = mysqli_num_rows($cres);
 
-                    if ($oexists > 0)
-                    {
+                    if ($oexists > 0) {
                         $carr = mysqli_fetch_assoc($cres);
 
                         $curSys["x"] = $carr["x"] == "" ? "" : $carr["x"];
                         $curSys["y"] = $carr["y"] == "" ? "" : $carr["y"];
                         $curSys["z"] = $carr["z"] == "" ? "" : $carr["z"];
                         $curSys["coordinates"] = $curSys["x"] . "," . $curSys["y"] . "," . $curSys["z"];
-                    }
-                    else
-                    {
+                    } else {
                         $curSys["coordinates"] = "";
                         $curSys["x"] = "";
                         $curSys["y"] = "";
@@ -155,8 +142,7 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"]))
                 // fetch previous system
                 $prev_system = edtb_common("last_system", "value");
 
-                if ($prev_system != $cssystemname && !empty($cssystemname))
-                {
+                if ($prev_system != $cssystemname && !empty($cssystemname)) {
                     // add system to user_visited_systems
                     $rows = mysqli_query($GLOBALS["___mysqli_ston"], "  SELECT system_name
                                                                         FROM user_visited_systems
@@ -166,23 +152,20 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"]))
 
                     $visited_on = date("Y-m-d") . " " . $visited_time;
 
-                    if ($vs_arr["system_name"] != $curSys["name"] && !empty($curSys["name"]))
-                    {
+                    if ($vs_arr["system_name"] != $curSys["name"] && !empty($curSys["name"])) {
                         mysqli_query($GLOBALS["___mysqli_ston"], "  INSERT INTO user_visited_systems (system_name, visit)
                                                                     VALUES
                                                                     ('" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "',
                                                                     '" . $visited_on . "')") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
                         // export to EDSM
-                        if ($settings["edsm_api_key"] != "" && $settings["edsm_export"] == "true" && $settings["edsm_cmdr_name"] != "")
-                        {
+                        if ($settings["edsm_api_key"] != "" && $settings["edsm_export"] == "true" && $settings["edsm_cmdr_name"] != "") {
                             $visited_on_utc = date("Y-m-d H:i:s");
                             $export = file_get_contents("http://www.edsm.net/api-logs-v1/set-log?commanderName=" . urlencode($settings["edsm_cmdr_name"]) . "&apiKey=" . $settings["edsm_api_key"] . "&systemName=" . urlencode($curSys["name"]) . "&dateVisited=" . urlencode($visited_on_utc) . "");
 
                             $exports = json_decode($export, true);
 
-                            if ($exports["msgnum"] != "100")
-                            {
+                            if ($exports["msgnum"] != "100") {
                                 write_log($export, __FILE__, __LINE__);
                             }
                         }
@@ -195,9 +178,7 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"]))
                     edtb_common("last_system", "value", true, $curSys["name"]);
 
                     $newSystem = true;
-                }
-                else
-                {
+                } else {
                     $newSystem = false;
                 }
 
@@ -207,8 +188,6 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"]))
             }
         }
     }
-}
-else
-{
+} else {
     write_log("Error: " . $settings["log_dir"] . " doesn't exist or is not readable", __FILE__, __LINE__);
 }

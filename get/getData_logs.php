@@ -35,15 +35,15 @@
  */
 
 $logdata = "";
-if (!empty($curSys["name"]))
-{
-    if (isset($_GET["slog_sort"]) && $_GET["slog_sort"] != "undefined")
-    {
-        if ($_GET["slog_sort"] == "asc") $ssort = "ASC";
-        if ($_GET["slog_sort"] == "desc") $ssort = "DESC";
-    }
-    else
-    {
+if (!empty($curSys["name"])) {
+    if (isset($_GET["slog_sort"]) && $_GET["slog_sort"] != "undefined") {
+        if ($_GET["slog_sort"] == "asc") {
+            $ssort = "ASC";
+        }
+        if ($_GET["slog_sort"] == "desc") {
+            $ssort = "DESC";
+        }
+    } else {
         $ssort = "DESC";
     }
 
@@ -58,8 +58,7 @@ if (!empty($curSys["name"]))
      * if log range is set to zero, only show logs from current system
      */
 
-    if ($settings["log_range"] == 0)
-    {
+    if ($settings["log_range"] == 0) {
         $log_res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT SQL_CACHE
                                                                 user_log.id, user_log.system_name AS log_system_name, user_log.station_id,
                                                                 user_log.log_entry, user_log.stardate,
@@ -76,8 +75,7 @@ if (!empty($curSys["name"]))
     /**
      * if log range is set to -1, show all logs
      */
-    elseif ($settings["log_range"] == -1)
-    {
+    elseif ($settings["log_range"] == -1) {
         $log_res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT SQL_CACHE
                                                                 user_log.id, user_log.system_name AS log_system_name, user_log.station_id,
                                                                 user_log.log_entry, user_log.stardate,
@@ -98,8 +96,7 @@ if (!empty($curSys["name"]))
     /**
      * in other cases, show logs from x ly away from last known location
      */
-    else
-    {
+    else {
         $log_res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT SQL_CACHE
                                                                 user_log.id, user_log.system_id, user_log.system_name AS log_system_name,
                                                                 user_log.station_id, user_log.log_entry, user_log.stardate,
@@ -137,10 +134,13 @@ if (!empty($curSys["name"]))
  */
 
 $sort = "DESC";
-if (isset($_GET["glog_sort"]) && $_GET["glog_sort"] != "undefined")
-{
-    if ($_GET["glog_sort"] == "asc") $sort = "ASC";
-    if ($_GET["glog_sort"] == "desc") $sort = "DESC";
+if (isset($_GET["glog_sort"]) && $_GET["glog_sort"] != "undefined") {
+    if ($_GET["glog_sort"] == "asc") {
+        $sort = "ASC";
+    }
+    if ($_GET["glog_sort"] == "desc") {
+        $sort = "DESC";
+    }
 }
 
 
@@ -151,8 +151,7 @@ $glog_res = mysqli_query($GLOBALS["___mysqli_ston"], "  SELECT SQL_CACHE
                                                         LIMIT 5") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 $gnum = mysqli_num_rows($glog_res);
 
-if ($gnum > 0)
-{
+if ($gnum > 0) {
     $logdata .= make_log_entries($glog_res, "general");
 }
 $data["log_data"] = $logdata;

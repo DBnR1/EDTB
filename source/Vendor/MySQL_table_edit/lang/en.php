@@ -22,5 +22,3 @@ $this->text['Next'] = 'Next';
 $this->text['Nothing_found'] = 'Nothing found';
 $this->text['Check_the_required_fields'] = 'Check the required (yellow) fields';
 $this->text['Protect_this_directory_with'] = 'Protect this directory with';
-
-?>

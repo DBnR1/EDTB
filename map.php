@@ -37,8 +37,7 @@ $pagetitle = "Galaxy Map&nbsp;&nbsp;&&nbsp;&nbsp;Neighborhood Map";
 /** @require header file */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 
-if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"]))
-{
+if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"])) {
     $settings["maxdistance"] = $_GET["maxdistance"];
 }
 ?>
@@ -126,14 +125,11 @@ if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"]))
         </div>
         <div id="map_settings">
             <?php
-            if (isset($_GET["mode"]) && $_GET["mode"] == "2d")
-            {
+            if (isset($_GET["mode"]) && $_GET["mode"] == "2d") {
                 $linkto = "/Map.php";
                 $linkname = "Switch to 3D mode";
                 $mode = "2d";
-            }
-            else
-            {
+            } else {
                 $linkto = "/Map.php?mode=2d";
                 $linkname = "Switch to 2D mode";
                 $mode = "3d";
@@ -147,8 +143,7 @@ if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"]))
                     $dropdowns = array_unique($dropdown);
                     sort($dropdowns);
 
-                    foreach ($dropdowns as $value)
-                    {
+                    foreach ($dropdowns as $value) {
                         $selected = $settings["maxdistance"] == $value ? ' selected="selected"' : "";
 
                         echo '<option value="' . $value . '"' . $selected . '>Range ' . $value . ' ly</option>';

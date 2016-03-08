@@ -30,7 +30,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-/** @var pagetitle */
+/** @var string pagetitle */
 $pagetitle = "Companion API login";
 
 /** @require header file */
@@ -40,18 +40,15 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
  * send login details
  */
 
-if (isset($_GET["login"]) && isset($_POST["email"]) && isset($_POST["password"]))
-{
+if (isset($_GET["login"]) && isset($_POST["email"]) && isset($_POST["password"])) {
     $email = $_POST["email"];
     $password = $_POST["password"];
 
-    if (!empty($email) && !empty($password))
-    {
+    if (!empty($email) && !empty($password)) {
         exec("\"" . $settings["curl_exe"] . "\" -c \"" . $settings["cookie_file"] . "\" -H \"User-Agent: " . $settings["agent"] . "\" -d email=" . $email . " -d password=\"" . urlencode($password) . "\" \"https://companion.orerve.net/user/login\" -k", $out);
     }
 
-    if (!empty($out))
-    {
+    if (!empty($out)) {
         write_log("Error: API login failed, possibly mistyped password or email.", __FILE__, __LINE__);
     }
 }
@@ -60,17 +57,14 @@ if (isset($_GET["login"]) && isset($_POST["email"]) && isset($_POST["password"])
  * send verification code
  */
 
-if (isset($_GET["sendcode"]))
-{
+if (isset($_GET["sendcode"])) {
     $code = $_POST["code"];
 
-    if (!empty($code))
-    {
+    if (!empty($code)) {
         exec("\"" . $settings["curl_exe"] . "\" -b \"" . $settings["cookie_file"] . "\" -c \"" . $settings["cookie_file"] . "\" -H \"User-Agent: " . $settings["agent"] . "\" -d code=" . $code . " \"https://companion.orerve.net/user/confirm\" -k", $out);
     }
 
-    if (!empty($out))
-    {
+    if (!empty($out)) {
         $error = json_encode($out);
         write_log("Error: " . $error, __FILE__, __LINE__);
     }
@@ -79,8 +73,7 @@ if (isset($_GET["sendcode"]))
 <div class="entries">
     <div class="entries_inner">
         <?php
-        if (isset($_GET["login"]) && !isset($_GET["sendcode"]))
-        {
+        if (isset($_GET["login"]) && !isset($_GET["sendcode"])) {
             ?>
             <div class="input" style="display:block">
                 <form method="post" action="/admin/api_login.php?sendcode">
@@ -109,25 +102,19 @@ if (isset($_GET["sendcode"]))
                 </form>
             </div>
             <?php
-        }
-        elseif (isset($_GET["sendcode"]) && isset($_POST["code"]))
-        {
+
+        } elseif (isset($_GET["sendcode"]) && isset($_POST["code"])) {
             echo notice('The companion api is now connected.<br />Click the refresh icon to initialize. Then return to using ED ToolBox normally.<br /><a id="api_refresh" href="javascript:void(0)" onclick="refresh_api()" title="Refresh API data"><img src="/style/img/refresh_24.png" class="icon24" alt="Refresh" /></a>', "API connected");
-        }
-        else
-        {
+        } else {
             /**
              * check if cookies are good (when are they not?)
              */
 
             exec("\"" . $settings["curl_exe"] . "\" -b \"" . $settings["cookie_file"] . "\" -c \"" . $settings["cookie_file"] . "\" -H \"User-Agent: " . $settings["agent"] . "\" \"https://companion.orerve.net/profile\" -k", $out);
 
-            if (!empty($out))
-            {
+            if (!empty($out)) {
                 echo notice('The companion api is already connected.<br />Click the refresh icon to refresh.<br /><a id="api_refresh" href="javascript:void(0)" onclick="refresh_api()" title="Refresh API data"><img src="/style/img/refresh_24.png" class="icon24" alt="Refresh" /></a>', "API already connected");
-            }
-            else
-            {
+            } else {
                 ?>
                 <div class="input" style="display:block">
                     <form method="post" action="/admin/api_login.php?login">
@@ -161,6 +148,7 @@ if (isset($_GET["sendcode"]))
                     </form>
                 </div>
                 <?php
+
             }
         }
         ?>

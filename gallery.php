@@ -30,7 +30,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-/** @var pagetitle */
+/** @var string pagetitle */
 $pagetitle = "Screenshot Gallery";
 
 /** @require header file */
@@ -39,32 +39,27 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 <div class="entries">
     <div class="entries_inner">
         <?php
-        if (isset($_GET["removed"]))
-        {
-            if ($_GET["removed"] != "1")
-            {
+        if (isset($_GET["removed"])) {
+            if ($_GET["removed"] != "1") {
                 echo '<div class="notify_success">Screenshot succesfully deleted</div>';
-            }
-            else
-            {
+            } else {
                 echo '<div class="notify_deleted">Screenshot deletion failed.</div>';
             }
         }
 
-        if (is_dir($settings["old_screendir"]) && $settings["old_screendir"] != "C:\Users" && $settings["old_screendir"] != "C:\Users\\")
-        {
+        if (is_dir($settings["old_screendir"]) && $settings["old_screendir"] != "C:\\Users" && $settings["old_screendir"] != "C:\\Users\\") {
             ?>
             <table id="wrapper">
                 <tr>
                     <td id="center">
-                        <?php require_once($_SERVER["DOCUMENT_ROOT"] . "/source/Vendor/spgm/spgm.php"); ?>
+                        <?php
+                        require_once($_SERVER["DOCUMENT_ROOT"] . "/source/Vendor/spgm/spgm.php");
+                        ?>
                     </td>
                 </tr>
             </table>
             <?php
-        }
-        else
-        {
+        } else {
             echo notice('Your screenshot directory is empty or gallery is disabled.<br />Set the variable "old_screendir" in the <a href="/admin/ini_editor.php">INI-editor</a> to enable gallery.');
         }
         ?>

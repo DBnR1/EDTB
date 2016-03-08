@@ -68,47 +68,31 @@ function getBrowser()
     $version= "";
 
     //First get the platform?
-    if (preg_match('/linux/i', $u_agent))
-    {
+    if (preg_match('/linux/i', $u_agent)) {
         $platform = 'linux';
-    }
-    elseif (preg_match('/macintosh|mac os x/i', $u_agent))
-    {
+    } elseif (preg_match('/macintosh|mac os x/i', $u_agent)) {
         $platform = 'mac';
-    }
-    elseif (preg_match('/windows|win32/i', $u_agent))
-    {
+    } elseif (preg_match('/windows|win32/i', $u_agent)) {
         $platform = 'windows';
     }
 
     // Next get the name of the useragent yes seperately and for good reason
-    if (preg_match('/MSIE/i', $u_agent) && !preg_match('/Opera/i', $u_agent))
-    {
+    if (preg_match('/MSIE/i', $u_agent) && !preg_match('/Opera/i', $u_agent)) {
         $bname = 'Internet Explorer';
         $ub = "MSIE";
-    }
-    elseif (preg_match('/Firefox/i', $u_agent))
-    {
+    } elseif (preg_match('/Firefox/i', $u_agent)) {
         $bname = 'Mozilla Firefox';
         $ub = "Firefox";
-    }
-    elseif (preg_match('/Chrome/i', $u_agent))
-    {
+    } elseif (preg_match('/Chrome/i', $u_agent)) {
         $bname = 'Google Chrome';
         $ub = "Chrome";
-    }
-    elseif (preg_match('/Safari/i', $u_agent))
-    {
+    } elseif (preg_match('/Safari/i', $u_agent)) {
         $bname = 'Apple Safari';
         $ub = "Safari";
-    }
-    elseif (preg_match('/Opera/i', $u_agent))
-    {
+    } elseif (preg_match('/Opera/i', $u_agent)) {
         $bname = 'Opera';
         $ub = "Opera";
-    }
-    elseif (preg_match('/Netscape/i', $u_agent))
-    {
+    } elseif (preg_match('/Netscape/i', $u_agent)) {
         $bname = 'Netscape';
         $ub = "Netscape";
     }
@@ -117,34 +101,26 @@ function getBrowser()
     $known = array('Version', $ub, 'other');
     $pattern = '#(?<browser>' . join('|', $known) .
     ')[/ ]+(?<version>[0-9.|a-zA-Z.]*)#';
-    if (!preg_match_all($pattern, $u_agent, $matches))
-    {
+    if (!preg_match_all($pattern, $u_agent, $matches)) {
         // we have no matching number just continue
     }
 
     // see how many we have
     $i = count($matches['browser']);
-    if ($i != 1)
-    {
+    if ($i != 1) {
         //we will have two since we are not using 'other' argument yet
         //see if version is before or after the name
-        if (strripos($u_agent, "Version") < strripos($u_agent, $ub))
-        {
+        if (strripos($u_agent, "Version") < strripos($u_agent, $ub)) {
             $version= $matches['version'][0];
-        }
-        else
-        {
+        } else {
             $version= $matches['version'][1];
         }
-    }
-    else
-    {
+    } else {
         $version= $matches['version'][0];
     }
 
     // check if we have a number
-    if ($version == null || $version == "")
-    {
+    if ($version == null || $version == "") {
         $version = "?";
     }
 
@@ -195,10 +171,8 @@ function getOS()
                             '/webos/i'              =>  'Mobile'
                         );
 
-    foreach ($os_array as $regex => $value)
-    {
-        if (preg_match($regex, $u_agent))
-        {
+    foreach ($os_array as $regex => $value) {
+        if (preg_match($regex, $u_agent)) {
             $os_platform = $value;
         }
     }
@@ -221,14 +195,12 @@ function get_timeago($ptime, $diff = true, $format = false)
 
     $ptime_og = $ptime;
 
-    if ($diff === true)
-    {
+    if ($diff === true) {
         $ptime = $ptime - ($system_time * 60 * 60);
     }
     $etime = time() - $ptime;
 
-    if ($etime < 1)
-    {
+    if ($etime < 1) {
         return 'less than ' . $etime . ' second ago';
     }
 
@@ -240,25 +212,17 @@ function get_timeago($ptime, $diff = true, $format = false)
                 1                       =>  'second'
     );
 
-    foreach ($a as $secs => $str)
-    {
+    foreach ($a as $secs => $str) {
         $d = $etime / $secs;
 
-        if ($d >= 1)
-        {
+        if ($d >= 1) {
             $r = round($d);
-            if ($format !== true)
-            {
+            if ($format !== true) {
                 return $r . ' ' . $str . ($r > 1 ? 's' : '') . ' ago';
-            }
-            else
-            {
-                if (data_is_old($ptime_og))
-                {
+            } else {
+                if (data_is_old($ptime_og)) {
                     return '<span class="old_data">' . $r . ' ' . $str . ($r > 1 ? 's' : '') . ' ago</span>';
-                }
-                else
-                {
+                } else {
                     return $r . ' ' . $str . ($r > 1 ? 's' : '') . ' ago';
                 }
             }
@@ -275,7 +239,9 @@ function get_timeago($ptime, $diff = true, $format = false)
  */
 function is_dir_empty($dir)
 {
-    if (!is_readable($dir)) return null;
+    if (!is_readable($dir)) {
+        return null;
+    }
     return (count(scandir($dir)) == 2);
 }
 
@@ -292,12 +258,10 @@ function write_log($msg, $file = "", $line = "", $debug_override = false)
 {
     global $settings, $system_time;
 
-    if (isset($settings["debug"]) && $settings["debug"] == "true" || $debug_override !== false)
-    {
+    if (isset($settings["debug"]) && $settings["debug"] == "true" || $debug_override !== false) {
         // write user info file if not exists
         $lfile = $_SERVER["DOCUMENT_ROOT"] . "/edtb_log_info.txt";
-        if (!file_exists($lfile))
-        {
+        if (!file_exists($lfile)) {
             $ua = getBrowser();
             $debug_info = "Browser: " . $ua['name'] . " " . $ua['version'] . " (" .$ua['platform'] . ")" . PHP_EOL;
             $debug_info .= "Platform: " . getOS() . PHP_EOL;
@@ -315,8 +279,7 @@ function write_log($msg, $file = "", $line = "", $debug_override = false)
         $logfile = $_SERVER["DOCUMENT_ROOT"] . "/edtb_log.txt";
         $fd = fopen($logfile, "a");
 
-        if (isset($file))
-        {
+        if (isset($file)) {
             $on_line = $line == "" ? "" : " on line " . $line;
             $where = "[" . $file . "" . $on_line . "] ";
         }

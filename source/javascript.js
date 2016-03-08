@@ -29,16 +29,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-/** @var zindexmax */
+/** @var int zindexmax */
 var zindexmax = 100000;
 
-/** @var debug_mode */
+/** @var boolean debug_mode */
 var debug_mode = false;
 
 /**
  * Send error messages to console if debug_mode = true
  *
- * @param string msg
+ * @param msg
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function log(msg)
@@ -61,10 +61,10 @@ function slide()
     };
 
     var s = $("#ltitle");
+    var value = s.width() - 284;
 
     if (s.width() >= 288)
     {
-        value = s.width() - 284;
         s.css("right", value + "px");
     }
 }
@@ -91,6 +91,7 @@ function slideout()
  * Retrieve URL variables
  * http://papermashup.com/read-url-get-variables-withjavascript/
  *
+ * @return {array} vars
  * @author Ashley <ashley@papermashup.com>
  */
 function getUrlVars()
@@ -130,7 +131,7 @@ var requestno = 0;
 /**
  * Update current system and station data
  *
- * @param bool override
+ * @param override boolean
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function get_data(override)
@@ -231,14 +232,15 @@ function get_data(override)
                             //log(result.si_detailed);
                         }
 
-                        if ($("#container").length)
+                        var cont = $("#container");
+                        if (cont.length)
                         {
                             log("Updating Neighborhood Map");
-                            var chart = $("#container").highcharts();
+                            var chart = cont.highcharts();
 
                             if (chart)
                             {
-                                $("#container").highcharts().destroy();
+                                cont.highcharts().destroy();
                             }
                             var mode = getUrlVars().mode;
                             var maxdistance = getUrlVars().maxdistance;
@@ -286,10 +288,10 @@ function get_data(override)
 /**
  * Update data from FD API
  *
- * @param int wait
- * @param bool newsys
- * @param bool override
- * @param bool force_update
+ * @param {int} wait
+ * @param {bool} newsys
+ * @param {bool} override
+ * @param {bool} force_update
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function update_api(wait, newsys, override, force_update)
@@ -378,9 +380,9 @@ $(function()
 /**
  * Get the current system when called
  *
- * @param string formid
- * @param string coordformid
- * @param bool onlyid
+ * @param {string} formid
+ * @param {string} coordformid
+ * @param {bool} onlyid
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function get_cs(formid, coordformid, onlyid)
@@ -436,8 +438,8 @@ function get_cs(formid, coordformid, onlyid)
 /**
  * Uupdate data for system editing
  *
- * @param string editurl
- * @param int deleteid
+ * @param {string} editurl
+ * @param {int} deleteid
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function update_values(editurl, deleteid)
@@ -486,30 +488,33 @@ function update_values(editurl, deleteid)
         }
     });
 
-    if ($("#delete").length)
+    var delete_div = $("#delete");
+    if (delete_div.length)
     {
-        $("#delete").html("");
+        delete_div.html("");
         if (deleteid !== false)
         {
-            $("#delete").html('<a href="javascript:void(0)" onclick="confirmation(' + deleteid + ', \'log\')" title="Delete item"><div class="delete_button" style="right:-271px;"><img src="/style/img/delete.png" class="icon" alt="Delete" style="margin-right:0" /></div></a>');
+            delete_div.html('<a href="javascript:void(0)" onclick="confirmation(' + deleteid + ', \'log\')" title="Delete item"><div class="delete_button" style="right:-271px;"><img src="/style/img/delete.png" class="icon" alt="Delete" style="margin-right:0" /></div></a>');
         }
     }
 
-    if ($("#delete_poi").length)
+    var delete_poi = $("#delete_poi");
+    if (delete_poi.length)
     {
-        $("#delete_poi").html("");
+        delete_poi.html("");
         if (deleteid !== false)
         {
-            $("#delete_poi").html('<a href="javascript:void(0)" data-replace="true" data-target=".entries" onclick="confirmation(' + deleteid + ', \'poi\')" title="Delete item"><div class="delete_button"><img src="/style/img/delete.png" class="icon" alt="Delete" style="margin-right:0" /></div></a>');
+            delete_poi.html('<a href="javascript:void(0)" data-replace="true" data-target=".entries" onclick="confirmation(' + deleteid + ', \'poi\')" title="Delete item"><div class="delete_button"><img src="/style/img/delete.png" class="icon" alt="Delete" style="margin-right:0" /></div></a>');
         }
     }
 
-    if ($("#delete_bm").length)
+    var delete_bm = $("#delete_bm");
+    if (delete_bm.length)
     {
-        $("#delete_bm").html("");
+        delete_bm.html("");
         if (deleteid !== false)
         {
-            $("#delete_bm").html('<a href="javascript:void(0)" data-replace="true" data-target=".entries" onclick="confirmation(' + deleteid + ', \'bm\')" title="Delete item"><div class="delete_button"><img src="/style/img/delete.png" class="icon" alt="Delete" style="margin-right:0" /></div></a>');
+            delete_bm.html('<a href="javascript:void(0)" data-replace="true" data-target=".entries" onclick="confirmation(' + deleteid + ', \'bm\')" title="Delete item"><div class="delete_button"><img src="/style/img/delete.png" class="icon" alt="Delete" style="margin-right:0" /></div></a>');
         }
     }
 }
@@ -517,9 +522,9 @@ function update_values(editurl, deleteid)
 /**
  * Update data (poi, log, what have you)
  *
- * @param string formid
- * @param string file
- * @param bool update_map
+ * @param {string} formid
+ * @param {string} file
+ * @param {bool} update_map
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function update_data(formid, file, update_map)
@@ -602,8 +607,8 @@ function update_data(formid, file, update_map)
 /**
  * Add zero to time if < 10
  *
- * @param int i
- * @return int i
+ * @param {int} i
+ * @return {int} i
  */
 function addZero(i)
 {
@@ -630,19 +635,22 @@ function startTime()
     m = addZero(m);
     s = addZero(s);
 
-    if ($("#hrs").length)
+    var hrs = $("#hrs");
+    if (hrs.length)
     {
-        $("#hrs").html(h + ":" + m + ":" + s);
+        hrs.html(h + ":" + m + ":" + s);
     }
 
-    if ($("#hrsns").length)
+    var hrsns = $("#hrsns");
+    if (hrsns.length)
     {
-        $("#hrsns").html(h + ":" + m);
+        hrsns.html(h + ":" + m);
     }
 
-    if ($("#date").length)
+    var date = $("#date");
+    if (date.length)
     {
-        $("#date").html(d + " " + mo + " " + year);
+        date.html(d + " " + mo + " " + year);
     }
     var t = setTimeout(function(){startTime();}, 500);
 }
@@ -650,8 +658,8 @@ function startTime()
 /**
  * Confirmation popup when deleting stuff
  *
- * @param int delid
- * @param string what
+ * @param {int} delid
+ * @param {string} what
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function confirmation(delid, what)
@@ -704,7 +712,7 @@ function confirmation(delid, what)
 /**
  * Toggle log adding
  *
- * @param string logsystem
+ * @param {string} logsystem
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function toggle_log(logsystem)
@@ -730,7 +738,7 @@ function toggle_log(logsystem)
 /**
  * Toggle log editing
  *
- * @param int log_id
+ * @param {int} log_id
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function toggle_log_edit(log_id)
@@ -743,26 +751,27 @@ var last_system = "";
 /**
  * Get info from clicking on a map point
  *
- * @param string system
+ * @param {string} system
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function get_mi(system)
 {
+    var report = $("#report");
     if (last_system == system)
     {
-        $("#report").hide();
+        report.hide();
         last_system = "";
     }
     else
     {
-        $("#report").show();
+        report.show();
         $.ajax(
         {
             url: "/get/getMapData.php?system=" + system,
             cache: false,
             success: function(result)
             {
-                $("#report").html(result);
+                report.html(result);
             }
         });
     }
@@ -772,13 +781,13 @@ function get_mi(system)
 /**
  * Autocomplete system/station name
  *
- * @param string str
- * @param string divid
- * @param string link
- * @param string station
- * @param string idlink
- * @param int sysid
- * @param string dp
+ * @param {string} str
+ * @param {string} divid
+ * @param {string} link
+ * @param {string} station
+ * @param {string} idlink
+ * @param {int} sysid
+ * @param {string} dp
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function showResult(str, divid, link, station, idlink, sysid, dp)
@@ -848,9 +857,9 @@ function showResult(str, divid, link, station, idlink, sysid, dp)
 /**
  * Change the value to the selected one
  *
- * @param int result
- * @param string coordinates
- * @param string divid
+ * @param {int} result
+ * @param {string} coordinates
+ * @param {string} divid
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function setResult(result, coordinates, divid)
@@ -870,8 +879,8 @@ function setResult(result, coordinates, divid)
 /**
  * Change the value to the selected one for Bookmarks
  *
- * @param string name
- * @param int sysid
+ * @param {string} name
+ * @param {int} sysid
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function setbm(name, sysid)
@@ -887,8 +896,8 @@ function setbm(name, sysid)
 /**
  * Change the value to the selected one for Stations
  *
- * @param string name
- * @param int stationid
+ * @param {string} name
+ * @param {int} stationid
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function setl(name, stationid)
@@ -900,7 +909,9 @@ function setl(name, stationid)
 /**
  * Change the value to the selected one for Data Point
  *
- * @param
+ * @param {string} name
+ * @param {string} coordinates
+ * @param {int} systemid
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function setdp(name, coordinates, systemid)
@@ -1048,19 +1059,19 @@ function empty()
 /**
  * Function to calculate distances and profits
  *
- * @param float coord_fromx
- * @param float coord_fromy
- * @param float coord_fromz
- * @param float coord_tox
- * @param float coord_toy
- * @param float coord_toz
- * @param string from
- * @param string to
- * @param float price1
- * @param float price2
- * @param int tonnage
- * @param int to_id
- * @param int from_id
+ * @param {float} coord_fromx
+ * @param {float} coord_fromy
+ * @param {float} coord_fromz
+ * @param {float} coord_tox
+ * @param {float} coord_toy
+ * @param {float} coord_toz
+ * @param {string} from
+ * @param {string} to
+ * @param {float} price1
+ * @param {float} price2
+ * @param {int} tonnage
+ * @param {int} to_id
+ * @param {int} from_id
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function calcDist(coord_fromx, coord_fromy, coord_fromz, coord_tox, coord_toy, coord_toz, from, to, price1, price2, tonnage, to_id, from_id)
@@ -1099,30 +1110,31 @@ function calcDist(coord_fromx, coord_fromy, coord_fromz, coord_tox, coord_toy, c
             }
         });
     }*/
+    var dist_display = $("#dist_display");
 
     if (x1 && x2 && y1 && y2 && z1 && z2)
     {
         if (to === "")
         {
-            $("#dist_display").val("Missing information, try again");
+            dist_display.val("Missing information, try again");
         }
         else
         {
             var distance = numeral(Math.round(Math.sqrt(Math.pow((x1-(x2)), 2) + Math.pow((y1-(y2)), 2) + Math.pow((z1-(z2)),2)))).format("0,0");
-            $("#dist_display").val("The distance from " + from + " to " + to + " is " + distance + " ly");
+            dist_display.val("The distance from " + from + " to " + to + " is " + distance + " ly");
         }
     }
     else
     {
-        $("#dist_display").val("Missing information, try again");
+        dist_display.val("Missing information, try again");
     }
 }
 
 /**
  * Add station to log form
  *
- * @param string station
- * @param int station_id
+ * @param {string} station
+ * @param {int} station_id
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function addstation(station, station_id)
@@ -1133,28 +1145,29 @@ function addstation(station, station_id)
 /**
  * Save session log
  *
- * @param string log
+ * @param {string} log
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function savelog(log)
 {
+    var seslogsuccess = $("#seslogsuccess");
     var data = $("#logtext").val();
     $.ajax(
     {
-      type: "POST",
-      url: "/action/sessionLogSave.php",
-      data: { logtext: data }
+        type: "POST",
+        url: "/action/sessionLogSave.php",
+        data: { logtext: data }
     })
     .done(function(msg)
     {
-        $("#seslogsuccess").html('<img src="/style/img/check.png" class="icon" alt="Done">');
+        seslogsuccess.html('<img src="/style/img/check.png" class="icon" alt="Done">');
 
         // display check.png for 3,5 seconds
         setTimeout(function()
         {
-            if ($("#seslogsuccess").html('<img src="/style/img/check.png" class="icon" alt="Done">'))
+            if (seslogsuccess.html('<img src="/style/img/check.png" class="icon" alt="Done">'))
             {
-                $("#seslogsuccess").html($("#old_val").html());
+                seslogsuccess.html($("#old_val").html());
             }
 
         }, 3500);
@@ -1174,8 +1187,8 @@ function showsave()
 /**
  * Shove affected div to the front
  *
- * @param int divid
- * @param bool toback
+ * @param {int} divid
+ * @param {bool} toback
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function tofront(divid, toback)
@@ -1219,8 +1232,8 @@ function tofront(divid, toback)
 /**
  * Upload image to Imgur
  *
- * @param string file base64 of image
- * @param string fileurl
+ * @param {string} file base64 of image
+ * @param {string} fileurl
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function imgurUpload(file, fileurl)
@@ -1265,8 +1278,8 @@ function imgurUpload(file, fileurl)
 /**
  * Set links as active
  *
- * @param int id
- * @param int num
+ * @param {int} id
+ * @param {int} num
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function setActive(id, num)
@@ -1284,16 +1297,18 @@ function setActive(id, num)
 /**
  * Get wikipedia articles
  *
- * @param string search
- * @param int id
+ * @param {string} search
+ * @param {int} id
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function get_wikipedia(search, id)
 {
-    if (document.getElementById("wpsearch_" + id).style.display == "none")
+    var wpsearch = $("#wpsearch_" + id);
+
+    if (!wpsearch.is(":visible"))
     {
-        $("#wpsearch_" + id).fadeIn();
-        $("#wpsearch_" + id).html('<strong>Querying Wikipedia</strong><br /><img src="/style/img/loading.gif" alt="Loading..." />');
+        wpsearch.fadeIn();
+        wpsearch.html('<strong>Querying Wikipedia</strong><br /><img src="/style/img/loading.gif" alt="Loading..." />');
 
         $.ajax(
         {
@@ -1302,13 +1317,13 @@ function get_wikipedia(search, id)
             dataType: "html",
             success: function(result)
             {
-                $("#wpsearch_" + id).html(result);
+                wpsearch.html(result);
             }
         });
     }
     else
     {
-        document.getElementById("wpsearch_" + id).style.display = "none";
+        wpsearch.hide();
     }
 }
 
@@ -1316,8 +1331,8 @@ function get_wikipedia(search, id)
 /**
  * Update class and rating on NearestSystems.php
  *
- * @param int group_id
- * @param string class_name
+ * @param {int} group_id
+ * @param {string} class_name
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function getCR(group_id, class_name)
@@ -1342,7 +1357,7 @@ function getCR(group_id, class_name)
  * Escape regex
  * http://stackoverflow.com/questions/1144783/replacing-all-occurrences-of-a-string-in-javascript
  *
- * @param string str
+ * @param {string} str
  * @author Sean Bright
  */
 function escapeRegExp(str)
@@ -1354,9 +1369,9 @@ function escapeRegExp(str)
  * Replace all occurrences of a string
  * http://stackoverflow.com/questions/1144783/replacing-all-occurrences-of-a-string-in-javascript
  *
- * @param string str
- * @param string find
- * @param string replace
+ * @param {string} str
+ * @param {string} find
+ * @param {string} replace
  * @author Sean Bright
  */
 function replaceAll(str, find, replace)
@@ -1382,7 +1397,9 @@ function refresh_api()
         }
     });
 
-    $("#api_refresh").html('<img class="icon24" src="/style/img/check_24.png" alt="Refresh done" style="margin-right:10px" />');
+    var api_refresh = $("#api_refresh");
+
+    api_refresh.html('<img class="icon24" src="/style/img/check_24.png" alt="Refresh done" style="margin-right:10px" />');
 
     // wait a couple of seconds before updating data
     setTimeout(function()
@@ -1392,14 +1409,14 @@ function refresh_api()
 
     setTimeout(function()
     {
-        $("#api_refresh").html('<img class="icon24" src="/style/img/refresh_24.png" alt="Refresh" style="margin-right:10px" />');
+        api_refresh.html('<img class="icon24" src="/style/img/refresh_24.png" alt="Refresh" style="margin-right:10px" />');
     }, 30000);
 }
 
 /**
  * Ignore version update
  *
- * @param string ignore_version
+ * @param {string} ignore_version
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function ignore_version(version)
@@ -1422,9 +1439,9 @@ function ignore_version(version)
 /**
  * Send/fetch private comments from EDSM
  *
- * @param string system
- * @param string comment
- * @param bool send
+ * @param {string} system
+ * @param {string} comment
+ * @param {bool} send
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function edsm_comment(comment, send)
@@ -1520,7 +1537,7 @@ function set_reference_systems(standard, force)
 /**
  * Bring info to view
  *
- * @param string div_id
+ * @param {string} div_id
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function to_view(div_id, e)
@@ -1540,8 +1557,8 @@ function to_view(div_id, e)
 /**
  * Enlarge thumbnails
  *
- * @param string img
- * @param int og_width
+ * @param {string} img
+ * @param {int} og_width
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function enlarge(img, og_width)
@@ -1569,7 +1586,7 @@ function enlarge(img, og_width)
 /**
  * Minimize or maximize the left panel
  *
- * @param string style
+ * @param {string} style
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function minmax(style)

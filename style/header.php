@@ -53,8 +53,7 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
             <link type="text/css" href="/style/style.css?ver=<?php echo $settings["edtb_version"]?>" rel="stylesheet" />
 
             <?php
-            if (isset($_COOKIE["style"]) && $_COOKIE["style"] == "narrow")
-            {
+            if (isset($_COOKIE["style"]) && $_COOKIE["style"] == "narrow") {
                 ?>
                 <link type="text/css" href="/style/style_narrow.css?ver=<?php echo $settings["edtb_version"]?>" rel="stylesheet" />
                 <?php
@@ -72,15 +71,14 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
             <script src="/source/Vendor/adamwdraper-Numeral-js-7487acb/numeral.js"></script>
 
             <?php
-            if ($_SERVER["PHP_SELF"] == "/GalMap.php")
-            {
-            ?>
+            if ($_SERVER["PHP_SELF"] == "/GalMap.php") {
+                ?>
                 <!-- Three.js -->
                 <script src="/source/Vendor/three.min.js"></script>
                 <!-- ED3D-Galaxy-Map -->
                 <link href="/source/Vendor/ED3D-Galaxy-Map/css/styles.css?ver=<?php echo $settings["edtb_version"]?>" rel="stylesheet" type="text/css" />
                 <script src="/source/Vendor/ED3D-Galaxy-Map/js/ed3dmap.js"></script>
-            <?php
+                <?php
             }
             ?>
 
@@ -89,13 +87,12 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
             <script src="/source/Vendor/markitup/jquery.markitup.js"></script>
 
             <?php
-            if ($_SERVER["PHP_SELF"] == "/Map.php")
-            {
-            ?>
+            if ($_SERVER["PHP_SELF"] == "/Map.php") {
+                ?>
                 <!-- highcharts (map)-->
                 <script src="/source/Vendor/Highcharts/js/highcharts.js"></script>
                 <script src="/source/Vendor/Highcharts/js/highcharts-3d.js"></script>
-            <?php
+                <?php
             }
             ?>
 
@@ -113,18 +110,15 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
                     <!-- date and clock will be rendered here -->
                     <div id="datetime">
                         <?php
-                        if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow")
-                        {
-                        ?>
+                        if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
+                            ?>
                             <div class="leftpanel-date" id="date"></div>
                             <div class="leftpanel-clock" id="hrs"></div>
-                        <?php
-                        }
-                        else
-                        {
-                        ?>
-                        <div class="leftpanel-clock" id="hrsns"></div>
-                        <?php
+                            <?php
+                        } else {
+                            ?>
+                            <div class="leftpanel-clock" id="hrsns"></div>
+                            <?php
                         }
                         ?>
                     </div>
@@ -132,8 +126,7 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
                     <div id="ext_links" class="leftpanel-ext_links">
                         <?php
                         // External links
-                        foreach ($settings["ext_links"] as $name => $link_href)
-                        {
+                        foreach ($settings["ext_links"] as $name => $link_href) {
                             echo '<a href="' .  $link_href . '" target="_blank" onclick="$(\'#ext_links\').fadeToggle(\'fast\')">';
                             echo '  <div class="leftpanel-ext_links_link">' . $name . '</div>';
                             echo '</a>';
@@ -155,8 +148,7 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
                         // set nav links
                         $i = 0;
                         $count = count($links);
-                        foreach ($links as $name => $link_href)
-                        {
+                        foreach ($links as $name => $link_href) {
                             $names = explode("--", $name);
                             $name = $names[0];
                             $pic = $names[1];
@@ -165,23 +157,19 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
                             $class = $pagetitle == $name ? "active" : "link";
 
                             //
-                            if ($pagetitle == "System Log" && $name == "ED ToolBox")
-                            {
+                            if ($pagetitle == "System Log" && $name == "ED ToolBox") {
                                 $class = "active";
                             }
 
                             $aclass = "";
                             $onclick = "";
-                            if ($reload != "true")
-                            {
+                            if ($reload != "true") {
                                 $aclass = ' data-push="true"';
                                 $onclick = ' onclick="setActive(\'' . $i . '\', \'' . $count . '\')"';
                             }
 
-                            if ($name != "System Log")
-                            {
-                                if (isset($_COOKIE["style"]) && $_COOKIE["style"] == "narrow")
-                                {
+                            if ($name != "System Log") {
+                                if (isset($_COOKIE["style"]) && $_COOKIE["style"] == "narrow") {
                                     // offset the log icon to make it appear centered
                                     $styling = $pic == "log.png" ? ' style="margin-left:6px"' : "";
 
@@ -190,10 +178,7 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
                                     echo '<img src="/style/img/' . $pic . '" alt="pic" class="icon"' . $styling . ' />';
                                     echo '</div>';
                                     echo '</a>';
-                                }
-                                else
-                                {
-
+                                } else {
                                     echo '<a' . $aclass . $onclick . ' href="' .  $link_href . '">';
                                     echo '<div id="link_' . $i . '" class="' . $class . '">';
                                     echo '<img src="/style/img/' . $pic . '" alt="pic" class="icon" />' . $name;
@@ -211,14 +196,11 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
                  *  minimize or maximize left panel
                  */
 
-                if (isset($_COOKIE["style"]) && $_COOKIE["style"] == "narrow")
-                {
+                if (isset($_COOKIE["style"]) && $_COOKIE["style"] == "narrow") {
                     $minm .= '<a href="javascript:void(0)" onclick="minmax(\'normal\')" title="Maximize left panel">';
                     $minm .= '<img class="minmax" src="/style/img/minmax.png" alt="Max" />';
                     $minm .= '</a>';
-                }
-                else
-                {
+                } else {
                     $minm .= '<a href="javascript:void(0)" onclick="minmax(\'narrow\')" title="Minimize left panel">';
                     $minm .= '<img class="minmax" src="/style/img/minmax.png" alt="Min" />';
                     $minm .= '</a>';
@@ -226,12 +208,10 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
                 ?>
                 <div class="leftpanel-sessionlog">
                     <?php
-                    if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow")
-                    {
+                    if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
                         // session log
                         // get old session log
-                        if (!$sessionlog = file_get_contents($settings["install_path"] . "/data/sessionlog.txt"))
-                        {
+                        if (!$sessionlog = file_get_contents($settings["install_path"] . "/data/sessionlog.txt")) {
                             $error = error_get_last();
                             write_log("Error: " . $error["message"], __FILE__, __LINE__);
                         }
@@ -244,9 +224,7 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
                         <!-- currently playing from foobar2000/VLC // -->
                         <div id="nowplaying"></div>
                         <?php
-                    }
-                    else
-                    {
+                    } else {
                         ?>
                         <div class="seslog" id="seslog">
                             <span id="seslogsuccess"><?php echo $minm?></span>
@@ -275,11 +253,9 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
                      * User ranks from FD API
                      */
 
-                    if (isset($api["commander"]) && $settings["show_cmdr_status"] == "true")
-                    {
+                    if (isset($api["commander"]) && $settings["show_cmdr_status"] == "true") {
                         $status_ranks_cache = "";
-                        if (file_exists($_SERVER["DOCUMENT_ROOT"] . "/cache/cmdr_ranks_status.html"))
-                        {
+                        if (file_exists($_SERVER["DOCUMENT_ROOT"] . "/cache/cmdr_ranks_status.html")) {
                             $status_ranks_cache = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/cache/cmdr_ranks_status.html");
                         }
 
@@ -290,8 +266,7 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
                      * EDSM comment link
                      */
 
-                    if (!empty($settings["edsm_api_key"]) && !empty($settings["edsm_cmdr_name"]))
-                    {
+                    if (!empty($settings["edsm_api_key"]) && !empty($settings["edsm_cmdr_name"])) {
                         ?>
                         <div style="display:inline-block;margin-left:5px">
                             <a id="edsm_cmnt_pic" href="javascript:void(0)" title="Add private comment to EDSM">
@@ -304,8 +279,7 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
                 </div>
                 <!-- EDSM comment -->
                 <?php
-                if (!empty($settings["edsm_api_key"]) && !empty($settings["edsm_cmdr_name"]))
-                {
+                if (!empty($settings["edsm_api_key"]) && !empty($settings["edsm_cmdr_name"])) {
                     ?>
                     <div class="edsm_comment" id="edsm_comment">
                         <form method="get" action="/" data-push="true">
@@ -314,20 +288,18 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
                             <div class="button" onclick="edsm_comment($('#comment2').val(), true)" style="margin-top:6px;margin-bottom:6px">Send comment</div>
                         </form>
                         <?php
-                        if (!empty($settings["edsm_standard_comments"]))
-                        {
+                        if (!empty($settings["edsm_standard_comments"])) {
                             echo '<br />&nbsp;OR choose from standard set<form method="get" action="/">';
                             echo '<select class="selectbox" id="comment1" name="comment" onchange="edsm_comment($(\'#comment1\').val(), true)">';
                             echo '<option value="">Choose comment</option>';
-                            foreach ($settings["edsm_standard_comments"] as $name => $comment)
-                            {
+                            foreach ($settings["edsm_standard_comments"] as $name => $comment) {
                                 echo '<option value="' . $comment . '">';
                                 echo $name;
                                 echo '</option>';
                             }
                             echo '</select></form>';
                         }
-                        ?>
+                    ?>
                     </div>
                     <?php
                 }
@@ -339,11 +311,9 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
                      * show ship status
                      */
 
-                    if (isset($api["ship"]) && $settings["show_ship_status"] == "true")
-                    {
+                    if (isset($api["ship"]) && $settings["show_ship_status"] == "true") {
                         $ship_cache = "";
-                        if (file_exists($_SERVER["DOCUMENT_ROOT"] . "/cache/ship_status.html"))
-                        {
+                        if (file_exists($_SERVER["DOCUMENT_ROOT"] . "/cache/ship_status.html")) {
                             $ship_cache = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/cache/ship_status.html");
                         }
 
@@ -359,8 +329,7 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
                          * show refresh button
                          */
 
-                        if (isset($api["commander"]) || isset($api["ship"]))
-                        {
+                        if (isset($api["commander"]) || isset($api["ship"])) {
                             ?>
                             <a id="api_refresh" href="javascript:void(0)" onclick="refresh_api()" title="Refresh API data">
                                 <img class="icon24" src="/style/img/refresh_24.png" alt="Refresh" style="margin-right:10px" />

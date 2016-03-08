@@ -43,13 +43,11 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 
 $ga_last_update = edtb_common("last_galnet_update", "unixtime") + 30 * 60; // 30 minutes
 
-if ($ga_last_update < time())
-{
+if ($ga_last_update < time()) {
     $xml2 = xml2array($galnet_feed);
 
     $in = 1;
-    foreach ($xml2["rss"]["channel"]["item"] as $dataga)
-    {
+    foreach ($xml2["rss"]["channel"]["item"] as $dataga) {
         $gatitle = $dataga["title"];
         $ga_title = explode(" - ", $gatitle);
         $ga_title = $ga_title[0];
@@ -62,40 +60,34 @@ if ($ga_last_update < time())
 
         // exclude stuff
         $continue = true;
-        foreach ($settings["galnet_excludes"] as $exclude)
-        {
+        foreach ($settings["galnet_excludes"] as $exclude) {
             $find = $exclude;
             $pos = strpos($ga_title, $find);
 
-            if ($pos !== false)
-            {
+            if ($pos !== false) {
                 $continue = false;
                 break 1;
             }
         }
 
-        if ($continue !== false)
-        {
+        if ($continue !== false) {
             /**
              * write articles into txt files for VoiceAttack
              */
             $to_write = $ga_title . "\n\r" . $text;
 
-            if ($in <= $settings["galnet_articles"])
-            {
+            if ($in <= $settings["galnet_articles"]) {
                 /**
                  * write x of the latest articles to .txt files
                  */
                 $newfile = $_SERVER["DOCUMENT_ROOT"] . "/Marvin/galnet" . $in . ".txt";
 
                 $old_file = "";
-                if (file_exists($newfile))
-                {
+                if (file_exists($newfile)) {
                     $old_file = file_get_contents($newfile);
                 }
 
-                if (!file_put_contents($newfile, $to_write))
-                {
+                if (!file_put_contents($newfile, $to_write)) {
                     $error = error_get_last();
                     write_log("Error: " . $error["message"], __FILE__, __LINE__);
                 }
@@ -104,13 +96,11 @@ if ($ga_last_update < time())
                  * compare to the latest to see if new articles have been posted since last check
                  */
                 $new_file = "-1";
-                if (file_exists($newfile))
-                {
+                if (file_exists($newfile)) {
                     $new_file = file_get_contents($newfile);
                 }
 
-                if ($new_file != $old_file)
-                {
+                if ($new_file != $old_file) {
                     edtb_common("last_galnet_new", "unixtime", true, time());
                 }
             }
@@ -130,12 +120,9 @@ if ($ga_last_update < time())
 $last_galnet_check = edtb_common("last_galnet_check", "unixtime");
 $last_galnet_new = edtb_common("last_galnet_new", "unixtime");
 
-if ($last_galnet_new < $last_galnet_check)
-{
+if ($last_galnet_new < $last_galnet_check) {
     echo "No new GalNet articles have been published since you last asked " . get_timeago($last_galnet_check, false) . ".";
-}
-else
-{
+} else {
     echo "New GalNet articles have been published since you last asked. Would you like me to read them to you?";
 }
 

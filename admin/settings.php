@@ -30,8 +30,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-if (isset($_GET["do"]))
-{
+if (isset($_GET["do"])) {
     /** @require configs */
     require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
     /** @require functions */
@@ -41,8 +40,7 @@ if (isset($_GET["do"]))
 
     $data = json_decode($_REQUEST["input"], true);
 
-    foreach ($data as $var => $value)
-    {
+    foreach ($data as $var => $value) {
         mysqli_query($GLOBALS["___mysqli_ston"], "  UPDATE user_settings
                                                     SET value = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $value) . "'
                                                     WHERE variable = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $var) . "'
@@ -77,23 +75,18 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
                                                             or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
     $i = 0;
-    while ($cat_arr = mysqli_fetch_assoc($cat_res))
-    {
+    while ($cat_arr = mysqli_fetch_assoc($cat_res)) {
         $id = $cat_arr["id"];
         $name = $cat_arr["name"];
 
-        if ($id == $cat_id)
-        {
+        if ($id == $cat_id) {
             $active = " class='actives'";
             $current_category = $name;
-        }
-        else
-        {
+        } else {
             $active = "";
         }
 
-        if (($i % 5) == 0)
-        {
+        if (($i % 5) == 0) {
             echo '</ul><br /><ul class="pagination" style="margin-top:-25px">';
         }
 
@@ -124,8 +117,7 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
             </tr>
             <?php
             $i = 0;
-            while ($arr = mysqli_fetch_assoc($res))
-            {
+            while ($arr = mysqli_fetch_assoc($res)) {
                 $name = $arr["name"];
                 $type = $arr["type"];
                 $variable = $arr["variable"];
@@ -134,8 +126,7 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
 
                 $tdclass = $i % 2 ? "dark" : "light";
 
-                if ($type == "numeric")
-                {
+                if ($type == "numeric") {
                     ?>
                     <tr>
                         <td class="<?php echo $tdclass?>">
@@ -146,9 +137,8 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
                         </td>
                     </tr>
                     <?php
-                }
-                elseif ($type == "textbox" || $type == "csl")
-                {
+
+                } elseif ($type == "textbox" || $type == "csl") {
                     ?>
                     <tr>
                         <td class="<?php echo $tdclass?>">
@@ -159,9 +149,8 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
                         </td>
                     </tr>
                     <?php
-                }
-                elseif ($type == "array")
-                {
+
+                } elseif ($type == "array") {
                     ?>
                     <tr>
                         <td class="<?php echo $tdclass?>">
@@ -172,16 +161,12 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
                         </td>
                     </tr>
                     <?php
-                }
-                elseif ($type == "tf")
-                {
-                    if ($value == "true")
-                    {
+
+                } elseif ($type == "tf") {
+                    if ($value == "true") {
                         $t_sel = ' selected="selected"';
                         $f_sel = "";
-                    }
-                    elseif ($value == "false")
-                    {
+                    } elseif ($value == "false") {
                         $t_sel = "";
                         $t_sel = ' selected="selected"';
                     }
@@ -198,9 +183,8 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
                         </td>
                     </tr>
                     <?php
-                }
-                elseif (substr($type, 0, 4) == "enum")
-                {
+
+                } elseif (substr($type, 0, 4) == "enum") {
                     $values = str_replace("enum::", "", $type);
 
                     $values = explode("&&", $values);
@@ -211,8 +195,7 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
                                 <span class="settings_info"><?php echo $name?></span><br />
                                 <select class="selectbox" name="<?php echo $variable?>" style="width:auto">
                                     <?php
-                                    foreach ($values as $val)
-                                    {
+                                    foreach ($values as $val) {
                                         $parts = explode(">>", $val);
 
                                         $val_value = $parts[0];
@@ -221,14 +204,14 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
                                         $selected = $value == $val_value ? ' selected="selected"' : '';
 
                                         echo '<option value="' . $val_value . '"' . $selected . '>' . $val_name . '</option>';
-
                                     }
-                                    ?>
+                    ?>
                                 </select>
                             </div>
                         </td>
                     </tr>
                     <?php
+
                 }
                 $i++;
             }

@@ -54,8 +54,7 @@ class db_create
 
         $this->link = new mysqli($server, $user, $pwd);
 
-        if ($this->link->connect_error)
-        {
+        if ($this->link->connect_error) {
             die("Connection failed: " . $this->link->connect_error);
         }
     }
@@ -67,7 +66,7 @@ class db_create
      * @return string|null
      * @author Mauri Kujala <contact@edtb.xyz>
      */
-    function db($db)
+    public function db($db)
     {
         //write_log("Running query: CREATE DATABASE IF NOT EXISTS `" . $db . "` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci", $file, $line);
         $this->link->query("CREATE DATABASE IF NOT EXISTS `" . $db . "` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci") or write_log(mysqli_error($this->link), __FILE__, __LINE__);
@@ -85,7 +84,7 @@ class db_create
      * @return string|null
      * @author Mauri Kujala <contact@edtb.xyz>
      */
-    function table($table, $sql, $modify, $file, $line, $database = "elite_log")
+    public function table($table, $sql, $modify, $file, $line, $database = "elite_log")
     {
         /**
          * check if table exists
@@ -101,11 +100,9 @@ class db_create
         $columns = explode(",>>", $sql);
         $modifies = explode(";", $modify);
 
-        if ($num > 0)
-        {
+        if ($num > 0) {
             $all_columns = "";
-            foreach ($columns as $column)
-            {
+            foreach ($columns as $column) {
                 preg_match_all("/\`(.*?)\`/", $column, $matches);
                 $column_name = $matches[1][0];
                 $all_columns[] = $column_name;
@@ -124,17 +121,14 @@ class db_create
 
                 $num_column = mysqli_num_rows($column_query);
 
-                if ($num_column > 0)
-                {
+                if ($num_column > 0) {
                     //write_log("Running query: ALTER TABLE " . $database . ".`" . $table . "` CHANGE `" . $column_name . "` " . $column_sql . "", $file, $line);
                     $this->link->query("ALTER TABLE " . $database . ".`" . $table . "` CHANGE `" . $column_name . "` " . $column_sql . "")
                     or write_log(mysqli_error($this->link), $file, $line);
 
                     $info = mysqli_info($this->link);
                     write_log($info, $file, $line);
-                }
-                else
-                {
+                } else {
                     //write_log("Running query: ALTER TABLE " . $database . ".`" . $table . "` ADD " . $column_sql . " AFTER `" . $prev_column . "`", $file, $line);
                     $this->link->query("ALTER TABLE " . $database . ".`" . $table . "` ADD " . $column_sql . " AFTER `" . $prev_column . "`")
                     or write_log(mysqli_error($this->link), $file, $line);
@@ -150,10 +144,8 @@ class db_create
              * remove any superfluous columns
              */
 
-            while ($arr = mysqli_fetch_assoc($query))
-            {
-                if (!in_array($arr["COLUMN_NAME"], $all_columns))
-                {
+            while ($arr = mysqli_fetch_assoc($query)) {
+                if (!in_array($arr["COLUMN_NAME"], $all_columns)) {
                     //write_log("Running query: ALTER TABLE " . $database . ".`" . $table . "` DROP COLUMN `" . $arr["COLUMN_NAME"] . "`", $file, $line);
                     $this->link->query("ALTER TABLE " . $database . ".`" . $table . "` DROP COLUMN `" . $arr["COLUMN_NAME"] . "`")
                     or write_log(mysqli_error($this->link), $file, $line);
@@ -163,10 +155,8 @@ class db_create
                 }
             }
 
-            foreach ($modifies as $mod)
-            {
-                if ($mod != "")
-                {
+            foreach ($modifies as $mod) {
+                if ($mod != "") {
                     //write_log("Running query: ALTER TABLE " . $database . ".`" . $table . "` " . $mod . "", $file, $line);
                     $this->link->query("ALTER TABLE " . $database . ".`" . $table . "` " . $mod . "") or write_log(mysqli_error($this->link), $file, $line);
 
@@ -174,19 +164,15 @@ class db_create
                     write_log($info, $file, $line);
                 }
             }
-        }
-        else
-        {
+        } else {
             //write_log("Running query: CREATE TABLE IF NOT EXISTS " . $database . ".`" . $table . "` (" . str_replace(">>", "", $sql) . ") ENGINE=InnoDB DEFAULT CHARSET=latin1", $file, $line);
             $this->link->query("CREATE TABLE IF NOT EXISTS " . $database . ".`" . $table . "` (" . str_replace(">>", "", $sql) . ") ENGINE=InnoDB DEFAULT CHARSET=latin1") or write_log(mysqli_error($this->link), $file, $line);
 
             $info = mysqli_info($this->link);
             write_log($info, $file, $line);
 
-            foreach ($modifies as $mod)
-            {
-                if ($mod != "")
-                {
+            foreach ($modifies as $mod) {
+                if ($mod != "") {
                     //write_log("Running query: ALTER TABLE " . $database . ".`" . $table . "` " . $mod . "", $file, $line);
                     $this->link->query("ALTER TABLE " . $database . ".`" . $table . "` " . $mod . "") or write_log(mysqli_error($this->link), $file, $line);
 
@@ -205,7 +191,7 @@ class db_create
      * @param string $line
      * @author Mauri Kujala <contact@edtb.xyz>
      */
-    function run_sql($sql, $file, $line)
+    public function run_sql($sql, $file, $line)
     {
         //write_log("Running query: " . $sql, $file, $line);
         $this->link->query($sql) or write_log(mysqli_error($this->link), $file, $line);

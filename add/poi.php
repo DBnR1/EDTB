@@ -30,8 +30,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-if (isset($_GET["do"]))
-{
+if (isset($_GET["do"])) {
     /** @require config */
     require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
     /** @require functions */
@@ -47,13 +46,10 @@ if (isset($_GET["do"]))
     $p_y = $data["poi_coordy"];
     $p_z = $data["poi_coordz"];
 
-    if (valid_coordinates($p_x, $p_y, $p_z))
-    {
+    if (valid_coordinates($p_x, $p_y, $p_z)) {
         $addc = ", x = '" . $p_x . "', y = '" . $p_y . "', z = '" . $p_z . "'";
         $addb = ", '" . $p_x . "', '" . $p_y . "', '" . $p_z . "'";
-    }
-    else
-    {
+    } else {
         $addc = ", x = null, y = null, z = null";
         $addb = ", null, null, null";
     }
@@ -62,23 +58,18 @@ if (isset($_GET["do"]))
     $p_id = $data["poi_edit_id"];
     $category_id = $data["category_id"];
 
-    if ($p_id != "")
-    {
+    if ($p_id != "") {
         mysqli_query($GLOBALS["___mysqli_ston"], "  UPDATE user_poi SET
                                                     poi_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $p_name) . "',
                                                     system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $p_system) . "',
                                                     text = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $p_entry) . "',
                                                     category_id = '" . $category_id . "'" . $addc . "
                                                     WHERE id = '" . $p_id . "'") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-    }
-    elseif (isset($_GET["deleteid"]))
-    {
+    } elseif (isset($_GET["deleteid"])) {
         mysqli_query($GLOBALS["___mysqli_ston"], "  DELETE FROM user_poi
                                                     WHERE id = '" . $_GET["deleteid"] . "'
                                                     LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-    }
-    else
-    {
+    } else {
         mysqli_query($GLOBALS["___mysqli_ston"], "  INSERT INTO user_poi (poi_name, system_name, text, category_id, x, y, z, added_on)
                                                     VALUES
                                                         ('" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $p_name) . "',
@@ -91,9 +82,8 @@ if (isset($_GET["do"]))
     exit;
 }
 
-if ($_SERVER['PHP_SELF'] == "/Poi.php")
-{
-?>
+if ($_SERVER['PHP_SELF'] == "/Poi.php") {
+    ?>
     <div class="input" id="addPoi" style="text-align:center">
         <form method="post" id="poi_form" action="Poi.php">
             <div class="input-inner">
@@ -129,11 +119,10 @@ if ($_SERVER['PHP_SELF'] == "/Poi.php")
                                 <?php
                                 $pcat_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id, name FROM user_poi_categories");
 
-                                while ($pcat_arr = mysqli_fetch_assoc($pcat_res))
-                                {
-                                    echo '<option value="' . $pcat_arr["id"] . '">' . $pcat_arr["name"] . '</option>';
-                                }
-                                ?>
+    while ($pcat_arr = mysqli_fetch_assoc($pcat_res)) {
+        echo '<option value="' . $pcat_arr["id"] . '">' . $pcat_arr["name"] . '</option>';
+    }
+    ?>
                             </select>
                         </td>
                     </tr>
@@ -157,4 +146,5 @@ if ($_SERVER['PHP_SELF'] == "/Poi.php")
         </form>
     </div>
 <?php
+
 }

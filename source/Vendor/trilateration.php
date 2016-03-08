@@ -14,12 +14,14 @@ function trilateration3d($p1, $p2, $p3, $p4)
     $ex = vector_unit(vector_diff($p2, $p1));
     $i = vector_dot_product($ex, vector_diff($p3, $p1));
     $ey = vector_unit(vector_diff(vector_diff($p3, $p1), vector_multiply($ex, $i)));
-    $ez = vector_cross($ex,$ey);
+    $ez = vector_cross($ex, $ey);
     $d = vector_length($p2, $p1);
-    $r1 = $p1[3]; $r2 = $p2[3]; $r3 = $p3[3]; $r4 = $p4[3];
+    $r1 = $p1[3];
+    $r2 = $p2[3];
+    $r3 = $p3[3];
+    $r4 = $p4[3];
 
-    if($d - $r1 >= $r2 || $r2 >= $d + $r1)
-    {
+    if ($d - $r1 >= $r2 || $r2 >= $d + $r1) {
         return array();
     }
 
@@ -28,8 +30,7 @@ function trilateration3d($p1, $p2, $p3, $p4)
     $y = ((($r1*$r1) - ($r3*$r3) + ($i*$i) + ($j*$j)) / (2*$j)) - (($i*$x) / $j);
     $z = $r1*$r1 - $x*$x - $y*$y;
 
-    if($z < 0)
-    {
+    if ($z < 0) {
         return array();
     }
 
@@ -51,8 +52,7 @@ function trilateration3d($p1, $p2, $p3, $p4)
     $t2 = $r2 - $r4;
     $coords = array();
 
-    if(abs($t1) < abs($t2))
-    {
+    if (abs($t1) < abs($t2)) {
         $result1[0]+=(1/64);
         $result1[0]*=32;
         $result1[0]=floor($result1[0]);
@@ -69,9 +69,7 @@ function trilateration3d($p1, $p2, $p3, $p4)
         $result1[2]/=32;
 
         $coords = array($result1[0], $result1[1], $result1[2]);
-    }
-    else
-    {
+    } else {
         $result2[0]+=(1/64);
         $result2[0]*=32;
         $result2[0]=floor($result2[0]);
@@ -226,8 +224,7 @@ function vector_unit($v)
 {
     $l = vector_norm($v);
 
-    if($l == 0)
-    {
+    if ($l == 0) {
         return -1;
     }
     return vector_div($v, $l);

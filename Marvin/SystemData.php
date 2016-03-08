@@ -43,8 +43,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/curSys.php");
  * System Info
  */
 
-if (isset($_GET["sys"]))
-{
+if (isset($_GET["sys"])) {
     $num_visits = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "    SELECT id
                                                                                 FROM user_visited_systems
                                                                                 WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'"))
@@ -52,8 +51,7 @@ if (isset($_GET["sys"]))
 
     $va_text .= "No system data.";
 
-    if (!empty($curSys["name"]))
-    {
+    if (!empty($curSys["name"])) {
         $va_system = str_replace(".", "", $curSys["name"]);
 
         $va_text = "The " . tts_override($va_system) . " system.\n\r";
@@ -65,8 +63,7 @@ if (isset($_GET["sys"]))
          * Marvin goes on a bit of a rant
          */
         $rant = "";
-        if ($settings["angry_droid"] == "true")
-        {
+        if ($settings["angry_droid"] == "true") {
             /**
              * fetch allegiance rants
              */
@@ -75,8 +72,7 @@ if (isset($_GET["sys"]))
             /**
              * loop trough files
              */
-            foreach ($allegiance_rants as $alleg)
-            {
+            foreach ($allegiance_rants as $alleg) {
                 $allegiance = str_replace("Rants/Allegiance_", "", $alleg);
                 $allegiance = str_replace(".txt", "", $allegiance);
 
@@ -85,14 +81,11 @@ if (isset($_GET["sys"]))
                 /**
                  * if current allegiance matches
                  */
-                if ($curSys["allegiance"] == $allegiance)
-                {
+                if ($curSys["allegiance"] == $allegiance) {
                     $rantss = file($alleg);
                     // loop trough rants
-                    foreach ($rantss as $ranta)
-                    {
-                        if (!empty($ranta) && $ranta{0} != ";")
-                        {
+                    foreach ($rantss as $ranta) {
+                        if (!empty($ranta) && $ranta{0} != ";") {
                             $rants[] = $ranta;
                         }
                     }
@@ -109,16 +102,14 @@ if (isset($_GET["sys"]))
         $va_government = $curSys["government"] == "None" ? "" : " " . $curSys["government"];
         $va_power = "";
 
-        if (!empty($curSys["power"]) && !empty($curSys["power_state"]))
-        {
+        if (!empty($curSys["power"]) && !empty($curSys["power_state"])) {
             $va_power_text = array();
             $va_power_text[] = $curSys["power"];
 
             /**
              * Another rant incoming...
              */
-            if ($settings["angry_droid"] == "true")
-            {
+            if ($settings["angry_droid"] == "true") {
                 /**
                  * fetch power rants
                  */
@@ -127,28 +118,21 @@ if (isset($_GET["sys"]))
                 /**
                  * loop trough files
                  */
-                foreach ($power_rants as $powers)
-                {
+                foreach ($power_rants as $powers) {
                     $power = str_replace("Rants/Power_", "", $powers);
                     $power = str_replace(".txt", "", $power);
 
                     // if current power matches
-                    if ($curSys["power"] == $power)
-                    {
+                    if ($curSys["power"] == $power) {
                         $power_rantss = file($powers);
 
                         $power_rants_text = array();
                         // loop trough rants
-                        foreach ($power_rantss as $power_ranta)
-                        {
-                            if (!empty($power_ranta))
-                            {
-                                if ($power_ranta == "random")
-                                {
+                        foreach ($power_rantss as $power_ranta) {
+                            if (!empty($power_ranta)) {
+                                if ($power_ranta == "random") {
                                     $power_rants_text[] = random_insult($power);
-                                }
-                                elseif ($power_ranta{0} != ";")
-                                {
+                                } elseif ($power_ranta{0} != ";") {
                                     $power_rants_text[] = $power_ranta;
                                 }
                             }
@@ -163,12 +147,9 @@ if (isset($_GET["sys"]))
                 }
             }
 
-            if ($curSys["power_state"] == "Contested")
-            {
+            if ($curSys["power_state"] == "Contested") {
                 $va_power = " system that is currently contested";
-            }
-            else
-            {
+            } else {
                 $va_power_state_text = $curSys["power_state"] == "Control" ? "controlled" : $curSys["power_state"];
 
                 array_filter($va_power_text);
@@ -181,40 +162,35 @@ if (isset($_GET["sys"]))
         /**
          * Round value for population
          */
-
-        if ($curSys["population"] >= 1000000000)
+        if ($curSys["population"] >= 1000000000) {
             $round = -6;
-        elseif ($curSys["population"] >= 10000000 && $curSys["population"] < 1000000000)
+        } elseif ($curSys["population"] >= 10000000 && $curSys["population"] < 1000000000) {
             $round = -5;
-        elseif ($curSys["population"] >= 1000000 && $curSys["population"] < 10000000)
+        } elseif ($curSys["population"] >= 1000000 && $curSys["population"] < 10000000) {
             $round = -4;
-        elseif ($curSys["population"] >= 100000 && $curSys["population"] < 1000000)
+        } elseif ($curSys["population"] >= 100000 && $curSys["population"] < 1000000) {
             $round = -3;
-        elseif ($curSys["population"] >= 10000 && $curSys["population"] < 100000)
+        } elseif ($curSys["population"] >= 10000 && $curSys["population"] < 100000) {
             $round = -3;
-        elseif ($curSys["population"] >= 1000 && $curSys["population"] < 10000)
+        } elseif ($curSys["population"] >= 1000 && $curSys["population"] < 10000) {
             $round = -2;
-        elseif ($curSys["population"] >= 100 && $curSys["population"] < 1000)
+        } elseif ($curSys["population"] >= 100 && $curSys["population"] < 1000) {
             $round = -1;
-        else
+        } else {
             $round = 0;
+        }
 
         $va_pop = "";
-        if ($curSys["population"] != 0)
-        {
+        if ($curSys["population"] != 0) {
             $pop = number_format(round($curSys["population"], $round));
             $va_pop = $curSys["population"] == "None" ? ". It is unpopulated." : ", with a population of about " . $pop . ".";
         }
 
         $article = "";
-        if ($va_allegiance != "No additional data available. ")
-        {
-            if (preg_match('/([aeiouAEIOU])/', $va_allegiance{0}))
-            {
+        if ($va_allegiance != "No additional data available. ") {
+            if (preg_match('/([aeiouAEIOU])/', $va_allegiance{0})) {
                 $article = "An";
-            }
-            else
-            {
+            } else {
                 $article = "A";
             }
         }
@@ -231,58 +207,41 @@ if (isset($_GET["sys"]))
 
         $count = mysqli_num_rows($ress);
 
-        if ($count > 0)
-        {
+        if ($count > 0) {
             $c = 0;
-            while ($arra = mysqli_fetch_assoc($ress))
-            {
-                if ($c == 0)
-                {
+            while ($arra = mysqli_fetch_assoc($ress)) {
+                if ($c == 0) {
                     $first_station_name = $arra["name"];
                     $first_station_ls_from_star = $arra["ls_from_star"];
-                }
-                else
-                {
+                } else {
                     break;
                 }
                 $c++;
             }
         }
 
-        if ($count == 1)
-        {
-            if ($first_station_ls_from_star != 0)
-            {
+        if ($count == 1) {
+            if ($first_station_ls_from_star != 0) {
                 $va_text .= " The systems' only spaceport is " . $first_station_name . " " . number_format(round($first_station_ls_from_star)) . " light seconds away.";
-            }
-            else
-            {
+            } else {
                 $va_text .= " The systems' only spaceport is " . $first_station_name . ".";
             }
-        }
-        elseif ($count > 1)
-        {
-            if ($first_station_ls_from_star != 0)
-            {
+        } elseif ($count > 1) {
+            if ($first_station_ls_from_star != 0) {
                 $va_text .= " It has " . $count . " spaceports, the nearest one is " . $first_station_name . " " . number_format(round($first_station_ls_from_star)) . " light seconds away.";
-            }
-            else
-            {
+            } else {
                 $va_text .= " It has " . $count . " spaceports.";
             }
         }
 
-        if ($num_visits == 1)
-        {
+        if ($num_visits == 1) {
             $inputs = array();
             $inputs[] = " We have not visited this system before.";
             $inputs[] = " This is our first time visiting this system.";
             shuffle($inputs);
 
             $va_text .= $inputs[0];
-        }
-        elseif ($num_visits == 2)
-        {
+        } elseif ($num_visits == 2) {
             $vis_res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT visit
                                                                     FROM user_visited_systems
                                                                     WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'
@@ -292,9 +251,7 @@ if (isset($_GET["sys"]))
 
             $first_vis = get_timeago(strtotime($vis_arr["visit"]));
             $va_text .= " We have visited this system once before. That was " . $first_vis . ".";
-        }
-        else
-        {
+        } else {
             $vis_res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT visit
                                                                     FROM user_visited_systems
                                                                     WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'
@@ -317,17 +274,13 @@ if (isset($_GET["sys"]))
  * Nearest Station
  */
 
-if (isset($_GET["cs"]))
-{
+if (isset($_GET["cs"])) {
     $ambiguity = "";
-    if (valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"]))
-    {
+    if (valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"])) {
         $usex = $curSys["x"];
         $usey = $curSys["y"];
         $usez = $curSys["z"];
-    }
-    else
-    {
+    } else {
         $last_coords = last_known_system();
 
         $usex = $last_coords["x"];
@@ -399,30 +352,21 @@ if (isset($_GET["cs"]))
         "restock" => $cs_rearm);
 
     $count = 0;
-    foreach ($cs_facilities as $cs_name => $cs_included)
-    {
-        if ($cs_included == 1)
-        {
+    foreach ($cs_facilities as $cs_name => $cs_included) {
+        if ($cs_included == 1) {
             $count++;
         }
     }
 
     $cs_services = "";
     $i = 0;
-    foreach ($cs_facilities as $cs_name => $cs_included)
-    {
-        if ($cs_included == 1)
-        {
-            if ($i == $count-1)
-            {
+    foreach ($cs_facilities as $cs_name => $cs_included) {
+        if ($cs_included == 1) {
+            if ($i == $count-1) {
                 $cs_services .= ", and ";
-            }
-            elseif ($i != 0 && $i != $count-1)
-            {
+            } elseif ($i != 0 && $i != $count-1) {
                 $cs_services .= ", ";
-            }
-            else
-            {
+            } else {
                 $cs_services .= ", and is equipped with ";
             }
 
@@ -432,35 +376,26 @@ if (isset($_GET["cs"]))
     }
 
     $article = "";
-    if (!empty($cs_type))
-    {
-        if (preg_match('/([aeiouAEIOU])/', $cs_type{0}))
-        {
+    if (!empty($cs_type)) {
+        if (preg_match('/([aeiouAEIOU])/', $cs_type{0})) {
             $article = "an";
-        }
-        else
-        {
+        } else {
             $article = "a";
         }
     }
 
-    if ($cs_distance == 0)
-    {
+    if ($cs_distance == 0) {
         echo 'The nearest spaceport is in this system. ';
-    }
-    else
-    {
+    } else {
         echo 'The nearest spaceport is in the ' . $cs_system . ' system, ' . $ambiguity . number_format($cs_distance, 1) . ' light years away.';
     }
 
     echo ' ' . $cs_station_name;
-    if (!empty($cs_type))
-    {
+    if (!empty($cs_type)) {
         $cs_type = str_ireplace("Unknown Planetary", "unknown planetary port", $cs_type);
         echo ' is ' . $article . ' ' . $cs_type;
     }
-    if ($cs_ls_from_star != 0)
-    {
+    if ($cs_ls_from_star != 0) {
         echo ' ' . number_format($cs_ls_from_star) . ' light seconds away from the main star';
     }
 
@@ -475,8 +410,7 @@ if (isset($_GET["cs"]))
  * Random Musings
  */
 
-if (isset($_GET["rm"]))
-{
+if (isset($_GET["rm"])) {
     $res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT id, text
                                                         FROM edtb_musings
                                                         WHERE used = '0'
@@ -502,11 +436,9 @@ if (isset($_GET["rm"]))
  * current system short
  */
 
-if (isset($_GET["sys_short"]))
-{
+if (isset($_GET["sys_short"])) {
     $sys_short = "unknown";
-    if (!empty($curSys["name"]))
-    {
+    if (!empty($curSys["name"])) {
         $sys_short = $curSys["name"];
     }
 
@@ -519,22 +451,17 @@ if (isset($_GET["sys_short"]))
  * distance to X
  */
 
-if (isset($_GET["dist"]))
-{
+if (isset($_GET["dist"])) {
     $to = $_GET["dist"];
 
     $distance = "";
 
     $to = str_replace("system", "", $to);
 
-    if (!valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"]))
-    {
+    if (!valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"])) {
         $distance = "How can I calculate distances if I don't even know where we are?";
-    }
-    else
-    {
-        if (system_exists($to))
-        {
+    } else {
+        if (system_exists($to)) {
             $res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT
                                                                 sqrt(pow((IFNULL(edtb_systems.x, user_systems_own.x)-(" . $curSys["x"] . ")),2)+pow((IFNULL(edtb_systems.y, user_systems_own.y)-(" . $curSys["y"] . ")),2)+pow((IFNULL(edtb_systems.z, user_systems_own.z)-(" . $curSys["z"] . ")),2))
                                                                 AS distance
@@ -547,9 +474,7 @@ if (isset($_GET["dist"]))
             $arr = mysqli_fetch_assoc($res);
 
             $distance = $arr["distance"] == "" ? "Not available" : number_format($arr["distance"], 1);
-        }
-        else
-        {
+        } else {
             $distance = "I'm sorry, I didn't get that.";
         }
     }
@@ -563,18 +488,14 @@ if (isset($_GET["dist"]))
  * curSys access, added the cSys variable because VA has oddly short limit on the url
  */
 
-if (isset($_GET["curSys"]) || isset($_GET["cSys"]))
-{
+if (isset($_GET["curSys"]) || isset($_GET["cSys"])) {
     $search = isset($_GET["curSys"]) ? $_GET["curSys"] : $_GET["cSys"];
 
     $info = "";
 
-    if (array_key_exists($search, $curSys))
-    {
+    if (array_key_exists($search, $curSys)) {
         $info = $curSys[$search] == "" ? "None" : $curSys[$search];
-    }
-    else
-    {
+    } else {
         $info = "" . $search . " is not recognised";
     }
 

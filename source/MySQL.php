@@ -45,12 +45,10 @@ require_once($settings["install_path"] . "/data/server_config.inc.php");
 function db_connect($server, $user, $pwd, $db)
 {
     $link = ($GLOBALS["___mysqli_ston"] = mysqli_connect($server, $user, $pwd));
-    if (!$link)
-    {
+    if (!$link) {
         exit('Could not connect: ' . ((is_object($GLOBALS["___mysqli_ston"])) ? mysqli_error($GLOBALS["___mysqli_ston"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)));
     }
-    if (!((bool)mysqli_query($GLOBALS["___mysqli_ston"], "USE " . $db)))
-    {
+    if (!((bool)mysqli_query($GLOBALS["___mysqli_ston"], "USE " . $db))) {
         exit('Could not select database: ' . ((is_object($GLOBALS["___mysqli_ston"])) ? mysqli_error($GLOBALS["___mysqli_ston"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)));
     }
 }

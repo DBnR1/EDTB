@@ -31,13 +31,11 @@
  */
 
 // If system id or name is set, show info about that system
-if ($_GET["system_id"] != "undefined" || $_GET["system_name"] != "undefined")
-{
+if ($_GET["system_id"] != "undefined" || $_GET["system_name"] != "undefined") {
     /** @var $system_id */
     $system_id = $_GET["system_id"] != "undefined" ? 0 + $_GET["system_id"] : "-1";
 
-    if ($system_id == "-1")
-    {
+    if ($system_id == "-1") {
         $res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT id
                                                             FROM edtb_systems
                                                             WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], urldecode($_GET["system_name"])) . "'
@@ -74,8 +72,7 @@ if ($_GET["system_id"] != "undefined" || $_GET["system_name"] != "undefined")
     $si_system_display_name = $si_system_name;
     $curSys["simbad_ref"] = $si_system_arr["simbad_ref"];
 
-    if (!empty($curSys["simbad_ref"]))
-    {
+    if (!empty($curSys["simbad_ref"])) {
         $si_system_display_name = '<a href="http://simbad.u-strasbg.fr/simbad/sim-id?Ident=' . urlencode($si_system_name) . '" target="_blank" title="View on Simbad">' . $si_system_name . '</a><img src="/style/img/external_link.png" class="ext_link" alt="ext" style="margin-left:5px" />';
     }
 
@@ -91,13 +88,10 @@ if ($_GET["system_id"] != "undefined" || $_GET["system_name"] != "undefined")
     $si_system_power_state = $si_system_arr["power_state"] == "" ? "None" : $si_system_arr["power_state"];
 
     // get distance to current system
-    if (valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"]))
-    {
+    if (valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"])) {
         $adds = "";
         $dist1 = sqrt(pow(($curSys["x"]-($si_system_arr["si_system_coordx"])), 2)+pow(($curSys["y"]-($si_system_arr["si_system_coordy"])), 2)+pow(($curSys["z"]-($si_system_arr["si_system_coordz"])), 2));
-    }
-    else
-    {
+    } else {
         // get last known coordinates
         $last_coords = last_known_system();
 
@@ -117,13 +111,11 @@ if ($_GET["system_id"] != "undefined" || $_GET["system_name"] != "undefined")
 /**
  * if system_id not set, show info about current system
  */
-else
-{
+else {
     $si_system_name = $curSys["name"];
     $si_system_display_name = $si_system_name;
 
-    if ($curSys["simbad_ref"] != "")
-    {
+    if ($curSys["simbad_ref"] != "") {
         $si_system_display_name = '<a href="http://simbad.u-strasbg.fr/simbad/sim-id?Ident=' . urlencode($si_system_name) . '" target="_blank" title="View on Simbad">' . $si_system_name . '</a><img src="/style/img/external_link.png" class="ext_link" alt="ext" style="margin-left:5px" />';
     }
 
@@ -144,20 +136,16 @@ else
  */
 
 // get distance to system
-if (valid_coordinates($curSys["x"], $curSys["z"], $curSys["y"]))
-{
+if (valid_coordinates($curSys["x"], $curSys["z"], $curSys["y"])) {
     $add3 = "";
     $ud_coordx = $curSys["x"];
     $ud_coordy = $curSys["y"];
     $ud_coordz = $curSys["z"];
 
     // get rares closeby, if set to -1 = disabled
-    if (isset($settings["rare_range"]) && $settings["rare_range"] == "-1")
-    {
+    if (isset($settings["rare_range"]) && $settings["rare_range"] == "-1") {
         $rares_closeby = 0;
-    }
-    else
-    {
+    } else {
         $rare_res = mysqli_query($GLOBALS["___mysqli_ston"], "  SELECT SQL_CACHE
                                                                 sqrt(pow((edtb_systems.x-(" . $curSys["x"] . ")),2)+pow((edtb_systems.y-(" . $curSys["y"] . ")),2)+pow((edtb_systems.z-(" . $curSys["z"] . ")),2)) AS distance,
                                                                 edtb_rares.item, edtb_rares.system_name, edtb_rares.station, edtb_rares.price,
@@ -180,9 +168,7 @@ if (valid_coordinates($curSys["x"], $curSys["z"], $curSys["y"]))
 
         $rares_closeby = mysqli_num_rows($rare_res);
     }
-}
-else
-{
+} else {
     // get last known coordinates
     $last_coords = last_known_system();
 
@@ -204,12 +190,10 @@ else
  */
 
 $user_dists = "<span class=\"right\" style=\"font-size:11px;\">" . $si_dist_add;
-if (isset($settings["dist_systems"]))
-{
+if (isset($settings["dist_systems"])) {
     $num_dists = count($settings["dist_systems"]);
     $i = 1;
-    foreach ($settings["dist_systems"] as $dist_sys => $dist_sys_display_name)
-    {
+    foreach ($settings["dist_systems"] as $dist_sys => $dist_sys_display_name) {
         $user_dist_q = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT id, x, y, z
                                                                     FROM edtb_systems
                                                                     WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $dist_sys) . "'
@@ -225,8 +209,7 @@ if (isset($settings["dist_systems"]))
         $user_dist = sqrt(pow(($ud_coordx-($dist_sys_coordx)), 2)+pow(($ud_coordy-($dist_sys_coordy)), 2)+pow(($ud_coordz-($dist_sys_coordz)), 2));
         $user_dists .= "<a href='System.php?system_id=" . $dist_sys_id . "'>" . $dist_sys_display_name . "</a>: " . number_format($user_dist, 1) . " ly" . $add3;
 
-        if ($i != $num_dists)
-        {
+        if ($i != $num_dists) {
             $user_dists .= " - ";
         }
 
@@ -237,13 +220,10 @@ $user_dists .= "</span>";
 
 $c_rares_data = '<div class="raresinfo" id="rares">';
 
-if ($rares_closeby > 0)
-{
+if ($rares_closeby > 0) {
     $actual_num_res = 0;
-    while ($rare_arr = mysqli_fetch_assoc($rare_res))
-    {
-        if ($rare_arr["distance"] <= $settings["rare_range"])
-        {
+    while ($rare_arr = mysqli_fetch_assoc($rare_res)) {
+        if ($rare_arr["distance"] <= $settings["rare_range"]) {
             $c_rares_data .= "[";
             $c_rares_data .= number_format($rare_arr["distance"], 1);
             $c_rares_data .= "&nbsp;ly]&nbsp";
@@ -269,9 +249,7 @@ if ($rares_closeby > 0)
             $actual_num_res++;
         }
     }
-}
-else
-{
+} else {
     $c_rares_data .= "No rares nearby";
 }
 
@@ -282,8 +260,7 @@ $c_rares_data .= "</div>";
  */
 $si_crosslinks = crosslinks($si_system_name);
 
-if (!is_mapped($si_system_name))
-{
+if (!is_mapped($si_system_name)) {
     $si_crosslinks .= '<a href="/SystemMap/?system=' . urlencode($si_system_name) . '" style="color:inherit" title="Map this system">';
     $si_crosslinks .= '<img src="/style/img/grid_g.png" class="icon" style="margin-left:5px;margin-right:0" />';
     $si_crosslinks .= '</a>';
@@ -293,8 +270,7 @@ $num_visits = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "SELECT i
                                                                         FROM user_visited_systems
                                                                         WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $si_system_name) . "'"));
 
-if ($actual_num_res > 0 && valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"]))
-{
+if ($actual_num_res > 0 && valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"])) {
     $rare_text = '&nbsp;&nbsp;<span onclick="$(\'#rares\').fadeToggle(\'fast\')">';
     $rare_text .= '<a href="javascript:void(0)" title="Click for more info">[ Rares within ' . $settings["rare_range"] . ' ly: ' . $actual_num_res . ' ]</a>';
     $rare_text .= $c_rares_data . '</span>';
@@ -316,14 +292,10 @@ $si_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT SQL_CACHE *
                                                     or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 $station_exists = mysqli_num_rows($si_res);
 
-if ($station_exists == 0)
-{
+if ($station_exists == 0) {
     $data["si_stations"] = "No station data available";
-}
-else
-{
-    while ($sarr2 = mysqli_fetch_assoc($si_res))
-    {
+} else {
+    while ($sarr2 = mysqli_fetch_assoc($si_res)) {
         $s_name = $sarr2["name"];
         $s_explode = explode(" ", $s_name);
 
@@ -331,15 +303,12 @@ else
 
         $first = "";
         $last = "";
-        if ($count > 1)
-        {
+        if ($count > 1) {
             $lastn = $count - 1;
             $last = $s_explode[$lastn];
 
             $first = str_replace($last, "", $s_name);
-        }
-        else
-        {
+        } else {
             $first = $s_name;
             $last = "";
         }
@@ -381,8 +350,7 @@ else
         /**
          * modules information
          */
-        if (!empty($sarr2["selling_modules"]))
-        {
+        if (!empty($sarr2["selling_modules"])) {
             $modules = $sarr2["selling_modules"];
 
             $modules_s = explode("-", $modules);
@@ -394,8 +362,7 @@ else
 
             $mod_cat = array();
             $i = 0;
-            foreach ($modules_s as $mods)
-            {
+            foreach ($modules_s as $mods) {
                 $mods_res = mysqli_query($GLOBALS["___mysqli_ston"], "  SELECT SQL_CACHE class, rating, price, group_name, category_name
                                                                         FROM edtb_modules
                                                                         WHERE id = '" . $mods . "'
@@ -403,8 +370,7 @@ else
 
                 $mods_num = mysqli_num_rows($mods_res);
 
-                if ($mods_num > 0)
-                {
+                if ($mods_num > 0) {
                     $mods_arr = mysqli_fetch_assoc($mods_res);
 
                     $mods_name = $mods_arr["group_name"];
@@ -430,8 +396,7 @@ else
             $modules_t .= ' </tr>';
 
             $modules_t .= '<tr style="vertical-align:top">';
-            foreach ($mod_cat as $key => $value)
-            {
+            foreach ($mod_cat as $key => $value) {
                 $m_category_name = $key;
                 $modules_t .= '<td>';
                 $modules_t .= ' <table style="margin-right:10px">';
@@ -443,15 +408,13 @@ else
 
                 asort($value);
 
-                foreach ($value as $module)
-                {
+                foreach ($value as $module) {
                     $m_name = $module["group_name"];
                     $m_class = $module["class"];
                     $m_rating = $module["rating"];
                     $m_price = $module["price"];
 
-                    if ($m_name != $last_module_name)
-                    {
+                    if ($m_name != $last_module_name) {
                         $modules_t .= '<tr>';
                         $modules_t .= ' <td class="dark" colspan="3">';
                         $modules_t .= '     <strong>' . $m_name . '</strong>';
@@ -461,12 +424,9 @@ else
                     }
 
                     $modules_t .= '<tr>';
-                    if ($m_class != $last_class)
-                    {
+                    if ($m_class != $last_class) {
                         $modules_t .= '<td class="light">Class ' . $m_class . '</td>';
-                    }
-                    else
-                    {
+                    } else {
                         $modules_t .= '<td class="transparent"></td>';
                     }
 
@@ -510,16 +470,12 @@ else
 
         $i = 0;
         $services = "";
-        foreach ($facilities as $name => $included)
-        {
+        foreach ($facilities as $name => $included) {
             $dname = str_replace("_", " ", $name);
-            if ($included == 1)
-            {
+            if ($included == 1) {
                 $services .= '<img src="/style/img/facilities/' . $name . '.png" class="icon24" alt="' . $name . '" style="margin-right:10px" onmouseover="$(\'#' . $name . '_' . $station_id . '\').fadeToggle(\'fast\')" onmouseout="$(\'#' . $name . '_' . $station_id . '\').toggle()" />';
                 $services .= '<div class="facilityinfo" style="display:none" id="' . $name . '_' . $station_id . '">Station has ' . $dname . '</div>';
-            }
-            else
-            {
+            } else {
                 $services .= '<img src="/style/img/facilities/' . $name . '_not.png" class="icon24" alt="' . $name . ' not included" style="margin-right:10px" onmouseover="$(\'#' . $name . '_not_' . $station_id . '\').fadeToggle(\'fast\')" onmouseout="$(\'#' . $name . '_not_' . $station_id . '\').toggle()" />';
                 $services .= '<div class="facilityinfo" style="display:none" id="' . $name . '_not_' . $station_id . '">Station doesn\'t have ' . $dname . '</div>';
             }
@@ -558,8 +514,7 @@ else
 
         $data["si_stations"] .= '<div id="info_'. $station_id .'" class="systeminfo_station_info">';
         $data["si_stations"] .= $info;
-        if ($info != "")
-        {
+        if ($info != "") {
             $data["si_stations"] .= "<br />";
         }
 
@@ -623,14 +578,10 @@ else
  * detailed system info
  */
 
-if ($exists == 0 && $_GET["system_id"] == "undefined" && $_GET["system_name"] == "undefined")
-{
+if ($exists == 0 && $_GET["system_id"] == "undefined" && $_GET["system_name"] == "undefined") {
     $data["si_detailed"] = "No data available for this system";
-}
-else
-{
-    if ($si_system_power != "None" && $si_system_power_state != "None")
-    {
+} else {
+    if ($si_system_power != "None" && $si_system_power_state != "None") {
         $hq_res = mysqli_query($GLOBALS["___mysqli_ston"], "    SELECT system_name
                                                                 FROM edtb_powers
                                                                 WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $si_system_power) . "'
@@ -640,13 +591,9 @@ else
         $hq = $hq_arr["system_name"];
 
         $si_system_data = '<a href="#" title="Headquarters: ' . $hq . '">' . $si_system_power . '</a> [' . $si_system_power_state . ']';
-    }
-    elseif (empty($si_system_power) && empty($si_system_power_state))
-    {
+    } elseif (empty($si_system_power) && empty($si_system_power_state)) {
         $si_system_data = $si_system_power_state;
-    }
-    else
-    {
+    } else {
         $si_system_data = "";
     }
 

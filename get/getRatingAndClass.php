@@ -35,8 +35,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 /** @require MySQL */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 
-if (isset($_GET["group_id"]) && !empty($_GET["group_id"]))
-{
+if (isset($_GET["group_id"]) && !empty($_GET["group_id"])) {
     $group_id = $_GET["group_id"];
 
     /**
@@ -51,10 +50,8 @@ if (isset($_GET["group_id"]) && !empty($_GET["group_id"]))
 
     $found = mysqli_num_rows($res);
 
-    if ($found > 0)
-    {
-        while ($arr = mysqli_fetch_assoc($res))
-        {
+    if ($found > 0) {
+        while ($arr = mysqli_fetch_assoc($res)) {
             $data["classv"] .= '<option value="' . $arr["class"] . '">Class ' . $arr["class"] . '</option>';
         }
     }
@@ -65,8 +62,7 @@ if (isset($_GET["group_id"]) && !empty($_GET["group_id"]))
     $class_name = $_GET["class_name"] == "" ? "" : $_GET["class_name"];
 
     $also_class = "";
-    if ($class_name != "")
-    {
+    if ($class_name != "") {
         $also_class = " AND class='" . $class_name . "'";
     }
 
@@ -79,10 +75,8 @@ if (isset($_GET["group_id"]) && !empty($_GET["group_id"]))
 
     $found_rating = mysqli_num_rows($rating_res);
 
-    if ($found_rating > 0)
-    {
-        while ($rating_arr = mysqli_fetch_assoc($rating_res))
-        {
+    if ($found_rating > 0) {
+        while ($rating_arr = mysqli_fetch_assoc($rating_res)) {
             $data["rating"] .= '<option value="' . $rating_arr["rating"] . '">Rating ' . $rating_arr["rating"] . '</option>';
         }
     }

@@ -51,20 +51,16 @@ $settings_res = mysqli_query($GLOBALS["___mysqli_ston"], "  SELECT SQL_CACHE use
                                                             LEFT JOIN edtb_settings_info ON edtb_settings_info.variable = user_settings.variable")
                                                             or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
-while ($settings_arr = mysqli_fetch_assoc($settings_res))
-{
+while ($settings_arr = mysqli_fetch_assoc($settings_res)) {
     $variable = $settings_arr["variable"];
     $value = $settings_arr["value"];
 
-    if ($settings_arr["type"] == "array")
-    {
+    if ($settings_arr["type"] == "array") {
         // split by new line
         $values = preg_split("/\r\n|\r|\n|" . PHP_EOL . "/", $value);
 
-        foreach ($values as $arvalue)
-        {
-            if (!empty($arvalue))
-            {
+        foreach ($values as $arvalue) {
+            if (!empty($arvalue)) {
                 $count = 0;
                 $parts = explode(">>", $arvalue);
 
@@ -74,35 +70,26 @@ while ($settings_arr = mysqli_fetch_assoc($settings_res))
                 $values_s = explode(",", $val);
                 $count = count($values_s);
 
-                if ($count > 1)
-                {
+                if ($count > 1) {
                     $i = 0;
-                    foreach ($values_s as $val_f)
-                    {
+                    foreach ($values_s as $val_f) {
                         $settings[$variable][$var][$i] = $val_f;
                         $i++;
                     }
-                }
-                else
-                {
+                } else {
                     $settings[$variable][$var] = $val;
                 }
             }
         }
-    }
-    elseif ($settings_arr["type"] == "csl")
-    {
+    } elseif ($settings_arr["type"] == "csl") {
         $values = explode(",", $value);
 
         $i = 0;
-        foreach ($values as $arvalue)
-        {
+        foreach ($values as $arvalue) {
             $settings[$variable][$i] = trim($arvalue);
             $i++;
         }
-    }
-    else
-    {
+    } else {
         $settings[$variable] = $value;
     }
 }
@@ -148,18 +135,14 @@ global $settings;
 
 $profile_file = $_SERVER["DOCUMENT_ROOT"] . "/profile.json";
 
-if (file_exists($profile_file))
-{
+if (file_exists($profile_file)) {
     $profile_file = file_get_contents($profile_file);
 
-    if ($profile_file == "no_data")
-    {
+    if ($profile_file == "no_data") {
         $api["commander"] = "no_data";
         $api["ship"] = "no_data";
         $api["stored_ships"] = "no_data";
-    }
-    else
-    {
+    } else {
         $profile = json_decode($profile_file, true);
 
         $api["commander"] = $profile["commander"];

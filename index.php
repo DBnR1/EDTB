@@ -31,7 +31,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-/** @var pagetitle */
+/** @var string pagetitle */
 $pagetitle = "ED ToolBox";
 
 /** @require header file */
@@ -40,8 +40,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 /**
  * if the user is coming from importing log entries
  */
-if (isset($_GET["import_done"]))
-{
+if (isset($_GET["import_done"])) {
     ?>
     <div class="entries">
         <div class="entries_inner">
@@ -56,24 +55,22 @@ if (isset($_GET["import_done"]))
                                                                     FROM user_visited_systems
                                                                     ORDER BY visit ASC")
                                                                     or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-            $this_s = "";
-            while ($arr = mysqli_fetch_assoc($systems))
-            {
-                $sys_name = $arr["system_name"];
-                $sys_id = $arr["id"];
+    $this_s = "";
+    while ($arr = mysqli_fetch_assoc($systems)) {
+        $sys_name = $arr["system_name"];
+        $sys_id = $arr["id"];
 
-                if ($sys_name == $this_s && $sys_id != "1")
-                {
-                    mysqli_query($GLOBALS["___mysqli_ston"], "  DELETE FROM user_visited_systems
+        if ($sys_name == $this_s && $sys_id != "1") {
+            mysqli_query($GLOBALS["___mysqli_ston"], "  DELETE FROM user_visited_systems
                                                                 WHERE id = '" . $sys_id  . "'
                                                                 LIMIT 1")
                                                                 or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-                }
+        }
 
-                $this_s = $sys_name;
-            }
-            echo notice("Succesfully added " . number_format($_GET["num"]) . " visited systems to the database.<br /><br />You may now continue using ED ToolBox.", "Logs imported");
-            ?>
+        $this_s = $sys_name;
+    }
+    echo notice("Succesfully added " . number_format($_GET["num"]) . " visited systems to the database.<br /><br />You may now continue using ED ToolBox.", "Logs imported");
+    ?>
         </div>
     </div>
     <?php

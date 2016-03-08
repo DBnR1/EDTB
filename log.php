@@ -32,7 +32,9 @@
 
 /** @var logsystem */
 $logsystem = $_GET["system"];
-if (!$logsystem) exit("No system set");
+if (!$logsystem) {
+    exit("No system set");
+}
 
 $logsystem_id = !isset($_GET["system_id"]) ? "-1" : 0 + $_GET["system_id"];
 /**if (!$logsystem_id) exit("No system id set"); */
@@ -58,12 +60,9 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
                                                                 or write_log(mysqli_error($GLOBALS["___mysqli_ston"]));
         $num = mysqli_num_rows($log_res);
 
-        if ($num > 0)
-        {
+        if ($num > 0) {
             echo make_log_entries($log_res, "log");
-        }
-        else
-        {
+        } else {
             echo '<h2>No log entries for ' . $logsystem . '</h2><br />';
             echo '<a href="javascript:void(0)" id="toggle" onclick="toggle_log(\'' . addslashes($logsystem) . '\')" title="Add log entry" style="color:inherit">';
             echo 'Click here to add one</a>';

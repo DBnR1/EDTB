@@ -38,8 +38,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 $poi_id = 0 + $_GET["Poi_id"];
 $data = array();
 
-if ($poi_id == "0")
-{
+if ($poi_id == "0") {
     $data["poi_edit_id"] = "";
     $data["system_33"] = "";
     $data["coordsx_33"] = "";
@@ -48,9 +47,7 @@ if ($poi_id == "0")
     $data["poi_text"] = "";
     $data["poi_name"] = "";
     $data["category_id"] = "0";
-}
-else
-{
+} else {
     $poi_res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT id, poi_name, system_name, text, category_id, x, y, z
                                                             FROM user_poi
                                                             WHERE id = '" . $poi_id . "'
@@ -60,14 +57,11 @@ else
     $data["poi_edit_id"] = $poi_arr["id"];
     $data["system_33"] = $poi_arr["system_name"];
 
-    if (isset($poi_arr["x"]))
-    {
+    if (isset($poi_arr["x"])) {
         $data["coordsx_33"] = $poi_arr["x"];
         $data["coordsy_33"] = $poi_arr["y"];
         $data["coordsz_33"] = $poi_arr["z"];
-    }
-    else
-    {
+    } else {
         $data["coordsx_33"] = "";
         $data["coordsy_33"] = "";
         $data["coordsz_33"] = "";

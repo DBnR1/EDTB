@@ -30,7 +30,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-/** @var pagetitle */
+/** @var string pagetitle */
 $pagetitle = "Error Log";
 
 /** @require header file */
@@ -60,13 +60,10 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
             <tbody>
             <?php
             // reverse array and output data
-            if (!empty($lines))
-            {
-                foreach (array_reverse($lines) as $line_num => $line)
-                {
+            if (!empty($lines)) {
+                foreach (array_reverse($lines) as $line_num => $line) {
                     // only show first 600 lines
-                    if ($line_num <= 599)
-                    {
+                    if ($line_num <= 599) {
                         // Regular Expression filter for links
                         $reg_exUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
 
@@ -85,8 +82,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
                         $error = array_slice($data, 2);
                         $error = implode("", $error);
 
-                        if (preg_match($reg_exUrl, $error, $url))
-                        {
+                        if (preg_match($reg_exUrl, $error, $url)) {
                             $error = preg_replace($reg_exUrl, "<a href='" . $url[0] . "' target='_blank'>" . $url[0] . "</a>", $error);
                         }
 
@@ -112,11 +108,10 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
                             </td>
                         </tr>
                         <?php
+
                     }
                 }
-            }
-            else
-            {
+            } else {
                 ?>
                 <tr>
                     <td class="dark" colspan="5">
@@ -124,6 +119,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
                     </td>
                 </tr>
                 <?php
+
             }
             ?>
             </tbody>

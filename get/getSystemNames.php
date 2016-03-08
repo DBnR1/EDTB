@@ -37,24 +37,20 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 
 $action = isset($_GET["action"]) ? $_GET["action"] : "";
 
-if (isset($_GET["q"]) && !empty($_GET["q"]) && isset($_GET["divid"]))
-{
+if (isset($_GET["q"]) && !empty($_GET["q"]) && isset($_GET["divid"])) {
     $search = addslashes($_GET["q"]);
     $divid = $_GET["divid"];
 
     $addtl = "";
-    if (isset($_GET["allegiance"]) && $_GET["allegiance"] != "undefined")
-    {
+    if (isset($_GET["allegiance"]) && $_GET["allegiance"] != "undefined") {
         $addtl .= "&allegiance=" . $_GET['allegiance'];
     }
 
-    if (isset($_GET["system_allegiance"]) && $_GET["system_allegiance"] != "undefined")
-    {
+    if (isset($_GET["system_allegiance"]) && $_GET["system_allegiance"] != "undefined") {
         $addtl .= "&system_allegiance=" . $_GET['system_allegiance'];
     }
 
-    if (isset($_GET["power"]) && $_GET["power"] != "undefined")
-    {
+    if (isset($_GET["power"]) && $_GET["power"] != "undefined") {
         $addtl .= "&power=" . $_GET['power'];
     }
 
@@ -79,69 +75,75 @@ if (isset($_GET["q"]) && !empty($_GET["q"]) && isset($_GET["divid"]))
 
     $found = mysqli_num_rows($suggest_query);
 
-    if ($found == 0)
-    {
+    if ($found == 0) {
         echo '<a href="#">Nothing found</a>';
-    }
-    else
-    {
-        while ($suggest = mysqli_fetch_assoc($suggest_query))
-        {
+    } else {
+        while ($suggest = mysqli_fetch_assoc($suggest_query)) {
             $suggest_coords = $suggest['x'] . "," . $suggest['y'] . "," . $suggest['z'];
             // find systems
-            if ($_GET["link"] == "yes")
-            {
-                if (isset($suggest['id']))
-                {
+            if ($_GET["link"] == "yes") {
+                if (isset($suggest['id'])) {
                     ?>
                     <a href="/System.php?system_id=<?php echo $suggest['id']?>">
-                        <?php echo $suggest['name']; ?>
+                        <?php echo $suggest['name'];
+                    ?>
                     </a><br />
                     <?php
-                }
-                else
-                {
+
+                } else {
                     ?>
                     <a href="/System.php?system_name=<?php echo urlencode($suggest['name'])?>">
-                        <?php echo $suggest['name']; ?>
+                        <?php echo $suggest['name'];
+                    ?>
                     </a><br />
                     <?php
+
                 }
             }
             // nearest systems
-            elseif ($_GET["idlink"] == "yes")
-            {
+            elseif ($_GET["idlink"] == "yes") {
                 ?>
                 <a href="/NearestSystems.php?system=<?php echo $suggest['id']?><?php echo $addtl?>">
-                    <?php echo $suggest['name']; ?>
+                    <?php echo $suggest['name'];
+                ?>
                 </a><br />
                 <?php
+
             }
             // bookmarks
-            elseif ($_GET["sysid"] == "yes")
-            {
+            elseif ($_GET["sysid"] == "yes") {
                 ?>
-                <a href="javascript:void(0);" onclick='setbm("<?php echo addslashes($suggest['name']);?>", "<?php echo $suggest['id'];?>");'>
-                    <?php echo $suggest['name']; ?>
+                <a href="javascript:void(0);" onclick='setbm("<?php echo addslashes($suggest['name']);
+                ?>", "<?php echo $suggest['id'];
+                ?>");'>
+                    <?php echo $suggest['name'];
+                ?>
                 </a><br />
                 <?php
+
             }
             // data point
-            elseif ($_GET["dp"] == "yes")
-            {
+            elseif ($_GET["dp"] == "yes") {
                 ?>
-                <a href="javascript:void(0);" onclick='setdp("<?php echo addslashes($suggest['name']);?>", "<?php echo $suggest_coords; ?>", "<?php echo $suggest['id'];?>");'>
-                    <?php echo $suggest['name']; ?>
+                <a href="javascript:void(0);" onclick='setdp("<?php echo addslashes($suggest['name']);
+                ?>", "<?php echo $suggest_coords;
+                ?>", "<?php echo $suggest['id'];
+                ?>");'>
+                    <?php echo $suggest['name'];
+                ?>
                 </a><br />
                 <?php
-            }
-            else
-            {
+
+            } else {
                 ?>
-                <a href="javascript:void(0);" onclick="setResult('<?php echo addslashes($suggest['name']); ?>', '<?php echo $suggest_coords; ?>', '<?php echo $divid ?>');">
-                    <?php echo $suggest['name']; ?>
+                <a href="javascript:void(0);" onclick="setResult('<?php echo addslashes($suggest['name']);
+                ?>', '<?php echo $suggest_coords;
+                ?>', '<?php echo $divid ?>');">
+                    <?php echo $suggest['name'];
+                ?>
                 </a><br />
                 <?php
+
             }
         }
     }

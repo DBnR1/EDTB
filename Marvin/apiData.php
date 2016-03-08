@@ -40,18 +40,13 @@ $info = "";
 /**
  * commander data
  */
-if (isset($_GET["cmdr"]))
-{
+if (isset($_GET["cmdr"])) {
     $search = $_GET["cmdr"];
 
-    if (isset($api["commander"]))
-    {
-        if ($search == "balance")
-        {
+    if (isset($api["commander"])) {
+        if ($search == "balance") {
             $info = number_format($api["commander"]["credits"]);
-        }
-        elseif ($search == "rank" && isset($_GET["of"]))
-        {
+        } elseif ($search == "rank" && isset($_GET["of"])) {
             $info = get_rank($_GET["of"], $api["commander"]["rank"][$_GET["of"]], false);
         }
     }
@@ -60,14 +55,11 @@ if (isset($_GET["cmdr"]))
 /**
  * ship data
  */
-if (isset($_GET["ship"]))
-{
+if (isset($_GET["ship"])) {
     $search = $_GET["ship"];
 
-    if (isset($api["ship"]))
-    {
-        switch ($search)
-        {
+    if (isset($api["ship"])) {
+        switch ($search) {
             case "name":
                 $info = ship_name($api["ship"]["name"]);
                 break;

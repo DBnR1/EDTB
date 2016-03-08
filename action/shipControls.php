@@ -39,30 +39,21 @@ $send = isset($_GET["send"]) ? $_GET["send"] : false;
 $shell = new COM("WScript.Shell");
 $shell->AppActivate("Elite - Dangerous (CLIENT)");
 
-if ($actions !== false)
-{
-    foreach ($actions as $action)
-    {
-        if (substr($action, 0, 10) != "sleep_for_")
-        {
-            if (is_array($action))
-            {
+if ($actions !== false) {
+    foreach ($actions as $action) {
+        if (substr($action, 0, 10) != "sleep_for_") {
+            if (is_array($action)) {
                 $repeat = $action[0];
                 $keypress = $action[1];
 
-                for ($i = 0; $i < $repeat; $i++)
-                {
+                for ($i = 0; $i < $repeat; $i++) {
                     $shell->SendKeys($keypress);
                 }
-            }
-            else
-            {
+            } else {
                 $shell->SendKeys("{" . $action . "}");
                 echo $action;
             }
-        }
-        else
-        {
+        } else {
             $sleep = str_replace("sleep_for_", "", $action);
             usleep($sleep);
         }
@@ -70,8 +61,7 @@ if ($actions !== false)
     exit;
 }
 
-if ($send !== false)
-{
+if ($send !== false) {
     $shell->SendKeys($send);
     //write_log($send);
     exit;

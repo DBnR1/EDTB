@@ -55,8 +55,7 @@ function makeitem($arr, $type, &$i)
     $item_added_ago = "";
     $item_added_on = "";
 
-    if (!empty($item_added_on))
-    {
+    if (!empty($item_added_on)) {
         $item_added_ago = get_timeago($item_added_on, false);
 
         $item_added_on = new DateTime(date("Y-m-d\TH:i:s\Z", ($item_added_on + $system_time * 60 * 60)));
@@ -69,8 +68,7 @@ function makeitem($arr, $type, &$i)
     $item_coordz = $arr["item_coordz"];
 
     $distance = "n/a";
-    if (valid_coordinates($item_coordx, $item_coordy, $item_coordz))
-    {
+    if (valid_coordinates($item_coordx, $item_coordy, $item_coordz)) {
         $distance = number_format(sqrt(pow(($item_coordx-($usex)), 2)+pow(($item_coordy-($usey)), 2)+pow(($item_coordz-($usez)), 2)), 1) . " ly";
     }
 
@@ -98,32 +96,23 @@ function makeitem($arr, $type, &$i)
 
     echo $distance . ' &ndash;';
 
-    if (!empty($item_system_id))
-    {
+    if (!empty($item_system_id)) {
         echo '</a>&nbsp;<a title="System information" href="/System.php?system_id=' . $item_system_id . '" style="color:inherit">';
-    }
-    elseif ($item_system_name != "")
-    {
+    } elseif ($item_system_name != "") {
         echo '</a>&nbsp;<a title="System information" href="/System.php?system_name=' . urlencode($item_system_name) . '" style="color:inherit">';
-    }
-    else
-    {
+    } else {
         echo '</a>&nbsp;<a href="#" style="color:inherit">';
     }
 
-    if (empty($item_name))
-    {
+    if (empty($item_name)) {
         echo $item_system_name;
-    }
-    else
-    {
+    } else {
         echo $item_name;
     }
 
     echo '</a>' . $item_crosslinks . '<span class="right" style="margin-left:5px">' . $item_cat_name . '</span><br />';
 
-    if (!empty($item_added_on))
-    {
+    if (!empty($item_added_on)) {
         echo 'Added: ' . $item_added_on . ' (' . $item_added_ago . ')<br /><br />';
     }
 
@@ -150,10 +139,8 @@ function maketable($res, $type)
 
     echo '<table>';
 
-    if ($num > 0)
-    {
-        if (!valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"]))
-        {
+    if ($num > 0) {
+        if (!valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"])) {
             echo '<tr>';
             echo '<td class="dark" style="min-width:420px;max-width:500px">';
             echo '<p><strong>No coordinates for current location, last known location used.</strong></p>';
@@ -163,15 +150,11 @@ function maketable($res, $type)
 
         $i = 0;
         $to_last = array();
-        while ($arr = mysqli_fetch_assoc($res))
-        {
+        while ($arr = mysqli_fetch_assoc($res)) {
             echo makeitem($arr, $type, $i);
         }
-    }
-    else
-    {
-        if ($type == "Poi")
-        {
+    } else {
+        if ($type == "Poi") {
             ?>
             <tr>
                 <td class="dark" style="min-width:420px;max-width:500px">
@@ -179,9 +162,8 @@ function maketable($res, $type)
                 </td>
             </tr>
             <?php
-        }
-        else
-        {
+
+        } else {
             ?>
             <tr>
                 <td class="dark" style="min-width:420px;max-width:500px">
@@ -189,6 +171,7 @@ function maketable($res, $type)
                 </td>
             </tr>
             <?php
+
         }
     }
 

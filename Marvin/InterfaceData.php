@@ -35,19 +35,16 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 /** @require config */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
 
-if (isset($_GET["nowplaying"]))
-{
+if (isset($_GET["nowplaying"])) {
     // VLC contents supercedes file contents if enabled.
 
     $nowplaying = "";
 
-    if (isset($settings["nowplaying_file"]) && $settings["nowplaying_file"] != "")
-    {
+    if (isset($settings["nowplaying_file"]) && $settings["nowplaying_file"] != "") {
         $nowplaying = file_get_contents($settings["nowplaying_file"]);
     }
 
-    if (isset($settings["nowplaying_vlc_password"]) && $settings["nowplaying_vlc_password"] != "")
-    {
+    if (isset($settings["nowplaying_vlc_password"]) && $settings["nowplaying_vlc_password"] != "") {
         $username = "";
         $password = $settings["nowplaying_vlc_password"];
         $url = $settings["nowplaying_vlc_url"];
@@ -61,8 +58,7 @@ if (isset($_GET["nowplaying"]))
 
         $context = stream_context_create($opts);
 
-        if (!$result = file_get_contents($url, false, $context))
-        {
+        if (!$result = file_get_contents($url, false, $context)) {
             $error = error_get_last();
             write_log("Error: " . $error["message"], __FILE__, __LINE__);
         }
@@ -72,8 +68,7 @@ if (isset($_GET["nowplaying"]))
         $nowplaying = $json_data["information"]["category"]["meta"]["now_playing"];
     }
 
-    if (empty($nowplaying))
-    {
+    if (empty($nowplaying)) {
         $nowplaying = "Not playing";
     }
 

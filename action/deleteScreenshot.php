@@ -35,8 +35,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 
 $img = isset($_GET["img"]) ? $_GET["img"] : "";
 
-if (empty($img))
-{
+if (empty($img)) {
     write_log("Error: screenshot deletion failed, variable img not set", __FILE__, __LINE__);
     $redir_url = "/Gallery.php?removed=2";
     echo $redir_url;
@@ -53,31 +52,23 @@ $path = $_SERVER["DOCUMENT_ROOT"] . "/" . $path;
 $image = $path . "/" . $file;
 $thumb = $path . "/thumbs/" . $file;
 
-if (file_exists($image))
-{
-    if (!unlink($image))
-    {
+if (file_exists($image)) {
+    if (!unlink($image)) {
         $error = error_get_last();
         write_log("Error: " . $error["message"], __FILE__, __LINE__);
         $redir_url = "/Gallery.php?spgmGal=" . urlencode($system) . "&removed=1";
     }
-}
-else
-{
+} else {
     write_log("Error: Could not remove " . $image . " - file doesn't exist", __FILE__, __LINE__);
 }
 
-if (file_exists($thumb))
-{
-    if (!unlink($thumb))
-    {
+if (file_exists($thumb)) {
+    if (!unlink($thumb)) {
         $error = error_get_last();
         write_log("Error: " . $error["message"], __FILE__, __LINE__);
         $redir_url = "/Gallery.php?spgmGal=" . urlencode($system) . "&removed=1";
     }
-}
-else
-{
+} else {
     write_log("Error: Could not remove " . $thumb . " - file doesn't exist", __FILE__, __LINE__);
     $redir_url = "/Gallery.php?spgmGal=" . urlencode($system) . "&removed=1";
 }
@@ -86,21 +77,18 @@ else
  * delete dir if it's now empty
  */
 
-if (is_dir_empty($path . "/thumbs"))
-{
+if (is_dir_empty($path . "/thumbs")) {
     $redir_url = "/Gallery.php?removed";
 
     // remove thumbs dir first
-    if (!rmdir($path . "/thumbs"))
-    {
+    if (!rmdir($path . "/thumbs")) {
         $error = error_get_last();
         write_log("Error: " . $error["message"], __FILE__, __LINE__);
         $redir_url = "/Gallery.php?removed=1";
     }
 
     // remove dir
-    if (!rmdir($path))
-    {
+    if (!rmdir($path)) {
         $error = error_get_last();
         write_log("Error: " . $error["message"], __FILE__, __LINE__);
         $redir_url = "/Gallery.php?removed=1";

@@ -30,8 +30,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-if (isset($_GET["do"]))
-{
+if (isset($_GET["do"])) {
     /** @require functions */
     require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
     /** @require MySQL */
@@ -45,22 +44,17 @@ if (isset($_GET["do"]))
     $bm_entry = $data["bm_text"];
     $bm_id = $data["bm_edit_id"];
 
-    if ($bm_id != "")
-    {
+    if ($bm_id != "") {
         mysqli_query($GLOBALS["___mysqli_ston"], "  UPDATE user_bookmarks SET
                                                     comment = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $bm_entry) . "',
                                                     system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $bm_system_name) . "',
                                                     category_id = '" . $bm_catid . "'
                                                     WHERE id = '" . $bm_id . "' LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-    }
-    elseif (isset($_GET["deleteid"]))
-    {
+    } elseif (isset($_GET["deleteid"])) {
         mysqli_query($GLOBALS["___mysqli_ston"], "  DELETE FROM user_bookmarks
                                                     WHERE id = '" . $_GET["deleteid"] . "'
                                                     LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-    }
-    else
-    {
+    } else {
         mysqli_query($GLOBALS["___mysqli_ston"], "  INSERT INTO user_bookmarks (system_id, system_name, comment, category_id, added_on)
                                                     VALUES
                                                     ('" . $bm_system_id . "',
@@ -99,8 +93,7 @@ if (isset($_GET["do"]))
                             <?php
                             $cat_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id, name FROM user_bm_categories ORDER BY name");
 
-                            while ($cat_arr = mysqli_fetch_assoc($cat_res))
-                            {
+                            while ($cat_arr = mysqli_fetch_assoc($cat_res)) {
                                 echo '<option value="' . $cat_arr["id"] . '">' . $cat_arr["name"] . '</option>';
                             }
                             ?>

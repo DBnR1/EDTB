@@ -32,22 +32,19 @@
 
 /** @var new is the system new */
 $new = "false";
-if (isset($_GET["newsys"]))
-{
+if (isset($_GET["newsys"])) {
     $new = $_GET["newsys"] == "true" ? "true" : "false";
 }
 
 /** @var override override the default minimum time between refreshes */
 $override = "false";
-if (isset($_GET["override"]))
-{
+if (isset($_GET["override"])) {
     $override = $_GET["override"] == "true" ? "true" : "false";
 }
 
 /** @var force_update */
 $force_update = "false";
-if (isset($_GET["force_update"]))
-{
+if (isset($_GET["force_update"])) {
     $force_update = $_GET["force_update"] == "true" ? "true" : "false";
 }
 
@@ -64,13 +61,11 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 
 $data["cmdr_status"] = "false";
 $data["cmdr_balance_status"] = "false";
-if (isset($api["commander"]) && $settings["show_cmdr_status"] == "true")
-{
+if (isset($api["commander"]) && $settings["show_cmdr_status"] == "true") {
     $data["cmdr_status"] = "";
     $data["cmdr_balance_status"] = "";
 
-    if ($api["commander"] != "no_data")
-    {
+    if ($api["commander"] != "no_data") {
         $cmdr_credits = number_format($api["commander"]["credits"]);
 
         /**
@@ -95,8 +90,7 @@ if (isset($api["commander"]) && $settings["show_cmdr_status"] == "true")
         $cmdr_rank_cqc = "";
         $cmdr_rank_cqc_icon = "";
 
-        if ($settings["show_cqc_rank"] == "true")
-        {
+        if ($settings["show_cqc_rank"] == "true") {
             $cmdr_rank_cqc = $api["commander"]["rank"]["cqc"];
             $cmdr_rank_cqc_icon = '<a href="#" title="CQC rank: ' . get_rank("cqc", $cmdr_rank_cqc, false) . '">';
             $cmdr_rank_cqc_icon .= '<img src="' . get_rank("cqc", $cmdr_rank_cqc + 1) . '" class="status_img" alt="cqc" style="margin-right:6px" />';
@@ -129,14 +123,10 @@ if (isset($api["commander"]) && $settings["show_cmdr_status"] == "true")
  */
 
 $data["ship_status"] = "false";
-if (isset($api["ship"]) && $settings["show_ship_status"] == "true")
-{
-    if ($api["ship"] == "no_data")
-    {
+if (isset($api["ship"]) && $settings["show_ship_status"] == "true") {
+    if ($api["ship"] == "no_data") {
         $data["ship_status"] = '<a href="/admin/api_login.php">No data, reconnect API</a>';
-    }
-    else
-    {
+    } else {
         /**
          * basic ship info
          */
@@ -154,13 +144,10 @@ if (isset($api["ship"]) && $settings["show_ship_status"] == "true")
         $ship_hull_value = number_format($api["ship"]["value"]["hull"]);
         $ship_modules_value = number_format($api["ship"]["value"]["modules"]);
 
-        if (isset($api["stored_ships"]))
-        {
+        if (isset($api["stored_ships"])) {
             $stored_ships = "<br /><br /><strong>Stored ships</strong><br />";
-            foreach ($api["stored_ships"] as $shipId => $stored_ship)
-            {
-                if ($shipId != $api["commander"]["currentShipId"])
-                {
+            foreach ($api["stored_ships"] as $shipId => $stored_ship) {
+                if ($shipId != $api["commander"]["currentShipId"]) {
                     $ship_name = ship_name($stored_ship["name"]);
                     $docked_at_station = $stored_ship["station"]["name"];
                     $docked_at_system = $stored_ship["starsystem"]["name"];
@@ -168,7 +155,7 @@ if (isset($api["ship"]) && $settings["show_ship_status"] == "true")
                     $distance = get_distance($docked_at_system);
 
                     $stored_ships .= $ship_name . ' (' . $distance . ')<br />';
-                    $stored_ships .= $docked_at_station . ' at <a href="/System.php?system_name=' . urlencode($docked_at_system ) . '">';
+                    $stored_ships .= $docked_at_station . ' at <a href="/System.php?system_name=' . urlencode($docked_at_system) . '">';
                     $stored_ships .= $docked_at_system . '</a><br /><br />';
                 }
             }
@@ -182,7 +169,8 @@ if (isset($api["ship"]) && $settings["show_ship_status"] == "true")
 
         $data["ship_status"] = '<img src="/style/img/ship.png" class="icon" alt="Ship hull" />' . $ship_health . ' %';
         $data["ship_status"] .= '<img src="/style/img/fuel.png" class="icon24" style="margin-left:6px;margin-bottom:4px" alt="Ship fuel" />' . $ship_fuel . ' %';
-        $data["ship_status"] .= '<img src="/style/img/cargo.png" class="icon24" style="margin-left:6px" alt="Ship cargo" />' . $ship_cargo_used . '/' . $ship_cargo_cap;$data["ship_status"] .= $additional;
+        $data["ship_status"] .= '<img src="/style/img/cargo.png" class="icon24" style="margin-left:6px" alt="Ship cargo" />' . $ship_cargo_used . '/' . $ship_cargo_cap;
+        $data["ship_status"] .= $additional;
     }
 }
 
@@ -201,38 +189,29 @@ $ship_status_file = $_SERVER["DOCUMENT_ROOT"] . "/cache/ship_status.html";
 $data["ship_status_update"] = "false";
 $ship_status_cache = file_get_contents($ship_status_file);
 
-if ($force_update == "true")
-{
+if ($force_update == "true") {
     $data["cmdr_ranks_update"] = "true";
     $data["cmdr_balance_update"] = "true";
     $data["ship_status_update"] = "true";
-}
-else
-{
-    if ($cmdr_rank_cache != $data["cmdr_status"])
-    {
-        if (!file_put_contents($cmdr_ranks_file, $data["cmdr_status"]))
-        {
+} else {
+    if ($cmdr_rank_cache != $data["cmdr_status"]) {
+        if (!file_put_contents($cmdr_ranks_file, $data["cmdr_status"])) {
             $error = error_get_last();
             write_log("Error: " . $error["message"], __FILE__, __LINE__);
         }
         $data["cmdr_ranks_update"] = "true";
     }
 
-    if ($cmdr_balance_cache != $data["cmdr_balance_status"])
-    {
-        if (!file_put_contents($cmdr_balance_file, $data["cmdr_balance_status"]))
-        {
+    if ($cmdr_balance_cache != $data["cmdr_balance_status"]) {
+        if (!file_put_contents($cmdr_balance_file, $data["cmdr_balance_status"])) {
             $error = error_get_last();
             write_log("Error: " . $error["message"], __FILE__, __LINE__);
         }
         $data["cmdr_balance_update"] = "true";
     }
 
-    if ($ship_status_cache != $data["ship_status"])
-    {
-        if (!file_put_contents($ship_status_file, $data["ship_status"]))
-        {
+    if ($ship_status_cache != $data["ship_status"]) {
+        if (!file_put_contents($ship_status_file, $data["ship_status"])) {
             $error = error_get_last();
             write_log("Error: " . $error["message"], __FILE__, __LINE__);
         }

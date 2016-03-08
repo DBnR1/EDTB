@@ -39,13 +39,10 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 /** @require curSys */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/curSys.php");
 
-if (isset($_GET["string"]) && isset($_GET["system"]))
-{
+if (isset($_GET["string"]) && isset($_GET["system"])) {
     $string = $_GET["string"];
     $system = $_GET["system"];
-}
-else
-{
+} else {
     write_log("Error: String or system not set", __FILE__, __LINE__);
     exit;
 }
@@ -54,14 +51,11 @@ else
  * insert / update
  */
 
-if ($string == "delete")
-{
+if ($string == "delete") {
     mysqli_query($GLOBALS["___mysqli_ston"], "  DELETE FROM user_system_map
                                                 WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system) . "'
                                                 LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-}
-else
-{
+} else {
     mysqli_query($GLOBALS["___mysqli_ston"], "  INSERT INTO user_system_map (system_name, string)
                                                 VALUES
                                                 ('" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system) . "',

@@ -30,8 +30,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-if (isset($_GET["do"]))
-{
+if (isset($_GET["do"])) {
     /** @require config */
     require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
     /** @require functions */
@@ -68,14 +67,12 @@ if (isset($_GET["do"]))
     $arr2 = mysqli_fetch_assoc($res2);
     $l_station = $arr2["station_id"];
 
-    if ($l_system_name == "")
-    {
+    if ($l_system_name == "") {
         $l_system = "0";
         $l_system_name = "";
     }
 
-    if ($l_id != "")
-    {
+    if ($l_id != "") {
         mysqli_query($GLOBALS["___mysqli_ston"], "  UPDATE user_log SET
                                                     system_id = '" . $l_system . "',
                                                     system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $l_system_name) . "',
@@ -88,9 +85,7 @@ if (isset($_GET["do"]))
                                                     audio = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $l_audiofiles) . "'
                                                     WHERE id = '" . $l_id . "'
                                                     LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]));
-    }
-    elseif (isset($_GET["deleteid"]))
-    {
+    } elseif (isset($_GET["deleteid"])) {
         $res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT audio
                                                             FROM user_log
                                                             WHERE id = '" . $_GET["deleteid"] . "'
@@ -100,14 +95,11 @@ if (isset($_GET["do"]))
         $audio = $arr["audio"];
         $audio_files = explode(", ", $audio);
 
-        foreach ($audio_files as $audio_file)
-        {
+        foreach ($audio_files as $audio_file) {
             $file = $_SERVER["DOCUMENT_ROOT"] . "/audio_logs/" . $audio_file;
 
-            if (file_exists($file) && is_file($file))
-            {
-                if (!unlink($file))
-                {
+            if (file_exists($file) && is_file($file)) {
+                if (!unlink($file)) {
                     $error = error_get_last();
                     write_log("Error: " . $error["message"], __FILE__, __LINE__);
                 }
@@ -117,9 +109,7 @@ if (isset($_GET["do"]))
         mysqli_query($GLOBALS["___mysqli_ston"], "  DELETE FROM user_log
                                                     WHERE id = '" . $_GET["deleteid"] . "'
                                                     LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]));
-    }
-    else
-    {
+    } else {
         mysqli_query($GLOBALS["___mysqli_ston"], "  INSERT INTO user_log (system_id, system_name, station_id, log_entry, title, weight, pinned, type, audio)
                                                     VALUES
                                                     ('" . $l_system . "',
@@ -172,8 +162,7 @@ if (isset($_GET["do"]))
                                 </span>&nbsp;&nbsp;
                                 <select class="selectbox" id="weight" name="weight" style="display:none">
                                     <?php
-                                    for ($i = -30; $i < 31; $i++)
-                                    {
+                                    for ($i = -30; $i < 31; $i++) {
                                         $selected = $i == 0 ? ' selected="selected"' : "";
                                         echo '<option value="' . $i . '"' . $selected . '>Weight ' . $i . '</option>';
                                     }

@@ -30,19 +30,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-/** @var pagetitle */
+/** @var string pagetitle */
 $pagetitle = "SQL";
 $notify = "";
 
 /** @require header file */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 
-if (isset($_POST["code"]))
-{
+if (isset($_POST["code"])) {
     $code = $_POST["code"];
 
-    $blacklist = array
-                (
+    $blacklist = array(
                     "DROP",
                     "DELETE",
                     "ROUTINE",
@@ -63,36 +61,26 @@ if (isset($_POST["code"]))
     $pattern = "/`(.*?)`/";
     $haystack = preg_replace($pattern, "", $haystack);
 
-    foreach ($blacklist as $find)
-    {
-        if (strripos($haystack, $find))
-        {
+    foreach ($blacklist as $find) {
+        if (strripos($haystack, $find)) {
             $continue = false;
             $notify = '<div class="notify_deleted">Query contains a forbidden command.</div>';
             break;
         }
     }
 
-    if ($continue !== false)
-    {
+    if ($continue !== false) {
         $queries = explode(">>BREAK<<", $code);
 
-        foreach ($queries as $query)
-        {
-            if (!mysqli_query($GLOBALS["___mysqli_ston"], "" . $query . ""))
-            {
+        foreach ($queries as $query) {
+            if (!mysqli_query($GLOBALS["___mysqli_ston"], "" . $query . "")) {
                 $error = mysqli_error($GLOBALS["___mysqli_ston"]);
                 $notify = '<div class="notify_deleted">Execution failed:<br />' . $error . '</div>';
-            }
-            else
-            {
-                if ($rows = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "" . $query . "")))
-                {
+            } else {
+                if ($rows = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "" . $query . ""))) {
                     $error = mysqli_info($GLOBALS["___mysqli_ston"]);
                     $notify = '<div class="notify_success">Query succesfully executed.<br />' . $error . '<br />Rows: ' . number_format($rows) . '</div>';
-                }
-                else
-                {
+                } else {
                     $error = mysqli_info($GLOBALS["___mysqli_ston"]);
                     $notify = '<div class="notify_success">Query succesfully executed.<br />' . $error . '</div>';
                 }
@@ -126,12 +114,9 @@ if (isset($_POST["code"]))
         <form method="post" action="sql.php">
             <textarea id="codes" name="code">
 <?php
-if (isset($_POST["code"]))
-{
+if (isset($_POST["code"])) {
     echo $code;
-}
-else
-{
+} else {
     echo '/*
 *        SQL statement goes here...
 */

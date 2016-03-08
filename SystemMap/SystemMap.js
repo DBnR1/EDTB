@@ -34,7 +34,6 @@
  *
  * http://stackoverflow.com/questions/14044178/js-or-jquery-create-unique-span-id
  *
- * @param
  * @author elclanrs
  */
 function uniqId()
@@ -47,7 +46,7 @@ function uniqId()
  *
  * http://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
  *
- * @param array array
+ * @param {array} array
  * @author ChristopheD
  */
 function shuffle(array)
@@ -111,9 +110,10 @@ function update_url()
     var newurl = "";
     var system = $("#smsys").html();
 
-    if ($(".panzoom .draggable").length)
+    var panzoom_draggable = $(".panzoom .draggable");
+    if (panzoom_draggable.length)
     {
-        $(".panzoom .draggable").each(function(i, obj)
+        panzoom_draggable.each(function(i, obj)
         {
             var bodyid = $(this).data("bodyid");
             var imgid = $(this).data("imgid");
@@ -265,11 +265,13 @@ function add_body(options)
             top_offset = diff;
         }
 
-        if ($(".panzoom .draggable").length)
+        var panzoom_draggable = $(".panzoom .draggable");
+        if (panzoom_draggable.length)
         {
-            last_position = $(".panzoom .draggable:last").position();
-            var last_width = $(".panzoom .draggable:last").width();
-            var last_height = $(".panzoom .draggable:last").height();
+            var panzoom_draggable_last = $(".panzoom .draggable:last");
+            last_position = panzoom_draggable_last.position();
+            var last_width = panzoom_draggable_last.width();
+            var last_height = panzoom_draggable_last.height();
 
             if (options.type == "planet" && last_type == "star")
             {
@@ -388,8 +390,9 @@ function add_body(options)
     /**
      * set position for new element
      */
-    $(".panzoom .draggable:last").css("left", posleft);
-    $(".panzoom .draggable:last").css("top", postop);
+    var panzoom_draggable_last = $(".panzoom .draggable:last");
+    panzoom_draggable_last.css("left", posleft);
+    panzoom_draggable_last.css("top", postop);
 
     /**
      * if body type is star or planet...
@@ -399,10 +402,10 @@ function add_body(options)
         /**
          * set width, height and id
          */
-        $(".panzoom .draggable:last").css("width", options.width + "px");
-        $(".panzoom .draggable:last").css("height", "auto");
+        panzoom_draggable_last.css("width", options.width + "px");
+        panzoom_draggable_last.css("height", "auto");
         $(".panzoom .draggable:last .draggable_img_" + options.type).prop("id", uniqid);
-        $(".panzoom .draggable:last").prop("id", "id_" + uniqid);
+        panzoom_draggable_last.prop("id", "id_" + uniqid);
 
         /**
          * highlight images with color from image
@@ -613,10 +616,10 @@ function add_body(options)
         /**
          * set width, height and id
          */
-        $(".panzoom .draggable:last").css("width", options.width + "px");
-        $(".panzoom .draggable:last").css("height", "auto");
+        panzoom_draggable_last.css("width", options.width + "px");
+        panzoom_draggable_last.css("height", "auto");
         $(".panzoom .draggable:last .draggable_img_other").prop("id", uniqid);
-        $(".panzoom .draggable:last").prop("id", "id_" + uniqid);
+        panzoom_draggable_last.prop("id", "id_" + uniqid);
 
         /**
          * append info panel
@@ -628,16 +631,18 @@ function add_body(options)
         $(".panzoom").append(append);
     }
 
+    var info_uniq = $("#info_" + uniqid);
     /**
      * remove body
      */
     $("#remove_" + uniqid).click(function()
     {
-        $("#id_" + uniqid).data("min-value-calc", 0);
-        $("#id_" + uniqid).data("max-value-calc", 0);
+        var iduniq = $("#id_" + uniqid);
+        iduniq.data("min-value-calc", 0);
+        iduniq.data("max-value-calc", 0);
 
-        $("#id_" + uniqid).remove();
-        $("#info_" + uniqid).remove();
+        iduniq.remove();
+        info_uniq.remove();
 
         update_url();
         update_price();
@@ -654,14 +659,14 @@ function add_body(options)
         }
         else
         {
-            if ($("#info_" + uniqid).is(":hidden"))
+            if (info_uniq.is(":hidden"))
             {
                 var posLeft = $(this).position().left + $(this).width() - 20;
                 var posTop = $(this).position().top + $(this).height() - 20;
-                $("#info_" + uniqid).fadeToggle("fast");
-                $("#info_" + uniqid).css("left", posLeft);
+                info_uniq.fadeToggle("fast");
+                info_uniq.css("left", posLeft);
 
-                $("#info_" + uniqid).css("top", posTop);
+                info_uniq.css("top", posTop);
             }
         }
     });
@@ -675,34 +680,38 @@ function add_body(options)
         {
             resize: function(e, ui)
             {
-                if (("#" + ui.element[0].id + " .landable").length)
+                var ui_elem = ui.element[0];
+                var landable_elem = ("#" + ui_elem.id + " .landable");
+                if (landable_elem.length)
                 {
-                    var og_width = ui.element[0].clientWidth;
+                    var og_width = ui_elem.clientWidth;
                     var new_ringwidth = Math.ceil(1.5625 * og_width);
                     var new_ringoffset = Math.ceil(0.44444444444444 * og_width);
 
-                    $("#" + ui.element[0].id + " .landable").css("top", "-" + new_ringoffset + "px");
-                    $("#" + ui.element[0].id + " .landable").css("left", "-" + new_ringoffset + "px");
-                    $("#" + ui.element[0].id + " .landable").css("width", + new_ringwidth + "px");
+                    landable_elem.css("top", "-" + new_ringoffset + "px");
+                    landable_elem.css("left", "-" + new_ringoffset + "px");
+                    landable_elem.css("width", + new_ringwidth + "px");
                 }
 
-                if (("#" + ui.element[0].id + " .ring").length)
+                var ring_elem = ("#" + ui_elem.id + " .ring");
+                if (ring_elem.length)
                 {
-                    var og_width2 = ui.element[0].clientWidth;
+                    var og_width2 = ui_elem.clientWidth;
                     var new_ring_width = Math.ceil(1.93 * og_width2);
                     var new_ring_offset = Math.ceil(0.455555 * og_width2);
 
-                    $("#" + ui.element[0].id + " .ring").css("top", "-" + new_ring_offset + "px");
-                    $("#" + ui.element[0].id + " .ring").css("left", "-" + new_ring_offset + "px");
-                    $("#" + ui.element[0].id + " .ring").css("width", + new_ring_width + "px");
+                    ring_elem.css("top", "-" + new_ring_offset + "px");
+                    ring_elem.css("left", "-" + new_ring_offset + "px");
+                    ring_elem.css("width", + new_ring_width + "px");
                 }
 
-                var imgheight = $("#" + ui.element[0].id + " img").height();
+                var resizeable_elem = $(".resizeable");
+                var imgheight = $("#" + ui_elem.id + " img").height();
 
                 if (imgheight == "190")
                 {
-                    $(".resizeable").resizable("option", "maxHeight", ui.element[0].clientHeight);
-                    $(".resizeable").resizable("option", "maxWidth", ui.element[0].clientWidth);
+                    resizeable_elem.resizable("option", "maxHeight", ui_elem.clientHeight);
+                    resizeable_elem.resizable("option", "maxWidth", ui_elem.clientWidth);
                 }
             },
             stop: function()

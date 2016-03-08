@@ -33,20 +33,17 @@
 
 //http://ed-board.net/3Dgalnet/
 
-/** @var pagetitle */
+/** @var string pagetitle */
 $pagetitle = "Galaxy Map&nbsp;&nbsp;&&nbsp;&nbsp;Neighborhood Map";
 
 /** @require header file */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 
-if (valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"]))
-{
+if (valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"])) {
     $ucoordx = $curSys["x"];
     $ucoordy = $curSys["y"];
     $ucoordz = -$curSys["z"];
-}
-else
-{
+} else {
     // get last known coordinates
     $last_coords = last_known_system();
 
@@ -57,8 +54,7 @@ else
     $is_unknown = " *";
 }
 
-if (!valid_coordinates($ucoordx, $ucoordy, $ucoordz))
-{
+if (!valid_coordinates($ucoordx, $ucoordy, $ucoordz)) {
     $ucoordx = "0";
     $ucoordy = "0";
     $ucoordz = "0";

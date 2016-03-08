@@ -30,11 +30,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
+/** @require header file */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 
 $system = $curSys["name"];
-if (isset($_GET["system"]))
-{
+if (isset($_GET["system"])) {
     $system = $_GET["system"];
 }
 
@@ -73,95 +73,92 @@ $link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http
             <?php
             $types = array("star", "planet", "other");
 
-            foreach ($types as $type)
-            {
+            foreach ($types as $type) {
                 $border = $type == "other" ? ' style="border-right:1px solid #333333"' : "";
                 ?>
-                    <div class="categories" id="<?php echo $type;?>_click"<?php echo $border;?>><?php echo $type;?></div>
-                    <div class="stars_planets" id="<?php echo $type;?>" style="display:none">
-                        <?php
-                        $json_file = "bodies.json";
-                        $json_string = file_get_contents($json_file);
+                <div class="categories" id="<?php echo $type;?>_click"<?php echo $border;?>>
+                    <?php echo $type;?>
+                </div>
+                <div class="stars_planets" id="<?php echo $type;?>" style="display:none">
+                <?php
+                $json_file = "bodies.json";
+                $json_string = file_get_contents($json_file);
 
-                        $json_arr = json_decode($json_string, true);
+                $json_arr = json_decode($json_string, true);
 
-                        $i = 0;
-                        $last_img = "";
+                $i = 0;
+                $last_img = "";
 
-                        Utility::orderBy($json_arr, 'order_num ASC, name ASC');
+                Utility::orderBy($json_arr, 'order_num ASC, name ASC');
 
-                        $last_name = "";
-                        foreach ($json_arr as $arr)
-                        {
-                            $type2 = $arr["type"];
-                            if ($type2 == $type)
-                            {
-                                $img = str_replace(" ", "_", $arr["name"]);
-                                $img = str_replace(",", "", $img);
-                                $img = strtolower($img);
+                $last_name = "";
+                foreach ($json_arr as $arr) {
+                    $type2 = $arr["type"];
+                    if ($type2 == $type) {
+                        $img = str_replace(" ", "_", $arr["name"]);
+                        $img = str_replace(",", "", $img);
+                        $img = strtolower($img);
 
-                                $imgfiles = glob($_SERVER["DOCUMENT_ROOT"] . "/style/img/bodies/" . $img . "_*");
+                        $imgfiles = glob($_SERVER["DOCUMENT_ROOT"] . "/style/img/bodies/" . $img . "_*");
 
-                                $name = $arr["name"];
-                                $id = $arr["id"];
-                                $width = $arr["width"];
-                                $min_value = $arr["min_value"];
-                                $max_value = $arr["max_value"];
+                        $name = $arr["name"];
+                        $id = $arr["id"];
+                        $width = $arr["width"];
+                        $min_value = $arr["min_value"];
+                        $max_value = $arr["max_value"];
 
-                                if ($name != $last_name)
-                                {
-                                    echo '<div class="cat_name">' . $name;
-                                }
-
-                                $ii = 0;
-                                foreach ($imgfiles as $imgfile)
-                                {
-                                    $src = str_replace($_SERVER["DOCUMENT_ROOT"], "", $imgfile);
-                                    $imgid = substr($imgfile, -5, 1);
-
-                                    $bid = $type . '_' . $id . '_' . $i . '_' . $ii;
-
-                                    ?>
-                                    <script>
-                                        var options<?php echo $id . $imgid;?> = [];
-                                        options<?php echo $id . $imgid;?>["id"] = "<?php echo $id;?>";
-                                        options<?php echo $id . $imgid;?>["type"] = "<?php echo $type;?>";
-                                        options<?php echo $id . $imgid;?>["name"] = "<?php echo $name;?>";
-                                        options<?php echo $id . $imgid;?>["src"] = "<?php echo $src;?>";
-                                        options<?php echo $id . $imgid;?>["imgid"] = "<?php echo $imgid;?>";
-                                        options<?php echo $id . $imgid;?>["width"] = "<?php echo $width;?>";
-                                        options<?php echo $id . $imgid;?>["min_value"] = "<?php echo $min_value;?>";
-                                        options<?php echo $id . $imgid;?>["max_value"] = "<?php echo $max_value;?>";
-                                        options<?php echo $id . $imgid;?>["bid"] = "<?php echo $bid;?>";
-                                        options<?php echo $id . $imgid;?>["bodyid"] = "<?php echo $id;?>";
-                                        options<?php echo $id . $imgid;?>["landable"] = 0;
-                                        options<?php echo $id . $imgid;?>["ringed"] = 0;
-                                        options<?php echo $id . $imgid;?>["scanned"] = 1;
-                                        options<?php echo $id . $imgid;?>["firstdisc"] = 0;
-                                        options<?php echo $id . $imgid;?>["do_update"] = true;
-                                        options<?php echo $id . $imgid;?>["pos_top"] = false;
-                                        options<?php echo $id . $imgid;?>["pos_left"] = false;
-                                        options<?php echo $id . $imgid;?>["source"] = "php";
-                                    </script>
-                                    <div class="add" onclick="add_body(options<?php echo $id . $imgid;?>)">
-                                        <img class="add_img_<?php echo $type;?>" src="<?php echo $src?>" alt="<?php echo $name;?>" />
-                                    </div>
-                                    <?php
-                                    $ii++;
-                                }
-
-                                if ($img != $last_img)
-                                {
-                                    echo '</div>';
-                                }
-
-                                $last_name = $name;
-                                $i++;
-                            }
+                        if ($name != $last_name) {
+                            echo '<div class="cat_name">' . $name;
                         }
-                        ?>
+
+                        $ii = 0;
+                        foreach ($imgfiles as $imgfile) {
+                            $src = str_replace($_SERVER["DOCUMENT_ROOT"], "", $imgfile);
+                            $imgid = substr($imgfile, -5, 1);
+
+                            $bid = $type . '_' . $id . '_' . $i . '_' . $ii;
+
+                            ?>
+                            <script>
+                                var options<?php echo $id . $imgid;?> = [];
+                                options<?php echo $id . $imgid;?>["id"] = "<?php echo $id;?>";
+                                options<?php echo $id . $imgid;?>["type"] = "<?php echo $type;?>";
+                                options<?php echo $id . $imgid;?>["name"] = "<?php echo $name;?>";
+                                options<?php echo $id . $imgid;?>["src"] = "<?php echo $src;?>";
+                                options<?php echo $id . $imgid;?>["imgid"] = "<?php echo $imgid;?>";
+                                options<?php echo $id . $imgid;?>["width"] = "<?php echo $width;?>";
+                                options<?php echo $id . $imgid;?>["min_value"] = "<?php echo $min_value;?>";
+                                options<?php echo $id . $imgid;?>["max_value"] = "<?php echo $max_value;?>";
+                                options<?php echo $id . $imgid;?>["bid"] = "<?php echo $bid;?>";
+                                options<?php echo $id . $imgid;?>["bodyid"] = "<?php echo $id;?>";
+                                options<?php echo $id . $imgid;?>["landable"] = 0;
+                                options<?php echo $id . $imgid;?>["ringed"] = 0;
+                                options<?php echo $id . $imgid;?>["scanned"] = 1;
+                                options<?php echo $id . $imgid;?>["firstdisc"] = 0;
+                                options<?php echo $id . $imgid;?>["do_update"] = true;
+                                options<?php echo $id . $imgid;?>["pos_top"] = false;
+                                options<?php echo $id . $imgid;?>["pos_left"] = false;
+                                options<?php echo $id . $imgid;?>["source"] = "php";
+                            </script>
+                            <div class="add" onclick="add_body(options<?php echo $id . $imgid;?>)">
+                                <img class="add_img_<?php echo $type;?>" src="<?php echo $src?>" alt="<?php echo $name;?>" />
+                            </div>
+                            <?php
+                            $ii++;
+                        }
+
+                        if ($img != $last_img) {
+                            echo '</div>';
+                        }
+
+                        $last_name = $name;
+                        $i++;
+                    }
+                }
+                ?>
                 </div>
                 <?php
+
             }
             ?>
             <span class="text" style="margin-left:40px;margin-right:20px">Controls :</span>
@@ -226,17 +223,14 @@ $link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http
         var url_vars = "";
 
         <?php
-        if (!empty($string))
-        {
-        ?>
+        if (!empty($string)) {
+            ?>
             url_vars = "<?php echo $string?>";
-        <?php
-        }
-        else
-        {
-        ?>
+            <?php
+        } else {
+            ?>
             url_vars = getUrlVars().v1;
-        <?php
+            <?php
         }
         ?>
 
@@ -325,52 +319,56 @@ $link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http
 
     $(document).ready(function()
     {
+        var star = $("#star");
+        var planet = $("#planet");
+        var other = $("#other");
         update_price();
+
         $("#star_click").mouseover(function()
         {
-            if ($("#star").is(":hidden"))
+            if (star.is(":hidden"))
             {
-                $("#star").fadeToggle("fast");
+                star.fadeToggle("fast");
             }
-            if ($("#planet").is(":visible"))
+            if (planet.is(":visible"))
             {
-                $("#planet").hide();
+                planet.hide();
             }
-            if ($("#other").is(":visible"))
+            if (other.is(":visible"))
             {
-                $("#other").hide();
+                other.hide();
             }
         });
 
         $("#planet_click").mouseover(function()
         {
-            if ($("#planet").is(":hidden"))
+            if (planet.is(":hidden"))
             {
-                $("#planet").fadeToggle("fast");
+                planet.fadeToggle("fast");
             }
-            if ($("#star").is(":visible"))
+            if (star.is(":visible"))
             {
-                $("#star").hide();
+                star.hide();
             }
-            if ($("#other").is(":visible"))
+            if (other.is(":visible"))
             {
-                $("#other").hide();
+                other.hide();
             }
         });
 
         $("#other_click").mouseover(function()
         {
-            if ($("#other").is(":hidden"))
+            if (other.is(":hidden"))
             {
-                $("#other").fadeToggle("fast");
+                other.fadeToggle("fast");
             }
-            if ($("#planet").is(":visible"))
+            if (planet.is(":visible"))
             {
-                $("#planet").hide();
+                planet.hide();
             }
-            if ($("#star").is(":visible"))
+            if (star.is(":visible"))
             {
-                $("#star").hide();
+                star.hide();
             }
         });
 
@@ -379,17 +377,17 @@ $link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http
          */
         $(".panzoom, .rightpanel-top").mouseover(function()
         {
-            if ($("#other").is(":visible"))
+            if (other.is(":visible"))
             {
-                $("#other").fadeOut("fast");
+                other.fadeOut("fast");
             }
-            if ($("#planet").is(":visible"))
+            if (planet.is(":visible"))
             {
-                $("#planet").fadeOut("fast");
+                planet.fadeOut("fast");
             }
-            if ($("#star").is(":visible"))
+            if (star.is(":visible"))
             {
-                $("#star").fadeOut("fast");
+                star.fadeOut("fast");
             }
         });
 
@@ -398,13 +396,14 @@ $link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http
          */
         $("#toggle_grid").click(function()
         {
-            if ($(".panzoom").css("background-image") == "none")
+            var panzoom = $(".panzoom");
+            if (panzoom.css("background-image") == "none")
             {
-                $(".panzoom").css("background-image", "repeating-linear-gradient(0deg, transparent, transparent 20px, #333333 20px, #333333 21px), repeating-linear-gradient(-90deg, transparent, transparent 20px, #333333 20px, #333333 21px)");
+                panzoom.css("background-image", "repeating-linear-gradient(0deg, transparent, transparent 20px, #333333 20px, #333333 21px), repeating-linear-gradient(-90deg, transparent, transparent 20px, #333333 20px, #333333 21px)");
             }
             else
             {
-                $(".panzoom").css("background-image", "none");
+                panzoom.css("background-image", "none");
             }
             update_url();
         });
@@ -412,17 +411,18 @@ $link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http
         /**
          * toggle body names
          */
-        $("#toggle_names").click(function()
+        var toggle_names = $("#toggle_names");
+        toggle_names.click(function()
         {
-            if ($("#toggle_names").html() == "Show names")
+            if (toggle_names.html() == "Show names")
             {
-                $("#toggle_names").html("Hide names");
+                toggle_names.html("Hide names");
                 $(".name").fadeIn("fast");
             }
             else
             {
                 $(".name").fadeOut("fast");
-                $("#toggle_names").html("Show names");
+                toggle_names.html("Show names");
             }
             update_url();
         });
@@ -432,13 +432,14 @@ $link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http
          */
         $("#toggle_background").click(function()
         {
-            if ($(".rightpanel").css("background-image") == "none")
+            var rightpanel = $(".rightpanel");
+            if (rightpanel.css("background-image") == "none")
             {
-                $(".rightpanel").css("background-image", "url(/style/img/backg.jpg)");
+                rightpanel.css("background-image", "url(/style/img/backg.jpg)");
             }
             else
             {
-                $(".rightpanel").css("background-image", "none");
+                rightpanel.css("background-image", "none");
             }
             update_url();
         });

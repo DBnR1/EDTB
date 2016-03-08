@@ -42,8 +42,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/curSys.php");
 Header("content-type: application/json");
 
 $last_system_name = $curSys["name"];
-if (!valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"]))
-{
+if (!valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"])) {
     // get last known coordinates
     $last_coords = last_known_system();
 
@@ -56,22 +55,18 @@ if (!valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"]))
 
 $data = "";
 $data_start = '{"categories":{';
-if ($settings["galmap_show_visited_systems"] == "true")
-{
+if ($settings["galmap_show_visited_systems"] == "true") {
     $data_start .= '"Visited Systems":{"1":{"name":"Empire","color":"e7d884"},"2":{"name":"Federation","color":"FFF8E6"},"3":{"name":"Alliance","color":"09b4f4"},"21":{"name":"Independent","color":"34242F"},"99":{"name":"Rest","color":"8c8c8c"}},';
 }
 $data_start .= '"Other":{"5":{"name":"Current location","color":"FF0000"},';
 
-if ($settings["galmap_show_bookmarks"] == "true")
-{
+if ($settings["galmap_show_bookmarks"] == "true") {
     $data_start .= '"6":{"name":"Bookmarked systems","color":"F7E707"},';
 }
-if ($settings["galmap_show_pois"] == "true")
-{
+if ($settings["galmap_show_pois"] == "true") {
     $data_start .= '"7":{"name":"Points of interest, unvisited","color":"E87C09"},"8":{"name":"Points of interest, visited","color":"00FF1E"},';
 }
-if ($settings["galmap_show_rares"] == "true")
-{
+if ($settings["galmap_show_rares"] == "true") {
     $data_start .= '"10":{"name":"Rare commodities","color":"8B9F63"},';
 }
 $data_start .= '"11":{"name":"Logged systems","color":"2938F8"}}}, "systems":[';
@@ -82,8 +77,7 @@ $last_row = "";
  * fetch visited systems data for the map
  */
 
-if ($settings["galmap_show_visited_systems"] == "true")
-{
+if ($settings["galmap_show_visited_systems"] == "true") {
     $result = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT
                                                         user_visited_systems.system_name AS system_name, user_visited_systems.visit,
                                                         edtb_systems.x, edtb_systems.y, edtb_systems.z, edtb_systems.id AS sysid, edtb_systems.allegiance
@@ -93,8 +87,7 @@ if ($settings["galmap_show_visited_systems"] == "true")
                                                         ORDER BY user_visited_systems.visit ASC")
                                                         or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
-    while ($row = mysqli_fetch_array($result))
-    {
+    while ($row = mysqli_fetch_array($result)) {
         $info = "";
 
         $name = $row["system_name"];
@@ -108,8 +101,7 @@ if ($settings["galmap_show_visited_systems"] == "true")
         /**
          * if coords are not set, see if user has calculated them
          */
-        if (!valid_coordinates($vs_coordx, $vs_coordy, $vs_coordz))
-        {
+        if (!valid_coordinates($vs_coordx, $vs_coordy, $vs_coordz)) {
             $cb_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT x, y, z
                                                                 FROM user_systems_own
                                                                 WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $name) . "'
@@ -125,14 +117,12 @@ if ($settings["galmap_show_visited_systems"] == "true")
         /**
          * if we now have valid coordinates, get on with it
          */
-        if (valid_coordinates($vs_coordx, $vs_coordy, $vs_coordz))
-        {
+        if (valid_coordinates($vs_coordx, $vs_coordy, $vs_coordz)) {
             $allegiance = $row["allegiance"];
             $visit = $row["visit"];
             $visit_og = $row["visit"];
 
-            switch ($allegiance)
-            {
+            switch ($allegiance) {
                 case "Empire":
                     $cat = ',"cat":[1]';
                     break;
@@ -151,8 +141,7 @@ if ($settings["galmap_show_visited_systems"] == "true")
 
             $info .= '<div class="map_info"><span class="map_info_title">Visited system</span><br />';
 
-            if (isset($visit))
-            {
+            if (isset($visit)) {
                 $visit = date_create($visit);
                 $visit_date = date_modify($visit, "+1286 years");
 
@@ -166,12 +155,9 @@ if ($settings["galmap_show_visited_systems"] == "true")
 
             $info .= '</div>';
 
-            if (isset($name) && isset($vs_coordx) && isset($vs_coordy) && isset($vs_coordz))
-            {
+            if (isset($name) && isset($vs_coordx) && isset($vs_coordy) && isset($vs_coordz)) {
                 $data = '{"name":"' . $name  . '"' . $cat . ',"coords":{"x":' . $vs_coordx . ',"y":' . $vs_coordy . ',"z":' . $vs_coordz . '},"infos":' . json_encode($info) . '}' . $last_row;
-            }
-            else
-            {
+            } else {
                 $data = $last_row;
             }
 
@@ -184,8 +170,7 @@ if ($settings["galmap_show_visited_systems"] == "true")
  *  fetch point of interest data for the map
  */
 
-if ($settings["galmap_show_pois"] == "true")
-{
+if ($settings["galmap_show_pois"] == "true") {
     $result = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT user_poi.poi_name, user_poi.system_name,
                                                         user_poi.x, user_poi.y, user_poi.z, user_poi.text,
                                                         user_poi_categories.name AS category_name
@@ -194,14 +179,12 @@ if ($settings["galmap_show_pois"] == "true")
                                                         WHERE user_poi.x != '' AND user_poi.y != '' AND user_poi.z != ''")
                                                         or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
-    while ($row = mysqli_fetch_array($result))
-    {
+    while ($row = mysqli_fetch_array($result)) {
         $info = "";
         $cat = "";
         $name = $row["system_name"];
 
-        if (strtolower($name) != strtolower($curSys["name"]))
-        {
+        if (strtolower($name) != strtolower($curSys["name"])) {
             $disp_name = $row["system_name"];
             $poi_name = $row["poi_name"];
             $text = $row["text"];
@@ -238,8 +221,7 @@ if ($settings["galmap_show_pois"] == "true")
  *  fetch bookmark data for the map
  */
 
-if ($settings["galmap_show_bookmarks"] == "true")
-{
+if ($settings["galmap_show_bookmarks"] == "true") {
     $bm_result = mysqli_query($GLOBALS["___mysqli_ston"], " SELECT user_bookmarks.comment, user_bookmarks.added_on,
                                                             edtb_systems.name AS system_name, edtb_systems.x, edtb_systems.y, edtb_systems.z,
                                                             user_bm_categories.name AS category_name
@@ -249,8 +231,7 @@ if ($settings["galmap_show_bookmarks"] == "true")
                                                             or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 
-    while ($bm_row = mysqli_fetch_array($bm_result))
-    {
+    while ($bm_row = mysqli_fetch_array($bm_result)) {
         $info = "";
         $cat = "";
         $bm_system_name = $bm_row["system_name"];
@@ -264,8 +245,7 @@ if ($settings["galmap_show_bookmarks"] == "true")
          * if coords are not set, see if user has calculated them
          */
 
-        if (!valid_coordinates($bm_coordx, $bm_coordy, $bm_coordz))
-        {
+        if (!valid_coordinates($bm_coordx, $bm_coordy, $bm_coordz)) {
             $bb_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT x, y, z
                                                                 FROM user_systems_own
                                                                 WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $bm_system_name) . "'
@@ -278,10 +258,8 @@ if ($settings["galmap_show_bookmarks"] == "true")
             $bm_coordz = $bb_arr["z"] == "" ? "" : $bb_arr["z"];
         }
 
-        if (valid_coordinates($bm_coordx, $bm_coordy, $bm_coordz))
-        {
-            if (strtolower($bm_system_name) != strtolower($curSys["name"]))
-            {
+        if (valid_coordinates($bm_coordx, $bm_coordy, $bm_coordz)) {
+            if (strtolower($bm_system_name) != strtolower($curSys["name"])) {
                 $bm_comment = $bm_row["comment"];
                 $bm_added_on = $bm_row["added_on"];
                 $bm_category_name = $bm_row["category_name"];
@@ -290,8 +268,7 @@ if ($settings["galmap_show_bookmarks"] == "true")
 
                 $info .= '<div class="map_info"><span class="map_info_title">Bookmarked System</span><br />';
 
-                if (isset($bm_added_on))
-                {
+                if (isset($bm_added_on)) {
                     $bm_added_on_og = $bm_added_on;
                     $bm_added_on = gmdate("Y-m-d\TH:i:s\Z", $bm_added_on);
                     $bm_added_on = date_create($bm_added_on);
@@ -319,8 +296,7 @@ if ($settings["galmap_show_bookmarks"] == "true")
  *  fetch rares data for the map
  */
 
-if ($settings["galmap_show_rares"] == "true")
-{
+if ($settings["galmap_show_rares"] == "true") {
     $rare_result = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT
                                                                 edtb_rares.item, edtb_rares.station, edtb_rares.system_name, edtb_rares.ls_to_star,
                                                                 edtb_systems.x, edtb_systems.y, edtb_systems.z
@@ -329,8 +305,7 @@ if ($settings["galmap_show_rares"] == "true")
                                                                 WHERE edtb_rares.system_name != ''")
                                                                 or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
-    while ($rare_row = mysqli_fetch_array($rare_result))
-    {
+    while ($rare_row = mysqli_fetch_array($rare_result)) {
         $info = "";
         $cat = "";
         $rare_system = $rare_row["system_name"];
@@ -340,8 +315,7 @@ if ($settings["galmap_show_rares"] == "true")
         $rare_coordy = $rare_row["y"];
         $rare_coordz = $rare_row["z"];
 
-        if (strtolower($rare_system) != strtolower($curSys["name"]) && valid_coordinates($rare_coordx, $rare_coordy, $rare_coordz))
-        {
+        if (strtolower($rare_system) != strtolower($curSys["name"]) && valid_coordinates($rare_coordx, $rare_coordy, $rare_coordz)) {
             $rare_item = $rare_row["item"];
             $rare_station = $rare_row["station"];
             $rare_dist_to_star = number_format($rare_row["ls_to_star"]);
@@ -375,8 +349,7 @@ $log_result = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT user_log.id, user
                                                             WHERE user_log.system_name != ''")
                                                             or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
-while ($log_row = mysqli_fetch_array($log_result))
-{
+while ($log_row = mysqli_fetch_array($log_result)) {
     $info = "";
     $cat = "";
     $log_system = $log_row["system_name"];
@@ -386,8 +359,7 @@ while ($log_row = mysqli_fetch_array($log_result))
     $log_coordy = $log_row["y"];
     $log_coordz = $log_row["z"];
 
-    if (!valid_coordinates($log_coordx, $log_coordy, $log_coordz))
-    {
+    if (!valid_coordinates($log_coordx, $log_coordy, $log_coordz)) {
         $lb_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT x, y, z
                                                             FROM user_systems_own
                                                             WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $log_system) . "'
@@ -400,15 +372,13 @@ while ($log_row = mysqli_fetch_array($log_result))
         $log_coordz = $lb_arr["z"] == "" ? "" : $lb_arr["z"];
     }
 
-    if (valid_coordinates($log_coordx, $log_coordy, $log_coordz))
-    {
+    if (valid_coordinates($log_coordx, $log_coordy, $log_coordz)) {
         $log_date = $log_row["stardate"];
         $date = date_create($log_date);
         $log_added = date_modify($date, "+1286 years");
         $text = $log_row["log_entry"];
 
-        if (mb_strlen($text) > 40)
-        {
+        if (mb_strlen($text) > 40) {
             $text = substr($text, 0, 40) . "...";
         }
 
@@ -432,8 +402,7 @@ while ($log_row = mysqli_fetch_array($log_result))
 //$info = '</div>';
 $cur_sys_data = "";
 
-if (strtolower($last_system_name) == strtolower($curSys["name"]) && valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"]))
-{
+if (strtolower($last_system_name) == strtolower($curSys["name"]) && valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"])) {
     $comma = !empty($data) ? "," : "";
     $cur_sys_data = $comma . '{"name":"' . $curSys["name"]  . '","cat":[5],"coords":{"x":' . $curSys["x"] . ',"y":' . $curSys["y"] . ',"z":' . $curSys["z"] . '}}';
 }

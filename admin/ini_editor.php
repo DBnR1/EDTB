@@ -32,21 +32,17 @@
 
 $notify = "";
 
-/** @var pagetitle */
+/** @var string pagetitle */
 $pagetitle = "Variable Editor";
 
 /** @require header file */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 
-if (isset($_POST["code"]))
-{
+if (isset($_POST["code"])) {
     $code = $_POST["code"];
-    if (file_put_contents($ini_file, $code))
-    {
+    if (file_put_contents($ini_file, $code)) {
         $notify = "<div class='notify_success'>Settings succesfully edited.</div>";
-    }
-    else
-    {
+    } else {
         $notify = "<div class='notify_deleted'>Edit unsuccesfull.</div>";
     }
 }

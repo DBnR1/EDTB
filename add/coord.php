@@ -37,8 +37,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 /** @require MySQL */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 
-if (isset($_GET["do"]))
-{
+if (isset($_GET["do"])) {
     $data = json_decode($_REQUEST["input"], true);
 
     $target_system = $data["target_system"];
@@ -58,8 +57,7 @@ if (isset($_GET["do"]))
     $reference_3_distance = $data["reference_3_distance"];
     $reference_4_distance = $data["reference_4_distance"];
 
-    if (is_numeric($reference_1_distance) && is_numeric($reference_2_distance) && is_numeric($reference_3_distance) && is_numeric($reference_4_distance))
-    {
+    if (is_numeric($reference_1_distance) && is_numeric($reference_2_distance) && is_numeric($reference_3_distance) && is_numeric($reference_4_distance)) {
         /**
          * submit to EDSM
          */
@@ -132,8 +130,7 @@ if (isset($_GET["do"]))
                                                                                     WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $target_system) . "'
                                                                                     LIMIT 1"));
 
-        if ($system_exists == 0)
-        {
+        if ($system_exists == 0) {
             mysqli_query($GLOBALS["___mysqli_ston"], "  INSERT INTO user_systems_own
                                                         (name, x, y, z, reference_distances, edsm_message)
                                                         VALUES
@@ -144,9 +141,7 @@ if (isset($_GET["do"]))
                                                         '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $reference_distances) . "',
                                                         '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $edsm_msg) . "')")
                                                         or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-        }
-        else
-        {
+        } else {
             mysqli_query($GLOBALS["___mysqli_ston"], "  UPDATE user_systems_own
                                                         SET name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $target_system) . "',
                                                             x = '" . $newcoords_x . "',
@@ -157,9 +152,7 @@ if (isset($_GET["do"]))
                                                         WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $target_system) . "'
                                                         LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
         }
-    }
-    else
-    {
+    } else {
         write_log("Error: Distances not numeric or all distances not given.", __FILE__, __LINE__);
     }
 

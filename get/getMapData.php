@@ -37,7 +37,9 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 
 $system = isset($_GET["system"]) ? $_GET["system"] : "";
 
-if (empty($system)) exit;
+if (empty($system)) {
+    exit;
+}
 
 /**
  * check if system has screenshots
@@ -56,14 +58,12 @@ $ress2 = mysqli_query($GLOBALS["___mysqli_ston"], " SELECT user_bookmarks.commen
 
 $count2 = mysqli_num_rows($ress2);
 
-if ($count2 > 0)
-{
+if ($count2 > 0) {
     $arras = mysqli_fetch_assoc($ress2);
     $comment = $arras["comment"];
     $added_on = $arras["added_on"];
 
-    if ($comment != "")
-    {
+    if ($comment != "") {
         echo 'Bookmark comment: ' . $comment . ' - ';
     }
 
@@ -88,19 +88,15 @@ $ress = mysqli_query($GLOBALS["___mysqli_ston"], "  SELECT user_poi.text AS text
 
 $count = mysqli_num_rows($ress);
 
-if ($count > 0)
-{
+if ($count > 0) {
     $arra = mysqli_fetch_assoc($ress);
     $text = htmlspecialchars($arra["text"]);
     $visit = $arra["visit"];
     $visit_og = $arra["visit"];
 
-    if (!$visit && !$text)
-    {
+    if (!$visit && !$text) {
         echo '<a href="System.php?system_name=' . urlencode($system) . '" style="color:inherit">' . $system . '</a>' . $screenshots . '<br />No additional information';
-    }
-    else
-    {
+    } else {
         $logres = mysqli_query($GLOBALS["___mysqli_ston"], "    SELECT id, LEFT(log_entry , 100) AS text
                                                                 FROM user_log
                                                                 WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system) . "'
@@ -108,21 +104,18 @@ if ($count > 0)
                                                                 LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
         $logged = mysqli_num_rows($logres);
 
-        if (isset($visit))
-        {
+        if (isset($visit)) {
             $visit = date_create($visit);
             $visit_date = date_modify($visit, "+1286 years");
 
             $visit = date_format($visit_date, "d.m.Y, H:i");
         }
 
-        if ($text != null)
-        {
+        if ($text != null) {
             echo $text . "<br />";
         }
 
-        if (!empty($visit))
-        {
+        if (!empty($visit)) {
             $visits = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "    SELECT id
                                                                                     FROM user_visited_systems
                                                                                     WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system) . "'"));
@@ -132,14 +125,11 @@ if ($count > 0)
             echo $system . '</a>' . $screenshots . '&nbsp;&nbsp;|&nbsp;';
             echo 'Total visits: ' . $visits . '&nbsp;&nbsp;|&nbsp;&nbsp;';
             echo 'First visit: ' . $visit . ' (' . $visit_ago . ')';
-        }
-        else
-        {
+        } else {
             echo '<a href="/System.php?system_name=' . urlencode($system) . '" style="color:inherit">' . $system . '</a>';
         }
 
-        if ($logged > 0)
-        {
+        if ($logged > 0) {
             $logarr = mysqli_fetch_assoc($logres);
             $text = $logarr["text"];
 

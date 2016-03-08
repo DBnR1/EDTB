@@ -38,16 +38,13 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 $bm_id = 0 + $_GET["Bm_id"];
 $data = array();
 
-if ($bm_id == "0")
-{
+if ($bm_id == "0") {
     $data["bm_edit_id"] = "";
     $data["bm_system_name"] = "";
     $data["bm_system_id"] = "";
     $data["bm_catid"] = "0";
     $data["bm_text"] = "";
-}
-else
-{
+} else {
     $bm_res = mysqli_query($GLOBALS["___mysqli_ston"], "    SELECT
                                                             user_bookmarks.id, user_bookmarks.system_id, user_bookmarks.system_name AS bm_system_name,
                                                             user_bookmarks.comment, user_bookmarks.category_id,

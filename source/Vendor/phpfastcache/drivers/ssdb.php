@@ -9,11 +9,13 @@
  * http://ssdb.io/
  */
 
-class phpfastcache_ssdb extends BasePhpFastCache implements phpfastcache_driver {
+class phpfastcache_ssdb extends BasePhpFastCache implements phpfastcache_driver
+{
 
     private $checked_ssdb = false;
 
-    function checkdriver() {
+    public function checkdriver()
+    {
         // Check memcache
         $this->required_extension("SSDB.php");
         if (class_exists("SimpleSSDB")) {
@@ -23,15 +25,16 @@ class phpfastcache_ssdb extends BasePhpFastCache implements phpfastcache_driver 
         return false;
     }
 
-    function __construct($config = array()) {
+    public function __construct($config = array())
+    {
         $this->setup($config);
         if (!$this->checkdriver() && !isset($config['skipError'])) {
             $this->fallback = true;
         }
     }
 
-    function connectServer() {
-
+    public function connectServer()
+    {
         $server = isset($this->config['ssdb']) ? $this->config['ssdb'] : array(
                                                                                 "host" => "127.0.0.1",
                                                                                 "port" => 8888,
@@ -60,45 +63,49 @@ class phpfastcache_ssdb extends BasePhpFastCache implements phpfastcache_driver 
         return true;
     }
 
-    function driver_set($keyword, $value = "", $time = 300, $option = array()) {
+    public function driver_set($keyword, $value = "", $time = 300, $option = array())
+    {
         if ($this->connectServer()) {
-	        if (isset($option['skipExisting']) && $option['skipExisting'] == true) {
-		        $x = $this->instant->get($keyword);
-                if($x === false) {
+            if (isset($option['skipExisting']) && $option['skipExisting'] == true) {
+                $x = $this->instant->get($keyword);
+                if ($x === false) {
                     return false;
-                }elseif(!is_null($x)) {
+                } elseif (!is_null($x)) {
                     return true;
                 }
-	        }
+            }
             $value = $this->encode($value);
-		    return $this->instant->setx($keyword, $value, $time);
+            return $this->instant->setx($keyword, $value, $time);
         } else {
             return $this->backup()->set($keyword, $value, $time, $option);
         }
     }
 
-    function driver_get($keyword, $option = array()) {
+    public function driver_get($keyword, $option = array())
+    {
         if ($this->connectServer()) {
             // return null if no caching
-	        // return value if in caching'
-	        $x = $this->instant->get($keyword);
-	        if($x == false) {
-		        return null;
-	        } else {
-		        return $this->decode($x);
-	        }
+            // return value if in caching'
+            $x = $this->instant->get($keyword);
+            if ($x == false) {
+                return null;
+            } else {
+                return $this->decode($x);
+            }
         } else {
             $this->backup()->get($keyword, $option);
         }
     }
 
-    function driver_delete($keyword, $option = array()) {
+    public function driver_delete($keyword, $option = array())
+    {
         if ($this->connectServer()) {
             $this->instant->del($keyword);
         }
     }
 
-    function driver_stats($option = array()) {
+    public function driver_stats($option = array())
+    {
         if ($this->connectServer()) {
             $res = array(
                 "info" => "",
@@ -112,13 +119,13 @@ class phpfastcache_ssdb extends BasePhpFastCache implements phpfastcache_driver 
         return array();
     }
 
-    function driver_clean($option = array())
+    public function driver_clean($option = array())
     {
         //Is not supported, only support command line operations
         return false;
     }
 
-    function driver_isExisting($keyword)
+    public function driver_isExisting($keyword)
     {
         if ($this->connectServer()) {
             $x = $this->instant->exists($keyword);
@@ -131,5 +138,4 @@ class phpfastcache_ssdb extends BasePhpFastCache implements phpfastcache_driver 
             return $this->backup()->isExisting($keyword);
         }
     }
-    
 }

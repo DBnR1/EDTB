@@ -38,19 +38,15 @@ $current_version = $settings["edtb_version"];
 $last_check = edtb_common("last_update_check", "unixtime");
 $time_frame = time() - 5 * 60 * 60;
 
-if ($last_check < $time_frame)
-{
-    if ($json_file = file_get_contents("http://data.edtb.xyz/version.json"))
-    {
+if ($last_check < $time_frame) {
+    if ($json_file = file_get_contents("http://data.edtb.xyz/version.json")) {
         $json_data = json_decode($json_file, true);
 
         $newest_version = $json_data["currentVersion"];
 
         // update latest_version value
         edtb_common("latest_version", "value", true, $newest_version);
-    }
-    else
-    {
+    } else {
         $error = error_get_last();
         write_log("Error: " . $error["message"], __FILE__, __LINE__);
     }
@@ -60,15 +56,12 @@ if ($last_check < $time_frame)
 
 $newest_version = edtb_common("latest_version", "value");
 
-if (version_compare($current_version, $newest_version) < 0)
-{
+if (version_compare($current_version, $newest_version) < 0) {
     // get last_update_check value
     $ignore_version = edtb_common("last_update_check", "value");
 
-    if ($newest_version != $ignore_version)
-    {
-        if ($json_file = file_get_contents("http://data.edtb.xyz/version.json"))
-        {
+    if ($newest_version != $ignore_version) {
+        if ($json_file = file_get_contents("http://data.edtb.xyz/version.json")) {
             $json_data = json_decode($json_file, true);
 
             $short_desc = $json_data["short"];
@@ -92,7 +85,6 @@ if ($now > $last_update && $last_update != "1")
     $data["notifications"] .= '<a href="javascript:void(0)" title="Notice" onclick="$(\'#notice\').fadeToggle(\'fast\')"><img src="/style/img/notice.png" style="height:26px;width:26px" alt="Notice" /></a>';
 }*/
 
-if ($data["notifications"] == "")
-{
+if ($data["notifications"] == "") {
     $data["notifications"] = "false";
 }

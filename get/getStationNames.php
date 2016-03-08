@@ -37,24 +37,20 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 
 $action = isset($_GET["action"]) ? $_GET["action"] : "";
 
-if (isset($_GET["q"]) && !empty($_GET["q"]) && isset($_GET["divid"]))
-{
+if (isset($_GET["q"]) && !empty($_GET["q"]) && isset($_GET["divid"])) {
     $search = $_GET["q"];
     $divid = $_GET["divid"];
 
     $addtl = "";
-    if (isset($_GET["allegiance"]) && $_GET["allegiance"] != "undefined")
-    {
+    if (isset($_GET["allegiance"]) && $_GET["allegiance"] != "undefined") {
         $addtl .= "&allegiance=" . $_GET['allegiance'];
     }
 
-    if (isset($_GET["system_allegiance"]) && $_GET["system_allegiance"] != "undefined")
-    {
+    if (isset($_GET["system_allegiance"]) && $_GET["system_allegiance"] != "undefined") {
         $addtl .= "&system_allegiance=" . $_GET['system_allegiance'];
     }
 
-    if (isset($_GET["power"]) && $_GET["power"] != "undefined")
-    {
+    if (isset($_GET["power"]) && $_GET["power"] != "undefined") {
         $addtl .= "&power=" . $_GET['power'];
     }
 
@@ -71,8 +67,7 @@ if (isset($_GET["q"]) && !empty($_GET["q"]) && isset($_GET["divid"]))
                                                                 edtb_stations.name
                                                                 LIMIT 30") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
-    if (isset($_GET["sysid"]) && $_GET["sysid"] != "no")
-    {
+    if (isset($_GET["sysid"]) && $_GET["sysid"] != "no") {
         $suggest_query = mysqli_query($GLOBALS["___mysqli_ston"], " SELECT edtb_systems.name AS system_name,
                                                                     edtb_systems.id AS system_id,
                                                                     edtb_systems.x,
@@ -90,47 +85,44 @@ if (isset($_GET["q"]) && !empty($_GET["q"]) && isset($_GET["divid"]))
     }
     $found = mysqli_num_rows($suggest_query);
 
-    if ($found == 0)
-    {
+    if ($found == 0) {
         echo '<a href="#">Nothing found</a>';
 
         exit;
     }
 
-    while ($suggest = mysqli_fetch_assoc($suggest_query))
-    {
-        if ($_GET["link"] == "yes")
-        {
+    while ($suggest = mysqli_fetch_assoc($suggest_query)) {
+        if ($_GET["link"] == "yes") {
             ?>
             <a href="/System.php?system_id=<?php echo $suggest['system_id']?>">
                 <?php echo $suggest['station_name']?>&nbsp;&nbsp;(<?php echo $suggest['system_name']?>)
             </a><br />
             <?php
-        }
-        elseif ($_GET["idlink"] == "yes")
-        {
+
+        } elseif ($_GET["idlink"] == "yes") {
             ?>
             <a href="/NearestSystems.php?system=<?php echo $suggest['system_id']?><?php echo $addtl?>">
                 <?php echo $suggest['station_name']?>&nbsp;&nbsp;(<?php echo $suggest['system_name']?>)
             </a><br />
             <?php
-        }
-        elseif ($_GET["sysid"] != "no")
-        {
+
+        } elseif ($_GET["sysid"] != "no") {
             ?>
             <a href="javascript:void(0);" onclick="setl('<?php echo $suggest['station_name']?>','<?php echo $suggest['station_id']?>');">
                 <?php echo $suggest['station_name']?>
             </a><br />
             <?php
-        }
-        else
-        {
+
+        } else {
             $suggest_coords = $suggest['x'] . "," . $suggest['y'] . "," . $suggest['z'];
             ?>
-            <a href="javascript:void(0);" onclick="setResult('<?php echo str_replace("'", "", $suggest['system_name']); ?>', '<?php echo $suggest_coords; ?>', '<?php echo $divid ?>');">
+            <a href="javascript:void(0);" onclick="setResult('<?php echo str_replace("'", "", $suggest['system_name']);
+            ?>', '<?php echo $suggest_coords;
+            ?>', '<?php echo $divid ?>');">
                 <?php echo $suggest['system_name'] ?>
             </a><br />
             <?php
+
         }
     }
 }

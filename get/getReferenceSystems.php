@@ -45,29 +45,23 @@ $system_res = mysqli_query($GLOBALS["___mysqli_ston"], "    SELECT id, reference
 $system_exists = mysqli_num_rows($system_res);
 $do = true;
 $ref = array();
-if ($system_exists > 0)
-{
+if ($system_exists > 0) {
     $system_arr = mysqli_fetch_assoc($system_res);
     $edsm_msg = $system_arr["edsm_message"];
     $parts = explode(":::", $edsm_msg);
 
     $msg_num = $parts[0];
 
-    if ($msg_num == "104" || $msg_num == "102")
-    {
+    if ($msg_num == "104" || $msg_num == "102") {
         $do = false;
-    }
-    else
-    {
+    } else {
         $do = true;
         $values = explode("---", $system_arr["reference_distances"]);
 
 
-        if (!isset($_GET["force"]))
-        {
+        if (!isset($_GET["force"])) {
             $i = 1;
-            foreach ($values as $value)
-            {
+            foreach ($values as $value) {
                 $values2 = explode(":::", $value);
 
                 $ref[$i]["name"] = $values2[0];
@@ -75,18 +69,14 @@ if ($system_exists > 0)
                 $i++;
             }
             $referencesystems = isset($_GET["standard"]) ? reference_systems(true) : reference_systems();
-        }
-        else
-        {
-            for ($ii = 1; $ii <= 4; $ii++)
-            {
+        } else {
+            for ($ii = 1; $ii <= 4; $ii++) {
                 $ref[$ii]["name"] = "";
                 $ref[$ii]["distance"] = "";
             }
 
             $used = array();
-            foreach ($values as $value)
-            {
+            foreach ($values as $value) {
                 $values2 = explode(":::", $value);
 
                 $used[] = $values2[0];
@@ -94,11 +84,8 @@ if ($system_exists > 0)
             $referencesystems = reference_systems(false, $used);
         }
     }
-}
-else
-{
-    for ($ii = 1; $ii <= 4; $ii++)
-    {
+} else {
+    for ($ii = 1; $ii <= 4; $ii++) {
         $ref[$ii]["name"] = "";
         $ref[$ii]["distance"] = "";
     }
@@ -148,8 +135,7 @@ else
                 </td>
             </tr>
             <?php
-            if ($do === true)
-            {
+            if ($do === true) {
                 ?>
                 <tr>
                     <td class="light" style="text-align:right">
@@ -162,8 +148,7 @@ else
                 </tr>
                 <?php
                 $i = 1;
-                foreach ($referencesystems as $ref_name => $ref_coordinates)
-                {
+                foreach ($referencesystems as $ref_name => $ref_coordinates) {
                     $ref_rname = $ref[$i]["name"] != "" ? $ref[$i]["name"] : $ref_name;
                     ?>
                     <tr>
@@ -187,9 +172,7 @@ else
                     <?php
                     $i++;
                 }
-            }
-            else
-            {
+            } else {
                 ?>
                 <tr>
                     <td class="dark" colspan="2">
@@ -197,6 +180,7 @@ else
                     </td>
                 </tr>
                 <?php
+
             }
             ?>
             <tr>

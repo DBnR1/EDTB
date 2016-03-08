@@ -35,14 +35,14 @@
  */
 session_start();
 
-/** @var pagetitle */
+/** @var string pagetitle */
 $pagetitle = "Data Point";
 
 /** @require header file */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/Vendor/MySQL_table_edit/mte.php");
 
-$data_table = $_GET["table"] != "" ? $_GET["table"] : $settings['data_view_default_table'];
+$data_table = $_GET["table"] != "" ? $_GET["table"] : $settings["data_view_default_table"];
 
 $tabledit = new MySQLtabledit();
 /**
@@ -62,8 +62,7 @@ $colres = mysqli_query($GLOBALS["___mysqli_ston"], "    SELECT COLUMN_NAME, COLU
 
 $output = array();
 $showt = array();
-while ($colarr = mysqli_fetch_assoc($colres))
-{
+while ($colarr = mysqli_fetch_assoc($colres)) {
     $output[] = $colarr['COLUMN_NAME'];
     $showt[$colarr['COLUMN_NAME']] = $colarr['COLUMN_COMMENT'];
 }
@@ -72,18 +71,18 @@ $tabledit->links_to_db = $settings["data_view_table"];
 
 $tabledit->skip = $settings["data_view_ignore"][$data_table];
 
-/** @var primary_key the primary key of the table (must be AUTO_INCREMENT) */
+/** @var string primary_key the primary key of the table (must be AUTO_INCREMENT) */
 $tabledit->primary_key = "id";
 
-/** @var fields_in_list_view the fields you want to see in "list view" */
+/** @var array fields_in_list_view the fields you want to see in "list view" */
 $tabledit->fields_in_list_view = $output;
 
 $tabledit->language = "en";
 
-/** @var num_rows_list_view numbers of rows/records in "list view" */
+/** @var int num_rows_list_view numbers of rows/records in "list view" */
 $tabledit->num_rows_list_view = 10;
 
-/** @var fields_required required fields in edit or add record */
+/** @var array fields_required required fields in edit or add record */
 //$tabledit->fields_required = array('name');
 
 $tabledit->url_base = "/source/Vendor/MySQL_table_edit/";
@@ -92,7 +91,7 @@ $tabledit->show_text = $showt;
 
 $tabledit->width_editor = "100%";
 
-/** @var no_htaccess_warning warning no .htacces ('on' or 'off') */
+/** @var bool no_htaccess_warning warning no .htacces ('on' or 'off') */
 $tabledit->no_htaccess_warning = "off";
 
 ?>
