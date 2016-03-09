@@ -60,8 +60,8 @@ function slide()
         marginSpeed: -10
     };
 
-    var s = $("#ltitle");
-    var value = s.width() - 284;
+    var s = $("#ltitle"),
+            value = s.width() - 284;
 
     if (s.width() >= 288)
     {
@@ -78,8 +78,8 @@ function slideout()
     {
         currentMargin: 0,
         marginSpeed: -10
-    };
-    var s = $("#ltitle");
+    },
+        s = $("#ltitle");
 
     if (s.width() >= 288)
     {
@@ -91,16 +91,16 @@ function slideout()
  * Retrieve URL variables
  * http://papermashup.com/read-url-get-variables-withjavascript/
  *
- * @return {array} vars
+ * @return {Array} vars
  * @author Ashley <ashley@papermashup.com>
  */
 function getUrlVars()
 {
-    var vars = {};
-    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value)
-    {
-        vars[key] = value;
-    });
+    var vars = {},
+        parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value)
+        {
+            vars[key] = value;
+        });
     return vars;
 }
 
@@ -127,6 +127,93 @@ function update_map()
     });
 }
 
+/**
+ * Update data from FD API
+ *
+ * @param {int} wait
+ * @param {string} newsys
+ * @param {string} override
+ * @param {string} force_update
+ * @author Mauri Kujala <contact@edtb.xyz>
+ */
+function update_api(wait, newsys, override, force_update)
+{
+    wait = wait || 0;
+    newsys = newsys || "false";
+    override = override || "false";
+    force_update = force_update || "false";
+    setTimeout(function()
+    {
+        $.ajax(
+            {
+                url: "/get/getData_status.php?newsys=" + newsys + "&override=" + override + "&force_update=" + force_update,
+                cache: false,
+                dataType: "json",
+                success: function(result)
+                {
+                    if (result.cmdr_status != "false" && result.cmdr_ranks_update == "true")
+                    {
+                        log("CMDR status changed, refreshing");
+                        $("#cmdr_status").html(result.cmdr_status);
+                    }
+                    else
+                    {
+                        log("CMDR status not changed");
+                    }
+
+                    if (result.cmdr_balance_status != "false" && result.cmdr_balance_update == "true")
+                    {
+                        log("CMDR balance changed, refreshing");
+                        $("#balance_st").html(result.cmdr_balance_status);
+                    }
+                    else
+                    {
+                        log("CMDR balance not changed");
+                    }
+
+                    if (result.ship_status != "false" && result.ship_status_update == "true")
+                    {
+                        log("Ship status changed, refreshing");
+                        $("#ship_status").html(result.ship_status);
+                    }
+                    else
+                    {
+                        log("Ship status not changed");
+                    }
+                    //log("Success: requesting /get/getData_status.php ok");
+                },
+                error: function()
+                {
+                    log("Error: requesting /get/getData_status.php failed");
+                }
+            });
+    }, wait);
+}
+
+/**
+ * Update points of interest and bookmarks
+ *
+ * @author Mauri Kujala <contact@edtb.xyz>
+ */
+function update_poi_bm()
+{
+    $.ajax(
+        {
+            url: "/get/getData_poi_bm.php",
+            cache: false,
+            dataType: "html",
+            success: function(result)
+            {
+                log("Refreshing poi & bm data");
+                $("#poi_bm").html(result);
+            },
+            error: function()
+            {
+                log("Error: requesting /get/getData_poi_bm.php failed");
+            }
+        });
+}
+
 var requestno = 0;
 /**
  * Update current system and station data
@@ -143,18 +230,18 @@ function get_data(override)
        requestno = 0;
     }
 
-    var time = 4000;
+    var time = 4000,
+        system_id = getUrlVars().system_id,
+        system_name = getUrlVars().system_name,
+
+        slog_sort = getUrlVars().slog_sort,
+        glog_sort = getUrlVars().glog_sort,
+        page_sys = $("#system_title").html();
+
     if (requestno === 0)
     {
-       time = 200;
+        time = 200;
     }
-
-    var system_id = getUrlVars().system_id;
-    var system_name = getUrlVars().system_name;
-
-    var slog_sort = getUrlVars().slog_sort;
-    var glog_sort = getUrlVars().glog_sort;
-    var page_sys = $("#system_title").html();
 
     /**
      * fetch info for left panel, system.php and maps
@@ -175,8 +262,6 @@ function get_data(override)
                     dataType: "json",
                     success: function(result)
                     {
-                        var returnedvalue = result;
-
                         $("#nowplaying").html(result.now_playing);
 
                         if (onlysystem != page_sys)
@@ -242,9 +327,10 @@ function get_data(override)
                             {
                                 cont.highcharts().destroy();
                             }
-                            var mode = getUrlVars().mode;
-                            var maxdistance = getUrlVars().maxdistance;
-                            var script = document.createElement("script");
+
+                            var mode = getUrlVars().mode,
+                                maxdistance = getUrlVars().maxdistance,
+                                script = document.createElement("script");
                             script.type = "text/javascript";
                             script.src = "/get/getMapPoints.js.php?mode=" + mode + "&maxdistance=" + maxdistance;
 
@@ -285,93 +371,6 @@ function get_data(override)
     });
 }
 
-/**
- * Update data from FD API
- *
- * @param {int} wait
- * @param {bool} newsys
- * @param {bool} override
- * @param {bool} force_update
- * @author Mauri Kujala <contact@edtb.xyz>
- */
-function update_api(wait, newsys, override, force_update)
-{
-    wait = wait | 0;
-    newsys = newsys | "false";
-    override = override | "false";
-    force_update = force_update | "false";
-    setTimeout(function()
-    {
-        $.ajax(
-        {
-            url: "/get/getData_status.php?newsys=" + newsys + "&override=" + override + "&force_update=" + force_update,
-            cache: false,
-            dataType: "json",
-            success: function(result)
-            {
-                if (result.cmdr_status != "false" && result.cmdr_ranks_update == "true")
-                {
-                    log("CMDR status changed, refreshing");
-                    $("#cmdr_status").html(result.cmdr_status);
-                }
-                else
-                {
-                    log("CMDR status not changed");
-                }
-
-                if (result.cmdr_balance_status != "false" && result.cmdr_balance_update == "true")
-                {
-                    log("CMDR balance changed, refreshing");
-                    $("#balance_st").html(result.cmdr_balance_status);
-                }
-                else
-                {
-                    log("CMDR balance not changed");
-                }
-
-                if (result.ship_status != "false" && result.ship_status_update == "true")
-                {
-                    log("Ship status changed, refreshing");
-                    $("#ship_status").html(result.ship_status);
-                }
-                else
-                {
-                    log("Ship status not changed");
-                }
-                //log("Success: requesting /get/getData_status.php ok");
-            },
-            error: function()
-            {
-                log("Error: requesting /get/getData_status.php failed");
-            }
-        });
-    }, wait);
-}
-
-/**
- * Update points of interest and bookmarks
- *
- * @author Mauri Kujala <contact@edtb.xyz>
- */
-function update_poi_bm()
-{
-    $.ajax(
-    {
-        url: "/get/getData_poi_bm.php",
-        cache: false,
-        dataType: "html",
-        success: function(result)
-        {
-            log("Refreshing poi & bm data");
-            $("#poi_bm").html(result);
-        },
-        error: function()
-        {
-            log("Error: requesting /get/getData_poi_bm.php failed");
-        }
-    });
-}
-
 $(function()
 {
     get_data();
@@ -382,7 +381,7 @@ $(function()
  *
  * @param {string} formid
  * @param {string} coordformid
- * @param {bool} onlyid
+ * @param {bool|string} onlyid
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function get_cs(formid, coordformid, onlyid)
@@ -406,18 +405,16 @@ function get_cs(formid, coordformid, onlyid)
             cache: false,
             success: function(results)
             {
-                var returnedvalues = results;
-                $("#" + coordformid).val(returnedvalues);
-
                 // split coordinates for distance calculations
-                var res = returnedvalues.split(",");
-                var x = res[0];
-                var y = res[1];
-                var z = res[2];
+                var res = results.split(","),
+                    x = res[0],
+                    y = res[1],
+                    z = res[2];
+
                 $("#coordsx_2").val(x);
                 $("#coordsy_2").val(y);
                 $("#coordsz_2").val(z);
-
+                $("#" + coordformid).val(results);
             }
         });
     }
@@ -455,11 +452,12 @@ function update_values(editurl, deleteid)
         {
             jQuery.each(result, function(id, value)
             {
-                if ($("#" + id).attr("type") == "checkbox")
+                var elem = $("#" + id);
+                if (elem.attr("type") == "checkbox")
                 {
                     if (value === "1")
                     {
-                        $("#" + id).prop("checked", true);
+                        elem.prop("checked", true);
                     }
 
                     if (id == "pinned")
@@ -476,19 +474,22 @@ function update_values(editurl, deleteid)
                         }
                     }
                 }
-                else if ($("#" + id).attr("type") == "select")
+                else if (elem.attr("type") == "select")
                 {
                     document.getElementById(id).getElementsByTagName("option")[value].selected = "selected";
                 }
                 else
                 {
-                    $("#" + id).val(value);
+                    elem.val(value);
                 }
             });
         }
     });
 
-    var delete_div = $("#delete");
+    var delete_div = $("#delete"),
+        delete_poi = $("#delete_poi"),
+        delete_bm = $("#delete_bm");
+
     if (delete_div.length)
     {
         delete_div.html("");
@@ -498,7 +499,6 @@ function update_values(editurl, deleteid)
         }
     }
 
-    var delete_poi = $("#delete_poi");
     if (delete_poi.length)
     {
         delete_poi.html("");
@@ -508,7 +508,6 @@ function update_values(editurl, deleteid)
         }
     }
 
-    var delete_bm = $("#delete_bm");
     if (delete_bm.length)
     {
         delete_bm.html("");
@@ -524,14 +523,16 @@ function update_values(editurl, deleteid)
  *
  * @param {string} formid
  * @param {string} file
- * @param {bool} update_map
+ * @param {boolean} update_map
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function update_data(formid, file, update_map)
 {
     update_map = update_map || false;
-    var allTags = document.getElementById(formid).elements;
-    var data_to_send = { };
+    var allTags = document.getElementById(formid).elements,
+        data_to_send = {},
+        tg,
+        st;
 
     for (tg = 0; tg < allTags.length; tg+= 1)
     {
@@ -555,7 +556,7 @@ function update_data(formid, file, update_map)
         }
     }
     //log(data_to_send);
-    var st = JSON.stringify(data_to_send);
+    st = JSON.stringify(data_to_send);
     $.ajax(
     {
         type: "POST",
@@ -608,7 +609,7 @@ function update_data(formid, file, update_map)
  * Add zero to time if < 10
  *
  * @param {int} i
- * @return {int} i
+ * @return {string} i
  */
 function addZero(i)
 {
@@ -624,35 +625,96 @@ function addZero(i)
  */
 function startTime()
 {
-    var today = new Date();
-    var h = addZero(today.getHours());
-    var m = today.getMinutes();
-    var s = today.getSeconds();
-    var monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
-    var d = today.getDate();
-    var year = today.getFullYear() + 1286;
-    var mo = monthNames[today.getMonth()];
+    if (gmt == "false")
+    {
+        var today = new Date(),
+            h = addZero(today.getHours()),
+            m = today.getMinutes(),
+            s = today.getSeconds(),
+            monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            d = today.getDate(),
+            year = today.getFullYear() + 1286,
+            mo = monthNames[today.getMonth()];
+    }
+    else
+    {
+        var today = new Date(),
+            h = addZero(today.getUTCHours()),
+            m = today.getUTCMinutes(),
+            s = today.getUTCSeconds(),
+            monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            d = today.getUTCDate(),
+            year = today.getUTCFullYear() + 1286,
+            mo = monthNames[today.getUTCMonth()];
+    }
+
     m = addZero(m);
     s = addZero(s);
 
-    var hrs = $("#hrs");
+    var hrs = $("#hrs"),
+        hrsns = $("#hrsns"),
+        date = $("#date");
+
     if (hrs.length)
     {
         hrs.html(h + ":" + m + ":" + s);
     }
 
-    var hrsns = $("#hrsns");
     if (hrsns.length)
     {
         hrsns.html(h + ":" + m);
     }
 
-    var date = $("#date");
     if (date.length)
     {
         date.html(d + " " + mo + " " + year);
     }
-    var t = setTimeout(function(){startTime();}, 500);
+
+    setTimeout(function(){startTime();}, 1000);
+}
+
+/**
+ * Shove affected div to the front
+ *
+ * @param {string} divid
+ * @param {boolean} toback
+ * @author Mauri Kujala <contact@edtb.xyz>
+ */
+function tofront(divid, toback)
+{
+    toback = toback || false;
+    var setindex = zindexmax + 1,
+        divs = ["addlog", "calculate", "addPoi", "addstation", "distance", "editsystem", "report", "addBm", "search_system"],
+        index;
+
+    if (toback === false)
+    {
+        if (document.getElementById(divid).style.display == "block")
+        {
+            document.getElementById(divid).style.display = "none";
+            $(".entries").fadeIn("fast");
+        }
+        else
+        {
+            $("#" + divid).fadeIn("fast");
+            document.getElementById(divid).style.zindex = setindex;
+            document.getElementsByClassName("entries")[0].style.display = "none";
+        }
+    }
+    else
+    {
+        get_data(true);
+        $(".entries").fadeIn("fast");
+    }
+
+    for (index = 0; index < divs.length; index += 1)
+    {
+        if (document.getElementById(divs[index]) && divs[index] != divid)
+        {
+            document.getElementById(divs[index]).style.zindex = 0;
+            document.getElementById(divs[index]).style.display = "none";
+        }
+    }
 }
 
 /**
@@ -756,7 +818,9 @@ var last_system = "";
  */
 function get_mi(system)
 {
-    var report = $("#report");
+    var report = $("#report"),
+        last_system = "";
+
     if (last_system == system)
     {
         report.hide();
@@ -820,13 +884,12 @@ function showResult(str, divid, link, station, idlink, sysid, dp)
         }
     };
 
-    allegiance = getUrlVars().allegiance;
-    system_allegiance = getUrlVars().system_allegiance;
-    power = getUrlVars().power;
-
-    var addtolink = "";
-    var addtolink2 = "";
-    var addtolink3 = "";
+    var allegiance = getUrlVars().allegiance,
+        system_allegiance = getUrlVars().system_allegiance,
+        power = getUrlVars().power,
+        addtolink = "",
+        addtolink2 = "",
+        addtolink3 = "";
 
     if (system_allegiance != "undefined")
     {
@@ -857,7 +920,7 @@ function showResult(str, divid, link, station, idlink, sysid, dp)
 /**
  * Change the value to the selected one
  *
- * @param {int} result
+ * @param {string} result
  * @param {string} coordinates
  * @param {string} divid
  * @author Mauri Kujala <contact@edtb.xyz>
@@ -865,10 +928,10 @@ function showResult(str, divid, link, station, idlink, sysid, dp)
 function setResult(result, coordinates, divid)
 {
     $("#system_" + divid).val(result);
-    var res = coordinates.split(",");
-    var x = res[0];
-    var y = res[1];
-    var z = res[2];
+    var res = coordinates.split(","),
+        x = res[0],
+        y = res[1],
+        z = res[2];
 
     $("#coordsx_" + divid).val(x);
     $("#coordsy_" + divid).val(y);
@@ -897,7 +960,7 @@ function setbm(name, sysid)
  * Change the value to the selected one for Stations
  *
  * @param {string} name
- * @param {int} stationid
+ * @param {string} stationid
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function setl(name, stationid)
@@ -916,12 +979,13 @@ function setl(name, stationid)
  */
 function setdp(name, coordinates, systemid)
 {
+    var res = coordinates.split(","),
+        x = res[0],
+        y = res[1],
+        z = res[2];
+
     $("#system_name").val(name);
     $("#system_id").val(systemid);
-    var res = coordinates.split(",");
-    var x = res[0];
-    var y = res[1];
-    var z = res[2];
     $("#x").val(x);
     $("#y").val(y);
     $("#z").val(z);
@@ -1082,13 +1146,12 @@ function calcDist(coord_fromx, coord_fromy, coord_fromz, coord_tox, coord_toy, c
     to_id = to_id || "";
     from_id = from_id || "";
 
-    var x1 = coord_fromx;
-    var y1 = coord_fromy;
-    var z1 = coord_fromz;
-
-    var x2 = coord_tox;
-    var y2 = coord_toy;
-    var z2 = coord_toz;
+    var x1 = coord_fromx,
+        y1 = coord_fromy,
+        z1 = coord_fromz,
+        x2 = coord_tox,
+        y2 = coord_toy,
+        z2 = coord_toz;
 
     /*if (document.getElementById("distance_mp") && document.getElementById("to_system").value != "" && document.getElementById("from_system").value != "")
     {
@@ -1150,8 +1213,9 @@ function addstation(station, station_id)
  */
 function savelog(log)
 {
-    var seslogsuccess = $("#seslogsuccess");
-    var data = $("#logtext").val();
+    var seslogsuccess = $("#seslogsuccess"),
+        data = $("#logtext").val();
+
     $.ajax(
     {
         type: "POST",
@@ -1182,51 +1246,6 @@ function savelog(log)
 function showsave()
 {
     $("#seslogsuccess").html('<a href="javascript:void(0)" onclick="savelog()" title="Save session log"><img src="/style/img/save.png" class="icon" alt="Save"></a>');
-}
-
-/**
- * Shove affected div to the front
- *
- * @param {int} divid
- * @param {bool} toback
- * @author Mauri Kujala <contact@edtb.xyz>
- */
-function tofront(divid, toback)
-{
-    setindex = zindexmax + 1;
-    toback = toback || false;
-
-    var divs = ["addlog", "calculate", "addPoi", "addstation", "distance", "editsystem", "report", "addBm", "search_system"];
-
-    if (toback === false)
-    {
-        if (document.getElementById(divid).style.display == "block")
-        {
-            document.getElementById(divid).style.display = "none";
-            $(".entries").fadeIn("fast");
-        }
-        else
-        {
-            $("#" + divid).fadeIn("fast");
-            document.getElementById(divid).style.zindex = setindex;
-            document.getElementsByClassName("entries")[0].style.display = "none";
-        }
-    }
-    else
-    {
-        get_data(true);
-        $(".entries").fadeIn("fast");
-    }
-
-    var index;
-    for (index = 0; index < divs.length; index += 1)
-    {
-        if (document.getElementById(divs[index]) && divs[index] != divid)
-        {
-            document.getElementById(divs[index]).style.zindex = 0;
-            document.getElementById(divs[index]).style.display = "none";
-        }
-    }
 }
 
 /**
@@ -1284,6 +1303,8 @@ function imgurUpload(file, fileurl)
  */
 function setActive(id, num)
 {
+    var i;
+
     for (i = 0; i <= num; i += 1)
     {
         if (document.getElementById("link_" + i))
@@ -1416,7 +1437,7 @@ function refresh_api()
 /**
  * Ignore version update
  *
- * @param {string} ignore_version
+ * @param {string} version
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function ignore_version(version)
@@ -1439,9 +1460,8 @@ function ignore_version(version)
 /**
  * Send/fetch private comments from EDSM
  *
- * @param {string} system
  * @param {string} comment
- * @param {bool} send
+ * @param {boolean} send
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function edsm_comment(comment, send)
@@ -1507,13 +1527,14 @@ function set_reference_systems(standard, force)
 {
     force = force || false;
 
-    add = "";
+    var add = "",
+        urli = "";
+
     if (force === true)
     {
         add = "?force";
     }
 
-    var urli = "";
     if (standard !== false)
     {
         urli = "/get/getReferenceSystems.php?standard=true" + add;
@@ -1538,6 +1559,7 @@ function set_reference_systems(standard, force)
  * Bring info to view
  *
  * @param {string} div_id
+ * @param {string} e
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function to_view(div_id, e)

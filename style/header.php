@@ -99,10 +99,42 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
             <!-- own js -->
             <script src="/source/javascript.js"></script>
 
+            <!-- global variable for clock -->
+            <script>
+                var gmt = "<?php echo $settings["game_time"]?>";
+            </script>
+
             <title>CMDR <?php echo $settings["cmdr_name"]; ?>'s ToolBox</title>
         </head>
         <body onload="startTime()">
-            <div class="se-pre-con" id="loading"><svg width="100" height="100" viewbox="0 0 40 40"><path d="m5,8l5,8l5,-8z" class="l1 d1" /><path d="m5,8l5,-8l5,8z"   class="l1 d2" /><path d="m10,0l5,8l5,-8z"  class="l1 d3" /><path d="m15,8l5,-8l5,8z"  class="l1 d4" /><path d="m20,0l5,8l5,-8z"  class="l1 d5" /><path d="m25,8l5,-8l5,8z"  class="l1 d6" /><path d="m25,8l5,8l5,-8z"  class="l1 d7" /><path d="m30,16l5,-8l5,8z" class="l1 d8" /><path d="m30,16l5,8l5,-8z" class="l1 d9" /><path d="m25,24l5,-8l5,8z" class="l1 d10" /><path d="m25,24l5,8l5,-8z" class="l1 d11" /><path d="m20,32l5,-8l5,8z" class="l1 d13" /><path d="m15,24l5,8l5,-8z" class="l1 d14" /><path d="m10,32l5,-8l5,8z" class="l1 d15" /><path d="m5,24l5,8l5,-8z"  class="l1 d16" /><path d="m5,24l5,-8l5,8z"  class="l1 d17" /><path d="m0,16l5,8l5,-8z"  class="l1 d18" /><path d="m0,16l5,-8l5,8z"  class="l1 d19" /><path d="m10,16l5,-8l5,8z" class="l2 d0" /><path d="m15,8l5,8l5,-8z"  class="l2 d3" /><path d="m20,16l5,-8l5,8z" class="l2 d6"  /><path d="m20,16l5,8l5,-8z" class="l2 d9" /><path d="m15,24l5,-8l5,8z" class="l2 d12" /><path d="m10,16l5,8l5,-8z" class="l2 d15" /></svg></div>
+            <div class="se-pre-con" id="loading">
+                <svg width="100" height="100" viewbox="0 0 40 40">
+                    <path d="m5,8l5,8l5,-8z" class="l1 d1" />
+                    <path d="m5,8l5,-8l5,8z" class="l1 d2" />
+                    <path d="m10,0l5,8l5,-8z" class="l1 d3" />
+                    <path d="m15,8l5,-8l5,8z" class="l1 d4" />
+                    <path d="m20,0l5,8l5,-8z" class="l1 d5" />
+                    <path d="m25,8l5,-8l5,8z" class="l1 d6" />
+                    <path d="m25,8l5,8l5,-8z" class="l1 d7" />
+                    <path d="m30,16l5,-8l5,8z" class="l1 d8" />
+                    <path d="m30,16l5,8l5,-8z" class="l1 d9" />
+                    <path d="m25,24l5,-8l5,8z" class="l1 d10" />
+                    <path d="m25,24l5,8l5,-8z" class="l1 d11" />
+                    <path d="m20,32l5,-8l5,8z" class="l1 d13" />
+                    <path d="m15,24l5,8l5,-8z" class="l1 d14" />
+                    <path d="m10,32l5,-8l5,8z" class="l1 d15" />
+                    <path d="m5,24l5,8l5,-8z" class="l1 d16" />
+                    <path d="m5,24l5,-8l5,8z" class="l1 d17" />
+                    <path d="m0,16l5,8l5,-8z" class="l1 d18" />
+                    <path d="m0,16l5,-8l5,8z" class="l1 d19" />
+                    <path d="m10,16l5,-8l5,8z" class="l2 d0" />
+                    <path d="m15,8l5,8l5,-8z" class="l2 d3" />
+                    <path d="m20,16l5,-8l5,8z" class="l2 d6" />
+                    <path d="m20,16l5,8l5,-8z" class="l2 d9" />
+                    <path d="m15,24l5,-8l5,8z" class="l2 d12" />
+                    <path d="m10,16l5,8l5,-8z" class="l2 d15" />
+                </svg>
+            </div>
             <div class="leftpanel">
                 <div class="leftpanel-top">
                     <!-- current system name will be rendered here -->
@@ -217,7 +249,7 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
                         }
                         ?>
                         <div class="seslog" id="seslog">
-                            <textarea class="seslogtext" cols="40" rows="13" id="logtext" oninput="showsave()"><?php echo $sessionlog?></textarea>
+                            <textarea title="Session log" class="seslogtext" cols="40" rows="13" id="logtext" oninput="showsave()"><?php echo $sessionlog?></textarea>
                             <span id="seslogsuccess"><?php echo $minm?></span>
                             <span id="old_val" style="display:none"><?php echo $minm?></span>
                         </div>
