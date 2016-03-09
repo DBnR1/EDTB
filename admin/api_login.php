@@ -76,7 +76,7 @@ if (isset($_GET["sendcode"])) {
         if (isset($_GET["login"]) && !isset($_GET["sendcode"])) {
             ?>
             <div class="input" style="display:block">
-                <form method="post" action="/admin/api_login.php?sendcode">
+                <form method="post" action="/admin/API_login.php?sendcode">
                     <div class="input-inner">
                         <table>
                             <tr>
@@ -117,7 +117,7 @@ if (isset($_GET["sendcode"])) {
             } else {
                 ?>
                 <div class="input" style="display:block">
-                    <form method="post" action="/admin/api_login.php?login">
+                    <form method="post" action="/admin/API_login.php?login">
                         <div class="input-inner">
                             <table style="width:340px">
                                 <tr>

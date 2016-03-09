@@ -88,7 +88,7 @@ if (isset($_GET["do"])) {
                         <input class="textbox" type="text" name="bm_system_name" placeholder="System name" id="bm_system_name" style="width:410px" oninput="showResult(this.value, '3', 'no', 'no', 'no', 'yes')" />
                     </td>
                     <td class="dark">
-                        <select class="selectbox" name="bm_catid" id="bm_catid" style="width:140px">
+                        <select title="Category" class="selectbox" name="bm_catid" id="bm_catid" style="width:140px">
                             <option value="0">Category (optional)</option>
                             <?php
                             $cat_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id, name FROM user_bm_categories ORDER BY name");

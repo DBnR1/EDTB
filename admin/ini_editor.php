@@ -62,7 +62,7 @@ $ini = file_get_contents($ini_file);
     </h2>
     <hr>
         <form method="post" action="ini_editor.php">
-            <textarea id="codes" name="code"><?php echo $ini?></textarea>
+            <textarea title="INI" id="codes" name="code"><?php echo $ini?></textarea>
             <input type="submit" class="button" value="Submit changes" />
         </form>
         <script type="text/javascript">

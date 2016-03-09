@@ -147,7 +147,7 @@ body
 div
 {
     cursor:url(/style/img/cursor.png), auto;
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#fffffa;
     font-size:13px;
 }
@@ -155,14 +155,14 @@ div
 h2
 {
     font-size:13px;
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#fffffa;
 }
 
 h3
 {
     font-size:13px;
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#70A4BD;
     font-weight:400;
     text-shadow:1px 1px 1px #000000;
@@ -176,9 +176,8 @@ hr
     border:0;
     margin-top:10px;
     height:1px;
-    border-top:1px solid #343f4a;
-    border-bottom:1px solid #343f4a;
-    border-style:outset;
+    border-top:1px outset #343f4a;
+    border-bottom:1px outset #343f4a;
 }
 
 a, a:visited
@@ -220,9 +219,7 @@ a:hover img
     width:350px;
     position:absolute;
     z-index:150 !important;
-    background-color:#404040;
-    background-image:url(/style/img/back.jpg);
-    background-repeat:repeat-x;
+    background: #404040 url(/style/img/back.jpg) repeat-x;
     border-right:3px double #2e3436;
 }
 
@@ -243,8 +240,7 @@ a:hover img
     height:60px;
     vertical-align:middle;
     border-bottom:1px solid #06060d;
-    background-color:#75bdd1;
-    background:radial-gradient(ellipse at center, #75bdd1 0%, #1499d3 0%, #168cc0 11%, #222222 100%);
+    background: #75bdd1 radial-gradient(ellipse at center, #75bdd1 0%, #1499d3 0%, #168cc0 11%, #222222 100%);
 }
 
 .leftpanel-top
@@ -303,7 +299,7 @@ a:hover img
 
 a.title
 {
-    font-family:Eurocaps;
+    font-family:"Eurocaps", sans-serif;
     color:#3f3f3f;
     font-size:22px;
     line-height:1;
@@ -314,7 +310,7 @@ a.title
 
 a.title:hover
 {
-    font-family:Eurocaps;
+    font-family:"Eurocaps", sans-serif;
     color:#3f3f3f;
     font-size:22px;
     line-height:1;
@@ -325,7 +321,7 @@ a.title:hover
 
 a.bookmarked
 {
-    font-family:Eurocaps;
+    font-family:"Eurocaps", sans-serif;
     color:#1B5C36;
     font-size:22px;
     line-height:1;
@@ -335,7 +331,7 @@ a.bookmarked
 
 a.bookmarked:hover
 {
-    font-family:Eurocaps;
+    font-family:"Eurocaps", sans-serif;
     color:#1B5C36;
     font-size:22px;
     line-height:1;
@@ -346,7 +342,7 @@ a.bookmarked:hover
 
 a.poid
 {
-    font-family:Eurocaps;
+    font-family:"Eurocaps", sans-serif;
     color:#D6A80F;
     font-size:22px;
     line-height:1;
@@ -356,7 +352,7 @@ a.poid
 
 a.poid:hover
 {
-    font-family:Eurocaps;
+    font-family:"Eurocaps", sans-serif;
     color:#D6A80F;
     font-size:22px;
     line-height:1;
@@ -377,7 +373,7 @@ a.poid:hover
     position:absolute;
     top:92px;
     right:10px;
-    font-family:Telegrama;
+    font-family:"Telegrama", sans-serif;
     color:#cccccc;
     font-size:13px;
     text-shadow:2px 2px 2px #000000;
@@ -396,7 +392,7 @@ a.poid:hover
     position:absolute;
     top:67px;
     right:10px;
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     z-index:10002;
     color:#cccccc;
     text-shadow:2px 2px 2px #000000;
@@ -412,13 +408,12 @@ a.poid:hover
 {
     display:none;
     position:absolute;
-    width:auto;
     max-width:250px;
     float:right;
     top:117px;
     left:194px;
     padding:10px;
-    font-family:Sintony;
+    font-family:Sintony, sans-serif;
     font-size:12px;
     width:135px;
     text-align:right;
@@ -461,7 +456,7 @@ a.poid:hover
     position:absolute;
     width:100%;
     height:52px;
-    padding:2px 0px 2px 3px;
+    padding:2px 0 2px 3px;
 }
 
 #img
@@ -472,7 +467,7 @@ a.poid:hover
 
 .subtitle
 {
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#1499d3;
     font-size:12px;
 }
@@ -489,7 +484,7 @@ a.poid:hover
 
 .text
 {
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#d1d5ff;
     text-shadow:1px 1px 1px #000000;
     font-size:13px;
@@ -506,7 +501,7 @@ a.poid:hover
 
 .leftpanel-stations
 {
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#fffffa;
     padding-left:7px;
     padding-top:3px;
@@ -514,9 +509,7 @@ a.poid:hover
     letter-spacing:normal;
     height:115px;
     overflow:hidden;
-    background-image:url(/style/img/station.png);
-    background-repeat:no-repeat;
-    background-position:right -27px bottom -27px;
+    background: url(/style/img/station.png) no-repeat right -27px bottom -27px;
     border-bottom:1px solid #06060d;
 }
 
@@ -541,7 +534,7 @@ a.poid:hover
 {
     display:none;
     position:absolute;
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#fffffa;
     font-size:12px;
     letter-spacing:normal;
@@ -552,7 +545,6 @@ a.poid:hover
     max-width:500px;
     background-image:linear-gradient(#2a3c45, #2D3B42);
     border:1px solid #000000;
-    color:#fffffa;
     text-shadow:1px 1px 1px #000000;
     z-index:1169600;
 }
@@ -596,7 +588,7 @@ a.poid:hover
 {
     display:none;
     position:absolute;
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#fffffa;
     font-size:12px;
     letter-spacing:normal;
@@ -605,7 +597,6 @@ a.poid:hover
     padding:8px;
     background-image:linear-gradient(#2a3c45, #2D3B42);
     border:1px solid #000000;
-    color:#fffffa;
     text-shadow:1px 1px 1px #000000;
     z-index:100000000;
     overflow:auto;
@@ -637,7 +628,7 @@ a.poid:hover
 
 .link
 {
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#fffffa;
     text-shadow:1px 1px 4px #333333;
     line-height:90%!important;
@@ -662,7 +653,7 @@ a.poid:hover
 
 .active
 {
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#ffffff;
     background-color:#0e0e11;
     line-height:90%!important;
@@ -670,8 +661,7 @@ a.poid:hover
     text-shadow:1px 1px 4px #333333;
     text-transform:uppercase;
     width:323px;
-    padding:7px;
-    padding-left:4px;
+    padding: 7px 7px 7px 4px;
     margin-top:8px;
     margin-left:7px;
     border-left:3px solid #56707d;
@@ -696,7 +686,7 @@ a.poid:hover
     bottom:0;
     top:545px;
     vertical-align:top;
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#ffffff;
     font-size:13px;
     padding-left:4px;
@@ -757,8 +747,7 @@ a.poid:hover
     left:352px;
     right:0;
     width:auto;
-    background-color:#000000;
-    background-image:url(/style/img/backg.jpg);
+    background: #000000 url(/style/img/backg.jpg);
     background-size:cover;
     overflow:auto;
     text-align:center;
@@ -775,7 +764,7 @@ a.poid:hover
 
 .titletext
 {
-    font-family:Eurocaps;
+    font-family:"Eurocaps", sans-serif;
     color:#3f3f3f;
     font-size:23px;
     font-weight:700;
@@ -787,7 +776,7 @@ a.poid:hover
 .titletext a
 {
     z-index:10002;
-    font-family:Eurocaps;
+    font-family:"Eurocaps", sans-serif;
     color:#3f3f3f;
     font-size:23px;
     font-weight:700;
@@ -830,7 +819,7 @@ a.poid:hover
     display:none;
     position:absolute;
     left:200px;
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     vertical-align:middle;
     color:#fffffa;
     text-shadow:none;
@@ -868,7 +857,7 @@ a.poid:hover
     top:92px;
     right:98px;
     white-space:nowrap;
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     vertical-align:middle;
     z-index:100000;
     color:#fffffa;
@@ -914,7 +903,7 @@ a.poid:hover
 {
     display:inline-block;
     white-space:nowrap;
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     vertical-align:middle;
     color:#cccccc;
     font-size:14px;
@@ -928,7 +917,7 @@ a.poid:hover
 #cmdr_status_mi, #ship_status_mi
 {
     position:absolute;
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     vertical-align:middle;
     color:#fffffa;
     font-size:13px;
@@ -951,7 +940,7 @@ a.poid:hover
 {
     color:#fffffa;
     font-size:13px;
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     text-shadow:none;
 }
 
@@ -993,7 +982,7 @@ a.poid:hover
 {
     display:none;
     margin-top:60px;
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#fffffa;
     width:100%;
     padding-top:15px;
@@ -1024,7 +1013,7 @@ a.poid:hover
 
 .entries_inner
 {
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#fffffa;
     font-size:12px;
     width:auto;
@@ -1049,7 +1038,7 @@ a.poid:hover
 /* pre format for log entries */
 .entriespre
 {
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#fffffa;
     font-size:12px;
     letter-spacing:normal;
@@ -1065,7 +1054,7 @@ a.poid:hover
 
 .poi
 {
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     font-size:12px;
     border-left:3px solid #4794b5;
     padding-left:7px;
@@ -1084,10 +1073,9 @@ a.poid:hover
     top:-30px;
     overflow:auto;
     color:#fffffa;
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     font-size:12px;
-    padding:5px;
-    padding-bottom:0;
+    padding: 5px 5px 0;
     white-space:nowrap;
     z-index:666;
 }
@@ -1116,7 +1104,7 @@ a.poid:hover
     right:100px;
     text-transform:uppercase;
     border-radius:4px;
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#fffffa;
     font-size:13px;
     font-weight:bold;
@@ -1132,7 +1120,6 @@ a.poid:hover
 
 #map_legend:hover
 {
-    color:inherit;
     cursor:url(/style/img/cursor.png), auto;
     background-color:#273238;
     border-color:#333333;
@@ -1151,7 +1138,7 @@ a.poid:hover
     letter-spacing:normal;
     line-height:1;
     border:1px solid #333333;
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     font-size:12px;
     padding:5px;
     z-index:666;
@@ -1164,9 +1151,8 @@ a.poid:hover
 
 .distance
 {
-    background-color:#333333;
     opacity:0.8;
-    background-image:none;
+    background:#333333 none;
     color:inherit;
     font-family:inherit;
     font-size:12px;
@@ -1186,15 +1172,14 @@ a.poid:hover
 .textbox
 {
     border-radius:4px;
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     font-size:12px;
     color:#fffffa;
     resize:none;
     background-color:#41545e;
     border:1px solid #1b2133;
     height:23px;
-    padding:3px;
-    padding-left:5px;
+    padding:3px 3px 3px 5px;
     margin-top:5px;
     outline:0;
     cursor:url(/style/img/cursor.png), auto;
@@ -1209,22 +1194,20 @@ a.poid:hover
 .textbox:focus, .selectbox:focus
 {
     border:2px solid #4e6470;
-    padding:2px;
-    padding-left:4px;
+    padding:2px 2px 2px 4px;
 }
 
 .selectbox
 {
     border-radius:4px;
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#fffffa;
     font-size:12px;
     resize:none;
     background-color:#41545e;
     border:1px solid #1b2133;
     height:31px;
-    padding:3px;
-    padding-left:5px;
+    padding:3px 3px 3px 5px;
     margin-top:5px;
     outline:0;
     cursor:url(/style/img/cursor.png), auto;
@@ -1239,13 +1222,12 @@ a.poid:hover
 .textarea
 {
     border-radius:4px;
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#fffffa;
     font-size:12px;
     background-color:#41545e;
     border:1px solid #1b2133;
-    padding:3px;
-    padding-left:5px;
+    padding: 3px 3px 3px 5px;
     margin-top:5px;
     outline:0;
     cursor:url(/style/img/cursor.png), auto;
@@ -1273,8 +1255,7 @@ input[type=checkbox] + label
     height:16px;
     width:16px;
     display:inline-block;
-    background-image:url(/style/img/pinned_not.png);
-    background-repeat:no-repeat;
+    background: url(/style/img/pinned_not.png) no-repeat;
     cursor:url(/style/img/cursor.png), auto;
 }
 
@@ -1283,8 +1264,7 @@ input[type=checkbox]:checked + label
     height:16px;
     width:16px;
     display:inline-block;
-    background-image:url(/style/img/pinned.png);
-    background-repeat:no-repeat;
+    background: url(/style/img/pinned.png) no-repeat;
     cursor:url(/style/img/cursor.png), auto;
 }
 
@@ -1314,7 +1294,7 @@ select::-ms-expand
 button, .button
 {
     border-radius:4px;
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#fffffa;
     font-size:12px;
     text-align:center;
@@ -1335,7 +1315,7 @@ button, .button
 button:hover, .button:hover
 {
     border-radius:4px;
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#fffffa;
     font-size:12px;
     resize:none;
@@ -1349,7 +1329,7 @@ button:hover, .button:hover
 .delete_button
 {
     border-radius:4px;
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#fffffa;
     text-align:center;
     font-size:12px;
@@ -1394,7 +1374,7 @@ fieldset
     border-radius:4px;
     padding:8px;
     text-transform:uppercase;
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#000000;
     font-size:13px;
     z-index:10000;
@@ -1421,7 +1401,7 @@ fieldset
 .suggestions a
 {
     line-height:2;
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#fffffa;
     font-size:11px;
 }
@@ -1468,7 +1448,7 @@ fieldset
 
 .light
 {
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#fffffa;
     font-size:13px;
     /*font-weight:bold;*/
@@ -1480,7 +1460,7 @@ fieldset
 
 .transparent
 {
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#fffffa;
     font-size:13px;
     padding:6px;
@@ -1491,7 +1471,7 @@ fieldset
 
 .dark
 {
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#fffffa;
     font-size:13px;
     padding:6px;
@@ -1503,7 +1483,7 @@ fieldset
 
 .heading
 {
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#fffffa;
     vertical-align:middle;
     text-shadow:1px 1px 4px #333333;
@@ -1534,7 +1514,7 @@ fieldset
     resize:none;
     line-height:18px;
     overflow:auto;
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#fffffa;
     font-size:12px;
 }
@@ -1550,8 +1530,7 @@ fieldset
 /* http://www.menucool.com/tooltip/css-tooltip */
 div.tooltip
 {
-    font-family:Sintony;
-    color:#fffffa;
+    font-family:"Sintony", sans-serif;
     font-size:13px;
     display:none;
     padding:14px 20px;
@@ -1561,7 +1540,7 @@ div.tooltip
     color:#eeeeee;
     background:#333 url(/style/img/css-tooltip-gradient-bg.png) repeat-x 0 0;
     border-radius:2px;
-    box-shadow:0px 0px 8px 4px #666;
+    box-shadow:0 0 8px 4px #666;
 }
 
 .callout
@@ -1579,7 +1558,7 @@ div.tooltip
     top:61px;
     width:auto;
     height:auto;
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#fffffa;
     text-align:left;
     font-size:12px;
@@ -1595,7 +1574,7 @@ div.tooltip
 
 .settings_panel a
 {
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#fffffa;
     text-align:left;
     font-size:12px;
@@ -1605,7 +1584,7 @@ div.tooltip
 
 .settings_panel a:hover
 {
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#fffffa;
     font-size:12px;
     text-shadow:1px 1px 4px #333333;
@@ -1632,7 +1611,7 @@ div.tooltip
 {
     position:relative;
     text-transform:uppercase;
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#fffffa;
     cursor:url(/style/img/cursor.png), auto;
     font-size:13px;
@@ -1673,7 +1652,6 @@ div.tooltip
 .pagination>.actives>a,.pagination>.actives>span,.pagination>.actives>span:hover,.pagination>.actives>a:focus,.pagination>.actives>span:focus
 {
     color:#fffffa;
-    cursor:default;
     background-color:#1483a8;
     cursor:url(/style/img/cursor.png), auto;
     border-color:#333333;
@@ -1681,7 +1659,6 @@ div.tooltip
 .pagination>.actives>a:hover
 {
     color:#ffffff;
-    cursor:default;
     cursor:url(/style/img/cursor.png), auto;
     background-color:#1483a8;
     border-color:#333333;
@@ -1719,8 +1696,7 @@ div.tooltip
 .info_td
 {
     font-weight:normal;
-    padding:4px;
-    padding-right:15px;
+    padding: 4px 15px 4px 4px;
     line-height:1.5;
 }
 
@@ -1745,8 +1721,7 @@ div.tooltip
 .notice_text
 {
     background-color:#536a75;
-    padding:4px;
-    padding-left:6px;
+    padding: 4px 4px 4px 6px;
     border:1px solid #5a5f61;
     border-top:none;
     line-height:2;
@@ -1807,7 +1782,7 @@ div.tooltip
     line-height:2;
     display:none;
     width:auto;
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#fffffa;
     font-size:12px;
     text-shadow:none;
@@ -1831,7 +1806,7 @@ div.tooltip
 {
     padding:5px;
     line-height:1.5;
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#fffffa;
     font-size:12px;
     background-color:#0e0e11;
@@ -1841,7 +1816,7 @@ div.tooltip
 
 .map_info_title
 {
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#fffffa;
     font-size:13px;
     float:right;
@@ -1878,7 +1853,7 @@ div.tooltip
 .settings_info
 {
     padding:3px;
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#fffffa;
     font-size:12px;
     font-style:italic;
@@ -1898,8 +1873,7 @@ div.tooltip
 
 .audio
 {
-    padding:5px;
-    padding-left:0;
+    padding: 5px 5px 5px 0;
     margin-bottom:10px;
 }
 
@@ -1961,8 +1935,7 @@ div.tooltip
     right:0;
     left:0;
     width:auto;
-    padding:10px;
-    padding-left:20px;
+    padding: 10px 10px 10px 20px;
     vertical-align:middle;
     z-index:1000002;
     font-size:0;
@@ -1999,9 +1972,7 @@ div.tooltip
 .categories
 {
     display:inline-block;
-    padding:5px;
-    padding-right:10px;
-    padding-left:10px;
+    padding: 5px 10px;
     border-left:1px solid #333;
     text-transform:uppercase;
     text-align:center;
@@ -2011,8 +1982,7 @@ div.tooltip
 .categories:hover, .categories:active
 {
     text-shadow:1px 1px 4px #000;
-    background-color:#333;
-    background-image:linear-gradient(#0e0e11, #333333);
+    background: #333 linear-gradient(#0e0e11, #333333);
     cursor:url(/style/img/cursor.png), auto;
 }
 
@@ -2039,8 +2009,7 @@ div.tooltip
 {
     max-width:100%;
     max-height:100%;
-    margin:auto;
-    margin-bottom:8px;
+    margin: auto auto 8px;
     display:block;
 }
 
@@ -2048,8 +2017,7 @@ div.tooltip
 {
     max-width:100%;
     max-height:100%;
-    margin:auto;
-    margin-bottom:8px;
+    margin: auto auto 8px;
     display:block;
 }
 
@@ -2065,7 +2033,7 @@ div.tooltip
 {
     display:none;
     position:absolute;
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#fffffa;
     font-size:12px;
     letter-spacing:normal;
@@ -2074,7 +2042,6 @@ div.tooltip
     padding:8px;
     background-image:linear-gradient(#2a3c45, #2D3B42);
     border:1px solid #000000;
-    color:#fffffa;
     text-shadow:1px 1px 1px #000000;
     z-index:100000;
     overflow:auto;
@@ -2092,7 +2059,7 @@ div.tooltip
 .delete_body
 {
     border-radius:4px;
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#fffffa;
     text-align:center;
     font-size:12px;
@@ -2136,8 +2103,7 @@ div.tooltip
 .info_td
 {
     font-weight:normal;
-    padding:4px;
-    padding-right:15px;
+    padding: 4px 15px 4px 4px;
     line-height:1.5;
 }
 
@@ -2318,7 +2284,7 @@ div.tooltip
     line-height:18px;
     overflow:auto;
     resize:none;
-    font-family:Sintony;
+    font-family:"Sintony", sans-serif;
     color:#fffffa;
     font-size:12px;
 }
@@ -2446,10 +2412,9 @@ div.tooltip
 .markItUpHeader ul ul a
 {
     display:block;
-    padding-left:0;
     text-indent:0;
     width:120px;
-    padding:5px 5px 5px 25px;
+    padding: 5px 5px 5px 25px;
     background-position:2px 50%;
 }
 
@@ -2516,9 +2481,7 @@ div.tooltip
 /* this targets the default scrollbar (compulsory) */
 ::-webkit-scrollbar-track
 {
-    background-color:#121619;
-    background-image:-webkit-gradient(linear, left top, left bottom, from(#121619), to(#313131));
-    background-repeat:stretch;
+    background: #121619 -webkit-gradient(linear, left top, left bottom, from(#121619), to(#313131)) stretch;
 }
 
 /* the new scrollbar will have a flat appearance with the set background color */
@@ -2615,9 +2578,7 @@ table.table-wrapper
 
 td.td-thumbnails-thumb
 {
-    padding:7px;
-    padding-top:2px;
-    padding-bottom:2px;
+    padding: 2px 7px;
     color:#555555;
     font-size:8pt;
     background-color:transparent;
@@ -2742,7 +2703,6 @@ td.td-picture-filename
     font-size:8pt;
     font-weight:bold;
     text-align:center;
-    background-color:#ececec;
     padding:7px;
     background-color:transparent;
 }
@@ -2751,7 +2711,6 @@ td.td-picture-caption
 {
     font-size:8pt;
     text-align:center;
-    background-color:#ececec;
     padding:7px;
     background-color:transparent;
 }

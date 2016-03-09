@@ -53,7 +53,6 @@ function makeitem($arr, $type, &$i)
     $item_added_on = $arr["added_on"];
 
     $item_added_ago = "";
-    $item_added_on = "";
 
     if (!empty($item_added_on)) {
         $item_added_ago = get_timeago($item_added_on, false);

@@ -110,7 +110,7 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
                                                         or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
     ?>
-    <form method="post" id="settings_form" action="settings.php">
+    <form method="post" id="settings_form" action="Settings.php">
         <table style="max-width:720px;margin-bottom:15px">
             <tr>
                 <td class="heading">Edit <?php echo $current_category?></td>
@@ -137,7 +137,6 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
                         </td>
                     </tr>
                     <?php
-
                 } elseif ($type == "textbox" || $type == "csl") {
                     ?>
                     <tr>
@@ -149,33 +148,33 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
                         </td>
                     </tr>
                     <?php
-
                 } elseif ($type == "array") {
                     ?>
                     <tr>
                         <td class="<?php echo $tdclass?>">
                             <div>
                                 <?php echo $info?>
-                                <textarea class="textarea" name="<?php echo $variable?>" placeholder="<?php echo $name?>" style="width:520px;height:220px" /><?php echo $value?></textarea>
+                                <textarea class="textarea" name="<?php echo $variable?>" placeholder="<?php echo $name?>" style="width:520px;height:220px">
+                                    <?php echo $value?>
+                                </textarea>
                             </div>
                         </td>
                     </tr>
                     <?php
-
                 } elseif ($type == "tf") {
                     if ($value == "true") {
                         $t_sel = ' selected="selected"';
                         $f_sel = "";
                     } elseif ($value == "false") {
                         $t_sel = "";
-                        $t_sel = ' selected="selected"';
+                        $f_sel = ' selected="selected"';
                     }
                     ?>
                     <tr>
                         <td class="<?php echo $tdclass?>">
                             <div>
                                 <span class="settings_info"><?php echo $name?></span><br />
-                                <select class="selectbox" name="<?php echo $variable?>" style="width:100px">
+                                <select title="tf" class="selectbox" name="<?php echo $variable?>" style="width:100px">
                                     <option value="true"<?php echo $t_sel?>>Yes</option>
                                     <option value="false"<?php echo $f_sel?>>No</option>
                                 </select>
@@ -183,7 +182,6 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
                         </td>
                     </tr>
                     <?php
-
                 } elseif (substr($type, 0, 4) == "enum") {
                     $values = str_replace("enum::", "", $type);
 
@@ -193,7 +191,7 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
                         <td class="<?php echo $tdclass?>">
                             <div>
                                 <span class="settings_info"><?php echo $name?></span><br />
-                                <select class="selectbox" name="<?php echo $variable?>" style="width:auto">
+                                <select title="Enum" class="selectbox" name="<?php echo $variable?>" style="width:auto">
                                     <?php
                                     foreach ($values as $val) {
                                         $parts = explode(">>", $val);
@@ -205,13 +203,12 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
 
                                         echo '<option value="' . $val_value . '"' . $selected . '>' . $val_name . '</option>';
                                     }
-                    ?>
+                                    ?>
                                 </select>
                             </div>
                         </td>
                     </tr>
                     <?php
-
                 }
                 $i++;
             }

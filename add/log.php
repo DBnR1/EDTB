@@ -149,7 +149,7 @@ if (isset($_GET["do"])) {
                     <tr>
                         <td class="dark" style="text-align:left;white-space:nowrap">
                             <input type="hidden" name="edit_id" id="edit_id" />
-                            <select class="selectbox" name="log_type" id="log_type">
+                            <select title="Type" class="selectbox" name="log_type" id="log_type">
                                 <option value="system">Type: System log</option>
                                 <option value="general">Type: General log</option>
                                 <option value="personal">Type: System log (Personal)</option>
@@ -160,7 +160,7 @@ if (isset($_GET["do"])) {
                                 <span id="pin_click" style="vertical-align:middle">
                                     &nbsp;Pin to top
                                 </span>&nbsp;&nbsp;
-                                <select class="selectbox" id="weight" name="weight" style="display:none">
+                                <select title="Weight" class="selectbox" id="weight" name="weight" style="display:none">
                                     <?php
                                     for ($i = -30; $i < 31; $i++) {
                                         $selected = $i == 0 ? ' selected="selected"' : "";
@@ -219,42 +219,48 @@ if (isset($_GET["do"])) {
     </form>
 </div>
 <script>
-    $("#enable_audio").click(function()
+    var enable_audio = $("#enable_audio"),
+        record_click = $("#record_click"),
+        stop_click = $("#stop_click"),
+        pin_click = $("#pin_click"),
+        pinned = $("#pinned"),
+        weight = $("#weight");
+
+    enable_audio.click(function()
     {
-        $("#enable_audio").hide();
-        $("#record_click").show();
-        //$("#stop_click").show();
+        enable_audio.hide();
+        record_click.show();
         start_audio();
     });
 
-    $("#record_click").click(function()
+    record_click.click(function()
     {
         startRecording(this);
-        $("#record_click").hide();
-        $("#stop_click").show();
+        record_click.hide();
+        stop_click.show();
         //$("#stop").attr("src", "/style/img/stop.png");
     });
 
-    $("#stop_click").click(function()
+    stop_click.click(function()
     {
         stopRecording(this);
-        $("#stop_click").hide();
+        stop_click.hide();
     });
 
-    $("#pin_click").click(function()
+    pin_click.click(function()
     {
-        if ($("#pinned").is(":checked"))
+        if (pinned.is(":checked"))
         {
-            $("#pinned").prop("checked", false);
-            $("#pin_click").html("&nbsp;Pin to top");
+            pinned.prop("checked", false);
+            pin_click.html("&nbsp;Pin to top");
         }
         else
         {
-            $("#pinned").prop("checked", true);
-            $("#pin_click").html("&nbsp;Pinned to top");
+            pinned.prop("checked", true);
+            pin_click.html("&nbsp;Pinned to top");
         }
-        $("#weight").toggle();
-        $("#weight").val("0");
+        weight.toggle();
+        weight.val("0");
     });
 
     $("#close_form").click(function()

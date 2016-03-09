@@ -31,7 +31,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-/** @var pagetitle */
+/** @var string pagetitle */
 $pagetitle = "Galaxy Map&nbsp;&nbsp;&&nbsp;&nbsp;Neighborhood Map";
 
 /** @require header file */
@@ -138,7 +138,7 @@ if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"])) {
             <a href="<?php echo $linkto?>" style="margin-left:4px"><?php echo $linkname?></a><br />
             <form method="GET" action="Map.php">
                 <input type="hidden" name="mode" value="<?php echo $mode?>">
-                <select class="distance" name="maxdistance" onchange="this.form.submit()">
+                <select title="Range" class="distance" name="maxdistance" onchange="this.form.submit()">
                     <?php
                     $dropdowns = array_unique($dropdown);
                     sort($dropdowns);
@@ -158,7 +158,7 @@ if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"])) {
 <script>
     $(document).mouseup(function (e)
     {
-        var container = new Array();
+        var container = [];
         container.push($("#disclaimer"));
         container.push($("#map_legend2"));
 

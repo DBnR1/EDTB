@@ -220,7 +220,7 @@ $link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http
         /**
          * add bodies according to url parameters
          */
-        var url_vars = "";
+        var url_vars;
 
         <?php
         if (!empty($string)) {
@@ -244,21 +244,23 @@ $link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http
             var show_bg = controls.substr(1, 1);
             var show_names = controls.substr(2, 1);
 
-            var bodies = url_parts[0].split("l").clean("");
+            var bodies = url_parts[0].split("l").clean(""),
+                i;
 
             $.getJSON("bodies.json", function(data)
             {
                 for (i = 0; i < bodies.length; i++)
                 {
-                    var options = [];
-                    parts = bodies[i].split("i");
+                    var options = [],
+                        parts = bodies[i].split("i"),
+                        ia;
 
                     options["imgid"] = parts[0];
                     options["pos_left"] = parts[1] * gridsize;
                     options["pos_top"] = parts[2] * gridsize;
                     options["width"] = parts[3];
 
-                    opt_parts = parts[4];
+                    var opt_parts = parts[4];
                     options["ringed"] = opt_parts.substr(0, 1);
                     options["firstdisc"] = opt_parts.substr(1, 1);
                     options["scanned"] = opt_parts.substr(2, 1);
@@ -277,7 +279,7 @@ $link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http
                         if (data[ia].id == options["bodyid"])
                         {
                             options["id"] = data[ia].id;
-                            var width2 = data[ia].width;
+                            //var width2 = data[ia].width;
                             options["type"] = data[ia].type;
                             options["min_value"] = data[ia].min_value * 1;
                             options["max_value"] = data[ia].max_value * 1;
@@ -449,7 +451,7 @@ $link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http
 <script>
     $(document).mouseup(function (e)
     {
-        var container = new Array();
+        var container = [];
         container.push($(".panzoom").find(".addinfo"));
 
         $.each(container, function(key, value)

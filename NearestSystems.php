@@ -33,15 +33,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-/** @var pagetitle */
+/** @var string pagetitle */
 $pagetitle = "Nearest Systems&nbsp;&nbsp;&&nbsp;&nbsp;Stations";
+
 /** @require header file */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 
-/** @var power_params parameters to add to Power links */
+/** @var string power_params parameters to add to Power links */
 $power_params = "";
 
-/** @var allegiance_params parameters to add to Allegiance links */
+/** @var string allegiance_params parameters to add to Allegiance links */
 $allegiance_params = "";
 
 $system = isset($_GET["system"]) ? $_GET["system"] : "";
@@ -86,6 +87,9 @@ if (!empty($system)) {
     $is_unknown = " *";
 }
 
+/**
+ * If we still don't have valid coordinates, center on Sol
+ */
 if (!valid_coordinates($usex, $usey, $usez)) {
     $usex = "0";
     $usey = "0";
@@ -445,7 +449,7 @@ $count = mysqli_num_rows($res);
                 <td class="heading" style="white-space:nowrap;width:20%">Nearest Allegiances</td>
                 <td class="heading" style="white-space:nowrap;width:20%">Nearest Powers</td>
                 <td class="heading" style="white-space:nowrap;width:20%">Selling Modules</td>
-                <td class="heading" style="white-space:nowrap;width:20%">Ships & Facilities</td>
+                <td class="heading" style="white-space:nowrap;width:20%">Ships &amp; Facilities</td>
             </tr>
             <tr>
                 <!-- station allegiances -->
@@ -517,57 +521,57 @@ $count = mysqli_num_rows($res);
                             $modi = " AND group_id = '" . $group_id . "'";
                         }
                         ?>
-                        <select title="Module" class="selectbox" name="group_id" style="width:222px" onchange="getCR($('select[name=group_id]').val(),'')">
-                                <optgroup label="Module"><option value="0">Module</option>
-                                <?php
-                                $mod_res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT DISTINCT group_id, group_name, category_name
-                                                                                        FROM edtb_modules
-                                                                                        ORDER BY category_name, group_name")
-                                                                                        or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+                        <select title="Module" class="selectbox" name="group_id" style="width:222px" onchange="getCR($('select[name=group_id]').val(), '')">
+                            <optgroup label="Module"><option value="0">Module</option>
+                            <?php
+                            $mod_res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT DISTINCT group_id, group_name, category_name
+                                                                                    FROM edtb_modules
+                                                                                    ORDER BY category_name, group_name")
+                                                                                    or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
-                                $cur_cat = "";
-                                while ($mod_arr = mysqli_fetch_assoc($mod_res)) {
-                                    $cat_name = $mod_arr["category_name"];
+                            $cur_cat = "";
+                            while ($mod_arr = mysqli_fetch_assoc($mod_res)) {
+                                $cat_name = $mod_arr["category_name"];
 
-                                    if ($cur_cat != $cat_name) {
-                                        echo '</optgroup><optgroup label="' . $cat_name . '">';
-                                    }
-
-                                    $selected = $_GET["group_id"] == $mod_arr["group_id"] ? " selected='selected'" : "";
-                                    echo '<option value="' . $mod_arr["group_id"] . '"' . $selected . '>' . $mod_arr["group_name"] . '</option>';
-
-                                    $cur_cat = $cat_name;
+                                if ($cur_cat != $cat_name) {
+                                    echo '</optgroup><optgroup label="' . $cat_name . '">';
                                 }
-                                ?>
+
+                                $selected = $_GET["group_id"] == $mod_arr["group_id"] ? " selected='selected'" : "";
+                                echo '<option value="' . $mod_arr["group_id"] . '"' . $selected . '>' . $mod_arr["group_name"] . '</option>';
+
+                                $cur_cat = $cat_name;
+                            }
+                            ?>
                         </select><br />
-                        <select title="Class" class="selectbox" name="class" style="width:222px" id="class" onchange="getCR($('select[name=group_id]').val(),$('select[name=class]').val())">
-                                <option value="0">Class</option>
-                                <?php
-                                $mod_res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT DISTINCT class
-                                                                                        FROM edtb_modules WHERE class != ''" . $modi . "
-                                                                                        ORDER BY class")
-                                                                                        or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+                        <select title="Class" class="selectbox" name="class" style="width:222px" id="class" onchange="getCR($('select[name=group_id]').val(), $('select[name=class]').val())">
+                            <option value="0">Class</option>
+                            <?php
+                            $mod_res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT DISTINCT class
+                                                                                    FROM edtb_modules WHERE class != ''" . $modi . "
+                                                                                    ORDER BY class")
+                                                                                    or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
-                                while ($mod_arr = mysqli_fetch_assoc($mod_res)) {
-                                    $selected = $_GET["class"] == $mod_arr["class"] ? " selected='selected'" : "";
-                                    echo '<option value="' . $mod_arr["class"] . '"' . $selected . '>Class ' . $mod_arr["class"] . '</option>';
-                                }
-                                ?>
+                            while ($mod_arr = mysqli_fetch_assoc($mod_res)) {
+                                $selected = $_GET["class"] == $mod_arr["class"] ? " selected='selected'" : "";
+                                echo '<option value="' . $mod_arr["class"] . '"' . $selected . '>Class ' . $mod_arr["class"] . '</option>';
+                            }
+                            ?>
                         </select><br />
                         <select title="Rating" class="selectbox" name="rating" style="width:222px" id="rating">
-                                <option value="0">Rating</option>
-                                <?php
-                                $mod_res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT DISTINCT rating
-                                                                                        FROM edtb_modules
-                                                                                        WHERE rating != ''" . $modi . "
-                                                                                        ORDER BY rating")
-                                                                                        or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+                            <option value="0">Rating</option>
+                            <?php
+                            $mod_res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT DISTINCT rating
+                                                                                    FROM edtb_modules
+                                                                                    WHERE rating != ''" . $modi . "
+                                                                                    ORDER BY rating")
+                                                                                    or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
-                                while ($mod_arr = mysqli_fetch_assoc($mod_res)) {
-                                    $selected = $_GET["rating"] == $mod_arr["rating"] ? " selected='selected'" : "";
-                                    echo '<option value="' . $mod_arr["rating"] . '"' . $selected . '>Rating ' . $mod_arr["rating"] . '</option>';
-                                }
-                                ?>
+                            while ($mod_arr = mysqli_fetch_assoc($mod_res)) {
+                                $selected = $_GET["rating"] == $mod_arr["rating"] ? " selected='selected'" : "";
+                                echo '<option value="' . $mod_arr["rating"] . '"' . $selected . '>Rating ' . $mod_arr["rating"] . '</option>';
+                            }
+                            ?>
                         </select><br />
                         <input class="button" type="submit" value="Search" style="width:222px;margin-top:5px" />
                     </form>
@@ -580,19 +584,19 @@ $count = mysqli_num_rows($res);
                         echo $hidden_inputs;
                         ?>
                         <select title="Ship" class="selectbox" name="ship_name" style="width:180px" onchange="$('.se-pre-con').show();this.form.submit()">
-                                <option value="0">Sells Ships</option>
-                                <?php
+                            <option value="0">Sells Ships</option>
+                            <?php
 
-                                $ship_res = mysqli_query($GLOBALS["___mysqli_ston"], "  SELECT name
-                                                                                        FROM edtb_ships
-                                                                                        ORDER BY name")
-                                                                                        or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+                            $ship_res = mysqli_query($GLOBALS["___mysqli_ston"], "  SELECT name
+                                                                                    FROM edtb_ships
+                                                                                    ORDER BY name")
+                                                                                    or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
-                                while ($ship_arr = mysqli_fetch_assoc($ship_res)) {
-                                    $selected = $_GET["ship_name"] == $ship_arr["name"] ? " selected='selected'" : "";
-                                    echo '<option value="' . $ship_arr["name"] . '"' . $selected . '>' . $ship_arr["name"] . '</option>';
-                                }
-                                ?>
+                            while ($ship_arr = mysqli_fetch_assoc($ship_res)) {
+                                $selected = $_GET["ship_name"] == $ship_arr["name"] ? " selected='selected'" : "";
+                                echo '<option value="' . $ship_arr["name"] . '"' . $selected . '>' . $ship_arr["name"] . '</option>';
+                            }
+                            ?>
                         </select><br />
                         <!--<input id="ship_submit" class="button" type="submit" value="Search" style="width:180px" />-->
                     </form>
@@ -602,18 +606,18 @@ $count = mysqli_num_rows($res);
                         echo $hidden_inputs;
                         ?>
                         <select title="Facility" class="selectbox" name="facility" style="width:180px" onchange="$('.se-pre-con').show();this.form.submit()">
-                                <option value="0">Has Facilities</option>
-                                <?php
-                                $facility_res = mysqli_query($GLOBALS["___mysqli_ston"], "  SELECT name, code
-                                                                                            FROM edtb_facilities
-                                                                                            ORDER BY name")
-                                                                                            or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+                            <option value="0">Has Facilities</option>
+                            <?php
+                            $facility_res = mysqli_query($GLOBALS["___mysqli_ston"], "  SELECT name, code
+                                                                                        FROM edtb_facilities
+                                                                                        ORDER BY name")
+                                                                                        or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
-                                while ($facility_arr = mysqli_fetch_assoc($facility_res)) {
-                                    $selected = $_GET["facility"] == $facility_arr["code"] ? " selected='selected'" : "";
-                                    echo '<option value="' . $facility_arr["code"] . '"' . $selected . '>' . $facility_arr["name"] . '</option>';
-                                }
-                                ?>
+                            while ($facility_arr = mysqli_fetch_assoc($facility_res)) {
+                                $selected = $_GET["facility"] == $facility_arr["code"] ? " selected='selected'" : "";
+                                echo '<option value="' . $facility_arr["code"] . '"' . $selected . '>' . $facility_arr["name"] . '</option>';
+                            }
+                            ?>
                         </select><br />
                     </form>
                     <!-- landing pads -->
@@ -623,8 +627,8 @@ $count = mysqli_num_rows($res);
                         ?>
                         <select title="Landing pad" class="selectbox" name="pad" style="width:180px" onchange="$('.se-pre-con').show();this.form.submit()">
                             <?php
-                            $selectedL = $_GET["pad"] == "L" ? " selected='selected'" : "";
-                            $selectedM = $_GET["pad"] == "M" ? " selected='selected'" : "";
+                            $selectedL = $_GET["pad"] == "L" ? ' selected="selected"' : "";
+                            $selectedM = $_GET["pad"] == "M" ? ' selected="selected"' : "";
                             ?>
                             <option value="">Landing Pad Size</option>
                             <option value="L"<?php echo $selectedL;?>>Large</option>
@@ -635,7 +639,7 @@ $count = mysqli_num_rows($res);
                 </td>
             </tr>
         </table>
-        <table id="nscontent"  style="margin-left:5px;margin-bottom:20px;width:100%">
+        <table id="nscontent" style="margin-left:5px;margin-bottom:20px;width:100%">
             <tr>
                 <td class="transparent" colspan="5">
                     <header><h2><img class="icon" src="/style/img/find.png" alt="Find" /><?php echo $text?></h2></header>
@@ -652,7 +656,6 @@ $count = mysqli_num_rows($res);
                                 ?>
                                 <td class="heading" colspan="3"><strong>Station</strong></td>
                                 <?php
-
                             }
                             ?>
                         </tr>
@@ -671,7 +674,6 @@ $count = mysqli_num_rows($res);
                                 <td class="dark"><strong>LS From Star</strong></td>
                                 <td class="dark"><strong>Landing Pad</strong></td>
                                 <?php
-
                             }
                             ?>
                         </tr>
@@ -722,20 +724,17 @@ $count = mysqli_num_rows($res);
                                             <a href="System.php?system_id=<?php echo $system_id?>">
                                                 <?php echo $system?>
                                             </a>
-                                            <?php echo $ns_crosslinks;
-                                    ?>
+                                            <?php echo $ns_crosslinks;?>
                                         </td>
                                         <td class="<?php echo $tdclass?>"><?php echo $sys_population?></td>
                                         <td class="<?php echo $tdclass?>"><?php echo $sys_economy?></td>
                                         <td class="<?php echo $tdclass?>"><?php echo $sys_government?></td>
                                         <td class="<?php echo $tdclass?>"><?php echo $sys_security?></td>
                                     <?php
-
                                 } else {
                                     ?>
                                     <tr><td class="transparent" colspan="7" style="height:45px">&nbsp;</td>
                                     <?php
-
                                 }
 
                                 if (!empty($station_name)) {
@@ -804,14 +803,15 @@ $count = mysqli_num_rows($res);
                                     $info = str_replace("']", "", $info);
                                     $info = str_replace("', '", ", ", $info);
 
-                                    // get allegiance icon
+                                    /**
+                                     * get allegiance icon
+                                     */
                                     $station_allegiance_icon = get_allegiance_icon($arr["station_allegiance"]);
                                     $station_allegiance_icon = '<img src="/style/img/' . $station_allegiance_icon . '" alt="' . $arr["station_allegiance"] . '" style="width:19px;height:19px;margin-right:5px" />';
 
                                     /**
                                      * notify user if data is old
                                      */
-
                                     $station_disp_name = $station_name;
 
                                     if (!empty($group_id) || !empty($ship_name)) {
@@ -820,22 +820,17 @@ $count = mysqli_num_rows($res);
                                         }
                                     }
                                     ?>
-                                    <td class="<?php echo $tdclass;
-                                    ?>">
-                                        <?php echo $station_allegiance_icon . $icon;
-                                    ?><a href="javascript:void(0)" id="minfo<?php echo $station_id;
-                                    ?>"  title="Additional information"><?php echo $station_disp_name;
-                                    ?></a>
+                                    <td class="<?php echo $tdclass;?>">
+                                        <?php echo $station_allegiance_icon . $icon;?>
+                                        <a href="javascript:void(0)" id="minfo<?php echo $station_id;?>" title="Additional information">
+                                            <?php echo $station_disp_name;?>
+                                        </a>
                                     </td>
-                                    <td class="<?php echo $tdclass;
-                                    ?>">
-                                        <?php echo $station_ls_from_star;
-                                    ?>
+                                    <td class="<?php echo $tdclass;?>">
+                                        <?php echo $station_ls_from_star;?>
                                     </td>
-                                    <td class="<?php echo $tdclass;
-                                    ?>">
-                                        <?php echo $station_max_landing_pad_size;
-                                    ?>
+                                    <td class="<?php echo $tdclass;?>">
+                                        <?php echo $station_max_landing_pad_size;?>
                                     </td>
                                     <script>
                                             $(document).mouseup(function (e)
@@ -851,8 +846,8 @@ $count = mysqli_num_rows($res);
                                                     }
                                                 });
                                             });
-                                            $("#minfo<?php echo $station_id;
-                                    ?>").click(function(e)
+
+                                            $("#minfo<?php echo $station_id;?>").click(function(e)
                                             {
                                                 var statinfo_div = $("#si_statinfo");
                                                 if (statinfo_div.is(":hidden"))
@@ -863,27 +858,23 @@ $count = mysqli_num_rows($res);
                                                         left: e.pageX - 330,
                                                         top: e.pageY - 40
                                                     });
-                                                    statinfo_div.html("<?php echo addslashes($info);
-                                    ?>");
+                                                    statinfo_div.html("<?php echo addslashes($info);?>");
                                                 }
                                             });
                                         </script>
                                 <?php
-
                                 }
                                 ?>
                                 </tr>
                                 <?php
                                 $last_system = $system;
                                 $ii++;
-                            }
+                            } // end of while
                         } else {
                             $colspan = $stations !== false ? "10" : "7";
                             ?>
-                            <tr><td class="light" colspan="<?php echo $colspan;
-                            ?>">None found!</td></tr>
+                            <tr><td class="light" colspan="<?php echo $colspan;?>">None found!</td></tr>
                             <?php
-
                         }
                         ?>
                     </table>

@@ -39,7 +39,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 ?>
 <div class="entries">
     <div class="entries_inner" id="system_page">
-        <h2 id="si_name"></h2><hr>
+        <h2 id="si_name"></h2>
+        <hr>
         <div class="systeminfo_st">
             <!-- STATIONS -->
             <div class="systeminfo_stations" id="si_stations"></div>

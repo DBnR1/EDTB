@@ -445,7 +445,7 @@ $(function ()
                 {
                     lineColor: '#333'
                 },
-                enableMouseTracking: true,
+                enableMouseTracking: true
             },
             boxplot:
             {
@@ -462,7 +462,7 @@ $(function ()
     Highcharts.setOptions(Highcharts.theme);
 
     // get the jQuery wrapper
-    var $report = $('#report');
+    //var $report = $('#report');
 
     // Set up the chart
     var chart = new Highcharts.Chart(
@@ -617,10 +617,8 @@ if ($disclaimer != "") {
     ?>
     $("#disclaimer").html('<?php echo $disclaimer?>');
     <?php
-
 } else {
     ?>
     $("#disclaimer").html("");
     <?php
-
 }

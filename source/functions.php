@@ -664,7 +664,7 @@ function get_distance($system, $is_id = false)
  * @param string $field
  * @param bool $update
  * @param string $value
- * @return string $value if $update = false
+ * @return string|null $value if $update = false
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function edtb_common($name, $field, $update = false, $value = "")

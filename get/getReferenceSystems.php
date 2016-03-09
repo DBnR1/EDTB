@@ -107,7 +107,7 @@ if ($system_exists > 0) {
          $("#ref_4_dist").val("");
     });
 </script>
-<form method="post" id="calc_form" action="coorddata.php">
+<form method="post" id="calc_form" action="/">
     <div class="input-inner">
         <table>
             <tr>
@@ -161,8 +161,8 @@ if ($system_exists > 0) {
                                 </a>
                                 <a href="javascript:void(0)" title="Copy to clipboard">
                                     <img class="btn" src="/style/img/clipboard.png" alt="Copy" data-clipboard-text="<?php echo $ref_rname?>" />
-                            </span>
                                 </a>
+                            </span>
                             <strong><?php echo $ref_rname?></strong>
                         </td>
                         <td class="dark">

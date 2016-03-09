@@ -250,7 +250,7 @@ if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
                 $station_data .= ' (' . number_format($ls_from_star) . ' ls)';
             }
 
-            $station_data .= "</a>&nbsp;<a href='javascript:void(0)' title='Add to new log as station' onclick='addstation(\"" . $station_name . "\", \"" . $station_id . "\")'><img src='/style/img/right.png' alt='Add to log' class='addstations' /></a>";
+            $station_data .= "</a>&nbsp;<a href='javascript:void(0)' title='Add to new log as station' onclick='addstation(\"" . $station_name . "\")'><img src='/style/img/right.png' alt='Add to log' class='addstations' /></a>";
 
             $station_data .= '<div class="stationinfo" id="statinfo_' . $station_id . '">' . $info . '</div></div>';
 

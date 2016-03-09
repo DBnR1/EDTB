@@ -444,7 +444,7 @@ if ($station_exists == 0) {
             $modules_t .= "</tr></table>";
 
             $selling_modules = '<br /><br /><div onclick="$(\'#modules_' . $station_id . '\').fadeToggle(\'fast\')">';
-            $selling_modules .= '<a href="javascript:void(0)"><img src="/style/img/plus.png" alt="plus" class="icon" \>Selling modules</a>';
+            $selling_modules .= '<a href="javascript:void(0)"><img src="/style/img/plus.png" alt="plus" class="icon" />Selling modules</a>';
             $selling_modules .= '</div>';
             $selling_modules .= '<div id="modules_' . $station_id . '" style="display:none">' . $modules_t . '</div>';
         }

@@ -85,7 +85,7 @@ if (isset($_GET["do"])) {
 if ($_SERVER['PHP_SELF'] == "/Poi.php") {
     ?>
     <div class="input" id="addPoi" style="text-align:center">
-        <form method="post" id="poi_form" action="Poi.php">
+        <form method="post" id="poi_form" action="/Poi.php">
             <div class="input-inner">
                 <div class="suggestions" id="suggestions_33" style="margin-top:79px;margin-left:12px"></div>
                 <table>
@@ -114,15 +114,15 @@ if ($_SERVER['PHP_SELF'] == "/Poi.php") {
                             <input class="textbox" type="text" name="poi_name" id="poi_name" placeholder="POI name (optional)" style="width:95%" />
                         </td>
                         <td class="dark" style="white-space:nowrap;width:auto">
-                            <select class="selectbox" name="category_id" id="category_id" style="width:auto">
+                            <select title="Category" class="selectbox" name="category_id" id="category_id" style="width:auto">
                                 <option value="0">Category (optional)</option>
                                 <?php
                                 $pcat_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id, name FROM user_poi_categories");
 
-    while ($pcat_arr = mysqli_fetch_assoc($pcat_res)) {
-        echo '<option value="' . $pcat_arr["id"] . '">' . $pcat_arr["name"] . '</option>';
-    }
-    ?>
+                                while ($pcat_arr = mysqli_fetch_assoc($pcat_res)) {
+                                    echo '<option value="' . $pcat_arr["id"] . '">' . $pcat_arr["name"] . '</option>';
+                                }
+                                ?>
                             </select>
                         </td>
                     </tr>

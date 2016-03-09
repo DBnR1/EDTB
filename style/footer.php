@@ -55,19 +55,23 @@
                 ?>
                 <!-- initialize textareas -->
                 <script>
-                    if ($('#html').length)
+                    var html = $("#html"),
+                        poi_text = $("#poi_text"),
+                        bm_text = $("#bm_text");
+
+                    if (html.length)
                     {
-                        $('#html').markItUp(html_textarea);
+                        html.markItUp(html_textarea);
                     }
 
-                    if ($('#poi_text').length)
+                    if (poi_text.length)
                     {
-                        $('#poi_text').markItUp(poi_bm);
+                        poi_text.markItUp(poi_bm);
                     }
 
-                    if ($('#bm_text').length)
+                    if (bm_text.length)
                     {
-                        $('#bm_text').markItUp(poi_bm);
+                        bm_text.markItUp(poi_bm);
                     }
                 </script>
                 <!-- calculate distances -->
@@ -164,7 +168,7 @@
         </div>
         <div class="tooltip" id="help_links" style="position:fixed;top:120px;left:260px">
             <img class="callout" alt="co" src="/style/img/callout_black.gif" style="top:-14px;left:20px" />Click the date and time to open external links<br />
-            You can edit these from the <a href="/admin/settings.php?cat_id=5">settings</a>
+            You can edit these from the <a href="/admin/Settings.php?cat_id=5">settings</a>
         </div>
         <!-- Wiselinks -->
         <script>
@@ -286,7 +290,7 @@
         <script>
             $(document).mouseup(function (e)
             {
-                var container = new Array();
+                var container = [];
                 container.push($("#settings"));
                 container.push($("#about"));
                 container.push($("#ext_links"));

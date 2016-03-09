@@ -252,20 +252,20 @@ $spgm_cfg['global']['URLExtraParams']   = ''; // Contains the extra paramaters f
 
 function spgm_Error($strErrorMessage)
 {
-    print '<div style="color: #ff0000; font-family: helvetica, arial; font-size:12pt; font-weight: bold">' . $strErrorMessage . '</div>' . "\n";
+    print '<div style="color:#ff0000;font-size:12pt;font-weight: bold">' . $strErrorMessage . '</div>' . "\n";
 }
 
 function spgm_Warning($strWarningMessage)
 {
     if (MODE_WARNING) {
-        print '<div style="color: #0000ff; font-family: helvetica, arial; font-size:12pt; font-weight: bold">' . $strWarningMessage . '</div>' . "\n";
+        print '<div style="color:#0000ff;font-size:12pt;font-weight: bold">' . $strWarningMessage . '</div>' . "\n";
     }
 }
 
 function spgm_Trace($strTrace)
 {
     if (MODE_TRACE) {
-        print '<div style="color: #000000; font-family: verdana, helvetica, arial; font-size:12pt">' . $strTrace . '</div>' . "\n";
+        print '<div style="color:#000000;font-size:12pt">' . $strTrace . '</div>' . "\n";
     }
 }
 

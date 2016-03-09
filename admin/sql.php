@@ -92,8 +92,6 @@ if (isset($_POST["code"])) {
 <!-- codemirror -->
 <link type="text/css" rel="stylesheet" href="/source/Vendor/codemirror/lib/codemirror.css">
 <script type="text/javascript" src="/source/Vendor/codemirror/lib/codemirror.js"></script>
-
-<script type="text/javascript" src="/source/Vendor/codemirror/addon/placeholder.js"></script>
 <script type="text/javascript" src="/source/Vendor/codemirror/mode/sql/sql.js"></script>
 
 <div class="entries">
@@ -111,8 +109,8 @@ if (isset($_POST["code"])) {
         For more complete database management, use the included db manager (<a href="/admin/">Adminer</a>)<br />
         or a database manager of your choice.
     </div>
-        <form method="post" action="sql.php">
-            <textarea id="codes" name="code">
+        <form method="post" action="SQL.php">
+            <textarea title="SQL" id="codes" name="code">
 <?php
 if (isset($_POST["code"])) {
     echo $code;

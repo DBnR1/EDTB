@@ -2,7 +2,8 @@
 /**
  * Screenshot gallery
  *
- * No description
+ * Front-end file for the screenshot gallery.
+ * Back-end files are /source/Vendor/spgm/spgm.php and /source/functions.php (make_gallery function)
  *
  * @package EDTB\Main
  * @author Mauri Kujala <contact@edtb.xyz>

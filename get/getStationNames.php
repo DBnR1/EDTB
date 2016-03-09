@@ -98,31 +98,25 @@ if (isset($_GET["q"]) && !empty($_GET["q"]) && isset($_GET["divid"])) {
                 <?php echo $suggest['station_name']?>&nbsp;&nbsp;(<?php echo $suggest['system_name']?>)
             </a><br />
             <?php
-
         } elseif ($_GET["idlink"] == "yes") {
             ?>
             <a href="/NearestSystems.php?system=<?php echo $suggest['system_id']?><?php echo $addtl?>">
                 <?php echo $suggest['station_name']?>&nbsp;&nbsp;(<?php echo $suggest['system_name']?>)
             </a><br />
             <?php
-
         } elseif ($_GET["sysid"] != "no") {
             ?>
-            <a href="javascript:void(0);" onclick="setl('<?php echo $suggest['station_name']?>','<?php echo $suggest['station_id']?>');">
+            <a href="javascript:void(0);" onclick="setl('<?php echo $suggest['station_name']?>', '<?php echo $suggest['station_id']?>');">
                 <?php echo $suggest['station_name']?>
             </a><br />
             <?php
-
         } else {
             $suggest_coords = $suggest['x'] . "," . $suggest['y'] . "," . $suggest['z'];
             ?>
-            <a href="javascript:void(0);" onclick="setResult('<?php echo str_replace("'", "", $suggest['system_name']);
-            ?>', '<?php echo $suggest_coords;
-            ?>', '<?php echo $divid ?>');">
+            <a href="javascript:void(0);" onclick="setResult('<?php echo str_replace("'", "", $suggest['system_name']);?>', '<?php echo $suggest_coords;?>', '<?php echo $divid ?>');">
                 <?php echo $suggest['system_name'] ?>
             </a><br />
             <?php
-
         }
     }
 }

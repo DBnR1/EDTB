@@ -46,7 +46,8 @@ function uniqId()
  *
  * http://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
  *
- * @param {array} array
+ * @param {Array} array
+ * @return {Array} array
  * @author ChristopheD
  */
 function shuffle(array)
@@ -76,10 +77,10 @@ function shuffle(array)
  */
 function update_price()
 {
-    var new_minvalue = "";
-    var new_maxvalue = "";
+    var new_minvalue = "",
+        new_maxvalue = "";
 
-    $(".draggable").each(function(i, obj)
+    $(".draggable").each(function()
     {
         new_maxvalue = new_maxvalue * 1 + $(this).data("max-value-calc") * 1;
         new_minvalue = new_minvalue * 1 + $(this).data("min-value-calc") * 1;
@@ -107,27 +108,26 @@ function update_price()
  */
 function update_url()
 {
-    var newurl = "";
-    var system = $("#smsys").html();
+    var newurl = "",
+        system = $("#smsys").html(),
+        panzoom_draggable = $(".panzoom .draggable"),
+        mlink = $("#mlink");
 
-    var panzoom_draggable = $(".panzoom .draggable");
     if (panzoom_draggable.length)
     {
-        panzoom_draggable.each(function(i, obj)
+        panzoom_draggable.each(function()
         {
-            var bodyid = $(this).data("bodyid");
-            var imgid = $(this).data("imgid");
-            var datauniqid = $(this).data("uniqid");
-            var dataposleft = ($(this).position().left) / gridsize;
-            var datapostop = ($(this).position().top) / gridsize;
-            var divwidth = $(this).css("width").replace("px", "");
-
-            var divid = $(this).attr("id");
-
-            var pringed = "";
-            var firstdisc = "";
-            var scanned = "";
-            var landable = "";
+            var bodyid = $(this).data("bodyid"),
+                imgid = $(this).data("imgid"),
+                datauniqid = $(this).data("uniqid"),
+                dataposleft = ($(this).position().left) / gridsize,
+                datapostop = ($(this).position().top) / gridsize,
+                divwidth = $(this).css("width").replace("px", ""),
+                //divid = $(this).attr("id"),
+                pringed = "",
+                firstdisc = "",
+                scanned = "",
+                landable = "";
 
             if ($("#ring_" + datauniqid).is(":checked"))
             {
@@ -167,9 +167,10 @@ function update_url()
 
             newurl = newurl + imgid + 'i' + dataposleft + 'i' + datapostop + 'i' + divwidth + 'i' + pringed + firstdisc + scanned + landable + 'i' + bodyid + 'l';
         });
-        var grid = 1;
-        var bg = 1;
-        var names = 1;
+
+        var grid = 1,
+            bg = 1,
+            names = 1;
 
         if ($(".panzoom").css("background-image") == "none")
         {
@@ -203,13 +204,13 @@ function update_url()
             }
         });
 
-        if ($("#mlink").html() != "")
+        if (mlink.html() != "")
         {
             $("#maplink").attr("href", "http://map.edtb.xyz?v1=" + newurl);
         }
         else
         {
-            $("#mlink").html('&nbsp;&ndash;&nbsp;<a href="http://map.edtb.xyz?v1=' + newurl + '" target="_blank" id="maplink" title="View on map.edtb.xyz">View on map.edtb.xyz</a>');
+            mlink.html('&nbsp;&ndash;&nbsp;<a href="http://map.edtb.xyz?v1=' + newurl + '" target="_blank" id="maplink" title="View on map.edtb.xyz">View on map.edtb.xyz</a>');
         }
     }
     else
@@ -228,30 +229,41 @@ function update_url()
                 log("Error occured when requesting /add/systemMap.php");
             }
         });
-        $("#mlink").html('');
+        mlink.html("");
     }
 }
 
 /**
  * Add body
  *
- * @param array options
+ * @param {Array} options
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function add_body(options)
 {
     /**
+     * create a unique id
+     */
+    var uniqid = uniqId(),
+        last_position = "",
+        last_width = "",
+        last_height = "",
+        calc_val_max,
+        calc_val_min,
+        posleft = "",
+        postop = "",
+        append = "",
+        last_type = $(".panzoom .draggable:last").data("type"),
+        pz = $(".panzoom");
+
+    /**
      * define position for the new element
      */
-    var last_position = "";
-    var posleft = "";
-    var postop = "";
-    var last_type = $(".panzoom .draggable:last").data("type");
-
     if (options.pos_left === false)
     {
-        var left_offset = "";
-        var top_offset = "";
+        var left_offset = "",
+            top_offset = "",
+            panzoom_draggable = $(".panzoom .draggable");
 
         if (options.width == "150")
         {
@@ -265,13 +277,13 @@ function add_body(options)
             top_offset = diff;
         }
 
-        var panzoom_draggable = $(".panzoom .draggable");
         if (panzoom_draggable.length)
         {
             var panzoom_draggable_last = $(".panzoom .draggable:last");
+
             last_position = panzoom_draggable_last.position();
-            var last_width = panzoom_draggable_last.width();
-            var last_height = panzoom_draggable_last.height();
+            last_width = panzoom_draggable_last.width();
+            last_height = panzoom_draggable_last.height();
 
             if (options.type == "planet" && last_type == "star")
             {
@@ -285,7 +297,7 @@ function add_body(options)
                 }
                 posleft = Math.round((last_position.left + last_width + 120) / gridsize) * gridsize;
             }
-            else if (options.type == "planet" && last_type == "planet" || options.type == "planet" && last_type == "other")
+            else if ((options.type == "planet" && last_type == "planet") || (options.type == "planet" && last_type == "other"))
             {
                 if ($(".panzoom .draggable_img_star").length)
                 {
@@ -353,14 +365,8 @@ function add_body(options)
     }
 
     /**
-     * create a unique id
-     */
-    var uniqid = uniqId();
-
-    /**
      * create and append div element
      */
-
     if (options.firstdisc == "1")
     {
         calc_val_max = options.max_value * 1.5;
@@ -380,7 +386,7 @@ function add_body(options)
                     '<div class="name">' + options.name + '</div>' +
                     '</div>';
 
-    $(".panzoom").append(newhtml);
+    pz.append(newhtml);
 
     if (options.show_name == "0")
     {
@@ -390,7 +396,9 @@ function add_body(options)
     /**
      * set position for new element
      */
-    var panzoom_draggable_last = $(".panzoom .draggable:last");
+    var uniqs = $("#id_" + uniqid),
+        panzoom_draggable_last = $(".panzoom .draggable:last");
+
     panzoom_draggable_last.css("left", posleft);
     panzoom_draggable_last.css("top", postop);
 
@@ -410,29 +418,32 @@ function add_body(options)
         /**
          * highlight images with color from image
          */
-        if ($("#" + uniqid).width() > 0)
+        var colors, colorThief,
+            uniqu = $("#" + uniqid);
+
+        if (uniqu.width() > 0)
         {
-            var colorThief = new ColorThief();
-            var colors = colorThief.getColor(document.getElementById(uniqid));
+            colorThief = new ColorThief();
+            colors = colorThief.getColor(document.getElementById(uniqid));
         }
         else
         {
-            var colors = [132, 132, 132];
+            colors = [132, 132, 132];
         }
 
-        $("#id_" + uniqid).mouseover(function()
+        uniqs.mouseover(function()
         {
-            $("#" + uniqid).css("box-shadow", "0px 0px 20px 10px rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")");
-            $("#" + uniqid).css("border-radius", "100%");
+            uniqu.css("box-shadow", "0px 0px 20px 10px rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")");
+            uniqu.css("border-radius", "100%");
         }).mouseout(function()
         {
-            $("#" + uniqid).css("box-shadow", "none");
+            uniqu.css("box-shadow", "none");
         });
 
         /**
          * append info panel
          */
-        var append ='<div class="addinfo" id="info_' + uniqid + '" data-source="' + options.source + '" style="display:none">' +
+        append ='<div class="addinfo" id="info_' + uniqid + '" data-source="' + options.source + '" style="display:none">' +
                     //'<span class="right close" id="close_' + uniqid + '"><a href="javascript:void(0)" title="Close">' +
                     //'<img src="/style/img/close.png" alt="X" class="icon" /></a></span>' +
                     '<input class="scanned" id="scanned_' + uniqid + '" name="scanned" type="checkbox" value="1" />' +
@@ -446,24 +457,33 @@ function add_body(options)
                     '<input id="remove_' + uniqid + '" class="delete_body" type="button" value="Remove" />' +
                     '</div>';
 
-        $(".panzoom").append(append);
+        pz.append(append);
+
+        /**
+         * variables for removing bodies, rings, bonuses, etc.
+         */
+        var uniqfirst = $("#first_" + uniqid),
+            uniqring = $("#ring_" + uniqid),
+            uniqland = $("#landable_" + uniqid),
+            uniqscan = $("#scanned_" + uniqid);
 
         /**
          * add/remove ring from body
          */
-        $("#ring_" + uniqid).click(function()
+        uniqring.click(function()
         {
-            if ($("#ring_" + uniqid).is(":checked"))
+            if (uniqring.is(":checked"))
             {
-                var width2 = $("#"+uniqid).prop("width");
-                var ring_width = Math.ceil(1.93 * width2);
-                var ring_offset = Math.ceil(0.455555 * width2);
+                var width2 = $("#"+uniqid).prop("width"),
+                    ring_width = Math.ceil(1.93 * width2),
+                    ring_offset = Math.ceil(0.455555 * width2),
+                    rings = ["ring_1.png", "ring_2.png", "ring_3.png"],
+                    ring;
 
-                var rings = ["ring_1.png", "ring_2.png", "ring_3.png"];
                 shuffle(rings);
-                var ring = rings[0];
+                ring = rings[0];
 
-                $("#id_" + uniqid).append('<img class="ring" id="ring_img_' + uniqid + '" src="/style/img/bodies/' + ring + '" style="position:absolute;top:-' + ring_offset + 'px;left:-' + ring_offset + 'px;width:' + ring_width + 'px;height:auto" />');
+                uniqs.append('<img class="ring" id="ring_img_' + uniqid + '" src="/style/img/bodies/' + ring + '" style="position:absolute;top:-' + ring_offset + 'px;left:-' + ring_offset + 'px;width:' + ring_width + 'px;height:auto" />');
             }
             else
             {
@@ -478,26 +498,26 @@ function add_body(options)
 
         if (options.ringed == "1")
         {
-            $("#ring_" + uniqid).trigger("click");
+            uniqring.trigger("click");
         }
 
         $("#f_r" + uniqid).not("#first_" + uniqid).click(function()
         {
-            $("#ring_" + uniqid).trigger("click");
+            uniqring.trigger("click");
         });
 
         /**
          * add/remove landable icon
          */
-        $("#landable_" + uniqid).click(function()
+        uniqland.click(function()
         {
-            if ($("#landable_" + uniqid).is(":checked"))
+            if (uniqland.is(":checked"))
             {
-                var width = $("#"+uniqid).prop("width");
-                var ringwidth = Math.ceil(1.5625 * width);
-                var ringoffset = Math.ceil(0.44444444444444 * width);
+                var width = $("#"+uniqid).prop("width"),
+                    ringwidth = Math.ceil(1.5625 * width),
+                    ringoffset = Math.ceil(0.44444444444444 * width);
 
-                $("#id_" + uniqid).append('<img class="landable" id="landable_img_' + uniqid + '" src="/style/img/bodies/landable.png" style="position:absolute;top:-' + ringoffset + 'px;left:-' + ringoffset + 'px;width:' + ringwidth + 'px;height:auto" />');
+                uniqs.append('<img class="landable" id="landable_img_' + uniqid + '" src="/style/img/bodies/landable.png" style="position:absolute;top:-' + ringoffset + 'px;left:-' + ringoffset + 'px;width:' + ringwidth + 'px;height:auto" />');
             }
             else
             {
@@ -512,36 +532,36 @@ function add_body(options)
 
         if (options.landable == "1")
         {
-            $("#landable_" + uniqid).trigger("click");
+            uniqland.trigger("click");
         }
 
         $("#f_l" + uniqid).not("#first_" + uniqid).click(function()
         {
-            $("#landable_" + uniqid).trigger("click");
+            uniqland.trigger("click");
         });
 
         /**
          * add/remove first discovery bonus
          */
-        $("#first_" + uniqid).click(function()
+        uniqfirst.click(function()
         {
-            if ($("#scanned_" + uniqid).is(":checked"))
+            if (uniqscan.is(":checked"))
             {
-                if ($("#first_" + uniqid).is(":checked"))
+                if (uniqfirst.is(":checked"))
                 {
-                    $("#id_" + uniqid).data("min-value-calc", options.min_value * 1.5);
-                    $("#id_" + uniqid).data("max-value-calc", options.max_value * 1.5);
+                    uniqs.data("min-value-calc", options.min_value * 1.5);
+                    uniqs.data("max-value-calc", options.max_value * 1.5);
                 }
                 else
                 {
-                    $("#id_" + uniqid).data("min-value-calc", options.min_value);
-                    $("#id_" + uniqid).data("max-value-calc", options.max_value);
+                    uniqs.data("min-value-calc", options.min_value);
+                    uniqs.data("max-value-calc", options.max_value);
                 }
             }
             else
             {
-                $("#id_" + uniqid).data("min-value-calc", 500);
-                $("#id_" + uniqid).data("max-value-calc", 500);
+                uniqs.data("min-value-calc", 500);
+                uniqs.data("max-value-calc", 500);
             }
 
             if (options.source == "php")
@@ -553,33 +573,33 @@ function add_body(options)
 
         $("#f_c" + uniqid).not("#first_" + uniqid).click(function()
         {
-            $("#first_" + uniqid).trigger("click");
+            uniqfirst.trigger("click");
         });
 
         if (options.firstdisc == "1")
         {
-            $("#first_" + uniqid).prop("checked", true);
-            // $("#id_" + uniqid).data("min-value-calc", options.min_value * 1.5);
-            // $("#id_" + uniqid).data("max-value-calc", options.max_value * 1.5);
+            uniqfirst.prop("checked", true);
+            // uniqs.data("min-value-calc", options.min_value * 1.5);
+            // uniqs.data("max-value-calc", options.max_value * 1.5);
             // console.log(options.min_value * 1.5);
             //update_price();
-            //$("#first_" + uniqid).trigger("click");
+            //uniqfirst.trigger("click");
         }
 
         /**
          * add/remove scan bonus
          */
-        $("#scanned_" + uniqid).click(function()
+        uniqscan.click(function()
         {
             if ($("#scanned_" + uniqid).is(":checked"))
             {
-                $("#id_" + uniqid).data("min-value-calc", $("#id_" + uniqid).data("min-value"));
-                $("#id_" + uniqid).data("max-value-calc", $("#id_" + uniqid).data("max-value"));
+                uniqs.data("min-value-calc", uniqs.data("min-value"));
+                uniqs.data("max-value-calc", uniqs.data("max-value"));
             }
             else
             {
-                $("#id_" + uniqid).data("min-value-calc", 500);
-                $("#id_" + uniqid).data("max-value-calc", 500);
+                uniqs.data("min-value-calc", 500);
+                uniqs.data("max-value-calc", 500);
             }
 
             if (options.source == "php")
@@ -591,13 +611,13 @@ function add_body(options)
 
         if (options.scanned == "1")
         {
-            $("#scanned_" + uniqid).trigger("click");
-            $("#scanned_" + uniqid).prop("checked", true);
+            uniqscan.trigger("click");
+            uniqscan.prop("checked", true);
         }
 
         $("#f_s" + uniqid).not("#first_" + uniqid).click(function()
         {
-            $("#scanned_" + uniqid).trigger("click");
+            uniqscan.trigger("click");
         });
 
         /**
@@ -624,11 +644,11 @@ function add_body(options)
         /**
          * append info panel
          */
-        var append ='<div class="addinfo" id="info_' + uniqid + '" style="display:none">' +
+        append ='<div class="addinfo" id="info_' + uniqid + '" style="display:none">' +
                     '<input id="remove_' + uniqid + '" class="button" type="button" value="Remove" />' +
                     '</div>';
 
-        $(".panzoom").append(append);
+        pz.append(append);
     }
 
     var info_uniq = $("#info_" + uniqid);
@@ -637,11 +657,10 @@ function add_body(options)
      */
     $("#remove_" + uniqid).click(function()
     {
-        var iduniq = $("#id_" + uniqid);
-        iduniq.data("min-value-calc", 0);
-        iduniq.data("max-value-calc", 0);
+        uniqs.data("min-value-calc", 0);
+        uniqs.data("max-value-calc", 0);
 
-        iduniq.remove();
+        uniqs.remove();
         info_uniq.remove();
 
         update_url();
@@ -651,7 +670,7 @@ function add_body(options)
     /**
      * show info panel
      */
-    $("#id_" + uniqid).click(function(e)
+    uniqs.click(function()
     {
         if ($(this).hasClass("noclick"))
         {
@@ -661,8 +680,9 @@ function add_body(options)
         {
             if (info_uniq.is(":hidden"))
             {
-                var posLeft = $(this).position().left + $(this).width() - 20;
-                var posTop = $(this).position().top + $(this).height() - 20;
+                var posLeft = $(this).position().left + $(this).width() - 20,
+                    posTop = $(this).position().top + $(this).height() - 20;
+
                 info_uniq.fadeToggle("fast");
                 info_uniq.css("left", posLeft);
 
@@ -680,32 +700,33 @@ function add_body(options)
         {
             resize: function(e, ui)
             {
-                var ui_elem = ui.element[0];
-                var landable_elem = ("#" + ui_elem.id + " .landable");
+                var ui_elem = ui.element[0],
+                    landable_elem = $("#" + ui_elem.id + " .landable"),
+                    ring_elem = $("#" + ui_elem.id + " .ring"),
+                    resizeable_elem = $(".resizeable");
+
                 if (landable_elem.length)
                 {
-                    var og_width = ui_elem.clientWidth;
-                    var new_ringwidth = Math.ceil(1.5625 * og_width);
-                    var new_ringoffset = Math.ceil(0.44444444444444 * og_width);
+                    var og_width = ui_elem.clientWidth,
+                        new_ringwidth = Math.ceil(1.5625 * og_width),
+                        new_ringoffset = Math.ceil(0.44444444444444 * og_width);
 
                     landable_elem.css("top", "-" + new_ringoffset + "px");
                     landable_elem.css("left", "-" + new_ringoffset + "px");
                     landable_elem.css("width", + new_ringwidth + "px");
                 }
 
-                var ring_elem = ("#" + ui_elem.id + " .ring");
                 if (ring_elem.length)
                 {
-                    var og_width2 = ui_elem.clientWidth;
-                    var new_ring_width = Math.ceil(1.93 * og_width2);
-                    var new_ring_offset = Math.ceil(0.455555 * og_width2);
+                    var og_width2 = ui_elem.clientWidth,
+                        new_ring_width = Math.ceil(1.93 * og_width2),
+                        new_ring_offset = Math.ceil(0.455555 * og_width2);
 
                     ring_elem.css("top", "-" + new_ring_offset + "px");
                     ring_elem.css("left", "-" + new_ring_offset + "px");
                     ring_elem.css("width", + new_ring_width + "px");
                 }
 
-                var resizeable_elem = $(".resizeable");
                 var imgheight = $("#" + ui_elem.id + " img").height();
 
                 if (imgheight == "190")

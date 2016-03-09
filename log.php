@@ -30,7 +30,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-/** @var logsystem */
+/** @var string logsystem */
 $logsystem = $_GET["system"];
 if (!$logsystem) {
     exit("No system set");
@@ -39,7 +39,7 @@ if (!$logsystem) {
 $logsystem_id = !isset($_GET["system_id"]) ? "-1" : 0 + $_GET["system_id"];
 /**if (!$logsystem_id) exit("No system id set"); */
 
-/** @var pagetitle */
+/** @var string pagetitle */
 $pagetitle = "ED ToolBox";
 
 /** @require header file */

@@ -103,8 +103,8 @@ class MySQLtabledit
     public function do_it()
     {
         // Sorry: in Joomla, remove the next two lines and place the language vars instead
-        require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/Vendor/MySQL_table_edit/lang/en.php");
-        require_once("" . $_SERVER["DOCUMENT_ROOT"] . "/source/Vendor/MySQL_table_edit/lang/" . $this->language . ".php");
+        require_once($_SERVER["DOCUMENT_ROOT"] . "/source/Vendor/MySQL_table_edit/lang/en.php");
+        require_once($_SERVER["DOCUMENT_ROOT"] . "/source/Vendor/MySQL_table_edit/lang/" . $this->language . ".php");
 
         # No cache
         if (!headers_sent()) {

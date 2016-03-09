@@ -112,19 +112,19 @@ $links = array( "ED ToolBox--log.png--true" => "/",
                 "Screenshot Gallery--gallery.png--false" => "/Gallery.php",
                 "System Log--log.png--true" => "/");
 
-/** @var galnet_feed feed url for galnet news page */
+/** @var string galnet_feed feed url for galnet news page */
 $galnet_feed = "http://feed43.com/8865261068171800.xml";
 
-/** @var base_dir path to EDTB */
+/** @var string base_dir path to EDTB */
 $base_dir = $settings["install_path"] . "/EDTB/";
 
 $settings["new_screendir"] = $settings["install_path"] . "/EDTB/screenshots";
 
-/** @var agent user agent for FD api */
+/** @var string agent user agent for FD api */
 $settings["agent"] = "Mozilla/5.0 (iPhone; CPU iPhone OS 7_1_2 like Mac OS X) AppleWebKit/537.51.2 (KHTML, like Gecko) Mobile/11D257";
-/** @var cookie_file cookie file for FD api */
+/** @var string cookie_file cookie file for FD api */
 $settings["cookie_file"] =  $_SERVER["DOCUMENT_ROOT"] . "\cache\cookies";
-/** @var curl_exe path to curl executable file */
+/** @var string curl_exe path to curl executable file */
 $settings["curl_exe"] = $settings["install_path"] . "\bin\curl.exe";
 
 global $settings;

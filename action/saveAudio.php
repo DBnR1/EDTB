@@ -60,10 +60,10 @@ if (!$fp = fopen($filename, 'wb')) {
     fclose($fp);
     ?>
     <script>
-        $("#audiofiles").html("ddd");
-        $("#audiofiles").append(<?php echo $_POST["fname"];
-    ?>);
-        $("#audiofiles").append("ddd");
+        var audiofiles = $("#audiofiles");
+        audiofiles.html("ddd");
+        audiofiles.append(<?php echo $_POST["fname"];?>);
+        audiofiles.append("ddd");
     </script>
     <?php
 

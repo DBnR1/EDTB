@@ -30,13 +30,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-/** @var ini_dir ini file directory */
+/** @var string ini_dir ini file directory */
 $ini_dir = str_replace("\\EDTB\\source", "", __DIR__);
 $ini_dir = str_replace("\\", "/", $ini_dir);
-/** @var ini_file ini file */
+/** @var string ini_file ini file */
 $ini_file = $ini_dir . "/data/edtoolbox_v1.ini";
 
-/** @var settings global user settings variable */
+/** @var array settings global user settings variable */
 $settings = parse_ini_file($ini_file);
 
 global $settings;

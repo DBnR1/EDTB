@@ -30,19 +30,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-/** @var new is the system new */
+/** @var string new is the system new */
 $new = "false";
 if (isset($_GET["newsys"])) {
     $new = $_GET["newsys"] == "true" ? "true" : "false";
 }
 
-/** @var override override the default minimum time between refreshes */
+/** @var string override override the default minimum time between refreshes */
 $override = "false";
 if (isset($_GET["override"])) {
     $override = $_GET["override"] == "true" ? "true" : "false";
 }
 
-/** @var force_update */
+/** @var string force_update */
 $force_update = "false";
 if (isset($_GET["force_update"])) {
     $force_update = $_GET["force_update"] == "true" ? "true" : "false";
@@ -125,7 +125,7 @@ if (isset($api["commander"]) && $settings["show_cmdr_status"] == "true") {
 $data["ship_status"] = "false";
 if (isset($api["ship"]) && $settings["show_ship_status"] == "true") {
     if ($api["ship"] == "no_data") {
-        $data["ship_status"] = '<a href="/admin/api_login.php">No data, reconnect API</a>';
+        $data["ship_status"] = '<a href="/admin/API_login.php">No data, reconnect API</a>';
     } else {
         /**
          * basic ship info
