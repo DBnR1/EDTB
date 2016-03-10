@@ -45,7 +45,6 @@ require_once("functions_safe.php");
 /**
  * Expand the $settings global variable with stuff from the database
  */
-
 $settings_res = mysqli_query($GLOBALS["___mysqli_ston"], "  SELECT SQL_CACHE user_settings.variable, user_settings.value, edtb_settings_info.type
                                                             FROM user_settings
                                                             LEFT JOIN edtb_settings_info ON edtb_settings_info.variable = user_settings.variable")
@@ -94,21 +93,20 @@ while ($settings_arr = mysqli_fetch_assoc($settings_res)) {
     }
 }
 
-$maplink = $settings["default_map"] == "galaxy_map" ? "/GalMap.php" : "/Map.php";
+$maplink = $settings["default_map"] == "galaxy_map" ? "/GalMap" : "/Map";
 $dropdown = $settings["dropdown"];
 array_push($dropdown, $settings["maxdistance"]);
 
 /**
  * Links for the navigation panel
  */
-
 $links = array( "ED ToolBox--log.png--true" => "/",
-                "System Information--info.png--true" => "/System.php",
+                "System Information--info.png--true" => "/System",
                 "Galaxy Map&nbsp;&nbsp;&&nbsp;&nbsp;Neighborhood Map--grid.png--true" => $maplink,
-                "Points of Interest&nbsp;&nbsp;&&nbsp;&nbsp;Bookmarks--poi.png--true" => "/Poi.php",
-                "Nearest Systems&nbsp;&nbsp;&&nbsp;&nbsp;Stations--find.png--false" => "/NearestSystems.php",
-                "Data Point--dataview.png--false" => "/DataPoint.php",
-                "Galnet News--news.png--false" => "/GalNet.php",
+                "Points of Interest&nbsp;&nbsp;&&nbsp;&nbsp;Bookmarks--poi.png--true" => "/Bookmarks",
+                "Nearest Systems&nbsp;&nbsp;&&nbsp;&nbsp;Stations--find.png--false" => "/NearestSystems",
+                "Data Point--dataview.png--false" => "/DataPoint",
+                "Galnet News--news.png--false" => "/GalNet",
                 "Screenshot Gallery--gallery.png--false" => "/Gallery.php",
                 "System Log--log.png--true" => "/");
 
@@ -132,8 +130,7 @@ global $settings;
 /**
  * parse data from companion json
  */
-
-$profile_file = $_SERVER["DOCUMENT_ROOT"] . "/profile.json";
+$profile_file = $_SERVER["DOCUMENT_ROOT"] . "/cache/profile.json";
 
 if (file_exists($profile_file)) {
     $profile_file = file_get_contents($profile_file);

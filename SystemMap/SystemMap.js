@@ -191,16 +191,16 @@ function update_url()
 
         $.ajax(
         {
-            url: "/add/systemMap.php?string=" + newurl + "&system=" + system,
+            url: "/SystemMap/add_systemMap.php?string=" + newurl + "&system=" + system,
             cache: false,
             dataType: "html",
             success: function()
             {
-                log("Requested /add/systemMap.php succesfully");
+                log("Requested /SystemMap/add_systemMap.php succesfully");
             },
             error: function()
             {
-                log("Error occured when requesting /add/systemMap.php");
+                log("Error occured when requesting /SystemMap/add_systemMap.php");
             }
         });
 
@@ -217,16 +217,16 @@ function update_url()
     {
         $.ajax(
         {
-            url: "/add/systemMap.php?string=delete&system=" + system,
+            url: "/SystemMap/add_systemMap.php?string=delete&system=" + system,
             cache: false,
             dataType: "html",
             success: function()
             {
-                log("Requested /add/systemMap.php succesfully");
+                log("Requested /SystemMap/add_systemMap.php succesfully");
             },
             error: function()
             {
-                log("Error occured when requesting /add/systemMap.php");
+                log("Error occured when requesting /SystemMap/add_systemMap.php");
             }
         });
         mlink.html("");

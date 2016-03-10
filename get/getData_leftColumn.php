@@ -70,7 +70,7 @@ if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
     $poid = mysqli_num_rows($pres);
 
     $class = $bookmarked > 0 ? "bookmarked" : "title";
-    $class = $poid > 0 ? "poid" : "title";
+    $class = $poid > 0 ? "poid" : $class;
 
     $data["system_title"] .= '<a class="' . $class . '" href="javascript:void(0)" id="system_title" onclick="tofront(\'distance\');get_cs(\'system_2\', \'coords_2\');$(\'#system_6\').focus()" onmouseover="slide()" onmouseout="slideout()" title="Calculate distances">';
 

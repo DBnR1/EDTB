@@ -100,16 +100,9 @@ function last_known_system($onlyedsm = false)
 }
 
 /**
- * Calculating coordinates
- */
-
-require_once("Vendor/trilateration.php");
-
-/**
  * Generate array from XML
  * https://gist.github.com/laiello/8189351
  */
-
 require_once("Vendor/xml2array.php");
 
 /**
@@ -153,7 +146,9 @@ function random_insult($who_to_insult)
     $whoa = array(  $first_name . " so called " . $last_name,
                     $first_name . " " . $last_name);
 
-    // Insults from museangel.net, katoninetales.com, mandatory.com with some of my own thrown in for good measure
+    /**
+     * Insults from museangel.net, katoninetales.com, mandatory.com with some of my own thrown in for good measure
+     */
     $pool1 = array("moronic", "putrid", "disgusting", "cockered", "droning", "fobbing", "frothy", "smelly", "infectious", "puny", "roguish", "assinine", "tottering", "shitty", "villainous", "pompous", "elitist", "dirty");
     $pool2 = array("shit-kicking", "Federal", "butt-munching", "clap-ridden", "fart-eating", "clay-brained", "sheep-fucking");
     $pool3 = array("hemorrhoid", "assface", "whore", "kretin", "cumbucket", "fuckface", "asshole", "turd", "taint", "knob", "tit", "shart", "douche");
@@ -167,115 +162,6 @@ function random_insult($who_to_insult)
     $insult = "the " . $pool1[0] . " " . $pool2[0] . " " . $pool3[0] . " " . $whoa[0];
 
     return $insult;
-}
-
-/**
- * Parse data for Data Point
- *
- * @param string $key field name
- * @param string $value field value
- * @param float $d_x x coordinate
- * @param float $d_y y coordinate
- * @param float $d_z z coordinate
- * @param bool $dist
- * @param string $table table name
- * @param bool $enum
- * @return string $this_row parsed html td tag
- * @author Mauri Kujala <contact@edtb.xyz>
- */
-function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
-{
-    global $curSys;
-
-    $distance = "";
-    $this_row = "";
-
-    // Regular Expression filter for links
-    $reg_exUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
-
-    if ($value == "") {
-        $value = "n/a";
-    }
-
-    if ($dist !== false) {
-        // figure out what coords to calculate from
-        $usable_coords = usable_coords();
-        $usex = $usable_coords["x"];
-        $usey = $usable_coords["y"];
-        $usez = $usable_coords["z"];
-        $exact = $usable_coords["current"] === true ? "" : " *";
-
-        if (valid_coordinates($d_x, $d_y, $d_z)) {
-            $distance = number_format(sqrt(pow(($d_x-($usex)), 2)+pow(($d_y-($usey)), 2)+pow(($d_z-($usez)), 2)), 2);
-            $this_row .= '<td style="padding:10px;white-space:nowrap;vertical-align:middle">' . $distance . $exact . '</td>';
-        } else {
-            $this_row .= '<td style="padding:10px;vertical-align:middle">n/a</td>';
-        }
-
-        $dist = false;
-    }
-    // make a link for systems with an id
-    if ($key == "system_id" && $value != "0") {
-        $this_row .= '<td style="padding:10px;vertical-align:middle">';
-        $this_row .= '<a href="/System.php?system_id=' . $value . '">' . $value . '</a>';
-        $this_row .= '</td>';
-    }
-    // make a link for systems with system name
-    elseif (strpos($key, "system_name") !== false && $value != "0" || $key == "name" && $table == "edtb_systems") {
-        /**
-         * provide crosslinks to screenshot gallery, log page, etc
-         */
-        $item_crosslinks = crosslinks($value);
-
-        $this_row .= '<td style="padding:10px;vertical-align:middle">';
-        $this_row .= '<a href="/System.php?system_name=' . urlencode($value) . '">' . $value . $item_crosslinks . '</a>';
-        $this_row .= '</td>';
-    }
-    // number format some values
-    elseif (strpos($key, "price") !== false || strpos($key, "ls") !== false || strpos($key, "population") !== false || strpos($key, "distance") !== false) {
-        if (is_numeric($value) && $value != null) {
-            $this_row .= '<td style="padding:10px;vertical-align:middle">' . number_format($value) . '</td>';
-        } else {
-            $this_row .= '<td style="padding:10px;vertical-align:middle">n/a</td>';
-        }
-    }
-    // make links
-    elseif (preg_match($reg_exUrl, $value, $url)) {
-        if (mb_strlen($value) >= 80) {
-            $urli = substr($value, 0, 80) . "...";
-        } else {
-            $urli = $value;
-        }
-        $this_row .= '<td style="padding:10px;vertical-align:middle">';
-        $this_row .= preg_replace($reg_exUrl, "<a href='" . $url[0] . "' target='_blank'>" . $urli . "</a> ", $value);
-        $this_row .= '</td>';
-    }
-    // make 0,1 human readable
-    elseif ($enum !== false) {
-        $real_value = "n/a";
-        if ($value == "0") {
-            $real_value = "<span class='enum_no'>&#10799;</span>";
-        }
-
-        if ($value == "1") {
-            $real_value = "<span class='enum_yes'>&#10003;</span>";
-        }
-
-        $this_row .= '<td style="padding:10px;text-align:center;vertical-align:middle">' .  $real_value . '</td>';
-    } else {
-        $this_row .= '<td style="padding:10px;vertical-align:middle">' . substr(strip_tags($value), 0, 100) . '</td>';
-    }
-
-    // parse log entries
-    if ($key == "log_entry") {
-        if (mb_strlen($value) >= 100) {
-            $this_row = '<td style="padding:10px;vertical-align:middle">' . substr(strip_tags($value), 0, 100) . '...</td>';
-        } else {
-            $this_row = '<td style="padding:10px;vertical-align:middle">' . $value . '</td>';
-        }
-    }
-
-    return $this_row;
 }
 
 /**
@@ -714,7 +600,7 @@ function make_gallery($gallery_name)
 {
     global $settings, $system_time;
 
-    if (isset($settings["old_screendir"]) && $settings["old_screendir"] != "C:\Users" && $settings["old_screendir"] != "C:\Users\\") {
+    if (isset($settings["old_screendir"]) && $settings["old_screendir"] != "C:\\Users" && $settings["old_screendir"] != "C:\\Users\\") {
         if (is_dir($settings["old_screendir"]) && is_writable($settings["old_screendir"])) {
             $res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT visit
                                                                 FROM user_visited_systems
@@ -798,7 +684,6 @@ function make_gallery($gallery_name)
                             /**
                              * add no more than 15 at a time
                              */
-
                             if ($added > 15) {
                                 break;
                             }
@@ -848,303 +733,6 @@ function make_gallery($gallery_name)
 }
 
 /**
- * Count how many jumps user has made since last known
- * coordinates and return a "fuzziness" factor
- *
- * @return array|bool $value range in ly to use for reference systems
- * @author Mauri Kujala <contact@edtb.xyz>
- */
-function fuzziness()
-{
-    $res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT system_name
-                                                        FROM user_visited_systems
-                                                        ORDER BY visit DESC
-                                                        LIMIT 30")
-                                                        or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-    $count = mysqli_num_rows($res);
-
-    if ($count > 0) {
-        $last_known = last_known_system(true);
-        $last_known_name = $last_known["name"];
-
-        if (!empty($last_known_name)) {
-            $num = 0;
-            $value = array();
-
-            while ($arr = mysqli_fetch_assoc($res)) {
-                $visited_system_name = $arr["system_name"];
-
-                if ($visited_system_name == $last_known_name) {
-                    break;
-                } else {
-                    $num++;
-                }
-            }
-
-            $num = $num == 0 ? 1 : $num;
-            $fuzziness = $num * 40 + 20; // assuming a range of 40 ly per jump (+ 20 ly just to be on the safe side)
-
-            $value["fuzziness"] = $fuzziness;
-            $value["system_name"] = $last_known_name;
-            $value["x"] = $last_known["x"];
-            $value["y"] = $last_known["y"];
-            $value["z"] = $last_known["z"];
-
-            return $value;
-        } else {
-            return false;
-        }
-    } else {
-        return false;
-    }
-}
-
-/**
- * Calculate optimal reference systems for trilateration
- * Experimental
- *
- * @param bool $standard return standard references
- * @param array $used
- * @return array $references name => coordinates
- * @author Mauri Kujala <contact@edtb.xyz>
- */
-function reference_systems($standard = false, $used = array())
-{
-    $start_point = fuzziness();
-
-    if ($start_point !== false && $standard !== true) {
-        $start_name = $start_point["system_name"];
-        $start_x = $start_point["x"];
-        $start_y = $start_point["y"];
-        $start_z = $start_point["z"];
-
-        $fuzziness = $start_point["fuzziness"];
-
-        $res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT name, x, y, z
-                                                            FROM edtb_systems
-                                                            WHERE x BETWEEN (" . $start_x . " - " . $fuzziness . ") AND (" . $start_x . " + " . $fuzziness . ")
-                                                            AND y BETWEEN (" . $start_y . " - " . $fuzziness . ") AND (" . $start_y . " + " . $fuzziness . ")
-                                                            AND z BETWEEN (" . $start_z . " - " . $fuzziness . ") AND (" . $start_z . " + " . $fuzziness . ")
-                                                            AND sqrt(pow((x-(" . $start_x . ")), 2)+pow((y-(" . $start_y . ")), 2)+pow((z-(" . $start_z . ")), 2)) < " . $fuzziness . "
-                                                            AND name != '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $start_name) . "'
-                                                            ORDER BY sqrt(pow((x-(" . $start_x . ")), 2)+pow((y-(" . $start_y . ")), 2)+pow((z-(" . $start_z . ")), 2)) DESC")
-                                                            or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-
-        $num = mysqli_num_rows($res);
-
-        if ($num <= 4) {
-            $res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT name, x, y, z
-                                                                FROM edtb_systems
-                                                                WHERE x NOT BETWEEN (" . $start_x . " - " . $fuzziness . ") AND (" . $start_x . " + " . $fuzziness . ")
-                                                                AND y NOT BETWEEN (" . $start_y . " - " . $fuzziness . ") AND (" . $start_y . " + " . $fuzziness . ")
-                                                                AND z NOT BETWEEN (" . $start_z . " - " . $fuzziness . ") AND (" . $start_z . " + " . $fuzziness . ")
-                                                                AND sqrt(pow((x-(" . $start_x . ")), 2)+pow((y-(" . $start_y . ")), 2)+pow((z-(" . $start_z . ")), 2)) > " . $fuzziness . "
-                                                                AND name != '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $start_name) . "'
-                                                                ORDER BY sqrt(pow((x-(" . $start_x . ")), 2)+pow((y-(" . $start_y . ")), 2)+pow((z-(" . $start_z . ")), 2)) ASC LIMIT 500")
-                                                                or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-        }
-
-        $i = 0;
-        $pool = array();
-        while ($arr = mysqli_fetch_assoc($res)) {
-            $pool[$i]["name"] = $arr["name"];
-            $pool[$i]["x"] = $arr["x"];
-            $pool[$i]["y"] = $arr["y"];
-            $pool[$i]["z"] = $arr["z"];
-
-            $i++;
-        }
-
-        $orders = array("z DESC", "z ASC", "x DESC", "x ASC");
-
-        $lastname = "";
-        $references = array();
-        foreach ($orders as $order) {
-            Utility::orderBy($pool, $order);
-
-            for ($is = 0; $is <= 4; $is++) {
-                if (!array_key_exists($pool[$is]["name"], $references) && !in_array($pool[$is]["name"], $used)) {
-                    $references[$pool[$is]["name"]] = $pool[$is]["x"] . "," . $pool[$is]["y"] . "," . $pool[$is]["z"];
-                    break;
-                }
-            }
-        }
-
-        $count = count($references);
-
-        if ($count < 4) {
-            //
-            $add = 4 - $count;
-
-            Utility::orderBy($pool, 'z ASC');
-
-            for ($i = 1; $i <= $add; $i++) {
-                $num = $lastname == $pool[0]["name"] ? 1 : 0;
-                $references[$pool[$num]["name"]] = $pool[$num]["x"] . "," . $pool[$num]["y"] . "," . $pool[$num]["z"];
-                $lastname = $pool[$num]["name"];
-            }
-        }
-    }
-    /**
-     *  If start point is not set, use standard set of references
-     */
-    else {
-        $references = array(    "Sadr" => "-1794.69,53.6875,365.844",
-                                "HD 1" => "-888.375,99.3125,-489.75",
-                                "Cant" => "126.406,-249.031,87.7812",
-                                "Nox"  => "38.8438,-17.7812,-63.875");
-    }
-
-    return $references;
-}
-
-/**
- * Make log entries
- *
- * @param resource $log_res
- * @param string $type
- * @return string $logdata
- * @author Mauri Kujala <contact@edtb.xyz>
- */
-function make_log_entries($log_res, $type)
-{
-    global $system_time;
-
-    $this_system = "";
-    $this_id = "";
-    $i = 0;
-    while ($log_arr = mysqli_fetch_assoc($log_res)) {
-        if ($this_id != $log_arr["id"]) {
-            $system_name = $log_arr["system_name"] == "" ? $log_arr["log_system_name"] : $log_arr["system_name"];
-            $log_station_name = $log_arr["station_name"];
-            $log_text = $log_arr["log_entry"];
-            $date = date_create($log_arr["stardate"]);
-            $log_added = date_modify($date, "+1286 years");
-            $distance = $log_arr["distance"] != "" ? number_format($log_arr["distance"], 1) : "";
-
-            if ($this_system != $system_name && $type == "system" || $this_system != $system_name && $type == "log") {
-                $add = $distance != 0 ? " (distance " . $distance . " ly)" : "";
-
-                $sortable = "";
-                if ($i == 0) {
-                    if (isset($_GET["slog_sort"]) && $_GET["slog_sort"] != "undefined") {
-                        if ($_GET["slog_sort"] == "asc") {
-                            $sssort = "desc";
-                        }
-                        if ($_GET["slog_sort"] == "desc") {
-                            $sssort = "asc";
-                        }
-                    } else {
-                        $sssort = "asc";
-                    }
-
-                    $sortable = '<span class="right">';
-                    $sortable .= '<a href="/index.php?slog_sort=' . $sssort . '" title="Sort by date asc/desc">';
-                    $sortable .= '<img class="icon" src="/style/img/sort.png" alt="Sort" style="margin-right:0" />';
-                    $sortable .= '</a></span>';
-                }
-                if ($type == "log") {
-                    $sortable = "";
-                }
-
-                /**
-                 * provide crosslinks to screenshot gallery, log page, etc
-                 */
-                $l_crosslinks = crosslinks($system_name, true, false, false);
-
-                $logdata = '<header><h2><img class="icon" src="/style/img/system_log.png" alt="log" />';
-                $logdata .= 'System log for <a href="/System.php?system_name=' . urlencode($system_name) . '">';
-                $logdata .= $system_name;
-                $logdata .= '</a>' . $l_crosslinks . $add . $sortable . '</h2></header>';
-                $logdata .= '<hr>';
-            } elseif ($type == "general" && $i == 0) {
-                if (isset($_GET["glog_sort"]) && $_GET["glog_sort"] != "undefined") {
-                    if ($_GET["glog_sort"] == "asc") {
-                        $gssort = "desc";
-                    }
-                    if ($_GET["glog_sort"] == "desc") {
-                        $gssort = "asc";
-                    }
-                } else {
-                    $gssort = "asc";
-                }
-
-                $sortable = '<span class="right">';
-                $sortable .= '<a href="/index.php?glog_sort=' . $gssort . '" title="Sort by date asc/desc">';
-                $sortable .= '<img class="icon" src="/style/img/sort.png" alt="Sort" style="margin-right:0" />';
-                $sortable .= '</a></span>';
-
-                $logdata = '<header><h2><img class="icon" src="/style/img/log.png" alt="log" />Commander\'s Log' . $sortable . '</h2></header>';
-                $logdata .= '<hr>';
-            }
-
-            // check if log is pinned
-            $pinned = $log_arr["pinned"] == "1" ? '<img class="icon" src="/style/img/pinned.png" alt="Pinned" />' : "";
-
-            // check if log is personal
-            $personal = $log_arr["type"] == "personal" ? '<img class="icon" src="/style/img/user.png" alt="Personal" />' : "";
-
-            $log_title = !empty($log_arr["title"]) ? '&nbsp;&ndash;&nbsp;' . $log_arr["title"] : "";
-
-            // check if log has audio
-            $audio = $log_arr["audio"] != "" ? '<a href="javascript:void(0)" onclick="$(\'#' . $log_arr["id"] . '\').fadeToggle(\'fast\')" title="Listen to audio logs"><img class="icon" src="/style/img/audio.png" alt="Audio" /></a>' : "";
-
-            $logdata .= '<h3>' . $pinned . $personal . $audio;
-            $logdata .= '<a href="javascript:void(0)" onclick="toggle_log_edit(\'' . $log_arr["id"] . '\')" style="color:inherit" title="Edit entry">';
-            $logdata .= date_format($log_added, "j M Y, H:i");
-
-            if (!empty($log_station_name)) {
-                $logdata .= '&nbsp;[Station: ' . htmlspecialchars($log_station_name) . ']';
-            }
-
-            $logdata .= $log_title;
-            $logdata .= '</a></h3>';
-            $logdata .= '<pre class="entriespre" style="margin-bottom:20px">';
-
-            if (!empty($audio)) {
-                $logdata .= '<div class="audio" id="' . $log_arr["id"] . '" style="display:none">';
-
-                $audio_files = explode(", ", $log_arr["audio"]);
-
-                foreach ($audio_files as $audio_file) {
-                    $file = $_SERVER["DOCUMENT_ROOT"] . "/audio_logs/" . $audio_file;
-                    $file_src = "/audio_logs/" . $audio_file;
-
-                    if (file_exists($file)) {
-                        $timestamp = filemtime($file)+($system_time*60*60);
-                        $record_date = date("Y-m-d H:i:s", $timestamp);
-                        $date = date_create($record_date);
-                        $record = date_modify($date, "+1286 years");
-                        $record_added = date_format($record, "j M Y, H:i");
-                        $added_ago = get_timeago($timestamp);
-
-                        $logdata .= '<div style="margin-bottom:4px;margin-top:6px;margin-left:3px">';
-                        $logdata .= 'Added: ' . $record_added . ' (' . $added_ago . ')';
-                        $logdata .= '</div>';
-                        $logdata .= '<div>';
-                        $logdata .= '<audio controls>';
-                        $logdata .= '<source src="' . $file_src . '" type="audio/mp3">';
-                        $logdata .= 'Your browser does not support the audio element.';
-                        $logdata .= '</audio>';
-                        $logdata .= '</div>';
-                    }
-                }
-                $logdata .= '</div>';
-            }
-
-            $logdata .= $log_text;
-            $logdata .= '</pre>';
-        }
-
-        $this_system = $system_name;
-        $this_id = $log_arr["id"];
-        $i++;
-    }
-
-    return $logdata;
-}
-
-/**
  * Return links to screenshots, system log or system map
  *
  * @param string $system
@@ -1167,7 +755,7 @@ function crosslinks($system, $show_screens = true, $show_system = false, $show_l
 
     // check if system is logged
     if ($show_logs === true && is_logged($system)) {
-        $return .= '<a href="/log.php?system=' . urlencode($system) . '" style="color:inherit" title="System has log entries">';
+        $return .= '<a href="/Log?system=' . urlencode($system) . '" style="color:inherit" title="System has log entries">';
         $return .= '<img src="/style/img/log.png" class="icon" style="margin-left:5px;margin-right:0" />';
         $return .= '</a>';
     }
@@ -1181,7 +769,7 @@ function crosslinks($system, $show_screens = true, $show_system = false, $show_l
 
     // show link if system exists
     if ($show_system === true && system_exists($system)) {
-        $return .= '<a href="/System.php?system_name=' . urlencode($system) . '" style="color:inherit" title="System info">';
+        $return .= '<a href="/System?system_name=' . urlencode($system) . '" style="color:inherit" title="System info">';
         $return .= '<img src="/style/img/info.png" class="icon" alt="Info" style="margin-left:5px;margin-right:0" />';
         $return .= '</a>';
     }

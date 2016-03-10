@@ -94,7 +94,7 @@ if (isset($_GET["q"]) && !empty($_GET["q"]) && isset($_GET["divid"])) {
     while ($suggest = mysqli_fetch_assoc($suggest_query)) {
         if ($_GET["link"] == "yes") {
             ?>
-            <a href="/System.php?system_id=<?php echo $suggest['system_id']?>">
+            <a href="/System?system_id=<?php echo $suggest['system_id']?>">
                 <?php echo $suggest['station_name']?>&nbsp;&nbsp;(<?php echo $suggest['system_name']?>)
             </a><br />
             <?php

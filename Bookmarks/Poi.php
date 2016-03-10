@@ -1,10 +1,11 @@
 <?php
 /**
- * Config file
+ * Points of Interest and Bookmarks
  *
- * No description
+ * Front-end file for Points of interest and Bookmarks.
+ * The back-end file is /get/getData_poi_bm.php
  *
- * @package EDTB\Backend
+ * @package EDTB\Main
  * @author Mauri Kujala <contact@edtb.xyz>
  * @copyright Copyright (C) 2016, Mauri Kujala
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
@@ -30,14 +31,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-/** @var string ini_dir ini file directory */
-$ini_dir = str_replace("\\EDTB\\source", "", __DIR__);
-$ini_dir = str_replace("\\", "/", $ini_dir);
-/** @var string ini_file ini file */
-$ini_file = $ini_dir . "/data/edtoolbox_v1.ini";
+/** @var string pagetitle */
+$pagetitle = "Points of Interest&nbsp;&nbsp;&&nbsp;&nbsp;Bookmarks";
 
-/** @var array settings global user settings variable */
-$settings = [];
-$settings = parse_ini_file($ini_file);
-
-global $settings;
+/** @require header file */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
+require_once("add_poi.php");
+?>
+<div class="entries">
+    <!-- points of interest and bookmarks are rendered here -->
+    <div class="entries_inner" id="poi_bm">
+    </div>
+</div>
+<?php
+require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");

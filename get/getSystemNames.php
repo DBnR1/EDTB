@@ -84,13 +84,13 @@ if (isset($_GET["q"]) && !empty($_GET["q"]) && isset($_GET["divid"])) {
             if ($_GET["link"] == "yes") {
                 if (isset($suggest['id'])) {
                     ?>
-                    <a href="/System.php?system_id=<?php echo $suggest['id']?>">
+                    <a href="/System?system_id=<?php echo $suggest['id']?>">
                         <?php echo $suggest['name'];?>
                     </a><br />
                     <?php
                 } else {
                     ?>
-                    <a href="/System.php?system_name=<?php echo urlencode($suggest['name'])?>">
+                    <a href="/System?system_name=<?php echo urlencode($suggest['name'])?>">
                         <?php echo $suggest['name'];?>
                     </a><br />
                     <?php

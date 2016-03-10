@@ -34,7 +34,7 @@
             <div class="rightpanel-content">
                 <?php
                 /** @include log */
-                include_once($_SERVER["DOCUMENT_ROOT"] . "/add/log.php");
+                include_once($_SERVER["DOCUMENT_ROOT"] . "/Log/add_log.php");
                 //
 
                 // add and edit stations
@@ -42,7 +42,7 @@
                 //
 
                 // calculate coordinates
-                include_once($_SERVER["DOCUMENT_ROOT"] . "/add/coord.php");
+                include_once($_SERVER["DOCUMENT_ROOT"] . "/Trilateration/coord.php");
                 //
 
                 // edit system
@@ -50,7 +50,7 @@
                 //
 
                 // add/edit bookmakrs
-                include_once($_SERVER["DOCUMENT_ROOT"] . "/add/bookmark.php");
+                include_once($_SERVER["DOCUMENT_ROOT"] . "/Bookmarks/add_bookmark.php");
                 //
                 ?>
                 <!-- initialize textareas -->

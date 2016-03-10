@@ -191,7 +191,7 @@
 			fd.append('data', event.target.result);
 			$.ajax({
 				type: 'POST',
-				url: '/action/saveAudio.php',
+				url: '/Log/saveAudio.php',
 				data: fd,
 				processData: false,
 				contentType: false

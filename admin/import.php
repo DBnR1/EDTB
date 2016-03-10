@@ -96,7 +96,7 @@ if (is_dir($settings["log_dir"])) {
         } else {
             $text = $num . ' netLog files totaling ' . FileSizeConvert($total_size) . ' remaining.<br />';
             $text .= 'Do you want to import the next batch?<br /><br />';
-            $text .= '<div id="text" style="text-align:center;">';
+            $text .= '<div id="text" style="text-align:center">';
             $text .= '<a href="import.php?import&batches_left=' . $batches_left . '&num=' . $numss . '" onclick="$(\'#loadin\').show();$(\'#text\').hide()">';
             $text .= 'Import logs, ' . $batches . ' batches left</a></div>';
             $text .= '<div id="loadin" style="text-align:center;display:none"><img src="/style/img/loading.gif" alt="Loading..." /></div>';

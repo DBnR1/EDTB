@@ -89,7 +89,6 @@ class db_create
         /**
          * check if table exists
          */
-
         $query = $this->link->query("   SELECT COLUMN_NAME FROM
                                         information_schema.COLUMNS
                                         WHERE TABLE_SCHEMA = '" . $database . "'
@@ -111,7 +110,6 @@ class db_create
                 /**
                  * check if column exists
                  */
-
                 $column_query = $this->link->query("    SELECT COLUMN_NAME FROM
                                                         information_schema.COLUMNS
                                                         WHERE TABLE_SCHEMA = '" . $database . "'
@@ -143,7 +141,6 @@ class db_create
             /**
              * remove any superfluous columns
              */
-
             while ($arr = mysqli_fetch_assoc($query)) {
                 if (!in_array($arr["COLUMN_NAME"], $all_columns)) {
                     //write_log("Running query: ALTER TABLE " . $database . ".`" . $table . "` DROP COLUMN `" . $arr["COLUMN_NAME"] . "`", $file, $line);

@@ -96,7 +96,7 @@ function slideout()
  */
 function getUrlVars()
 {
-    var vars = {},
+    var vars = [],
         parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value)
         {
             vars[key] = value;
@@ -113,16 +113,16 @@ function update_map()
 {
     $.ajax(
     {
-        url: "/get/getMapPoints.json.php",
+        url: "/GalMap/getMapPoints.json.php",
         cache: false,
         dataType: "html",
         success: function()
         {
-            log("Requested /get/getMapPoints.json.php succesfully");
+            log("Requested /GalMap/getMapPoints.json.php succesfully");
         },
         error: function()
         {
-            log("Error occured when requesting /get/getMapPoints.json.php");
+            log("Error occured when requesting /GalMap/getMapPoints.json.php");
         }
     });
 }
@@ -199,7 +199,7 @@ function update_poi_bm()
 {
     $.ajax(
         {
-            url: "/get/getData_poi_bm.php",
+            url: "/Bookmarks/getData_poi_bm.php",
             cache: false,
             dataType: "html",
             success: function(result)
@@ -209,7 +209,7 @@ function update_poi_bm()
             },
             error: function()
             {
-                log("Error: requesting /get/getData_poi_bm.php failed");
+                log("Error: requesting /Bookmarks/getData_poi_bm.php failed");
             }
         });
 }
@@ -332,7 +332,7 @@ function get_data(override)
                                 maxdistance = getUrlVars().maxdistance,
                                 script = document.createElement("script");
                             script.type = "text/javascript";
-                            script.src = "/get/getMapPoints.js.php?mode=" + mode + "&maxdistance=" + maxdistance;
+                            script.src = "/Map/getMapPoints.js.php?mode=" + mode + "&maxdistance=" + maxdistance;
 
                             $("head").append(script);
                         }
@@ -583,7 +583,7 @@ function update_data(formid, file, update_map)
     {
         $.ajax(
         {
-            url: "/get/getMapPoints.json.php",
+            url: "/GalMap/getMapPoints.json.php",
             cache: false,
             dataType: "html",
             success: function()
@@ -625,26 +625,25 @@ function addZero(i)
  */
 function startTime()
 {
+    var today = new Date(), h, m, s, d, year, mo,
+        monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
     if (gmt == "false")
     {
-        var today = new Date(),
-            h = addZero(today.getHours()),
-            m = today.getMinutes(),
-            s = today.getSeconds(),
-            monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-            d = today.getDate(),
-            year = today.getFullYear() + 1286,
+            h = addZero(today.getHours());
+            m = today.getMinutes();
+            s = today.getSeconds();
+            d = today.getDate();
+            year = today.getFullYear() + 1286;
             mo = monthNames[today.getMonth()];
     }
     else
     {
-        var today = new Date(),
-            h = addZero(today.getUTCHours()),
-            m = today.getUTCMinutes(),
-            s = today.getUTCSeconds(),
-            monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-            d = today.getUTCDate(),
-            year = today.getUTCFullYear() + 1286,
+            h = addZero(today.getUTCHours());
+            m = today.getUTCMinutes();
+            s = today.getUTCSeconds();
+            d = today.getUTCDate();
+            year = today.getUTCFullYear() + 1286;
             mo = monthNames[today.getUTCMonth()];
     }
 
@@ -731,15 +730,15 @@ function confirmation(delid, what)
         var script = "";
         if (what == "log")
         {
-            script = "/add/log.php?do&deleteid=" + delid;
+            script = "/Log/add_log.php?do&deleteid=" + delid;
         }
         else if (what == "poi")
         {
-            script = "/add/Poi.php?do&deleteid=" + delid;
+            script = "/Bookmarks/add_poi.php?do&deleteid=" + delid;
         }
         else if (what == "bm")
         {
-            script = "/add/bookmark.php?do&deleteid=" + delid;
+            script = "/Bookmarks/add_bookmark.php?do&deleteid=" + delid;
         }
         else if (what == "screenshot")
         {
@@ -806,7 +805,7 @@ function toggle_log(logsystem)
 function toggle_log_edit(log_id)
 {
     tofront("addlog");
-    update_values("/get/getLogEditData.php?logid=" + log_id, log_id);
+    update_values("/Bookmarks/getLogEditData.php?logid=" + log_id, log_id);
 }
 
 var last_system = "";
@@ -831,7 +830,7 @@ function get_mi(system)
         report.show();
         $.ajax(
         {
-            url: "/get/getMapData.php?system=" + system,
+            url: "/Map/getMapData.php?system=" + system,
             cache: false,
             success: function(result)
             {
@@ -1537,11 +1536,11 @@ function set_reference_systems(standard, force)
 
     if (standard !== false)
     {
-        urli = "/get/getReferenceSystems.php?standard=true" + add;
+        urli = "/Trilateration/getReferenceSystems.php?standard=true" + add;
     }
     else
     {
-        urli = "/get/getReferenceSystems.php" + add;
+        urli = "/Trilateration/getReferenceSystems.php" + add;
     }
 
     $.ajax(

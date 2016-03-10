@@ -71,7 +71,6 @@ if ((isset($settings["nowplaying_file"]) && !empty($settings["nowplaying_file"])
     /**
      *  from file
      */
-
     if (isset($settings["nowplaying_file"]) && !empty($settings["nowplaying_file"])) {
         $nowplaying .= file_get_contents($settings["nowplaying_file"]);
     }
@@ -79,7 +78,6 @@ if ((isset($settings["nowplaying_file"]) && !empty($settings["nowplaying_file"])
     /**
      *  from VLC (@author Travis)
      */
-
     if (isset($settings["nowplaying_vlc_password"]) && !empty($settings["nowplaying_vlc_password"])) {
         $username = "";
         $password = $settings["nowplaying_vlc_password"];
@@ -152,12 +150,11 @@ if ($newSystem !== false || $request == 0) {
      * update galmap json if system is new or file doesn't exist
      * or if last update was more than an hour ago
      */
-
     $data["update_map"] = "false";
     $last_map_update = edtb_common("last_map_update", "unixtime");
     $map_update_time_frame = time() - 1 * 60 * 60;
 
-    if ($newSystem !== false || !file_exists($_SERVER["DOCUMENT_ROOT"] . "/map_points.json") || $last_map_update < $map_update_time_frame) {
+    if ($newSystem !== false || !file_exists($_SERVER["DOCUMENT_ROOT"] . "/GalMap/map_points.json") || $last_map_update < $map_update_time_frame) {
         $data["update_map"] = "true";
     }
 
@@ -179,13 +176,13 @@ if ($newSystem !== false || $request == 0) {
      * Stuff specifically for System.php
      */
 
-    require_once($_SERVER["DOCUMENT_ROOT"] . "/get/getData_systemInfo.php");
+    require_once($_SERVER["DOCUMENT_ROOT"] . "/System/getData_systemInfo.php");
 
     /**
      * System and general logs
      */
 
-    require_once($_SERVER["DOCUMENT_ROOT"] . "/get/getData_logs.php");
+    require_once($_SERVER["DOCUMENT_ROOT"] . "/Log/getData_logs.php");
 
     /**
      * Check for updates

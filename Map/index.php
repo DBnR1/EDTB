@@ -1,15 +1,4 @@
 <?php
-/**
- * Config file
- *
- * No description
- *
- * @package EDTB\Backend
- * @author Mauri Kujala <contact@edtb.xyz>
- * @copyright Copyright (C) 2016, Mauri Kujala
- * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
- */
-
  /*
  * ED ToolBox, a companion web app for the video game Elite Dangerous
  * (C) 1984 - 2016 Frontier Developments Plc.
@@ -30,14 +19,5 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-/** @var string ini_dir ini file directory */
-$ini_dir = str_replace("\\EDTB\\source", "", __DIR__);
-$ini_dir = str_replace("\\", "/", $ini_dir);
-/** @var string ini_file ini file */
-$ini_file = $ini_dir . "/data/edtoolbox_v1.ini";
-
-/** @var array settings global user settings variable */
-$settings = [];
-$settings = parse_ini_file($ini_file);
-
-global $settings;
+/** @require file */
+require_once("Map.php");

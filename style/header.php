@@ -70,31 +70,9 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
             <script src="/source/Vendor/Recordmp3js/recordmp3.js"></script>
             <script src="/source/Vendor/adamwdraper-Numeral-js-7487acb/numeral.js"></script>
 
-            <?php
-            if ($_SERVER["PHP_SELF"] == "/GalMap.php") {
-                ?>
-                <!-- Three.js -->
-                <script src="/source/Vendor/three.min.js"></script>
-                <!-- ED3D-Galaxy-Map -->
-                <link href="/source/Vendor/ED3D-Galaxy-Map/css/styles.css?ver=<?php echo $settings["edtb_version"]?>" rel="stylesheet" type="text/css" />
-                <script src="/source/Vendor/ED3D-Galaxy-Map/js/ed3dmap.js"></script>
-                <?php
-            }
-            ?>
-
             <!-- markitup -->
             <script src="/source/Vendor/markitup/sets/html/set.js"></script>
             <script src="/source/Vendor/markitup/jquery.markitup.js"></script>
-
-            <?php
-            if ($_SERVER["PHP_SELF"] == "/Map.php") {
-                ?>
-                <!-- highcharts (map)-->
-                <script src="/source/Vendor/Highcharts/js/highcharts.js"></script>
-                <script src="/source/Vendor/Highcharts/js/highcharts-3d.js"></script>
-                <?php
-            }
-            ?>
 
             <!-- own js -->
             <script src="/source/javascript.js"></script>
@@ -386,37 +364,37 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
                 <div class="settings_panel" id="notice_new"></div>
 
                 <div class="settings_panel" id="settings" style="width:227px">
-                    <a href="/admin/Settings.php" title="Settings editor">
+                    <a href="/Admin" title="Settings editor">
                         <div class="link" style="width:90%;text-align:left">
                             <img class="icon" src="/style/img/settings.png" alt="Settings" />Customize ED ToolBox
                         </div>
                     </a>
-                    <a href="/admin/ini_editor.php" title="Edit ini file">
+                    <a href="/Admin/ini_editor.php" title="Edit ini file">
                         <div class="link" style="width:90%;text-align:left">
                             <img class="icon" src="/style/img/vareditor.png" alt="INI" />Edit ini file
                         </div>
                     </a>
-                    <a href="/admin" title="Database manager (Adminer)" target="_blank">
+                    <a href="/Admin/db_manager.php" title="Database manager (Adminer)" target="_blank">
                         <div class="link" style="width:90%;text-align:left">
                             <img class="icon" src="/style/img/dataview.png" alt="DB Manager" />Database Management
                         </div>
                     </a>
-                    <a href="/admin/SQL.php" title="Run MySQL queries">
+                    <a href="/Admin/SQL.php" title="Run MySQL queries">
                         <div class="link" style="width:90%;text-align:left">
                             <img class="icon" src="/style/img/sql.png" alt="MySQL" />Run MySQL queries
                         </div>
                     </a>
-                    <a href="/admin/Import.php" title="Import flight logs">
+                    <a href="/Admin/Import.php" title="Import flight logs">
                         <div class="link" style="width:90%;text-align:left">
                             <img class="icon" src="/style/img/import.png" alt="Import" />Import Flight Logs
                         </div>
                     </a>
-                    <a href="/admin/API_login.php" title="Connect Companion API">
+                    <a href="/Admin/API_login.php" title="Connect Companion API">
                         <div class="link" style="width:90%;text-align:left">
                             <img class="icon" src="/style/img/api.png" alt="API" />Connect Companion API
                         </div>
                     </a>
-                    <a href="/admin/Log.php" title="View Error Log">
+                    <a href="/Admin/Log.php" title="View Error Log">
                         <div class="link" style="width:90%;text-align:left">
                             <img class="icon" src="/style/img/log2.png" alt="Log" />View Error Log
                         </div>
