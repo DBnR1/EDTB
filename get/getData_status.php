@@ -125,7 +125,7 @@ if (isset($api["commander"]) && $settings["show_cmdr_status"] == "true") {
 $data["ship_status"] = "false";
 if (isset($api["ship"]) && $settings["show_ship_status"] == "true") {
     if ($api["ship"] == "no_data") {
-        $data["ship_status"] = '<a href="/admin/API_login.php">No data, reconnect API</a>';
+        $data["ship_status"] = '<a href="/Admin/API_login.php">No data, reconnect API</a>';
     } else {
         /**
          * basic ship info

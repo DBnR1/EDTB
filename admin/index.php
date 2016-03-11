@@ -154,9 +154,7 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
                         <td class="<?php echo $tdclass?>">
                             <div>
                                 <?php echo $info?>
-                                <textarea class="textarea" name="<?php echo $variable?>" placeholder="<?php echo $name?>" style="width:520px;height:220px">
-                                    <?php echo $value?>
-                                </textarea>
+                                <textarea class="textarea" name="<?php echo $variable?>" placeholder="<?php echo $name?>" style="width:520px;height:220px"><?php echo $value?></textarea>
                             </div>
                         </td>
                     </tr>

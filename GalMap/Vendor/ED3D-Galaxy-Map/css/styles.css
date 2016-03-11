@@ -216,8 +216,7 @@ a.hud {
   color: #ddd;
   color: rgba(255,255,255,0.8);
   background: rgba(100,100,100,0.2);
-  border: solid 1px #ddd;
-  border-color: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   float: left;
   cursor: pointer;
   border-radius: 4px;

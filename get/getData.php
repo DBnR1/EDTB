@@ -117,14 +117,13 @@ if ($newSystem !== false || $request == 0) {
     /**
      * update system and station data in the background if last update was more than 6 hours ago
      */
-
     $last_update = edtb_common("last_data_update", "unixtime");
-    $time_frame = time()-6*60*60;
+    $time_frame = time() - 6 * 60 * 60;
 
     if ($last_update < $time_frame) {
         // fetch last update start time
         $last_data_update_start = edtb_common("last_data_update_start", "unixtime");
-        $start_time_frame = time()-160;
+        $start_time_frame = time() - 160;
 
         // run update script
         if ($last_data_update_start < $start_time_frame) {
@@ -169,31 +168,26 @@ if ($newSystem !== false || $request == 0) {
     /**
      * Data for the left column
      */
-
     require_once($_SERVER["DOCUMENT_ROOT"] . "/get/getData_leftColumn.php");
 
     /**
      * Stuff specifically for System.php
      */
-
     require_once($_SERVER["DOCUMENT_ROOT"] . "/System/getData_systemInfo.php");
 
     /**
      * System and general logs
      */
-
     require_once($_SERVER["DOCUMENT_ROOT"] . "/Log/getData_logs.php");
 
     /**
      * Check for updates
      */
-
     require_once($_SERVER["DOCUMENT_ROOT"] . "/get/getData_checkForUpdates.php");
 
     /**
      * set data renew tag
      */
-
     $data["renew"] = "true";
 } else {
     $data["renew"] = "false";

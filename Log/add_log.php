@@ -129,7 +129,7 @@ if (isset($_GET["do"])) {
 
 ?>
 <div class="input" id="addlog">
-    <form method="post" id="log_form" action="log.php">
+    <form method="post" id="log_form" action="/">
         <div class="input-inner">
             <div class="suggestions" id="suggestions_1" style="margin-left:8px;margin-top:130px"></div>
             <div class="suggestions" id="suggestions_41" style="margin-left:402px;margin-top:130px"></div>
@@ -280,9 +280,10 @@ if (isset($_GET["do"])) {
     });
 </script>
 <script>
-    $("#log_type").change(function()
+    var log_type = $("#log_type");
+    log_type.change(function()
     {
-        $("#log_type option:selected").each(function()
+        log_type.find("option:selected").each(function()
         {
             var value = $(this).val(),
                 system_1 = $("#system_1"),

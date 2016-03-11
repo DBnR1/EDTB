@@ -3,7 +3,7 @@
  * Front page
  *
  * Front-end file for the front page
- * Back-end files are /get/getData.php, /get/getData_logs.php
+ * Back-end files are /get/getData.php, /Log/getData_logs.php
  *
  * @package EDTB\Main
  * @author Mauri Kujala <contact@edtb.xyz>
@@ -63,9 +63,9 @@ if (isset($_GET["import_done"])) {
 
                 if ($sys_name == $this_s && $sys_id != "1") {
                     mysqli_query($GLOBALS["___mysqli_ston"], "  DELETE FROM user_visited_systems
-                                                                        WHERE id = '" . $sys_id  . "'
-                                                                        LIMIT 1")
-                                                                        or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+                                                                WHERE id = '" . $sys_id  . "'
+                                                                LIMIT 1")
+                                                                or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
                 }
 
                 $this_s = $sys_name;

@@ -168,7 +168,7 @@
         </div>
         <div class="tooltip" id="help_links" style="position:fixed;top:120px;left:260px">
             <img class="callout" alt="co" src="/style/img/callout_black.gif" style="top:-14px;left:20px" />Click the date and time to open external links<br />
-            You can edit these from the <a href="/admin/Settings.php?cat_id=5">settings</a>
+            You can edit these from the <a href="/Admin?cat_id=5">settings</a>
         </div>
         <!-- Wiselinks -->
         <script>
@@ -211,59 +211,66 @@
                 // edsm comment
                 $("#edsm_click").click(function()
                 {
-                  edsm_comment("", false);
-                  if ($("#edsm_comment").is(":hidden"))
+                    edsm_comment("", false);
+                    var edsm_comments = $("#edsm_comment");
+                    if (edsm_comments.is(":hidden"))
                     {
-                         $("#edsm_comment").fadeToggle("fast");
-                         $("#comment2").focus();
+                        edsm_comments.fadeToggle("fast");
+                        $("#comment2").focus();
                     }
                 });
                 // about ED ToolBox
                 $("#about_click").click(function()
                 {
-                    if ($("#about").is(":hidden"))
+                    var about = $("#about");
+                    if (about.is(":hidden"))
                     {
-                        $("#about").fadeToggle("fast");
+                        about.fadeToggle("fast");
                     }
                 });
                 // Settings panel
                 $("#settings_click").click(function()
                 {
-                    if ($("#settings").is(":hidden"))
+                    var settings = $("#settings");
+                    if (settings.is(":hidden"))
                     {
-                        $("#settings").fadeToggle("fast");
+                        settings.fadeToggle("fast");
                     }
                 });
                 // CMDR info from API
                 $("#cmdr_click").click(function()
                 {
-                    if ($("#cmdr_status_mi").is(":hidden"))
+                    var cmdr_status_mi = $("#cmdr_status_mi");
+                    if (cmdr_status_mi.is(":hidden"))
                     {
-                        $("#cmdr_status_mi").fadeToggle("fast")
+                        cmdr_status_mi.fadeToggle("fast")
                     }
                 });
                 // Ship info from API
                 $("#ship_status").click(function()
                 {
-                    if ($("#ship_status_mi").is(":hidden"))
+                    var ship_status_mi = $("#ship_status_mi");
+                    if (ship_status_mi.is(":hidden"))
                     {
-                        $("#ship_status_mi").fadeToggle("fast");
+                        ship_status_mi.fadeToggle("fast");
                     }
                 });
                 // External links
                 $("#datetime").click(function()
                 {
-                    if ($("#ext_links").is(":hidden"))
+                    var ext_links = $("#ext_links");
+                    if (ext_links.is(":hidden"))
                     {
-                        $("#ext_links").fadeToggle("fast");
+                        ext_links.fadeToggle("fast");
                     }
                 });
                 // Map legend
                 $("#map_legend").click(function()
                 {
-                    if ($("#map_legend2").is(":hidden"))
+                    var map_legend2 = $("#map_legend2");
+                    if (map_legend2.is(":hidden"))
                     {
-                        $("#map_legend2").fadeToggle("fast");
+                        map_legend2.fadeToggle("fast");
                     }
                 });
 

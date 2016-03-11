@@ -61,7 +61,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
             </table>
             <?php
         } else {
-            echo notice('Your screenshot directory is empty or gallery is disabled.<br />Set the variable "old_screendir" in the <a href="/admin/ini_editor.php">INI-editor</a> to enable gallery.');
+            echo notice('Your screenshot directory is empty or gallery is disabled.<br />Set the variable "old_screendir" in the <a href="/Admin/ini_editor.php">INI-editor</a> to enable gallery.');
         }
         ?>
     </div>

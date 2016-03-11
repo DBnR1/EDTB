@@ -719,7 +719,7 @@ function tofront(divid, toback)
 /**
  * Confirmation popup when deleting stuff
  *
- * @param {int} delid
+ * @param {int|string} delid
  * @param {string} what
  * @author Mauri Kujala <contact@edtb.xyz>
  */
@@ -763,6 +763,7 @@ function confirmation(delid, what)
             });
         }
     }
+
     if (what != "screenshot")
     {
         get_data(true);
@@ -1558,7 +1559,7 @@ function set_reference_systems(standard, force)
  * Bring info to view
  *
  * @param {string} div_id
- * @param {string} e
+ * @param {Event} e
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function to_view(div_id, e)

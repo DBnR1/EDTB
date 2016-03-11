@@ -275,7 +275,6 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
                     /**
                      * EDSM comment link
                      */
-
                     if (!empty($settings["edsm_api_key"]) && !empty($settings["edsm_cmdr_name"])) {
                         ?>
                         <div style="display:inline-block;margin-left:5px">

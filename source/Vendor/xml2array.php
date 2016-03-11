@@ -4,8 +4,9 @@
  *
  * @param string $url
  * @param bool $get_attributes
- * @param string $tag
+ * @param string $priority
  * @author Lorenzo Aiello https://gist.github.com/laiello/8189351
+ * @return array
  */
 function xml2array($url, $get_attributes = 1, $priority = 'tag')
 {

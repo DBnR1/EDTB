@@ -100,7 +100,7 @@ if (isset($_GET["q"]) && !empty($_GET["q"]) && isset($_GET["divid"])) {
             <?php
         } elseif ($_GET["idlink"] == "yes") {
             ?>
-            <a href="/NearestSystems.php?system=<?php echo $suggest['system_id']?><?php echo $addtl?>">
+            <a href="/NearestSystems?system=<?php echo $suggest['system_id']?><?php echo $addtl?>">
                 <?php echo $suggest['station_name']?>&nbsp;&nbsp;(<?php echo $suggest['system_name']?>)
             </a><br />
             <?php

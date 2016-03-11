@@ -30,7 +30,7 @@ html_textarea = {
 		{name:'Clean', className:'clean', replaceWith:function(markitup) { return markitup.selection.replace(/<(.*?)>/g, "") } },
 		//{name:'Preview', className:'preview', call:'preview' }
 	]
-}
+};
 
 poi_bm = {
 	nameSpace: 'poi_bm',
@@ -53,4 +53,4 @@ poi_bm = {
 		{name:'Clean', className:'clean', replaceWith:function(markitup) { return markitup.selection.replace(/<(.*?)>/g, "") } },
 		//{name:'Preview', className:'preview', call:'preview' }
 	]
-}
+};

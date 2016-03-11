@@ -84,7 +84,7 @@ if ($html == null) {
                         <span style="margin-bottom:15px">
                             <a href="<?php echo $link;?>" target="_blank">
                                 Read on elitedangerous.com
-                            </a><img class="ext_icon" src="style/img/external_link.png" style="margin-bottom:3px" alt="ext" />
+                            </a><img class="ext_icon" src="/style/img/external_link.png" style="margin-bottom:3px" alt="ext" />
                         </span>
                     </p>
                     <?php

@@ -452,7 +452,6 @@ var Ed3d = {
   /**
    * Calc distance from current
    */
-
   'calcDistCur' : function(target, fromx, fromy, fromz) {
 
     var x2 = target.x;
@@ -463,11 +462,9 @@ var Ed3d = {
 	var y1 = fromy;
 	var z1 = fromz;
 
-	var distance = Math.round(Math.sqrt(Math.pow((x1-(x2)),2)+Math.pow((y1-(y2)),2)+Math.pow((z1-(z2)),2)));
-
-	return distance;
+	return Math.round(Math.sqrt(Math.pow((x1-(x2)), 2)+Math.pow((y1-(y2)), 2)+Math.pow((z1-(z2)), 2)));
   }
-}
+};
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------

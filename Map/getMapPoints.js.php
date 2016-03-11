@@ -48,7 +48,6 @@ if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"])) {
 /**
  * if current coordinates aren't valid, use last known coordinates
  */
-
 $disclaimer = "";
 if (!valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"])) {
     // get last known coordinates
@@ -75,7 +74,6 @@ $last_row = "";
 /**
  * fetch point of interest data for the map
  */
-
 if ($settings["nmap_show_pois"] == "true") {
     $result = mysqli_query($GLOBALS["___mysqli_ston"], "    SELECT poi_name, system_name, x, y, z
                                                             FROM user_poi
@@ -123,7 +121,6 @@ if ($settings["nmap_show_pois"] == "true") {
 /**
  *  fetch bookmark data for the map
  */
-
 if ($settings["nmap_show_bookmarks"] == "true") {
     $bm_result = mysqli_query($GLOBALS["___mysqli_ston"], " SELECT user_bookmarks.comment, user_bookmarks.added_on,
                                                             edtb_systems.name AS system_name, edtb_systems.x, edtb_systems.y, edtb_systems.z,
@@ -165,7 +162,6 @@ if ($settings["nmap_show_bookmarks"] == "true") {
 /**
  *  fetch rares data for the map
  */
-
 if ($settings["nmap_show_rares"] == "true") {
     $rare_result = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT
                                                                 edtb_rares.item, edtb_rares.station, edtb_rares.system_name, edtb_rares.ls_to_star,
@@ -208,7 +204,6 @@ if ($settings["nmap_show_rares"] == "true") {
 /**
  * fetch visited systems data for the map
  */
-
 if ($settings["nmap_show_visited_systems"] == "true") {
     $result = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT
                                                         user_visited_systems.system_name AS system_name,

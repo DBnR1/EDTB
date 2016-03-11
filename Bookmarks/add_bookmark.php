@@ -68,7 +68,7 @@ if (isset($_GET["do"])) {
 }
 ?>
 <div class="input" id="addBm">
-    <form method="post" id="bm_form" action="bookmark.php">
+    <form method="post" id="bm_form" action="/">
         <div class="input-inner">
             <div class="suggestions" id="suggestions_3" style="margin-top:79px;margin-left:14px"></div>
             <table>

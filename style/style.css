@@ -1726,7 +1726,7 @@ div.tooltip {
 }
 
 .panzoom {
-    background-image:repeating-linear-gradient(0deg, transparent, transparent 20px, #333 20px, #333 21px), repeating-linear-gradient(-90deg, transparent, transparent 20px, #333 20px, #333 21px);
+    background-image:repeating-linear-gradient(0deg, transparent, transparent 20px, #333 20px, #333 21px), repeating-linear-gradient(90deg, transparent, transparent 20px, #333 20px, #333 21px);
     background-size:21px 21px;
 }
 

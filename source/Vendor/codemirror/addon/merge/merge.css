@@ -20,7 +20,7 @@
 }
 .CodeMirror-merge-pane-rightmost {
   position: absolute;
-  right: 0px;
+  right: 0;
   z-index: 1;
 }
 

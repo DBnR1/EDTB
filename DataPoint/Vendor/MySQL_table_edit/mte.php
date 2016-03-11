@@ -6,6 +6,9 @@ if (strtolower(basename($_SERVER['PHP_SELF'])) == strtolower(basename(__FILE__))
     die('No access...');
 }
 
+/**
+ * Class MySQLtabledit
+ */
 class MySQLtabledit
 {
     /**
@@ -198,10 +201,9 @@ class MySQLtabledit
         # select
         $sql = "SELECT * FROM `$this->table` $where_search $order_by";
 
-        /*
-        *   if sorting by distance
-        */
-
+        /**
+         * if sorting by distance
+         */
         if ($_GET['sort'] && $_GET['sort'] == "distance") {
             if ($_GET['ad'] == 'a') {
                 $asc_des = 'DESC';
