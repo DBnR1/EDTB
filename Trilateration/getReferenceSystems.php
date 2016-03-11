@@ -71,7 +71,7 @@ if ($system_exists > 0) {
                 $i++;
             }
 
-            $systems = new referenceSystems();
+            $systems = new ReferenceSystems();
             $systems->standard = isset($_GET["standard"]) ? true : false;
             $referencesystems = $systems->reference_systems();
         } else {
@@ -87,7 +87,7 @@ if ($system_exists > 0) {
                 $used[] = $values2[0];
             }
 
-            $systems = new referenceSystems();
+            $systems = new ReferenceSystems();
             $systems->standard = false;
             $systems->used = $used;
             $referencesystems = $systems->reference_systems();
@@ -99,7 +99,7 @@ if ($system_exists > 0) {
         $ref[$ii]["distance"] = "";
     }
 
-    $systems = new referenceSystems();
+    $systems = new ReferenceSystems();
     $systems->standard = isset($_GET["standard"]) ? true : false;
     $referencesystems = $systems->reference_systems();
 }

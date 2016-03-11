@@ -31,9 +31,9 @@
  */
 
 /**
- * Class referenceSystems
+ * Class ReferenceSystems
  */
-class referenceSystems
+class ReferenceSystems
 {
     public $standard = false;
     public $used = array();
