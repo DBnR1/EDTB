@@ -30,14 +30,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/installer_style.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Install/installer_style.php");
 
 /**
  * Class used to migrate database changes between versions
  *
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-class db_create
+class DbCreate
 {
     /** @var resource MySQL link */
     private $link;

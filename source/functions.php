@@ -37,7 +37,7 @@ require_once("MySQL.php");
 /** @require other functions */
 require_once("functions_safe.php");
 /** @require curSys */
-//require_once("curSys.php");
+//require_once("curSys.php"); // can't require curSys here, it interferes with the data update
 /** @require mappings */
 require_once("FDMaps.php");
 /** @require utility */
@@ -165,49 +165,6 @@ function random_insult($who_to_insult)
 }
 
 /**
- * Converts bytes into human readable file size.
- *
- * @param string $bytes
- * @return string human readable file size (2,87 ??)
- * @author Mogilev Arseny
- */
-function FileSizeConvert($bytes)
-{
-    $bytes = floatval($bytes);
-    $arBytes = array(
-        0 => array(
-            "UNIT" => "TB",
-            "VALUE" => pow(1024, 4)
-        ),
-        1 => array(
-            "UNIT" => "GB",
-            "VALUE" => pow(1024, 3)
-        ),
-        2 => array(
-            "UNIT" => "MB",
-            "VALUE" => pow(1024, 2)
-        ),
-        3 => array(
-            "UNIT" => "KB",
-            "VALUE" => 1024
-        ),
-        4 => array(
-            "UNIT" => "B",
-            "VALUE" => 0
-        ),
-    );
-
-    foreach ($arBytes as $arItem) {
-        if ($bytes >= $arItem["VALUE"]) {
-            $result = $bytes / $arItem["VALUE"];
-            $result = str_replace(".", ",", strval(round($result, 2))) . " " . $arItem["UNIT"];
-            break;
-        }
-    }
-    return $result;
-}
-
-/**
  * Return the correct starport icon
  *
  * @param string $type starport type
@@ -324,85 +281,165 @@ function valid_coordinates($x, $y, $z)
 }
 
 /**
- * Check if system is mapped in System map
- *
- * @param string $system_name
- * @return bool
- * @author Mauri Kujala <contact@edtb.xyz>
+ * Class System
  */
-function is_mapped($system_name)
+class System
 {
-    if (empty($system_name)) {
-        return false;
+    /**
+     * Check if system is mapped in System map
+     *
+     * @param string $system_name
+     * @return bool
+     * @author Mauri Kujala <contact@edtb.xyz>
+     */
+    static public function is_mapped($system_name)
+    {
+        if (empty($system_name)) {
+            return false;
+        }
+
+        $res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT id
+                                                            FROM user_system_map
+                                                            WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system_name) . "'
+                                                            LIMIT 1");
+        $num = mysqli_num_rows($res);
+
+        if ($num > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    $res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT id
-                                                        FROM user_system_map
-                                                        WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system_name) . "'
-                                                        LIMIT 1");
-    $num = mysqli_num_rows($res);
+    /**
+     * Check if system has screenshots
+     *
+     * @param string $system_name
+     * @return bool
+     * @author Mauri Kujala <contact@edtb.xyz>
+     */
+    static public function has_screenshots($system_name)
+    {
+        $system_name = strip_invalid_dos_chars($system_name);
 
-    if ($num > 0) {
-        return true;
-    } else {
-        return false;
-    }
-}
+        if (empty($system_name)) {
+            return false;
+        }
 
-/**
- * Check if system has screenshots
- *
- * @param string $system_name
- * @return bool
- * @author Mauri Kujala <contact@edtb.xyz>
- */
-function has_screenshots($system_name)
-{
-    $system_name = strip_invalid_dos_chars($system_name);
-
-    if (empty($system_name)) {
-        return false;
+        if (is_dir($_SERVER["DOCUMENT_ROOT"] . "/screenshots/" . $system_name)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    if (is_dir($_SERVER["DOCUMENT_ROOT"] . "/screenshots/" . $system_name)) {
-        return true;
-    } else {
-        return false;
-    }
-}
+    /**
+     * Check if system is logged
+     *
+     * @param string $system
+     * @param bool $is_id
+     * @return bool
+     * @author Mauri Kujala <contact@edtb.xyz>
+     */
+    static public function is_logged($system, $is_id = false)
+    {
+        if (empty($system)) {
+            return false;
+        }
 
-/**
- * Check if system is logged
- *
- * @param string $system
- * @param bool $is_id
- * @return bool
- * @author Mauri Kujala <contact@edtb.xyz>
- */
-function is_logged($system, $is_id = false)
-{
-    if (empty($system)) {
-        return false;
+        if ($is_id !== false) {
+            $logged = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "    SELECT id
+                                                                                    FROM user_log
+                                                                                    WHERE system_id = '" . $system . "'
+                                                                                    AND system_id != ''
+                                                                                    LIMIT 1"));
+        } else {
+            $logged = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "    SELECT id
+                                                                                    FROM user_log
+                                                                                    WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system) . "'
+                                                                                    AND system_name != ''
+                                                                                    LIMIT 1"));
+        }
+
+        if ($logged > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    if ($is_id !== false) {
-        $logged = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "    SELECT id
-                                                                                FROM user_log
-                                                                                WHERE system_id = '" . $system . "'
-                                                                                AND system_id != ''
+    /**
+     * Check if a system exists in our database
+     *
+     * @param string $system_name
+     * @return bool
+     * @author Mauri Kujala <contact@edtb.xyz>
+     */
+    static public function exists($system_name)
+    {
+        $count = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], " SELECT
+                                                                            id
+                                                                            FROM edtb_systems
+                                                                            WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system_name) . "'
+                                                                            LIMIT 1"));
+        if ($count == 0) {
+            $count = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], " SELECT
+                                                                                id
+                                                                                FROM user_systems_own
+                                                                                WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system_name) . "'
                                                                                 LIMIT 1"));
-    } else {
-        $logged = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "    SELECT id
-                                                                                FROM user_log
-                                                                                WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system) . "'
-                                                                                AND system_name != ''
-                                                                                LIMIT 1"));
+        }
+
+        if ($count > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    if ($logged > 0) {
-        return true;
-    } else {
-        return false;
+    /**
+     * Return links to screenshots, system log or system map
+     *
+     * @param string $system
+     * @param bool $show_screens
+     * @param bool $show_system
+     * @param bool $show_logs
+     * @param bool $show_map
+     * @return string $return
+     * @author Mauri Kujala <contact@edtb.xyz>
+     */
+    static public function crosslinks($system, $show_screens = true, $show_system = false, $show_logs = true, $show_map = true)
+    {
+        $return = "";
+        // check if system has screenshots
+        if ($show_screens === true && System::has_screenshots($system)) {
+            $return .= '<a href="/Gallery.php?spgmGal=' . urlencode(strip_invalid_dos_chars($system)) . '" title="View image gallery">';
+            $return .= '<img src="/style/img/image.png" class="icon" alt="Gallery" style="margin-left:5px;margin-right:0;vertical-align:top" />';
+            $return .= '</a>';
+        }
+
+        // check if system is logged
+        if ($show_logs === true && System::is_logged($system)) {
+            $return .= '<a href="/Log?system=' . urlencode($system) . '" style="color:inherit" title="System has log entries">';
+            $return .= '<img src="/style/img/log.png" class="icon" style="margin-left:5px;margin-right:0" />';
+            $return .= '</a>';
+        }
+
+        // check if system is mapped
+        if ($show_map === true && System::is_mapped($system)) {
+            $return .= '<a href="/SystemMap/?system=' . urlencode($system) . '" style="color:inherit" title="System map">';
+            $return .= '<img src="/style/img/grid.png" class="icon" style="margin-left:5px;margin-right:0" />';
+            $return .= '</a>';
+        }
+
+        // show link if system exists
+        if ($show_system === true && System::exists($system)) {
+            $return .= '<a href="/System?system_name=' . urlencode($system) . '" style="color:inherit" title="System info">';
+            $return .= '<img src="/style/img/info.png" class="icon" alt="Info" style="margin-left:5px;margin-right:0" />';
+            $return .= '</a>';
+        }
+
+        return $return;
     }
 }
 
@@ -422,35 +459,6 @@ function tts_override($text)
     }
 
     return $text;
-}
-
-/**
- * Check if a system exists in our database
- *
- * @param string $system_name
- * @return bool
- * @author Mauri Kujala <contact@edtb.xyz>
- */
-function system_exists($system_name)
-{
-    $count = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], " SELECT
-                                                                        id
-                                                                        FROM edtb_systems
-                                                                        WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system_name) . "'
-                                                                        LIMIT 1"));
-    if ($count == 0) {
-        $count = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], " SELECT
-                                                                            id
-                                                                            FROM user_systems_own
-                                                                            WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system_name) . "'
-                                                                            LIMIT 1"));
-    }
-
-    if ($count > 0) {
-        return true;
-    } else {
-        return false;
-    }
 }
 
 /**
@@ -581,7 +589,7 @@ function edtb_common($name, $field, $update = false, $value = "")
  *
  * @param string $source_string directory/file name to check for invalid chars
  * @return string $ret_value
- * @author David Marshall <contact@edtb.xyz>
+ * @author David Marshall
  */
 function strip_invalid_dos_chars($source_string)
 {
@@ -602,6 +610,9 @@ function make_gallery($gallery_name)
 
     if (isset($settings["old_screendir"]) && $settings["old_screendir"] != "C:\\Users" && $settings["old_screendir"] != "C:\\Users\\") {
         if (is_dir($settings["old_screendir"]) && is_writable($settings["old_screendir"])) {
+            /**
+             * get visit time for the system so we can tell if the screenshots were taken in that system
+             */
             $res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT visit
                                                                 FROM user_visited_systems
                                                                 WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $gallery_name) . "'
@@ -611,6 +622,9 @@ function make_gallery($gallery_name)
 
             $visit_time = isset($arr["visit"]) ? strtotime($arr["visit"]) : time();
 
+            /**
+             * scan screenshot directory
+             */
             if (!$screenshots = scandir($settings["old_screendir"])) {
                 $error = error_get_last();
                 write_log("Error: " . $error["message"], __FILE__, __LINE__);
@@ -625,6 +639,9 @@ function make_gallery($gallery_name)
                         $filetime = filemtime($settings["old_screendir"] . "/" . $file);
                         $filetime = $filetime + ($system_time * 60 * 60);
 
+                        /**
+                         * if screenshot was taken after entering the system
+                         */
                         if ($filetime > $visit_time) {
                             if (!is_dir($newscreendir)) {
                                 if (!mkdir($newscreendir, 0775, true)) {
@@ -633,6 +650,7 @@ function make_gallery($gallery_name)
                                     break;
                                 }
                             }
+
                             $old_file_bmp = $settings["old_screendir"] . "/" . $file;
                             $old_file_og = $settings["old_screendir"] . "/originals/" . $file;
                             $edited = date("Y-m-d_H-i-s", filemtime($old_file_bmp));
@@ -640,7 +658,9 @@ function make_gallery($gallery_name)
                             $new_file_jpg = $settings["old_screendir"] . "/" . $new_filename;
                             $new_screenshot = $newscreendir . "/" . $new_filename;
 
-                            // convert from bmp to jpg
+                            /**
+                             * convert from bmp to jpg
+                             */
                             if (file_exists($old_file_bmp)) {
                                 exec("\"" . $settings["install_path"] . "/bin/ImageMagick/convert\" \"" . $old_file_bmp . "\" \"" . $new_file_jpg . "\"", $out);
 
@@ -650,11 +670,17 @@ function make_gallery($gallery_name)
                                 }
                             }
 
+                            /**
+                             * delete original...
+                             */
                             if ($settings["keep_og"] == "false") {
                                 if (!unlink($old_file_bmp)) {
                                     $error = error_get_last();
                                     write_log("Error: " . $error["message"], __FILE__, __LINE__);
                                 }
+                            /**
+                             * ... or move to "originals" directory
+                             */
                             } else {
                                 if (!is_dir($settings["old_screendir"] . "/originals")) {
                                     if (!mkdir($settings["old_screendir"] . "/originals", 0775, true)) {
@@ -663,6 +689,7 @@ function make_gallery($gallery_name)
                                         break;
                                     }
                                 }
+
                                 if (file_exists($old_file_og)) {
                                     $old_file_og = $settings["old_screendir"] . "/originals/" . $filetime  . "_" .  $file;
                                 }
@@ -672,7 +699,10 @@ function make_gallery($gallery_name)
                                     write_log("Error: " . $error["message"], __FILE__, __LINE__);
                                 }
                             }
-                            // move to new screenshot folder
+
+                            /**
+                             * move the converted file to screenshot folder
+                             */
                             if (file_exists($new_file_jpg)) {
                                 if (!rename($new_file_jpg, $new_screenshot)) {
                                     $error = error_get_last();
@@ -687,9 +717,14 @@ function make_gallery($gallery_name)
                             if ($added > 15) {
                                 break;
                             }
+                        /**
+                         * if screenshot was taken before entering the system, move it to originals directory
+                         * so it doesn't interfere with the script in the future
+                         */
                         } else {
                             $old_file_bmp = $settings["old_screendir"] . "/" . $file;
                             $old_file_og = $settings["old_screendir"] . "/originals/" . $file;
+
                             if (!is_dir($settings["old_screendir"] . "/originals")) {
                                 if (!mkdir($settings["old_screendir"] . "/originals", 0775, true)) {
                                     $error = error_get_last();
@@ -697,9 +732,14 @@ function make_gallery($gallery_name)
                                     break;
                                 }
                             }
+
                             if (file_exists($old_file_og)) {
                                 $old_file_og = $settings["old_screendir"] . "/originals/" . $filetime . "_" .  $file;
                             }
+
+                            /**
+                             * move to "originals" directory
+                             */
                             if (!rename($old_file_bmp, $old_file_og)) {
                                 $error = error_get_last();
                                 write_log("Error: " . $error["message"], __FILE__, __LINE__);
@@ -708,10 +748,16 @@ function make_gallery($gallery_name)
                     }
                 }
             }
-            // make thumbnails for the gallery
+
+            /**
+             * make thumbnails for the gallery
+             */
             if ($added > 0) {
                 $thumbdir = $newscreendir . "/thumbs";
 
+                /**
+                 * create thumbnail directory
+                 */
                 if (!is_dir($thumbdir)) {
                     if (!mkdir($thumbdir, 0775, true)) {
                         $error = error_get_last();
@@ -719,6 +765,10 @@ function make_gallery($gallery_name)
                         //break;
                     }
                 }
+
+                /**
+                 * run ImageMagick
+                 */
                 exec("\"" . $settings["install_path"] . "/bin/ImageMagick/mogrify\" -resize " . $settings["thumbnail_size"] . " -background #333333 -gravity center -extent " . $settings["thumbnail_size"] . " -format jpg -quality 95 -path \"" . $thumbdir . "\" \"" . $newscreendir . "/\"*.jpg", $out3);
 
                 if (!empty($out3)) {
@@ -730,49 +780,4 @@ function make_gallery($gallery_name)
             write_log("Error: " . $settings["old_screendir"] . " is not writable", __FILE__, __LINE__);
         }
     }
-}
-
-/**
- * Return links to screenshots, system log or system map
- *
- * @param string $system
- * @param bool $show_screens
- * @param bool $show_system
- * @param bool $show_logs
- * @param bool $show_map
- * @return string $return
- * @author Mauri Kujala <contact@edtb.xyz>
- */
-function crosslinks($system, $show_screens = true, $show_system = false, $show_logs = true, $show_map = true)
-{
-    $return = "";
-    // check if system has screenshots
-    if ($show_screens === true && has_screenshots($system)) {
-        $return .= '<a href="/Gallery.php?spgmGal=' . urlencode(strip_invalid_dos_chars($system)) . '" title="View image gallery">';
-        $return .= '<img src="/style/img/image.png" class="icon" alt="Gallery" style="margin-left:5px;margin-right:0;vertical-align:top" />';
-        $return .= '</a>';
-    }
-
-    // check if system is logged
-    if ($show_logs === true && is_logged($system)) {
-        $return .= '<a href="/Log?system=' . urlencode($system) . '" style="color:inherit" title="System has log entries">';
-        $return .= '<img src="/style/img/log.png" class="icon" style="margin-left:5px;margin-right:0" />';
-        $return .= '</a>';
-    }
-
-    // check if system is mapped
-    if ($show_map === true && is_mapped($system)) {
-        $return .= '<a href="/SystemMap/?system=' . urlencode($system) . '" style="color:inherit" title="System map">';
-        $return .= '<img src="/style/img/grid.png" class="icon" style="margin-left:5px;margin-right:0" />';
-        $return .= '</a>';
-    }
-
-    // show link if system exists
-    if ($show_system === true && system_exists($system)) {
-        $return .= '<a href="/System?system_name=' . urlencode($system) . '" style="color:inherit" title="System info">';
-        $return .= '<img src="/style/img/info.png" class="icon" alt="Info" style="margin-left:5px;margin-right:0" />';
-        $return .= '</a>';
-    }
-
-    return $return;
 }

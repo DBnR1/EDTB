@@ -1196,7 +1196,7 @@ function spgm_DisplayGalleryNavibar($strGalleryId, $strFilterFlags, $mixPictureI
         /**
         * provide crosslinks to screenshot gallery, log page, etc
         */
-        $g_crosslinks = crosslinks($arrExplodedPathToGallery[$i], false, true);
+        $g_crosslinks = System::crosslinks($arrExplodedPathToGallery[$i], false, true);
 
         if ($i < ($_max - 1)) {
             print spgm_BuildLink($strHtmlGalleryName, CLASS_DIV_GALHEADER, '', $strHtmlGalleryLink, -1, -1, $filters);
@@ -1442,7 +1442,7 @@ function spgm_DisplayGalleryHierarchy($strGalleryId, $iGalleryDepth, $strFilterF
             /**
              * provide crosslinks to screenshot gallery, log page, etc
              */
-            $g2_crosslinks = crosslinks($strHtmlGalleryName, false, false);
+            $g2_crosslinks = System::crosslinks($strHtmlGalleryName, false, false);
 
             // display the gallery title
             print '      <td class="' . CLASS_TD_GALITEM_TITLE . '">' . "\n";
@@ -1669,7 +1669,7 @@ function spgm_DisplayPicture($strGalleryId, $iPictureId, $strFilterFlags)
         if ($spgm_cfg['conf']['filenameWithPictures'] == true) {
             print '<tr>' . "\n";
             print '  <td class="' . CLASS_TD_PICTURE_FILENAME . '">' . "\n";
-            echo '<span class="left"><a href="javascript:void(0)" onclick="confirmation(\'' . addslashes($strPictureURL) . '\',\'screenshot\')" title="Delete screenshot"><div class="delete_button" style="position:relative;left:-6px;top:0"><img src="/style/img/delete.png" alt="Delete" /></div></a></span>' . "\n";
+            echo '<span class="left"><a href="javascript:void(0)" onclick="confirmation(\'' . addslashes($strPictureURL) . '\', \'screenshot\')" title="Delete screenshot"><div class="delete_button" style="position:relative;left:-6px;top:0"><img src="/style/img/delete.png" alt="Delete" /></div></a></span>' . "\n";
             print $strPictureBasename . '' . $_strFileExtension . '';
 
             $imgurfile = "" . $_SERVER["DOCUMENT_ROOT"] . "/screenshots/Imgur/" . urldecode($strPictureBasename) . ".txt";

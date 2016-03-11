@@ -86,7 +86,7 @@ function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
         /**
          * provide crosslinks to screenshot gallery, log page, etc
          */
-        $item_crosslinks = crosslinks($value);
+        $item_crosslinks = System::crosslinks($value);
 
         $this_row .= '<td style="padding:10px;vertical-align:middle">';
         $this_row .= '<a href="/System?system_name=' . urlencode($value) . '">' . $value . $item_crosslinks . '</a>';

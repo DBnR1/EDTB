@@ -33,7 +33,7 @@
 /**
  * Make log entries
  *
- * @param resource $log_res
+ * @param mysqli_result $log_res
  * @param string $type
  * @return string $logdata
  * @author Mauri Kujala <contact@edtb.xyz>
@@ -82,7 +82,7 @@ function make_log_entries($log_res, $type)
                 /**
                  * provide crosslinks to screenshot gallery, log page, etc
                  */
-                $l_crosslinks = crosslinks($system_name, true, false, false);
+                $l_crosslinks = System::crosslinks($system_name, true, false, false);
 
                 $logdata = '<header><h2><img class="icon" src="/style/img/system_log.png" alt="log" />';
                 $logdata .= 'System log for <a href="/System?system_name=' . urlencode($system_name) . '">';
@@ -143,7 +143,7 @@ function make_log_entries($log_res, $type)
                     $file_src = "/audio_logs/" . $audio_file;
 
                     if (file_exists($file)) {
-                        $timestamp = filemtime($file)+($system_time*60*60);
+                        $timestamp = filemtime($file) + ($system_time * 60 * 60);
                         $record_date = date("Y-m-d H:i:s", $timestamp);
                         $date = date_create($record_date);
                         $record = date_modify($date, "+1286 years");
@@ -175,4 +175,3 @@ function make_log_entries($log_res, $type)
 
     return $logdata;
 }
-

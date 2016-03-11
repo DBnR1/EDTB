@@ -86,7 +86,7 @@ function makeitem($arr, $type, &$i)
     /**
      * provide crosslinks to screenshot gallery, log page, etc
      */
-    $item_crosslinks = crosslinks($item_system_name);
+    $item_crosslinks = System::crosslinks($item_system_name);
 
     echo '<tr>';
     echo '<td class="' . $tdclass . '" style="min-width:420px;max-width:500px">';
@@ -125,7 +125,7 @@ function makeitem($arr, $type, &$i)
 /**
  * Make item table
  *
- * @param resource $res
+ * @param mysqli_result $res
  * @param string $type
  * @return string
  * @author Mauri Kujala <contact@edtb.xyz>

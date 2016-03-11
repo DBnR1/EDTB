@@ -258,9 +258,9 @@ $c_rares_data .= "</div>";
 /**
  * provide crosslinks to screenshot gallery, log page, etc
  */
-$si_crosslinks = crosslinks($si_system_name);
+$si_crosslinks = System::crosslinks($si_system_name);
 
-if (!is_mapped($si_system_name)) {
+if (!System::is_mapped($si_system_name)) {
     $si_crosslinks .= '<a href="/SystemMap/?system=' . urlencode($si_system_name) . '" style="color:inherit" title="Map this system">';
     $si_crosslinks .= '<img src="/style/img/grid_g.png" class="icon" style="margin-left:5px;margin-right:0" />';
     $si_crosslinks .= '</a>';

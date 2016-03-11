@@ -461,7 +461,7 @@ if (isset($_GET["dist"])) {
     if (!valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"])) {
         $distance = "How can I calculate distances if I don't even know where we are?";
     } else {
-        if (system_exists($to)) {
+        if (System::exists($to)) {
             $res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT
                                                                 sqrt(pow((IFNULL(edtb_systems.x, user_systems_own.x)-(" . $curSys["x"] . ")),2)+pow((IFNULL(edtb_systems.y, user_systems_own.y)-(" . $curSys["y"] . ")),2)+pow((IFNULL(edtb_systems.z, user_systems_own.z)-(" . $curSys["z"] . ")),2))
                                                                 AS distance

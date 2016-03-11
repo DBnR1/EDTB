@@ -51,6 +51,7 @@ function notice($msg, $title = "Notice")
     return $notice;
 }
 
+/** @var string $u_agent the users user_agent*/
 $u_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : "";
 
 /**
@@ -181,13 +182,57 @@ function getOS()
 }
 
 /**
+ * Converts bytes into human readable file size.
+ *
+ * @param string $bytes
+ * @return string human readable file size (2,87 ??)
+ * @author Mogilev Arseny
+ */
+function FileSizeConvert($bytes)
+{
+    $bytes = floatval($bytes);
+    $arBytes = array(
+        0 => array(
+            "UNIT" => "TB",
+            "VALUE" => pow(1024, 4)
+        ),
+        1 => array(
+            "UNIT" => "GB",
+            "VALUE" => pow(1024, 3)
+        ),
+        2 => array(
+            "UNIT" => "MB",
+            "VALUE" => pow(1024, 2)
+        ),
+        3 => array(
+            "UNIT" => "KB",
+            "VALUE" => 1024
+        ),
+        4 => array(
+            "UNIT" => "B",
+            "VALUE" => 0
+        ),
+    );
+
+    foreach ($arBytes as $arItem) {
+        if ($bytes >= $arItem["VALUE"]) {
+            $result = $bytes / $arItem["VALUE"];
+            $result = str_replace(".", ",", strval(round($result, 2))) . " " . $arItem["UNIT"];
+            break;
+        }
+    }
+    return $result;
+}
+
+/**
  * Get time elapsed in string
+ * http://stackoverflow.com/questions/27330650/how-to-display-time-in-x-days-ago-in-php
  *
  * @param int $ptime unix timestamp
  * @param bool $diff
  * @param bool $format
- * @return string
- * @author http://stackoverflow.com/questions/27330650/how-to-display-time-in-x-days-ago-in-php
+ * @return string $ret
+ * @author Arun Kumar
  */
 function get_timeago($ptime, $diff = true, $format = false)
 {
@@ -201,7 +246,7 @@ function get_timeago($ptime, $diff = true, $format = false)
     $etime = time() - $ptime;
 
     if ($etime < 1) {
-        return 'less than ' . $etime . ' second ago';
+        $ret = 'less than ' . $etime . ' second ago';
     }
 
     $a = array( 12 * 30 * 24 * 60 * 60  =>  'year',
@@ -218,24 +263,27 @@ function get_timeago($ptime, $diff = true, $format = false)
         if ($d >= 1) {
             $r = round($d);
             if ($format !== true) {
-                return $r . ' ' . $str . ($r > 1 ? 's' : '') . ' ago';
+                $ret = $r . ' ' . $str . ($r > 1 ? 's' : '') . ' ago';
             } else {
                 if (data_is_old($ptime_og)) {
-                    return '<span class="old_data">' . $r . ' ' . $str . ($r > 1 ? 's' : '') . ' ago</span>';
+                    $ret = '<span class="old_data">' . $r . ' ' . $str . ($r > 1 ? 's' : '') . ' ago</span>';
                 } else {
-                    return $r . ' ' . $str . ($r > 1 ? 's' : '') . ' ago';
+                    $ret = $r . ' ' . $str . ($r > 1 ? 's' : '') . ' ago';
                 }
             }
         }
     }
+
+    return $ret;
 }
 
 /**
  * Check if directory is empty
+ * http://stackoverflow.com/questions/7497733/how-can-use-php-to-check-if-a-directory-is-empty
  *
  * @param string $dir
  * @return string
- * @author http://stackoverflow.com/questions/7497733/how-can-use-php-to-check-if-a-directory-is-empty
+ * @author Your Common Sense
  */
 function is_dir_empty($dir)
 {
