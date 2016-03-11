@@ -98,6 +98,9 @@ if (!valid_coordinates($usex, $usey, $usez)) {
     $is_unknown = " *";
 }
 
+/**
+ * get url parameters
+ */
 $ship_name = isset($_GET["ship_name"]) ? $_GET["ship_name"] : "";
 $facility = isset($_GET["facility"]) ? $_GET["facility"] : "";
 $only = isset($_GET["allegiance"]) ? $_GET["allegiance"] : "";
@@ -105,6 +108,7 @@ $system_allegiance = isset($_GET["system_allegiance"]) ? $_GET["system_allegianc
 $group_id = isset($_GET["group_id"]) ? $_GET["group_id"] : "";
 $power = isset($_GET["power"]) ? $_GET["power"] : "";
 $pad = isset($_GET["pad"]) ? $_GET["pad"] : "";
+$station_type = isset($_GET["station_type"]) ? $_GET["station_type"] : "";
 $stations = true;
 
 /**
@@ -196,6 +200,35 @@ if ($pad != "") {
     $allegiance_params .= "&pad=" . $pad;
 }
 
+/**
+ * station type
+ */
+if ($station_type != "") {
+    $stations = true;
+
+    switch ($station_type)
+    {
+        case "planetary":
+            $add .= " AND edtb_stations.is_planetary = '1'";
+            $text .= " (planetary only)";
+            break;
+        case "space":
+            $add .= " AND edtb_stations.is_planetary = '0'";
+            $text .= " (space ports only)";
+            break;
+        case "all":
+            $add .= "";
+            $text .= "";
+            break;
+        default:
+            $add .= "";
+            $text .= "";
+    }
+
+    $hidden_inputs .= '<input type="hidden" name="station_type" value="' . $station_type . '" />';
+    $power_params .= "&station_type=" . $station_type;
+    $allegiance_params .= "&station_type=" . $station_type;
+}
 /**
  * nearest stations....
  */
@@ -297,7 +330,7 @@ if (!empty($group_id)) {
         $price = " (normal price " . $modules_price . " CR) ";
     }
 
-    $text .= " stations selling " . $ratings . "" . $classes . "" . $group_name . "" . $price;
+    $text .= " stations selling " . $ratings . $classes . $group_name . $price;
     $hidden_inputs .= '<input type="hidden" name="group_id" value="' . $group_id . '" />';
     $power_params .= "&group_id=" . $group_id;
     $allegiance_params .= "&group_id=" . $group_id;
@@ -406,7 +439,6 @@ if (substr($text, 0, 11) == "Nearest (to" && $stations === true) {
 /**
  * replace all but the first occurance of "key" with "value"
  */
-
 $replaces = array(  "stations" => "",
                     "selling" => "and",
                     "with" => "and"
@@ -422,7 +454,6 @@ foreach ($replaces as $replace => $with) {
 /**
  * replace all but the last occurance of "systems"
  */
-
 $pos = substr_count($text, 'systems');
 if ($pos > 1) {
     $text = preg_replace('/\.(\s|$)/', 'systems$1', $text);
@@ -636,6 +667,23 @@ $count = mysqli_num_rows($res);
                             <option value="">All</option>
                         </select><br />
                     </form>
+                    <!-- station type -->
+                    <form method="get" action="<?php echo $_SERVER['PHP_SELF'];?>" name="go" id="stationtype" data-push="true" data-target="#nscontent" data-include-blank-url-params="true" data-optimize-url-params="false">
+                        <?php
+                        echo $hidden_inputs;
+                        ?>
+                        <select title="Station type" class="selectbox" name="station_type" style="width:180px" onchange="$('.se-pre-con').show();this.form.submit()">
+                            <?php
+                            $selectedP = $_GET["station_type"] == "planetary" ? ' selected="selected"' : "";
+                            $selectedS = $_GET["station_type"] == "space" ? ' selected="selected"' : "";
+                            $selectedA = $_GET["station_type"] == "all" ? ' selected="selected"' : "";
+                            ?>
+                            <option value="">Station type</option>
+                            <option value="planetary"<?php echo $selectedP;?>>Planetary</option>
+                            <option value="space"<?php echo $selectedS;?>>Space</option>
+                            <option value="all"<?php echo $selectedA;?>>All</option>
+                        </select><br />
+                    </form>
                 </td>
             </tr>
         </table>
@@ -696,7 +744,7 @@ $count = mysqli_num_rows($res);
                                 /**
                                  * provide crosslinks to screenshot gallery, log page, etc
                                  */
-                                $ns_crosslinks = crosslinks($system);
+                                $ns_crosslinks = System::crosslinks($system);
 
                                 $ss_coordx = $arr["coordx"];
                                 $ss_coordy = $arr["coordy"];
@@ -723,7 +771,7 @@ $count = mysqli_num_rows($res);
                                             <a class="send" href="javascript:void(0)" data-send="<?php echo $system?>" data-id="<?php echo $system_id?>">
                                                 <img class="icon" src="/style/img/magic.png" alt="Send" style="margin-bottom:7px;margin-right:0" onmouseover="to_view('sysinfo', event)" onmouseout="$('#sysinfo').fadeToggle('fast')" />
                                             </a>
-                                            <a href="System.php?system_id=<?php echo $system_id?>">
+                                            <a href="/System?system_id=<?php echo $system_id?>">
                                                 <?php echo $system?>
                                             </a>
                                             <?php echo $ns_crosslinks;?>
@@ -799,7 +847,8 @@ $count = mysqli_num_rows($res);
 
                                     $shipyard_updated_at = $arr["shipyard_updated_at"] == "0" ? "" : "<strong>Shipyard last updated:</strong> " . get_timeago($arr["shipyard_updated_at"], true, true) . "<br />";
 
-                                    $info = $station_type_d . $station_faction . $station_government . $station_allegiance . $station_state . $station_economies . $station_services . $station_import_commodities . $station_export_commodities . $station_prohibited_commodities . $outfitting_updated_at . $shipyard_updated_at . $station_selling_ships;
+                                    $info = $station_type_d . $station_faction . $station_government . $station_allegiance . $station_state . $station_economies . $station_services;
+                                    $info .= $station_import_commodities . $station_export_commodities . $station_prohibited_commodities . $outfitting_updated_at . $shipyard_updated_at . $station_selling_ships;
 
                                     $info = str_replace("['", "", $info);
                                     $info = str_replace("']", "", $info);
@@ -822,17 +871,17 @@ $count = mysqli_num_rows($res);
                                         }
                                     }
                                     ?>
-                                    <td class="<?php echo $tdclass;?>">
-                                        <?php echo $station_allegiance_icon . $icon;?>
-                                        <a href="javascript:void(0)" id="minfo<?php echo $station_id;?>" title="Additional information">
-                                            <?php echo $station_disp_name;?>
+                                    <td class="<?php echo $tdclass?>">
+                                        <?php echo $station_allegiance_icon . $icon?>
+                                        <a href="javascript:void(0)" id="minfo<?php echo $station_id?>" title="Additional information">
+                                            <?php echo $station_disp_name?>
                                         </a>
                                     </td>
-                                    <td class="<?php echo $tdclass;?>">
-                                        <?php echo $station_ls_from_star;?>
+                                    <td class="<?php echo $tdclass?>">
+                                        <?php echo $station_ls_from_star?>
                                     </td>
-                                    <td class="<?php echo $tdclass;?>">
-                                        <?php echo $station_max_landing_pad_size;?>
+                                    <td class="<?php echo $tdclass?>">
+                                        <?php echo $station_max_landing_pad_size?>
                                     </td>
                                     <script>
                                             $(document).mouseup(function (e)
@@ -860,7 +909,7 @@ $count = mysqli_num_rows($res);
                                                         left: e.pageX - 330,
                                                         top: e.pageY - 40
                                                     });
-                                                    statinfo_div.html("<?php echo addslashes($info);?>");
+                                                    statinfo_div.html("<?php echo addslashes($info)?>");
                                                 }
                                             });
                                         </script>
@@ -875,7 +924,7 @@ $count = mysqli_num_rows($res);
                         } else {
                             $colspan = $stations !== false ? "10" : "7";
                             ?>
-                            <tr><td class="light" colspan="<?php echo $colspan;?>">None found!</td></tr>
+                            <tr><td class="light" colspan="<?php echo $colspan?>">None found!</td></tr>
                             <?php
                         }
                         ?>
