@@ -1,0 +1,44 @@
+<?php
+###########################################
+#       SPGM's default theme file
+#
+################# by Sylvain Pajot ########
+
+# the gallery icon (small size)
+$spgm_cfg['theme']['gallerySmallIcon'] = 'folder.png';
+
+# the gallery icon (thumbnail size)
+$spgm_cfg['theme']['galleryBigIcon'] = 'folder.png';
+
+# the image that highlights new pictures
+$spgm_cfg['theme']['newItemIcon'] = 'new.png';
+
+# previous picture button icon
+$spgm_cfg['theme']['previousPictureIcon'] = 'page_previous.png';
+
+# next picture button icon
+$spgm_cfg['theme']['nextPictureIcon'] = 'page_next.png';
+
+# previous thumnail page button icon
+$spgm_cfg['theme']['previousPageIcon'] = 'page_previous.png';
+
+# disabled previous thumnail page button icon
+$spgm_cfg['theme']['previousPageIconNot'] = 'page_previous_not.png';
+
+# next thumnail page button icon
+$spgm_cfg['theme']['nextPageIcon'] = 'page_next.png';
+
+# disabled next thumnail page button icon
+$spgm_cfg['theme']['nextPageIconNot'] = 'page_next_not.png';
+
+# first thumnail page button icon
+$spgm_cfg['theme']['firstPageIcon'] = 'page_first.png';
+
+# disabled first thumnail page button icon
+$spgm_cfg['theme']['firstPageIconNot'] = 'page_first_not.png';
+
+# last thumnail page button icon
+$spgm_cfg['theme']['lastPageIcon'] = 'page_last.png';
+
+# disabled last thumnail page button icon
+$spgm_cfg['theme']['lastPageIconNot'] = 'page_last_not.png';

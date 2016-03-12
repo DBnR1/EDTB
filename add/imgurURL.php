@@ -37,7 +37,7 @@ $url = isset($_GET["url"]) ? $_GET["url"] : "";
 $file = isset($_GET["file"]) ? $_GET["file"] : "";
 
 if (!empty($file) && !empty($url)) {
-    $path = $_SERVER["DOCUMENT_ROOT"] . "/screenshots/Imgur";
+    $path = $settings["new_screendir"] . "/Imgur";
 
     if (!is_dir($path)) {
         if (!mkdir($path, 0775, true)) {

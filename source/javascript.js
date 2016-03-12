@@ -742,7 +742,7 @@ function confirmation(delid, what)
         }
         else if (what == "screenshot")
         {
-            script = "/action/deleteScreenshot.php?img=" + delid;
+            script = "/Gallery/deleteScreenshot.php?img=" + delid;
         }
 
         if (script !== "")
@@ -806,7 +806,7 @@ function toggle_log(logsystem)
 function toggle_log_edit(log_id)
 {
     tofront("addlog");
-    update_values("/Bookmarks/getLogEditData.php?logid=" + log_id, log_id);
+    update_values("/Log/getLogEditData.php?logid=" + log_id, log_id);
 }
 
 var last_system = "";

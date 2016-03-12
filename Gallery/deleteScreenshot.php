@@ -37,7 +37,7 @@ $img = isset($_GET["img"]) ? $_GET["img"] : "";
 
 if (empty($img)) {
     write_log("Error: screenshot deletion failed, variable img not set", __FILE__, __LINE__);
-    $redir_url = "/Gallery.php?removed=2";
+    $redir_url = "/Gallery?removed=2";
     echo $redir_url;
     exit;
 }
@@ -45,53 +45,58 @@ if (empty($img)) {
 $pathinfo = pathinfo($img);
 $path = $pathinfo['dirname'];
 $file = $pathinfo['basename'];
-$system = str_replace("screenshots/", "", $path);
-$redir_url = "/Gallery.php?spgmGal=" . urlencode($system) . "&removed";
-$path = $_SERVER["DOCUMENT_ROOT"] . "/" . $path;
+$system = basename($path);
+
+$redir_url = "/Gallery?spgmGal=" . urlencode($system) . "&removed";
 
 $image = $path . "/" . $file;
 $thumb = $path . "/thumbs/" . $file;
 
+/**
+ * delete image file
+ */
 if (file_exists($image)) {
     if (!unlink($image)) {
         $error = error_get_last();
         write_log("Error: " . $error["message"], __FILE__, __LINE__);
-        $redir_url = "/Gallery.php?spgmGal=" . urlencode($system) . "&removed=1";
+        $redir_url = "/Gallery?spgmGal=" . urlencode($system) . "&removed=1";
     }
 } else {
     write_log("Error: Could not remove " . $image . " - file doesn't exist", __FILE__, __LINE__);
 }
 
+/**
+ * delete thumbnail file
+ */
 if (file_exists($thumb)) {
     if (!unlink($thumb)) {
         $error = error_get_last();
         write_log("Error: " . $error["message"], __FILE__, __LINE__);
-        $redir_url = "/Gallery.php?spgmGal=" . urlencode($system) . "&removed=1";
+        $redir_url = "/Gallery?spgmGal=" . urlencode($system) . "&removed=1";
     }
 } else {
     write_log("Error: Could not remove " . $thumb . " - file doesn't exist", __FILE__, __LINE__);
-    $redir_url = "/Gallery.php?spgmGal=" . urlencode($system) . "&removed=1";
+    $redir_url = "/Gallery?spgmGal=" . urlencode($system) . "&removed=1";
 }
 
 /**
- * delete dir if it's now empty
+ * delete directory if it's now empty
  */
-
 if (is_dir_empty($path . "/thumbs")) {
-    $redir_url = "/Gallery.php?removed";
+    $redir_url = "/Gallery?removed";
 
     // remove thumbs dir first
     if (!rmdir($path . "/thumbs")) {
         $error = error_get_last();
         write_log("Error: " . $error["message"], __FILE__, __LINE__);
-        $redir_url = "/Gallery.php?removed=1";
+        $redir_url = "/Gallery?removed=1";
     }
 
     // remove dir
     if (!rmdir($path)) {
         $error = error_get_last();
         write_log("Error: " . $error["message"], __FILE__, __LINE__);
-        $redir_url = "/Gallery.php?removed=1";
+        $redir_url = "/Gallery?removed=1";
     }
 }
 

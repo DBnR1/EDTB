@@ -54,7 +54,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
                 <tr>
                     <td id="center">
                         <?php
-                        require_once($_SERVER["DOCUMENT_ROOT"] . "/source/Vendor/spgm/spgm.php");
+                        require_once($_SERVER["DOCUMENT_ROOT"] . "/Gallery/Vendor/spgm/spgm.php");
                         ?>
                     </td>
                 </tr>

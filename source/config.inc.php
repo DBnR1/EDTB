@@ -34,13 +34,13 @@
 date_default_timezone_set('UTC');
 
 /** @require ini config */
-require_once("config_ini.inc.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config_ini.inc.php");
 /** @require server config */
 require_once($settings["install_path"] . "/data/server_config.inc.php");
 /** @require MySQL */
-require_once("MySQL.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 /** @require functions */
-require_once("functions_safe.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions_safe.php");
 
 /**
  * Expand the $settings global variable with stuff from the database
@@ -107,23 +107,21 @@ $links = array( "ED ToolBox--log.png--true" => "/",
                 "Nearest Systems&nbsp;&nbsp;&&nbsp;&nbsp;Stations--find.png--false" => "/NearestSystems",
                 "Data Point--dataview.png--false" => "/DataPoint",
                 "Galnet News--news.png--false" => "/GalNet",
-                "Screenshot Gallery--gallery.png--false" => "/Gallery.php",
+                "Screenshot Gallery--gallery.png--false" => "/Gallery",
                 "System Log--log.png--true" => "/");
 
 /** @var string galnet_feed feed url for galnet news page */
 $galnet_feed = "http://feed43.com/8865261068171800.xml";
 
-/** @var string base_dir path to EDTB */
-$base_dir = $settings["install_path"] . "/EDTB/";
-
-$settings["new_screendir"] = $settings["install_path"] . "/EDTB/screenshots";
+/** @var string new_screendir */
+$settings["new_screendir"] = empty($settings["new_screendir"]) ? $settings["install_path"] . "/EDTB/screenshots" : $settings["new_screendir"];
 
 /** @var string agent user agent for FD api */
 $settings["agent"] = "Mozilla/5.0 (iPhone; CPU iPhone OS 7_1_2 like Mac OS X) AppleWebKit/537.51.2 (KHTML, like Gecko) Mobile/11D257";
 /** @var string cookie_file cookie file for FD api */
-$settings["cookie_file"] =  $_SERVER["DOCUMENT_ROOT"] . "\cache\cookies";
+$settings["cookie_file"] =  $_SERVER["DOCUMENT_ROOT"] . "\\cache\\cookies";
 /** @var string curl_exe path to curl executable file */
-$settings["curl_exe"] = $settings["install_path"] . "\bin\curl.exe";
+$settings["curl_exe"] = $settings["install_path"] . "\\bin\\curl.exe";
 
 global $settings;
 

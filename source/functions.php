@@ -31,17 +31,17 @@
  */
 
 /** @require config */
-require_once("config.inc.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
 /** @require MySQL */
-require_once("MySQL.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 /** @require other functions */
-require_once("functions_safe.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions_safe.php");
 /** @require curSys */
 //require_once("curSys.php"); // can't require curSys here, it interferes with the data update
 /** @require mappings */
-require_once("FDMaps.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/FDMaps.php");
 /** @require utility */
-require_once("Vendor/utility.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/Vendor/utility.php");
 
 /**
  * Last known system with valid coordinates
@@ -177,13 +177,13 @@ function get_station_icon($type, $planetary = "0", $style = "")
 {
     switch ($type) {
         case "Coriolis Starport":
-            $station_icon = '<img src="/style/img/spaceports/coriolis.png" class="icon" alt="Coriolis Starport" style="' . $style . '" />';
+            $station_icon = '<img src="/style/img/spaceports/coriolis.png" class="icon" alt="' . $type . '" style="' . $style . '" />';
             break;
         case "Orbis Starport":
-            $station_icon = '<img src="/style/img/spaceports/orbis.png" class="icon" alt="Orbis Starport" style="' . $style . '" />';
+            $station_icon = '<img src="/style/img/spaceports/orbis.png" class="icon" alt="' . $type . '" style="' . $style . '" />';
             break;
         case "Ocellus Starport":
-            $station_icon = '<img src="/style/img/spaceports/ocellus.png" class="icon" alt="Ocellus Starport" style="' . $style . '" />';
+            $station_icon = '<img src="/style/img/spaceports/ocellus.png" class="icon" alt="' . $type . '" style="' . $style . '" />';
             break;
         case ($planetary == "0"):
             $station_icon = '<img src="/style/img/spaceports/spaceport.png" class="icon" alt="Starport" style="' . $style . '" />';
@@ -326,7 +326,7 @@ class System
             return false;
         }
 
-        if (is_dir($_SERVER["DOCUMENT_ROOT"] . "/screenshots/" . $system_name)) {
+        if (is_dir($settings["new_screendir"] . "/" . $system_name)) {
             return true;
         } else {
             return false;
@@ -413,7 +413,7 @@ class System
         $return = "";
         // check if system has screenshots
         if ($show_screens === true && System::has_screenshots($system)) {
-            $return .= '<a href="/Gallery.php?spgmGal=' . urlencode(strip_invalid_dos_chars($system)) . '" title="View image gallery">';
+            $return .= '<a href="/Gallery?spgmGal=' . urlencode(strip_invalid_dos_chars($system)) . '" title="View image gallery">';
             $return .= '<img src="/style/img/image.png" class="icon" alt="Gallery" style="margin-left:5px;margin-right:0;vertical-align:top" />';
             $return .= '</a>';
         }
@@ -505,26 +505,28 @@ function ship_name($name)
  * Return distance from current to $system
  *
  * @param string|int $system
- * @param bool $is_id
  * @return string $distance
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function get_distance($system, $is_id = false)
+function get_distance($system)
 {
-    // fetch target coordinates
+    /**
+     * fetch target coordinates
+     */
+    $esc_sys = mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system);
     $res = mysqli_query($GLOBALS["___mysqli_ston"], "   (SELECT
                                                         edtb_systems.x AS target_x,
                                                         edtb_systems.y AS target_y,
                                                         edtb_systems.z AS target_z
                                                         FROM edtb_systems
-                                                        WHERE edtb_systems.name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system) . "')
+                                                        WHERE edtb_systems.name = '" . $esc_sys . "')
                                                         UNION
                                                         (SELECT
                                                         user_systems_own.x AS target_x,
                                                         user_systems_own.y AS target_y,
                                                         user_systems_own.z AS target_z
                                                         FROM user_systems_own
-                                                        WHERE user_systems_own.name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system) . "')
+                                                        WHERE user_systems_own.name = '" . $esc_sys . "')
                                                         LIMIT 1")
                                                         or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
@@ -581,6 +583,8 @@ function edtb_common($name, $field, $update = false, $value = "")
                                                             WHERE name = '" . $name . "'
                                                             LIMIT 1")
                                                             or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+
+        return null;
     }
 }
 
@@ -596,188 +600,4 @@ function strip_invalid_dos_chars($source_string)
     $invalid_chars = array('*','\\','/',':','?','"','<','>','|'); // Invalid chars according to Windows 10
     $ret_value = str_replace($invalid_chars, "_", $source_string);
     return $ret_value;
-}
-
-/**
- * Convert screenshots to jpg and move to screenhot folder
- *
- * @param string $gallery_name name of the gallery to create
- * @author Mauri Kujala <contact@edtb.xyz>
- */
-function make_gallery($gallery_name)
-{
-    global $settings, $system_time;
-
-    if (isset($settings["old_screendir"]) && $settings["old_screendir"] != "C:\\Users" && $settings["old_screendir"] != "C:\\Users\\") {
-        if (is_dir($settings["old_screendir"]) && is_writable($settings["old_screendir"])) {
-            /**
-             * get visit time for the system so we can tell if the screenshots were taken in that system
-             */
-            $res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT visit
-                                                                FROM user_visited_systems
-                                                                WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $gallery_name) . "'
-                                                                ORDER BY visit DESC
-                                                                LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-            $arr = mysqli_fetch_assoc($res);
-
-            $visit_time = isset($arr["visit"]) ? strtotime($arr["visit"]) : time();
-
-            /**
-             * scan screenshot directory
-             */
-            if (!$screenshots = scandir($settings["old_screendir"])) {
-                $error = error_get_last();
-                write_log("Error: " . $error["message"], __FILE__, __LINE__);
-            } else {
-                $gallery_name = strip_invalid_dos_chars($gallery_name);
-
-                $newscreendir = $settings["new_screendir"] . "/" . $gallery_name;
-
-                $added = 0;
-                foreach ($screenshots as $file) {
-                    if (substr($file, -3) == "bmp") {
-                        $filetime = filemtime($settings["old_screendir"] . "/" . $file);
-                        $filetime = $filetime + ($system_time * 60 * 60);
-
-                        /**
-                         * if screenshot was taken after entering the system
-                         */
-                        if ($filetime > $visit_time) {
-                            if (!is_dir($newscreendir)) {
-                                if (!mkdir($newscreendir, 0775, true)) {
-                                    $error = error_get_last();
-                                    write_log("Error: " . $error["message"], __FILE__, __LINE__);
-                                    break;
-                                }
-                            }
-
-                            $old_file_bmp = $settings["old_screendir"] . "/" . $file;
-                            $old_file_og = $settings["old_screendir"] . "/originals/" . $file;
-                            $edited = date("Y-m-d_H-i-s", filemtime($old_file_bmp));
-                            $new_filename = $edited . "-" . $gallery_name . ".jpg";
-                            $new_file_jpg = $settings["old_screendir"] . "/" . $new_filename;
-                            $new_screenshot = $newscreendir . "/" . $new_filename;
-
-                            /**
-                             * convert from bmp to jpg
-                             */
-                            if (file_exists($old_file_bmp)) {
-                                exec("\"" . $settings["install_path"] . "/bin/ImageMagick/convert\" \"" . $old_file_bmp . "\" \"" . $new_file_jpg . "\"", $out);
-
-                                if (!empty($out)) {
-                                    $error = json_encode($out);
-                                    write_log("Error: " . $error, __FILE__, __LINE__);
-                                }
-                            }
-
-                            /**
-                             * delete original...
-                             */
-                            if ($settings["keep_og"] == "false") {
-                                if (!unlink($old_file_bmp)) {
-                                    $error = error_get_last();
-                                    write_log("Error: " . $error["message"], __FILE__, __LINE__);
-                                }
-                            /**
-                             * ... or move to "originals" directory
-                             */
-                            } else {
-                                if (!is_dir($settings["old_screendir"] . "/originals")) {
-                                    if (!mkdir($settings["old_screendir"] . "/originals", 0775, true)) {
-                                        $error = error_get_last();
-                                        write_log("Error: " . $error["message"], __FILE__, __LINE__);
-                                        break;
-                                    }
-                                }
-
-                                if (file_exists($old_file_og)) {
-                                    $old_file_og = $settings["old_screendir"] . "/originals/" . $filetime  . "_" .  $file;
-                                }
-
-                                if (!rename($old_file_bmp, $old_file_og)) {
-                                    $error = error_get_last();
-                                    write_log("Error: " . $error["message"], __FILE__, __LINE__);
-                                }
-                            }
-
-                            /**
-                             * move the converted file to screenshot folder
-                             */
-                            if (file_exists($new_file_jpg)) {
-                                if (!rename($new_file_jpg, $new_screenshot)) {
-                                    $error = error_get_last();
-                                    write_log("Error: " . $error["message"], __FILE__, __LINE__);
-                                }
-                            }
-                            $added++;
-
-                            /**
-                             * add no more than 15 at a time
-                             */
-                            if ($added > 15) {
-                                break;
-                            }
-                        /**
-                         * if screenshot was taken before entering the system, move it to originals directory
-                         * so it doesn't interfere with the script in the future
-                         */
-                        } else {
-                            $old_file_bmp = $settings["old_screendir"] . "/" . $file;
-                            $old_file_og = $settings["old_screendir"] . "/originals/" . $file;
-
-                            if (!is_dir($settings["old_screendir"] . "/originals")) {
-                                if (!mkdir($settings["old_screendir"] . "/originals", 0775, true)) {
-                                    $error = error_get_last();
-                                    write_log("Error: " . $error["message"], __FILE__, __LINE__);
-                                    break;
-                                }
-                            }
-
-                            if (file_exists($old_file_og)) {
-                                $old_file_og = $settings["old_screendir"] . "/originals/" . $filetime . "_" .  $file;
-                            }
-
-                            /**
-                             * move to "originals" directory
-                             */
-                            if (!rename($old_file_bmp, $old_file_og)) {
-                                $error = error_get_last();
-                                write_log("Error: " . $error["message"], __FILE__, __LINE__);
-                            }
-                        }
-                    }
-                }
-            }
-
-            /**
-             * make thumbnails for the gallery
-             */
-            if ($added > 0) {
-                $thumbdir = $newscreendir . "/thumbs";
-
-                /**
-                 * create thumbnail directory
-                 */
-                if (!is_dir($thumbdir)) {
-                    if (!mkdir($thumbdir, 0775, true)) {
-                        $error = error_get_last();
-                        write_log("Error: " . $error["message"], __FILE__, __LINE__);
-                        //break;
-                    }
-                }
-
-                /**
-                 * run ImageMagick
-                 */
-                exec("\"" . $settings["install_path"] . "/bin/ImageMagick/mogrify\" -resize " . $settings["thumbnail_size"] . " -background #333333 -gravity center -extent " . $settings["thumbnail_size"] . " -format jpg -quality 95 -path \"" . $thumbdir . "\" \"" . $newscreendir . "/\"*.jpg", $out3);
-
-                if (!empty($out3)) {
-                    $error = json_encode($out3);
-                    write_log("Error: " . $error, __FILE__, __LINE__);
-                }
-            }
-        } else {
-            write_log("Error: " . $settings["old_screendir"] . " is not writable", __FILE__, __LINE__);
-        }
-    }
 }
