@@ -1693,6 +1693,7 @@ div.tooltip {
     margin-bottom:6px;
     border:1px solid #000;
 }
+
 /**
  * for System Map
  */
@@ -1712,10 +1713,11 @@ div.tooltip {
     font-size:14px;
     display:inline-block;
     vertical-align:top;
-    padding:3px;
+    padding:5px;
+    margin-right:3px;
     text-align:center;
     min-width:70px;
-    max-width:90px;
+    max-width:100px;
 }
 
 .draggable {
@@ -1738,7 +1740,7 @@ div.tooltip {
     right:0;
     left:0;
     width:auto;
-    padding:10px 10px 10px 20px;
+    padding: 10px 10px 10px 20px;
     vertical-align:middle;
     z-index:1000002;
     font-size:0;
@@ -1771,7 +1773,7 @@ div.tooltip {
 
 .categories {
     display:inline-block;
-    padding:5px 10px;
+    padding: 5px 10px;
     border-left:1px solid #333;
     text-transform:uppercase;
     text-align:center;
@@ -1780,39 +1782,34 @@ div.tooltip {
 
 .categories:hover, .categories:active {
     text-shadow:1px 1px 4px #000;
-    background:#333 linear-gradient(#0e0e11, #333);
+    background: #333 linear-gradient(#0e0e11, #333);
     cursor:url(/style/img/cursor.png), auto;
 }
 
 .add {
-    padding:3px;
+    padding:5px;
 }
 
-/*noinspection CssUnusedSymbol,CssUnusedSymbol,CssUnusedSymbol*/
 .add_img_star, .add_img_planet, .add_img_other {
     width:50px;
     height:auto;
-    border-radius:100%;
-    border:1px solid transparent;
 }
 
-/*noinspection CssUnusedSymbol,CssUnusedSymbol,CssUnusedSymbol*/
 .add_img_star:hover, .add_img_planet:hover, .add_img_other:hover {
-    border-radius:100%;
-    border:1px solid #ccc;
+    opacity:0.7;
 }
 
 .draggable_img_star {
     max-width:100%;
     max-height:100%;
-    margin:auto auto 8px;
+    margin: auto auto 8px;
     display:block;
 }
 
 .draggable_img_planet {
     max-width:100%;
     max-height:100%;
-    margin:auto auto 8px;
+    margin: auto auto 8px;
     display:block;
 }
 
@@ -1825,7 +1822,7 @@ div.tooltip {
 
 .addinfo {
     display:none;
-    position:absolute;
+    position:fixed;
     font-family:"Sintony", sans-serif;
     color:#fffffa;
     font-size:12px;
@@ -1841,6 +1838,30 @@ div.tooltip {
     white-space:nowrap;
     opacity:1;
     text-align:left;
+}
+
+.ring {
+    z-index:1;
+}
+
+.landable {
+    z-index:0;
+}
+
+.name {
+    text-align:center;
+}
+
+.panzoom {
+    width:100%;
+    height:100%;
+    position:relative;
+}
+
+.info_td {
+    font-weight:400;
+    padding: 4px 15px 4px 4px;
+    line-height:1.5;
 }
 
 .in {
@@ -1869,6 +1890,10 @@ div.tooltip {
     text-transform:uppercase;
 }
 
+.delete_body:hover {
+    border:1px solid #ccc;
+}
+
 .ring {
     z-index:1;
 }
@@ -1879,12 +1904,6 @@ div.tooltip {
 
 .name {
     text-align:center;
-}
-
-.panzoom {
-    width:100%;
-    height:100%;
-    position:relative;
 }
 
 .info_td {
@@ -2252,6 +2271,7 @@ div.tooltip {
 
 /* this targets the default scrollbar (compulsory) */
 ::-webkit-scrollbar-track {
+    /*noinspection CssInvalidPropertyValue,CssInvalidPropertyValue*/
     background:#121619 -webkit-gradient(linear, left top, left bottom, from(#121619), to(#313131)) stretch;
 }
 
