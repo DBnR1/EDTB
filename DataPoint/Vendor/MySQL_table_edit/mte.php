@@ -480,7 +480,7 @@ class MySQLtabledit
             $nav_toon = $this->num_rows_list_view * ($f-1);
 
             if ($f == $this_page) {
-                $navigation .= "<td class='mte_nav' style='color:#fffffa;background-color:#808080;font-weight:bold'>$f</td> ";
+                $navigation .= "<td class='mte_nav' style='color:#fffffa;background-color:#808080;font-weight:700'>$f</td> ";
             } else {
                 $navigation .= "<td class='mte_nav' style='background-color:#0e0e11'><a data-replace='true' data-target='.rightpanel' class='mtelink' href='$this->url_script?$query_nav&start=$nav_toon'>$f</a></td>";
             }

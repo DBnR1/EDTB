@@ -63,7 +63,6 @@ if (isset($_GET["do"])) {
         /**
          * submit to EDSM
          */
-
         $json_string = '{
         "data": {
             "fromSoftware": "ED ToolBox",
@@ -109,7 +108,6 @@ if (isset($_GET["do"])) {
         /**
          * calculate coordinates
          */
-
         $reference_distances = $reference_1_system . ":::" . $reference_1_distance . "---" . $reference_2_system . ":::" . $reference_2_distance . "---" . $reference_3_system . ":::" . $reference_3_distance . "---" . $reference_4_system . ":::" . $reference_4_distance;
 
         $reference_1 = explode(",", $reference_1_coordinates);

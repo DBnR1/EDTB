@@ -38,18 +38,11 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 ###### Toggles #############
 define('MODE_TRACE', false); // toggles debug mode
 define('MODE_WARNING', true); // toggles warning mode
-define('DIR_GAL', 'screenshots/'); // galleries base directory (relative path from
-// spgm.php or the file requiring it if there's one)
-define('BASE_DIR', $base_dir); // galleries base directory (relative path from
-// spgm.php or the file requiring it if there's one)
-define('DIR_LANG', 'source/Vendor/spgm/lang/'); // language packs (relative path from spgm.php or
-// the file requiring it if there's one)
-define('DIR_THEMES', 'source/Vendor/spgm/flavors/'); // themes base directory (relative path from
-// spgm.php or the file requiring it
-// if there's one)
-define('DIR_THUMBS', 'thumbs/'); // if defined, points to the directory
-// where thumbnails reside, relatively
-// from the gallery directory
+define('DIR_GAL', $settings["new_screendir"] . "\\"); // galleries base directory (relative path from spgm.php or the file requiring it if there's one)
+define('URL_GAL', "/screenshots/");
+define('DIR_LANG', 'source/Vendor/spgm/lang/'); // language packs (relative path from spgm.php or the file requiring it if there's one)
+define('DIR_THEMES', 'source/Vendor/spgm/flavors/'); // themes base directory (relative path from spgm.php or the file requiring it if there's one)
+define('DIR_THUMBS', 'thumbs/'); // if defined, points to the directory where thumbnails reside, relatively from the gallery directory
 
 define('FILE_GAL_TITLE', 'gal-title.txt'); // default title file for a gallery
 define('FILE_GAL_SORT', 'gal-sort.txt'); // file for explicit gallery sort
@@ -265,7 +258,7 @@ function spgm_Warning($strWarningMessage)
 function spgm_Trace($strTrace)
 {
     if (MODE_TRACE) {
-        print '<div style="color:#000000;font-size:12pt">' . $strTrace . '</div>' . "\n";
+        print '<div style="color:#000;font-size:12pt">' . $strTrace . '</div>' . "\n";
     }
 }
 
@@ -1493,10 +1486,11 @@ function spgm_DisplayPicture($strGalleryId, $iPictureId, $strFilterFlags)
     $arrPictureFilenames = spgm_CreatePictureArray($strGalleryId, $strFilterFlags, true);
     $iPictureNumber      = count($arrPictureFilenames);
     $strPathToPictures   = DIR_GAL . $strGalleryId . '/';
+    $urlPathToPictures   = URL_GAL . $strGalleryId . '/';
     $strPictureFilename  = $arrPictureFilenames[$iPictureId];
     $_strFileExtension   = strrchr($strPictureFilename, '.');
     $strPictureBasename  = substr($strPictureFilename, 0, -strlen($_strFileExtension));
-    $strPictureURL       = $strPathToPictures . rawurlencode($strPictureFilename);
+    $strPictureURL       = $urlPathToPictures . rawurlencode($strPictureFilename);
     $strPictureURL2      = $strPathToPictures . $strPictureFilename;
     $strCaptionURL       = $strPictureURL . EXT_PIC_CAPTION; // DEPRECATED
     $strGalleryName      = str_replace('_', ' ', $strGalleryId);
@@ -1591,7 +1585,7 @@ function spgm_DisplayPicture($strGalleryId, $iPictureId, $strFilterFlags)
 
         // Load pictures if slideshow mode is enabled
         if ($bSlideshowMode) {
-            print '<script language="Javascript">' . "\n";
+            print '<script>' . "\n";
             $iPictureNumber  = count($arrPictureFilenames);
             $_dim            = array();
             $_strPicturePath = '';
@@ -1629,7 +1623,7 @@ function spgm_DisplayPicture($strGalleryId, $iPictureId, $strFilterFlags)
         print '  <td class="' . CLASS_TD_PICTURE_PIC . '">' . "\n";
 
         // Overlib hidden span for EXIF data
-        print '  <div id="overDiv" style="position:absolute; visibility:hidden; z-index:1000"></div>' . "\n";
+        print '  <div id="overDiv" style="position:absolute;visibility:hidden;z-index:1000"></div>' . "\n";
 
         spgm_DropShadowsBeginWrap();
 
@@ -1664,7 +1658,7 @@ function spgm_DisplayPicture($strGalleryId, $iPictureId, $strFilterFlags)
         print '  </td>' . "\n";
         print '</tr>' . "\n";
 
-        $file = base64_encode(file_get_contents("" . BASE_DIR . "/" . $strPictureURL2 . ""));
+        $file = base64_encode(file_get_contents($strPictureURL2));
         // display the picture's filename if needed
         if ($spgm_cfg['conf']['filenameWithPictures'] == true) {
             print '<tr>' . "\n";
@@ -1672,7 +1666,7 @@ function spgm_DisplayPicture($strGalleryId, $iPictureId, $strFilterFlags)
             echo '<span class="left"><a href="javascript:void(0)" onclick="confirmation(\'' . addslashes($strPictureURL) . '\', \'screenshot\')" title="Delete screenshot"><div class="delete_button" style="position:relative;left:-6px;top:0"><img src="/style/img/delete.png" alt="Delete" /></div></a></span>' . "\n";
             print $strPictureBasename . '' . $_strFileExtension . '';
 
-            $imgurfile = "" . $_SERVER["DOCUMENT_ROOT"] . "/screenshots/Imgur/" . urldecode($strPictureBasename) . ".txt";
+            $imgurfile = $settings["new_screendir"] . "/Imgur/" . urldecode($strPictureBasename) . ".txt";
             if (!file_exists($imgurfile)) {
                 print '<span id="uploaded" style="float:right"><a href="javascript:void(0)" onclick="imgurUpload(\'' . addslashes($file) . '\', \'' . addslashes($strPictureBasename) . '\')"><img src="/style/img/upload.png" alt="upload" />&nbsp;Upload to Imgur</a></span><br />' . "\n";
             } else {
@@ -1744,6 +1738,7 @@ function spgm_DisplayThumbnails($strGalleryId, $arrPictureFilenames, $iPictureId
 
     $strPathToPictures = DIR_GAL . rawurlencode($strGalleryId) . '/';
     $strPathToPictures2 = DIR_GAL . $strGalleryId . '/';
+    $urlPathToPictures = URL_GAL . $strGalleryId . '/';
     $iPictureNumber    = count($arrPictureFilenames);
     $iPageNumber       = $iPictureNumber / $spgm_cfg['conf']['thumbnailsPerPage'];
     if ($iPageNumber > (int) ($iPictureNumber / $spgm_cfg['conf']['thumbnailsPerPage'])) {
@@ -1799,7 +1794,7 @@ function spgm_DisplayThumbnails($strGalleryId, $arrPictureFilenames, $iPictureId
             $strThumbnailFilename = DIR_THUMBS . PREF_THUMB . rawurlencode($arrPictureFilenames[$i]);
             $strThumbnailFilename2 = DIR_THUMBS . PREF_THUMB . $arrPictureFilenames[$i];
         }
-        $strThumbnailURL        = $strPathToPictures . $strThumbnailFilename;
+        $strThumbnailURL        = $urlPathToPictures . $strThumbnailFilename;
         $strThumbnailURL2       = $strPathToPictures2 . $strThumbnailFilename2;
         $arrThumbnailDim        = getimagesize($strThumbnailURL2);
         $iCurrentPictureIndex   = $i + 1; // index that is displayed

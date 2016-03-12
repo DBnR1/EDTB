@@ -30,9 +30,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-// If system id or name is set, show info about that system
-if ($_GET["system_id"] != "undefined" || $_GET["system_name"] != "undefined") {
-    /** @var $system_id */
+/**
+ * if system id or name is set, show info about that system
+ */
+ if ($_GET["system_id"] != "undefined" || $_GET["system_name"] != "undefined") {
+    /** @var int $system_id */
     $system_id = $_GET["system_id"] != "undefined" ? 0 + $_GET["system_id"] : "-1";
 
     if ($system_id == "-1") {
@@ -73,7 +75,10 @@ if ($_GET["system_id"] != "undefined" || $_GET["system_name"] != "undefined") {
     $curSys["simbad_ref"] = $si_system_arr["simbad_ref"];
 
     if (!empty($curSys["simbad_ref"])) {
-        $si_system_display_name = '<a href="http://simbad.u-strasbg.fr/simbad/sim-id?Ident=' . urlencode($si_system_name) . '" target="_blank" title="View on Simbad">' . $si_system_name . '</a><img src="/style/img/external_link.png" class="ext_link" alt="ext" style="margin-left:5px" />';
+        $si_system_display_name = '<a href="http://simbad.u-strasbg.fr/simbad/sim-id?Ident=' . urlencode($si_system_name) . '" target="_blank" title="View on Simbad">';
+        $si_system_display_name .= $si_system_name;
+        $si_system_display_name .= '</a>';
+        $si_system_display_name .= '<img src="/style/img/external_link.png" class="ext_link" alt="ext" style="margin-left:5px" />';
     }
 
     $si_system_id = $si_system_arr["id"];
@@ -116,7 +121,10 @@ else {
     $si_system_display_name = $si_system_name;
 
     if ($curSys["simbad_ref"] != "") {
-        $si_system_display_name = '<a href="http://simbad.u-strasbg.fr/simbad/sim-id?Ident=' . urlencode($si_system_name) . '" target="_blank" title="View on Simbad">' . $si_system_name . '</a><img src="/style/img/external_link.png" class="ext_link" alt="ext" style="margin-left:5px" />';
+        $si_system_display_name = '<a href="http://simbad.u-strasbg.fr/simbad/sim-id?Ident=' . urlencode($si_system_name) . '" target="_blank" title="View on Simbad">';
+        $si_system_display_name .= $si_system_name;
+        $si_system_display_name .= '</a>';
+        $si_system_display_name .= '<img src="/style/img/external_link.png" class="ext_link" alt="ext" style="margin-left:5px" />';
     }
 
     $si_system_id = $curSys["id"];
@@ -189,7 +197,7 @@ if (valid_coordinates($curSys["x"], $curSys["z"], $curSys["y"])) {
  * get distances to user defined systems
  */
 
-$user_dists = "<span class=\"right\" style=\"font-size:11px;\">" . $si_dist_add;
+$user_dists = '<span class="right" style="font-size:11px">' . $si_dist_add;
 if (isset($settings["dist_systems"])) {
     $num_dists = count($settings["dist_systems"]);
     $i = 1;
@@ -207,7 +215,7 @@ if (isset($settings["dist_systems"])) {
         $dist_sys_coordz = $user_dist_a["z"];
 
         $user_dist = sqrt(pow(($ud_coordx-($dist_sys_coordx)), 2)+pow(($ud_coordy-($dist_sys_coordy)), 2)+pow(($ud_coordz-($dist_sys_coordz)), 2));
-        $user_dists .= "<a href='System.php?system_id=" . $dist_sys_id . "'>" . $dist_sys_display_name . "</a>: " . number_format($user_dist, 1) . " ly" . $add3;
+        $user_dists .= '<a href="/System?system_id=' . $dist_sys_id . '">' . $dist_sys_display_name . '</a>: ' . number_format($user_dist, 1) . ' ly' . $add3;
 
         if ($i != $num_dists) {
             $user_dists .= " - ";
@@ -231,7 +239,7 @@ if ($rares_closeby > 0) {
             $c_rares_data .= "&nbsp;(";
             $c_rares_data .= number_format($rare_arr["price"]);
             $c_rares_data .= "&nbsp;CR)";
-            $c_rares_data .= "<br /><span style='font-weight:normal'>";
+            $c_rares_data .= "<br /><span style='font-weight:400'>";
             $c_rares_data .= "<a href='/System?system_name=" . urlencode($rare_arr["system_name"]) . "'>";
             $c_rares_data .= $rare_arr["system_name"];
             $c_rares_data .= "</a>&nbsp;(";
@@ -327,7 +335,7 @@ if ($station_exists == 0) {
 
         $s_faction = $sarr2["faction"] == "" ? "" : "<strong>Faction:</strong> " . $sarr2["faction"];
         $s_distance_from_star = $ls_from_star == 0 ? "" : "" . number_format($ls_from_star, 0) . " ls - ";
-        $s_information = "<span style='float:right;margin-right:8px'>&boxur;&nbsp" . $s_distance_from_star . "Landing pad: " . $max_landing_pad_size . "</span><br />";
+        $s_information = '<span style="float:right;margin-right:8px">&boxur;&nbsp;' . $s_distance_from_star . 'Landing pad: ' . $max_landing_pad_size . '</span><br />';
         $s_government = $sarr2["government"] == "" ? "Government unknown" : $sarr2["government"];
         $s_allegiance = $sarr2["allegiance"] == "" ? "Allegiance unknown" : $sarr2["allegiance"];
 
@@ -391,20 +399,20 @@ if ($station_exists == 0) {
             arsort($mod_cat);
 
             $modules_t .= '<table style="margin-top:10px">';
-            $modules_t .= ' <tr>';
-            $modules_t .= '     <td class="transparent" colspan="3" style="font-weight:bold">' . $outfitting_updated_ago . '</td>';
-            $modules_t .= ' </tr>';
+            $modules_t .= '<tr>';
+            $modules_t .= '<td class="transparent" colspan="3" style="font-weight:700">' . $outfitting_updated_ago . '</td>';
+            $modules_t .= '</tr>';
 
             $modules_t .= '<tr style="vertical-align:top">';
             foreach ($mod_cat as $key => $value) {
                 $m_category_name = $key;
                 $modules_t .= '<td>';
-                $modules_t .= ' <table style="margin-right:10px">';
-                $modules_t .= '     <tr>';
-                $modules_t .= '         <td class="heading" colspan="3">';
-                $modules_t .=               $m_category_name;
-                $modules_t .= '         </td>';
-                $modules_t .= '     </tr>';
+                $modules_t .= '<table style="margin-right:10px">';
+                $modules_t .= '<tr>';
+                $modules_t .= '<td class="heading" colspan="3">';
+                $modules_t .= $m_category_name;
+                $modules_t .= '</td>';
+                $modules_t .= '</tr>';
 
                 asort($value);
 
@@ -416,9 +424,9 @@ if ($station_exists == 0) {
 
                     if ($m_name != $last_module_name) {
                         $modules_t .= '<tr>';
-                        $modules_t .= ' <td class="dark" colspan="3">';
-                        $modules_t .= '     <strong>' . $m_name . '</strong>';
-                        $modules_t .= ' </td>';
+                        $modules_t .= '<td class="dark" colspan="3">';
+                        $modules_t .= '<strong>' . $m_name . '</strong>';
+                        $modules_t .= '</td>';
                         $modules_t .= '</tr>';
                         $last_class = "";
                     }
@@ -498,8 +506,8 @@ if ($station_exists == 0) {
         $data["si_stations"] .= '<div class="heading">';
         $data["si_stations"] .= $icon . $s_name;
 
-        $data["si_stations"] .= '<span style="font-weight:normal;font-size:10px">';
-        $data["si_stations"] .= '[ ' . $type . ' - ' . $s_allegiance . ' - ' . $s_government . ' - ' . $economies . ' ]';
+        $data["si_stations"] .= '<span style="font-weight:400;font-size:10px">';
+        $data["si_stations"] .= '&nbsp;[ ' . $type . ' - ' . $s_allegiance . ' - ' . $s_government . ' - ' . $economies . ' ]';
         $data["si_stations"] .= '</span>';
 
         $data["si_stations"] .= '<span class="right">';
@@ -600,7 +608,7 @@ if ($exists == 0 && $_GET["system_id"] == "undefined" && $_GET["system_name"] ==
     $disp_population = is_numeric($si_system_population) ? number_format($si_system_population) : $si_system_population;
 
     $data["si_detailed"] .= '<img src="/style/img/powers/' . str_replace(" ", "_", $si_system_power) . '.jpg" class="powerpic" alt="' . $si_system_power . '" /><br />';
-    $data["si_detailed"] .= '<span style="font-size:13px;font-weight:bold">' . $si_system_data . '</span><br /><br />';
+    $data["si_detailed"] .= '<span style="font-size:13px;font-weight:700">' . $si_system_data . '</span><br /><br />';
     $data["si_detailed"] .= '<span>
                                 <strong>Allegiance:</strong> ' . $si_system_allegiance . '<br />
                                 <strong>Government:</strong> ' . $si_system_government . '<br />

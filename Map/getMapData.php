@@ -45,7 +45,7 @@ if (empty($system)) {
  * check if system has screenshots
  */
 
-$screenshots = System::has_screenshots($system) ? '<a href="/Gallery.php?spgmGal=' . urlencode(strip_invalid_dos_chars($system)) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" class="icon" style="margin-left:5px;vertical-align:top" /></a>' : "";
+$screenshots = System::has_screenshots($system) ? '<a href="/Gallery?spgmGal=' . urlencode(strip_invalid_dos_chars($system)) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" class="icon" style="margin-left:5px;vertical-align:top" /></a>' : "";
 
 /**
  * check if system is in the bookmarks
@@ -134,7 +134,7 @@ if ($count > 0) {
             $text = $logarr["text"];
 
             echo '<br />';
-            echo '<a href="/Log?system=' . urlencode($system) . '" style="color:inherit;font-weight:bold" title="View the log for this system">';
+            echo '<a href="/Log?system=' . urlencode($system) . '" style="color:inherit;font-weight:700" title="View the log for this system">';
             echo $text . ' ...';
             echo '</a>';
         }

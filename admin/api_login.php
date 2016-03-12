@@ -39,7 +39,6 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 /**
  * send login details
  */
-
 if (isset($_GET["login"]) && isset($_POST["email"]) && isset($_POST["password"])) {
     $email = $_POST["email"];
     $password = $_POST["password"];
@@ -56,7 +55,6 @@ if (isset($_GET["login"]) && isset($_POST["email"]) && isset($_POST["password"])
 /**
  * send verification code
  */
-
 if (isset($_GET["sendcode"])) {
     $code = $_POST["code"];
 
@@ -76,7 +74,7 @@ if (isset($_GET["sendcode"])) {
         if (isset($_GET["login"]) && !isset($_GET["sendcode"])) {
             ?>
             <div class="input" style="display:block">
-                <form method="post" action="/admin/API_login.php?sendcode">
+                <form method="post" action="/Admin/API_login.php?sendcode">
                     <div class="input-inner">
                         <table>
                             <tr>
@@ -102,14 +100,12 @@ if (isset($_GET["sendcode"])) {
                 </form>
             </div>
             <?php
-
         } elseif (isset($_GET["sendcode"]) && isset($_POST["code"])) {
             echo notice('The companion api is now connected.<br />Click the refresh icon to initialize. Then return to using ED ToolBox normally.<br /><a id="api_refresh" href="javascript:void(0)" onclick="refresh_api()" title="Refresh API data"><img src="/style/img/refresh_24.png" class="icon24" alt="Refresh" /></a>', "API connected");
         } else {
             /**
              * check if cookies are good (when are they not?)
              */
-
             exec("\"" . $settings["curl_exe"] . "\" -b \"" . $settings["cookie_file"] . "\" -c \"" . $settings["cookie_file"] . "\" -H \"User-Agent: " . $settings["agent"] . "\" \"https://companion.orerve.net/profile\" -k", $out);
 
             if (!empty($out)) {
@@ -117,7 +113,7 @@ if (isset($_GET["sendcode"])) {
             } else {
                 ?>
                 <div class="input" style="display:block">
-                    <form method="post" action="/admin/API_login.php?login">
+                    <form method="post" action="/Admin/API_login.php?login">
                         <div class="input-inner">
                             <table style="width:340px">
                                 <tr>
@@ -148,7 +144,6 @@ if (isset($_GET["sendcode"])) {
                     </form>
                 </div>
                 <?php
-
             }
         }
         ?>

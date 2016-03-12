@@ -39,12 +39,16 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/curSys.php");
 /** @require referenceSystems class */
 require_once("referenceSystems.php");
 
+/**
+ * check if system already has distances
+ */
 $system_res = mysqli_query($GLOBALS["___mysqli_ston"], "    SELECT id, reference_distances, edsm_message
                                                             FROM user_systems_own
                                                             WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'
                                                             LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
 
 $system_exists = mysqli_num_rows($system_res);
+
 $do = true;
 $ref = array();
 if ($system_exists > 0) {
@@ -54,12 +58,14 @@ if ($system_exists > 0) {
 
     $msg_num = $parts[0];
 
+    /**
+     * if the system has been succesfully trilaterated, we don't need any more references
+     */
     if ($msg_num == "104" || $msg_num == "102") {
         $do = false;
     } else {
         $do = true;
         $values = explode("---", $system_arr["reference_distances"]);
-
 
         if (!isset($_GET["force"])) {
             $i = 1;
@@ -80,6 +86,9 @@ if ($system_exists > 0) {
                 $ref[$ii]["distance"] = "";
             }
 
+            /**
+             * put already used systems into an array so we don't use them again
+             */
             $used = array();
             foreach ($values as $value) {
                 $values2 = explode(":::", $value);

@@ -31,7 +31,7 @@
  */
 
 /** @require config */
-require_once("config.inc.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
 require_once($settings["install_path"] . "/data/server_config.inc.php");
 
 /**

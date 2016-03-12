@@ -387,7 +387,7 @@ while ($log_row = mysqli_fetch_array($log_result)) {
         $cat = ',"cat":[11]';
 
         $info .= '<div class="map_info"><span class="map_info_title">Logged System</span><br />';
-        $info .= '<strong>Log entry</strong><br /><a href="/Log?system=' . urlencode($log_system) . '" style="color:inherit;font-weight:bold" title="View the log for this system">' . $text . ' </a><br /><br />';
+        $info .= '<strong>Log entry</strong><br /><a href="/Log?system=' . urlencode($log_system) . '" style="color:inherit;font-weight:700" title="View the log for this system">' . $text . ' </a><br /><br />';
 
         $info .= '<strong>Added</strong><br />' . date_format($log_added, "j M Y, H:i") . '';
 

@@ -98,7 +98,6 @@ if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
 /**
  * User balance from FD API
  */
-
 if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
     $status_balance_cache = "";
     if (isset($api["commander"]) && $settings["show_cmdr_status"] == "true") {
@@ -107,10 +106,10 @@ if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
         }
     }
 }
+
 /**
  * System information for the left column
  */
-
 $data["system_info"] = "";
 
 if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
@@ -139,7 +138,6 @@ if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
 /**
  * link to calculate coordinates
  */
-
 if (empty($curSys["coordinates"]) && !empty($curSys["name"])) {
     if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
         $calc_coord .= '<span style="margin-bottom:6px;height:40px">';
@@ -157,7 +155,6 @@ if (empty($curSys["coordinates"]) && !empty($curSys["name"])) {
 /**
  * Stations for the left column
  */
-
 if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
     $ress = mysqli_query($GLOBALS["___mysqli_ston"], "  SELECT SQL_CACHE
                                                         id, name, ls_from_star, max_landing_pad_size, faction, government, allegiance,
@@ -267,7 +264,6 @@ if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
 /**
  * if system coords are user calculated, show calc button
  */
-
 $system_user_calculated = mysqli_query($GLOBALS["___mysqli_ston"], "    SELECT id, edsm_message
                                                                         FROM user_systems_own
                                                                         WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'

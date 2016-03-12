@@ -40,6 +40,9 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 if (isset($_POST["code"])) {
     $code = $_POST["code"];
 
+    /**
+     * blacklist certain commands for security purposes
+     */
     $blacklist = array(
                     "DROP",
                     "DELETE",
@@ -69,6 +72,9 @@ if (isset($_POST["code"])) {
         }
     }
 
+    /**
+     * if the query is safe to execute, get on with it
+     */
     if ($continue !== false) {
         $queries = explode(">>BREAK<<", $code);
 
@@ -100,13 +106,13 @@ if (isset($_POST["code"])) {
         <img src="/style/img/sql24.png" alt="Settings" class="icon24" />Execute SQL
     </h2>
     <hr>
-    <?php echo $notify;?>
+    <?php echo $notify?>
     <div style="padding:5px;margin-bottom:10px">
         You can use this form to perform SQL statements. Certain commands, such as<br />
         <strong>DELETE</strong>, <strong>TRUNCATE</strong> and <strong>DROP</strong> are not available here.<br />
          To do multiple statements, use <code>>>BREAK<<</code> to separate statements<br /><br />
 
-        For more complete database management, use the included db manager (<a href="/admin/">Adminer</a>)<br />
+        For more complete database management, use the included db manager (<a href="/Admin/db_manager.php">Adminer</a>)<br />
         or a database manager of your choice.
     </div>
         <form method="post" action="SQL.php">

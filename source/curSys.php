@@ -32,9 +32,9 @@
  */
 
 /** @require configs */
-require_once("config.inc.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
 /** @require functions */
-require_once("functions.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 /** @array curSys */
 $curSys = array();
 

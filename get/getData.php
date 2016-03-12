@@ -38,6 +38,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 /** @require curSys */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/curSys.php");
+/** @require MakeGallery class */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Gallery/MakeGallery.php");
 
 $action = isset($_GET["action"]) ? $_GET["action"] : "";
 $request = isset($_GET["request"]) ? $_GET["request"] : 0;
@@ -48,8 +50,15 @@ if ($action == "onlycoordinates") {
     exit;
 } elseif ($action == "onlysystem") {
     echo $curSys["name"];
-    // make screenshot gallery
-    make_gallery($curSys["name"]);
+
+    /**
+     * make screenshot gallery
+     */
+    /*if (MakeGallery::go()) {
+        $gallery = new MakeGallery();
+        $gallery->make_gallery($curSys["name"]);
+    }*/
+
     exit;
 } elseif ($action == "onlyid") {
     echo $curSys["id"];
@@ -60,9 +69,8 @@ if ($action == "onlycoordinates") {
 $data = array();
 
 /**
-*   Now Playing
+ * Now Playing
  */
-
 $data["now_playing"] = "";
 
 if ((isset($settings["nowplaying_file"]) && !empty($settings["nowplaying_file"])) or (isset($settings["nowplaying_vlc_password"]) && !empty($settings["nowplaying_vlc_password"]))) {
@@ -110,7 +118,6 @@ if ((isset($settings["nowplaying_file"]) && !empty($settings["nowplaying_file"])
  * If we've arrived in a new system or
  * are requesting page for the first time
  */
-
 $data["update_in_progress"] = "false";
 $data["update_notification_data"] = "false";
 if ($newSystem !== false || $request == 0) {
@@ -193,7 +200,12 @@ if ($newSystem !== false || $request == 0) {
     $data["renew"] = "false";
 }
 
-// make screenshot gallery
-make_gallery($curSys["name"]);
+/**
+ * make screenshot gallery
+ */
+if (MakeGallery::go()) {
+    $gallery = new MakeGallery();
+    $gallery->make_gallery($curSys["name"]);
+}
 
 echo json_encode($data);

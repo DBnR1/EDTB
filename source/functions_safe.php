@@ -31,7 +31,7 @@
  */
 
 /** @require ini config */
-require_once("config_ini.inc.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config_ini.inc.php");
 
 /**
  * Display notice message
@@ -246,7 +246,7 @@ function get_timeago($ptime, $diff = true, $format = false)
     $etime = time() - $ptime;
 
     if ($etime < 1) {
-        $ret = 'less than ' . $etime . ' second ago';
+        return 'less than ' . $etime . ' second ago';
     }
 
     $a = array( 12 * 30 * 24 * 60 * 60  =>  'year',
@@ -263,18 +263,16 @@ function get_timeago($ptime, $diff = true, $format = false)
         if ($d >= 1) {
             $r = round($d);
             if ($format !== true) {
-                $ret = $r . ' ' . $str . ($r > 1 ? 's' : '') . ' ago';
+                return $r . ' ' . $str . ($r > 1 ? 's' : '') . ' ago';
             } else {
                 if (data_is_old($ptime_og)) {
-                    $ret = '<span class="old_data">' . $r . ' ' . $str . ($r > 1 ? 's' : '') . ' ago</span>';
+                    return '<span class="old_data">' . $r . ' ' . $str . ($r > 1 ? 's' : '') . ' ago</span>';
                 } else {
-                    $ret = $r . ' ' . $str . ($r > 1 ? 's' : '') . ' ago';
+                    return $r . ' ' . $str . ($r > 1 ? 's' : '') . ' ago';
                 }
             }
         }
     }
-
-    return $ret;
 }
 
 /**

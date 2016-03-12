@@ -71,7 +71,6 @@ if (isset($api["commander"]) && $settings["show_cmdr_status"] == "true") {
         /**
          * get icons for cmdr ranks
          */
-
         $cmdr_rank_combat = $api["commander"]["rank"]["combat"];
         $cmdr_rank_combat_icon = '<a href="#" title="Combat rank: ' . get_rank("combat", $cmdr_rank_combat, false) . '">';
         $cmdr_rank_combat_icon .= '<img src="' . get_rank("combat", $cmdr_rank_combat + 1) . '" alt="combat" class="status_img" style="margin-right:6px" />';
@@ -100,7 +99,6 @@ if (isset($api["commander"]) && $settings["show_cmdr_status"] == "true") {
         /**
          * additional info
          */
-
         $cmdr_rank_fed = $api["commander"]["rank"]["federation"];
         $fed_rank = get_rank("federation", $cmdr_rank_fed, false);
 

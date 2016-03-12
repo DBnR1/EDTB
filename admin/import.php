@@ -72,7 +72,7 @@ if (is_dir($settings["log_dir"])) {
         echo notice($text, "Import Logs");
     } elseif ($total_size < $batch_limit && $batches_left == "") {
         $text = 'Located ' . $num . ' netLog files totaling ' . FileSizeConvert($total_size) . '.';
-        $text .= 'Do you want to import them?<br /><br /><a href="/admin/Import.php?import">Import logs</a>';
+        $text .= 'Do you want to import them?<br /><br /><a href="/Admin/Import.php?import">Import logs</a>';
         echo notice($text, "Import Logs");
     } else {
         $batches = ceil($total_size / $batch_limit);
@@ -187,11 +187,11 @@ if (is_dir($settings["log_dir"])) {
             $nums = $_GET["num"] + $i;
             $batches_left = $_GET["batches_left"] - 1;
             if (!headers_sent()) {
-                exit(header('Location: /admin/import.php?batches_left=' . $batches_left . '&num=' . $nums));
+                exit(header('Location: /Admin/import.php?batches_left=' . $batches_left . '&num=' . $nums));
             } else {
                 ?>
                 <script>
-                    location.replace("/admin/import.php?batches_left=<?php echo $batches_left;?>&num=<?php echo $nums;?>");
+                    location.replace("/Admin/import.php?batches_left=<?php echo $batches_left;?>&num=<?php echo $nums;?>");
                 </script>
                 <?php
                 exit();

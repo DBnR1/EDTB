@@ -76,7 +76,6 @@ if (version_compare($current_version, $newest_version) < 0) {
 /**
  * Display notification if user hasn't updated data in a while
  */
-
 /*$last_update = edtb_common("last_data_update", "unixtime");
 $now = time()-(7*24*60*60); // 7 days
 

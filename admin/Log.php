@@ -59,7 +59,9 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
             </thead>
             <tbody>
             <?php
-            // reverse array and output data
+            /**
+             * reverse the array and output data
+             */
             if (!empty($lines)) {
                 foreach (array_reverse($lines) as $line_num => $line) {
                     // only show first 600 lines
@@ -76,7 +78,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
                         $error_line = empty($error_line) ? "n/a" : $error_line;
 
                         $file = str_replace("[", "", $parts[0]);
-                        $file = str_replace($settings["install_path"] . "\EDTB\\", "", $file);
+                        $file = str_replace($settings["install_path"] . "\\EDTB\\", "", $file);
                         $file = empty($file) ? "n/a" : $file;
 
                         $error = array_slice($data, 2);
@@ -108,7 +110,6 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
                             </td>
                         </tr>
                         <?php
-
                     }
                 }
             } else {
@@ -119,7 +120,6 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
                     </td>
                 </tr>
                 <?php
-
             }
             ?>
             </tbody>
