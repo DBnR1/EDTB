@@ -35,8 +35,8 @@
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 /** @require curSys */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/curSys.php");
-/** @require poi_bm functions */
-require_once("functions.php");
+/** @require PoiBm class */
+require_once("PoiBm.php");
 
 /**
  * get usable coordinates
@@ -80,7 +80,9 @@ $usez = $usable["z"];
                                                                     LEFT JOIN user_systems_own ON user_poi.system_name = user_systems_own.name
                                                                     ORDER BY -(sqrt(pow((item_coordx-(" . $usex . ")),2)+pow((item_coordy-(" . $usey . ")),2)+pow((item_coordz-(" . $usez . ")),2))) DESC, poi_name, system_name")
                                                                     or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-            echo maketable($poi_res, "Poi");
+            //echo maketable($poi_res, "Poi");
+            $poi = new PoiBm();
+            echo $poi->maketable($poi_res, "Poi");
             ?>
         </td>
         <td style="vertical-align:top;padding:0">
@@ -99,7 +101,8 @@ $usez = $usable["z"];
                                                                     ORDER BY -(sqrt(pow((item_coordx-(" . $usex . ")),2)+pow((item_coordy-(" . $usey . ")),2)+pow((item_coordz-(" . $usez . ")),2))) DESC, system_name, user_bookmarks.added_on DESC")
                                                                     or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
             $i = 0;
-            echo maketable($bm_res, "Bm");
+            $bm = new PoiBm();
+            echo $bm->maketable($bm_res, "Bm");
             ?>
         </td>
     </tr>
