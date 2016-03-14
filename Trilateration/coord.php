@@ -40,24 +40,24 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 require_once("coord_trilateration.php");
 
 if (isset($_GET["do"])) {
-    $data = json_decode($_REQUEST["input"], true);
+    $data = json_decode($_REQUEST["input"]);
 
-    $target_system = $data["target_system"];
+    $target_system = $data->{"target_system"};
 
-    $reference_1_system = $data["reference_1"];
-    $reference_2_system = $data["reference_2"];
-    $reference_3_system = $data["reference_3"];
-    $reference_4_system = $data["reference_4"];
+    $reference_1_system = $data->{"reference_1"};
+    $reference_2_system = $data->{"reference_2"};
+    $reference_3_system = $data->{"reference_3"};
+    $reference_4_system = $data->{"reference_4"};
 
-    $reference_1_coordinates = $data["reference_1_coordinates"];
-    $reference_2_coordinates = $data["reference_2_coordinates"];
-    $reference_3_coordinates = $data["reference_3_coordinates"];
-    $reference_4_coordinates = $data["reference_4_coordinates"];
+    $reference_1_coordinates = $data->{"reference_1_coordinates"};
+    $reference_2_coordinates = $data->{"reference_2_coordinates"};
+    $reference_3_coordinates = $data->{"reference_3_coordinates"};
+    $reference_4_coordinates = $data->{"reference_4_coordinates"};
 
-    $reference_1_distance = $data["reference_1_distance"];
-    $reference_2_distance = $data["reference_2_distance"];
-    $reference_3_distance = $data["reference_3_distance"];
-    $reference_4_distance = $data["reference_4_distance"];
+    $reference_1_distance = $data->{"reference_1_distance"};
+    $reference_2_distance = $data->{"reference_2_distance"};
+    $reference_3_distance = $data->{"reference_3_distance"};
+    $reference_4_distance = $data->{"reference_4_distance"};
 
     if (is_numeric($reference_1_distance) && is_numeric($reference_2_distance) && is_numeric($reference_3_distance) && is_numeric($reference_4_distance)) {
         /**
@@ -98,12 +98,12 @@ if (isset($_GET["do"])) {
         $context = stream_context_create($opts);
 
         $result = file_get_contents("http://www.edsm.net/api-v1/submit-distances", false, $context);
-        $result_j = json_decode($result, true);
-        $edsm_msg = $result_j["basesystem"]["msg"];
+        $result_j = json_decode($result);
+        $edsm_msg = $result_j->{"basesystem"}->{"msg"};
 
         write_log("EDSM message: " . $edsm_msg, __FILE__, __LINE__);
 
-        $edsm_msg = $result_j["basesystem"]["msgnum"] . ":::" . $edsm_msg;
+        $edsm_msg = $result_j->{"basesystem"}->{"msgnum"} . ":::" . $edsm_msg;
 
         /**
          * calculate coordinates
@@ -125,33 +125,35 @@ if (isset($_GET["do"])) {
         $newcoords_y = $newcoords[1];
         $newcoords_z = $newcoords[2];
 
-        $system_exists = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], " SELECT id
-                                                                                    FROM user_systems_own
-                                                                                    WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $target_system) . "'
-                                                                                    LIMIT 1"));
+        $esc_target_system = $mysqli->real_escape_string($target_system);
+        $esc_reference_distances = $mysqli->real_escape_string($reference_distances);
+        $esc_edsm_msg = $mysqli->real_escape_string($edsm_msg);
 
-        if ($system_exists == 0) {
-            mysqli_query($GLOBALS["___mysqli_ston"], "  INSERT INTO user_systems_own
-                                                        (name, x, y, z, reference_distances, edsm_message)
-                                                        VALUES
-                                                        ('" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $target_system) . "',
-                                                        '" . $newcoords_x . "',
-                                                        '" . $newcoords_y . "',
-                                                        '" . $newcoords_z . "',
-                                                        '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $reference_distances) . "',
-                                                        '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $edsm_msg) . "')")
-                                                        or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+        $system_exists = System::exists($target_system, true);
+
+        if ($system_exists) {
+            $stmt = "   INSERT INTO user_systems_own
+                        (name, x, y, z, reference_distances, edsm_message)
+                        VALUES
+                        ('$esc_target_system',
+                        '$newcoords_x',
+                        '$newcoords_y',
+                        '$newcoords_z',
+                        '$esc_reference_distances',
+                        '$esc_edsm_msg')";
         } else {
-            mysqli_query($GLOBALS["___mysqli_ston"], "  UPDATE user_systems_own
-                                                        SET name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $target_system) . "',
-                                                            x = '" . $newcoords_x . "',
-                                                            y = '" . $newcoords_y . "',
-                                                            z = '" . $newcoords_z . "',
-                                                            reference_distances = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $reference_distances) . "',
-                                                            edsm_message = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $edsm_msg) . "'
-                                                        WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $target_system) . "'
-                                                        LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+            $stmt = "   UPDATE user_systems_own
+                        SET name = '$esc_target_system',
+                            x = '$newcoords_x',
+                            y = '$newcoords_y',
+                            z = '$newcoords_z',
+                            reference_distances = '$esc_reference_distances',
+                            edsm_message = '$esc_edsm_msg'
+                        WHERE name = '$esc_target_system'
+                        LIMIT 1";
         }
+
+        $mysqli->query($stmt) or write_log($mysqli->error, __FILE__, __LINE__);
     } else {
         write_log("Error: Distances not numeric or all distances not given.", __FILE__, __LINE__);
     }

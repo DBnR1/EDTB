@@ -51,25 +51,29 @@ if (isset($_GET["import_done"])) {
             /**
              * remove duplicates
              */
-            $systems = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT id, system_name
-                                                                    FROM user_visited_systems
-                                                                    ORDER BY visit ASC")
-                                                                    or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+            $query = "  SELECT id, system_name
+                        FROM user_visited_systems
+                        ORDER BY visit ASC";
+
+            $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
 
             $this_s = "";
-            while ($arr = mysqli_fetch_assoc($systems)) {
-                $sys_name = $arr["system_name"];
-                $sys_id = $arr["id"];
+            while ($obj = $result->fetch_object()) {
+                $sys_name = $obj->system_name;
+                $sys_id = $obj->id;
 
                 if ($sys_name == $this_s && $sys_id != "1") {
-                    mysqli_query($GLOBALS["___mysqli_ston"], "  DELETE FROM user_visited_systems
-                                                                WHERE id = '" . $sys_id  . "'
-                                                                LIMIT 1")
-                                                                or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+                    $stmt = "   DELETE FROM user_visited_systems
+                                WHERE id = '$sys_id '
+                                LIMIT 1";
+
+                    $mysqli->query($stmt) or write_log($mysqli->error, __FILE__, __LINE__);
                 }
 
                 $this_s = $sys_name;
             }
+
+            $result->close();
 
             echo notice("Succesfully added " . number_format($_GET["num"]) . " visited systems to the database.<br /><br />You may now continue using ED ToolBox.", "Logs imported");
             ?>

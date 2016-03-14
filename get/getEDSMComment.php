@@ -49,10 +49,10 @@ $result = "";
 
 if (!empty($settings["edsm_api_key"]) && !empty($settings["edsm_cmdr_name"])) {
     if ($get_comment = file_get_contents("http://www.edsm.net/api-logs-v1/get-comment?systemName=" . $system . "&commanderName=" . urlencode($settings["edsm_cmdr_name"]) . "&apiKey=" . $settings["edsm_api_key"])) {
-        $json_d = json_decode($get_comment, true);
+        $json_d = json_decode($get_comment);
 
-        if (!empty($json_d["comment"])) {
-            $result = $json_d["comment"];
+        if (!empty($json_d->{"comment"})) {
+            $result = $json_d->{"comment"};
         }
     } else {
         $error = error_get_last();

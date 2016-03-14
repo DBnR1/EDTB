@@ -31,7 +31,7 @@
  */
 
 /** @require config */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
+require_once(__DIR__ . "/config.inc.php");
 require_once($settings["install_path"] . "/data/server_config.inc.php");
 
 /**
@@ -51,6 +51,15 @@ function db_connect($server, $user, $pwd, $db)
     if (!((bool)mysqli_query($GLOBALS["___mysqli_ston"], "USE " . $db))) {
         exit('Could not select database: ' . ((is_object($GLOBALS["___mysqli_ston"])) ? mysqli_error($GLOBALS["___mysqli_ston"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)));
     }
+
 }
 
-db_connect($server, $user, $pwd, $db);
+$mysqli = new mysqli($server, $user, $pwd, $db);
+
+/* check connection */
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
+}
+//db_connect($server, $user, $pwd, $db);
+

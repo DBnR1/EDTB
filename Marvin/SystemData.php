@@ -44,10 +44,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/curSys.php");
  */
 
 if (isset($_GET["sys"])) {
-    $num_visits = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "    SELECT id
-                                                                                FROM user_visited_systems
-                                                                                WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'"))
-                                                                                or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+    $num_visits = System::num_visits($curSys["name"]);
+    $esc_sysname = $mysqli->real_escape_string($curSys["name"]);
 
     $va_text .= "No system data.";
 
@@ -76,7 +74,7 @@ if (isset($_GET["sys"])) {
                 $allegiance = str_replace("Rants/Allegiance_", "", $alleg);
                 $allegiance = str_replace(".txt", "", $allegiance);
 
-                $rants = array();
+                $rants = [];
 
                 /**
                  * if current allegiance matches
@@ -103,7 +101,7 @@ if (isset($_GET["sys"])) {
         $va_power = "";
 
         if (!empty($curSys["power"]) && !empty($curSys["power_state"])) {
-            $va_power_text = array();
+            $va_power_text = [];
             $va_power_text[] = $curSys["power"];
 
             /**
@@ -126,7 +124,7 @@ if (isset($_GET["sys"])) {
                     if ($curSys["power"] == $power) {
                         $power_rantss = file($powers);
 
-                        $power_rants_text = array();
+                        $power_rants_text = [];
                         // loop trough rants
                         foreach ($power_rantss as $power_ranta) {
                             if (!empty($power_ranta)) {
@@ -199,26 +197,29 @@ if (isset($_GET["sys"])) {
 
         $va_text .= " " . $rant;
 
-        $ress = mysqli_query($GLOBALS["___mysqli_ston"], "  SELECT name, ls_from_star
-                                                            FROM edtb_stations
-                                                            WHERE system_id = '" . $curSys["id"] . "'
-                                                            ORDER BY -ls_from_star DESC, name")
-                                                            or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+        $query = "  SELECT name, ls_from_star
+                    FROM edtb_stations
+                    WHERE system_id = '" . $curSys["id"] . "'
+                    ORDER BY -ls_from_star DESC, name";
 
-        $count = mysqli_num_rows($ress);
+        $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+
+        $count = $result->num_rows;
 
         if ($count > 0) {
             $c = 0;
-            while ($arra = mysqli_fetch_assoc($ress)) {
+            while ($arra = $result->fetch_object()) {
                 if ($c == 0) {
-                    $first_station_name = $arra["name"];
-                    $first_station_ls_from_star = $arra["ls_from_star"];
+                    $first_station_name = $arra->name;
+                    $first_station_ls_from_star = $arra->ls_from_star;
                 } else {
                     break;
                 }
                 $c++;
             }
         }
+
+        $result->close();
 
         if ($count == 1) {
             if ($first_station_ls_from_star != 0) {
@@ -235,36 +236,32 @@ if (isset($_GET["sys"])) {
         }
 
         if ($num_visits == 1) {
-            $inputs = array();
+            $inputs = [];
             $inputs[] = " We have not visited this system before.";
             $inputs[] = " This is our first time visiting this system.";
             shuffle($inputs);
 
             $va_text .= $inputs[0];
-        } elseif ($num_visits == 2) {
-            $vis_res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT visit
-                                                                    FROM user_visited_systems
-                                                                    WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'
-                                                                    ORDER BY visit ASC
-                                                                    LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-            $vis_arr = mysqli_fetch_assoc($vis_res);
-
-            $first_vis = get_timeago(strtotime($vis_arr["visit"]));
-            $va_text .= " We have visited this system once before. That was " . $first_vis . ".";
         } else {
-            $vis_res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT visit
-                                                                    FROM user_visited_systems
-                                                                    WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'
-                                                                    ORDER BY visit ASC
-                                                                    LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-            $vis_arr = mysqli_fetch_assoc($vis_res);
+            $query = "  SELECT visit
+                        FROM user_visited_systems
+                        WHERE system_name = '$esc_sysname'
+                        ORDER BY visit ASC
+                        LIMIT 1";
 
-            $num_vis = $num_visits-1;
-            $first_vis = get_timeago(strtotime($vis_arr["visit"]));
-            $va_text .= " We have visited this system " . $num_vis . " times before. Our first visit was " . $first_vis . ".";
+            $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+            $vis_arr = $result->fetch_object();
+
+            $first_vis = get_timeago(strtotime($vis_arr->visit));
+            $result->close();
+
+            if ($num_visits == 2) {
+                $va_text .= " We have visited this system once before. That was " . $first_vis . ".";
+            } else {
+                $va_text .= " We have visited this system " . $num_vis . " times before. Our first visit was " . $first_vis . ".";
+            }
         }
     }
-
     echo $va_text;
 
     exit;
@@ -292,56 +289,60 @@ if (isset($_GET["cs"])) {
         $ambiguity = " some ";
     }
 
-    $cs_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT
-                                                        edtb_stations.system_id AS system_id,
-                                                        edtb_stations.name AS station_name,
-                                                        edtb_stations.max_landing_pad_size,
-                                                        edtb_stations.ls_from_star,
-                                                        edtb_stations.type,
-                                                        edtb_stations.shipyard,
-                                                        edtb_stations.outfitting,
-                                                        edtb_stations.commodities_market,
-                                                        edtb_stations.black_market,
-                                                        edtb_stations.refuel,
-                                                        edtb_stations.repair,
-                                                        edtb_stations.rearm,
-                                                        edtb_systems.allegiance AS allegiance,
-                                                        edtb_systems.id AS system_id,
-                                                        edtb_systems.x AS coordx,
-                                                        edtb_systems.y AS coordy,
-                                                        edtb_systems.z AS coordz,
-                                                        edtb_systems.name as system_name
-                                                        FROM edtb_stations
-                                                        LEFT JOIN edtb_systems on edtb_stations.system_id = edtb_systems.id
-                                                        WHERE edtb_systems.x != ''
-                                                        ORDER BY sqrt(pow((coordx-(" . $usex . ")),2)+pow((coordy-(" . $usey . ")),2)+pow((coordz-(" . $usez . ")),2)),
-                                                        -edtb_stations.ls_from_star DESC
-                                                        LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+    $query = "  SELECT
+                edtb_stations.system_id AS system_id,
+                edtb_stations.name AS station_name,
+                edtb_stations.max_landing_pad_size,
+                edtb_stations.ls_from_star,
+                edtb_stations.type,
+                edtb_stations.shipyard,
+                edtb_stations.outfitting,
+                edtb_stations.commodities_market,
+                edtb_stations.black_market,
+                edtb_stations.refuel,
+                edtb_stations.repair,
+                edtb_stations.rearm,
+                edtb_systems.allegiance AS allegiance,
+                edtb_systems.id AS system_id,
+                edtb_systems.x AS coordx,
+                edtb_systems.y AS coordy,
+                edtb_systems.z AS coordz,
+                edtb_systems.name as system_name
+                FROM edtb_stations
+                LEFT JOIN edtb_systems on edtb_stations.system_id = edtb_systems.id
+                WHERE edtb_systems.x != ''
+                ORDER BY sqrt(pow((coordx-(" . $usex . ")), 2)+pow((coordy-(" . $usey . ")), 2)+pow((coordz-(" . $usez . ")), 2)),
+                -edtb_stations.ls_from_star DESC
+                LIMIT 1";
+
+    $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
 
     echo $add2;
 
-    $cs_arr = mysqli_fetch_assoc($cs_res);
+    $cs_obj = $result->fetch_object();
 
-    $cs_system = tts_override($cs_arr["system_name"]);
-    $cs_allegiance = $cs_arr["allegiance"];
+    $cs_system = tts_override($cs_obj->system_name);
+    $cs_allegiance = $cs_obj->allegiance;
 
-    $ss_coordx = $cs_arr["coordx"];
-    $ss_coordy = $cs_arr["coordy"];
-    $ss_coordz = $cs_arr["coordz"];
+    $ss_coordx = $cs_obj->coordx;
+    $ss_coordy = $cs_obj->coordy;
+    $ss_coordz = $cs_obj->coordz;
 
     $cs_distance = sqrt(pow(($ss_coordx-($usex)), 2)+pow(($ss_coordy-($usey)), 2)+pow(($ss_coordz-($usez)), 2));
 
-    $cs_station_name = $cs_arr["station_name"];
-    $cs_max_landing_pad_size = $cs_arr["max_landing_pad_size"] == "L" ? "large" : "medium";
-    $cs_ls_from_star = $cs_arr["ls_from_star"];
-    $cs_type = $cs_arr["type"];
-    $cs_shipyard = $cs_arr["shipyard"];
-    $cs_outfitting = $cs_arr["outfitting"];
-    $cs_commodities_market = $cs_arr["commodities_market"];
-    $cs_black_market = $cs_arr["black_market"];
-    $cs_refuel = $cs_arr["refuel"];
-    $cs_repair = $cs_arr["repair"];
-    $cs_rearm = $cs_arr["rearm"];
+    $cs_station_name = $cs_obj->station_name;
+    $cs_max_landing_pad_size = $cs_obj->max_landing_pad_size == "L" ? "large" : "medium";
+    $cs_ls_from_star = $cs_obj->ls_from_star;
+    $cs_type = $cs_obj->type;
+    $cs_shipyard = $cs_obj->shipyard;
+    $cs_outfitting = $cs_obj->outfitting;
+    $cs_commodities_market = $cs_obj->commodities_market;
+    $cs_black_market = $cs_obj->black_market;
+    $cs_refuel = $cs_obj->refuel;
+    $cs_repair = $cs_obj->repair;
+    $cs_rearm = $cs_obj->rearm;
+
+    $result->close();
 
     $cs_facilities = array( "a shipyard" => $cs_shipyard,
         "outfitting" => $cs_outfitting,
@@ -411,23 +412,28 @@ if (isset($_GET["cs"])) {
  */
 
 if (isset($_GET["rm"])) {
-    $res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT id, text
-                                                        FROM edtb_musings
-                                                        WHERE used = '0'
-                                                        ORDER BY rand()
-                                                        LIMIT 1")
-                                                        or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-    $arr = mysqli_fetch_assoc($res);
+    $query = "  SELECT id, text
+                FROM edtb_musings
+                WHERE used = '0'
+                ORDER BY rand()
+                LIMIT 1";
 
-    $rm_id = $arr["id"];
-    $rm_text = $arr["text"];
+    $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+
+    $obj = $result->fetch_object();
+
+    $rm_id = $obj->id;
+    $rm_text = $obj->text;
     echo $rm_text;
 
-    mysqli_query($GLOBALS["___mysqli_ston"], "  UPDATE edtb_musings
-                                                SET used = '1'
-                                                WHERE id = '" . $rm_id . "'
-                                                LIMIT 1")
-                                                or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+    $result->close();
+
+    $query = "  UPDATE edtb_musings
+                SET used = '1'
+                WHERE id = '$rm_id'
+                LIMIT 1";
+
+    $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
 
     exit;
 }
@@ -462,18 +468,21 @@ if (isset($_GET["dist"])) {
         $distance = "How can I calculate distances if I don't even know where we are?";
     } else {
         if (System::exists($to)) {
-            $res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT
-                                                                sqrt(pow((IFNULL(edtb_systems.x, user_systems_own.x)-(" . $curSys["x"] . ")),2)+pow((IFNULL(edtb_systems.y, user_systems_own.y)-(" . $curSys["y"] . ")),2)+pow((IFNULL(edtb_systems.z, user_systems_own.z)-(" . $curSys["z"] . ")),2))
-                                                                AS distance
-                                                                FROM edtb_systems
-                                                                LEFT JOIN user_systems_own ON edtb_systems.name = user_systems_own.name
-                                                                WHERE edtb_systems.name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $to) . "'
-                                                                LIMIT 1")
-                                                                or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+            $esc_to = $mysqli->real_escape_string($to);
+            $query = "  SELECT
+                        sqrt(pow((IFNULL(edtb_systems.x, user_systems_own.x)-(" . $curSys["x"] . ")),2)+pow((IFNULL(edtb_systems.y, user_systems_own.y)-(" . $curSys["y"] . ")),2)+pow((IFNULL(edtb_systems.z, user_systems_own.z)-(" . $curSys["z"] . ")),2))
+                        AS distance
+                        FROM edtb_systems
+                        LEFT JOIN user_systems_own ON edtb_systems.name = user_systems_own.name
+                        WHERE edtb_systems.name = '$esc_to'
+                        LIMIT 1";
 
-            $arr = mysqli_fetch_assoc($res);
+            $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+            $obj = $result->fetch_object();
 
-            $distance = $arr["distance"] == "" ? "Not available" : number_format($arr["distance"], 1);
+            $distance = $obj->distance == "" ? "Not available" : number_format($obj->distance, 1);
+
+            $result->close();
         } else {
             $distance = "I'm sorry, I didn't get that.";
         }

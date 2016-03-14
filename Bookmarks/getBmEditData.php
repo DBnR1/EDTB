@@ -36,7 +36,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 
 $bm_id = 0 + $_GET["Bm_id"];
-$data = array();
+$data = [];
 
 if ($bm_id == "0") {
     $data["bm_edit_id"] = "";
@@ -45,21 +45,26 @@ if ($bm_id == "0") {
     $data["bm_catid"] = "0";
     $data["bm_text"] = "";
 } else {
-    $bm_res = mysqli_query($GLOBALS["___mysqli_ston"], "    SELECT
-                                                            user_bookmarks.id, user_bookmarks.system_id, user_bookmarks.system_name AS bm_system_name,
-                                                            user_bookmarks.comment, user_bookmarks.category_id,
-                                                            edtb_systems.name AS system_name
-                                                            FROM user_bookmarks
-                                                            LEFT JOIN edtb_systems ON user_bookmarks.system_id = edtb_systems.id
-                                                            WHERE user_bookmarks.id = '" . $bm_id . "'
-                                                            LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-    $bm_arr = mysqli_fetch_assoc($bm_res);
+    $query = "  SELECT
+                user_bookmarks.id, user_bookmarks.system_id, user_bookmarks.system_name AS bm_system_name,
+                user_bookmarks.comment, user_bookmarks.category_id,
+                edtb_systems.name AS system_name
+                FROM user_bookmarks
+                LEFT JOIN edtb_systems ON user_bookmarks.system_id = edtb_systems.id
+                WHERE user_bookmarks.id = '$bm_id'
+                LIMIT 1";
 
-    $data["bm_edit_id"] = $bm_arr["id"];
-    $data["bm_system_name"] = $bm_arr["system_name"] == "" ? $bm_arr["bm_system_name"] : $bm_arr["system_name"];
-    $data["bm_system_id"] = $bm_arr["system_id"];
-    $data["bm_catid"] = $bm_arr["category_id"];
-    $data["bm_text"] = $bm_arr["comment"];
+    $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+
+    $bm_obj = $result->fetch_object();
+
+    $data["bm_edit_id"] = $bm_obj->id;
+    $data["bm_system_name"] = $bm_obj->system_name == "" ? $bm_obj->bm_system_name : $bm_obj->system_name;
+    $data["bm_system_id"] = $bm_obj->system_id;
+    $data["bm_catid"] = $bm_obj->category_id;
+    $data["bm_text"] = $bm_obj->comment;
+
+    $result->close();
 }
 
 echo json_encode($data);

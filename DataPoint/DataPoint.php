@@ -47,28 +47,28 @@ require_once("Vendor/MySQL_table_edit/mte.php");
 
 $data_table = $_GET["table"] != "" ? $_GET["table"] : $settings["data_view_default_table"];
 
-$tabledit = new MySQLtabledit();
 /**
- * database settings
+ * initate MySQLtabledit class
  */
-$tabledit->database = $db;
-$tabledit->host = $server;
-$tabledit->user = $user;
-$tabledit->pass = $pwd;
+$tabledit = new MySQLtabledit();
 
-$tabledit->database_connect();
 $tabledit->table = $data_table;
 
-$colres = mysqli_query($GLOBALS["___mysqli_ston"], "    SELECT COLUMN_NAME, COLUMN_COMMENT
-                                                        FROM INFORMATION_SCHEMA.COLUMNS
-                                                        WHERE table_name = '" . $data_table . "'");
+$query = "  SELECT COLUMN_NAME, COLUMN_COMMENT
+            FROM INFORMATION_SCHEMA.COLUMNS
+            WHERE table_name = '$data_table'";
 
-$output = array();
-$showt = array();
-while ($colarr = mysqli_fetch_assoc($colres)) {
-    $output[] = $colarr['COLUMN_NAME'];
-    $showt[$colarr['COLUMN_NAME']] = $colarr['COLUMN_COMMENT'];
+$result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+
+$output = [];
+$showt = [];
+
+while ($column_obj = $result->fetch_object()) {
+    $output[] = $column_obj->COLUMN_NAME;
+    $showt[$column_obj->COLUMN_NAME] = $column_obj->COLUMN_COMMENT;
 }
+
+$result->close();
 
 $tabledit->links_to_db = $settings["data_view_table"];
 
@@ -79,8 +79,6 @@ $tabledit->primary_key = "id";
 
 /** @var array fields_in_list_view the fields you want to see in "list view" */
 $tabledit->fields_in_list_view = $output;
-
-$tabledit->language = "en";
 
 /** @var int num_rows_list_view numbers of rows/records in "list view" */
 $tabledit->num_rows_list_view = 10;
@@ -95,10 +93,6 @@ $tabledit->url_script = "/DataPoint";
 $tabledit->show_text = $showt;
 
 $tabledit->width_editor = "100%";
-
-/** @var bool no_htaccess_warning warning no .htacces ('on' or 'off') */
-$tabledit->no_htaccess_warning = "off";
-
 ?>
 <div class="entries">
     <div class="entries_inner">
@@ -110,4 +104,3 @@ $tabledit->no_htaccess_warning = "off";
 <?php
 require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");
 
-$tabledit->database_disconnect();

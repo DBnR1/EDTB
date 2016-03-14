@@ -36,6 +36,7 @@ $pagetitle = "Import Log Files";
 /** @require header file */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 
+/** @var int $batch_limit */
 $batch_limit = 104857600; // 100 MB
 $batches_left = isset($_GET["batches_left"]) ? $_GET["batches_left"] : "";
 
@@ -45,16 +46,18 @@ echo '<div class="entries"><div class="entries_inner">';
 
 if (is_dir($settings["log_dir"])) {
     $logfiles2 = glob($settings["log_dir"] . "/netLog*");
-    $logfiles = array();
+    $logfiles = [];
     $total_size = 0;
 
-    $imported_files = array();
+    /**
+     * read already imported files to an array
+     */
+    $imported_files = [];
     if (file_exists($imported_logs_file)) {
         $imported_files = file($imported_logs_file, FILE_IGNORE_NEW_LINES);
     }
-    //print_r($imported_files);
+
     foreach ($logfiles2 as $file) {
-        //if (!array_search($file, $imported_files))
         if (!in_array($file, $imported_files)) {
             $size = filesize($file);
             $total_size += $size;
@@ -123,35 +126,51 @@ if (is_dir($settings["log_dir"])) {
                 $filr = file($newest_file);
                 $lines = $filr;
 
+                /**
+                 * Prepare statement an bind
+                 */
+                $stmt = $mysqli->prepare("INSERT INTO user_visited_systems (system_name, visit) VALUES (?, ?)");
+                $stmt->bind_param("ss", $esc_sys, $visited_on);
+
                 foreach ($lines as $line_num => $line) {
                     $pos = strrpos($line, "System:");
                     if ($pos !== false) {
                         preg_match_all("/\((.*?)\) B/", $line, $matches);
                         $cssystemname = $matches[1][0];
 
-                        preg_match_all("/\{(.*?)\} System:/", $line, $matches2);
-                        $visited_time = $matches2[1][0];
-                        $visited_on = $year . "-" . $month . "-" . $day . " " . $visited_time;
-
                         if ($current_sys != $cssystemname) {
-                            // check if the visit is already improted
-                            $res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT id
-                                                                                FROM user_visited_systems
-                                                                                WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $cssystemname) . "'
-                                                                                AND visit = '" . $visited_on . "'
-                                                                                LIMIT 1")
-                                                                                or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+                            preg_match_all("/\{(.*?)\} System:/", $line, $matches2);
+                            $visited_time = $matches2[1][0];
+                            $visited_on = $year . "-" . $month . "-" . $day . " " . $visited_time;
 
-                            $exists = mysqli_num_rows($res);
+                            $esc_sys = $mysqli->real_escape_string($cssystemname);
+
+                            /**
+                             * check if the visit is already improted
+                             */
+                            $query = "  SELECT id
+                                        FROM user_visited_systems
+                                        WHERE system_name = '$esc_sys'
+                                        AND visit = '$visited_on'
+                                        LIMIT 1";
+
+                            $result = $mysqli->query($query);
+
+                            $exists = $result->num_rows;
+                            $result->close();
 
                             if ($exists == 0) {
-                                mysqli_query($GLOBALS["___mysqli_ston"], "  INSERT INTO user_visited_systems (system_name, visit)
-                                                                            VALUES (
-                                                                            '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $cssystemname) . "',
-                                                                            '" . $visited_on . "')")
-                                                                            or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+                                /*$query = "INSERT INTO user_visited_systems (system_name, visit)
+                                          VALUES ('$esc_sys', '$visited_on')";
 
-                                if (mysqli_affected_rows($GLOBALS["___mysqli_ston"]) >= 1) {
+                                $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+
+                                if ($mysqli->affected_rows >= 1) {
+                                    $i++;
+                                }*/
+                                $stmt->execute();
+
+                                if ($mysqli->affected_rows >= 1) {
                                     $i++;
                                 }
                             }
@@ -159,6 +178,8 @@ if (is_dir($settings["log_dir"])) {
                         $current_sys = $cssystemname;
                     }
                 }
+
+                $stmt->close();
 
                 /**
                  *  Write filename to .txt so we won't process this file again
@@ -178,7 +199,7 @@ if (is_dir($settings["log_dir"])) {
             } else {
                 ?>
                 <script>
-                    location.replace("/index.php?import_done&num=<?php echo $nums;?>");
+                    location.replace("/index.php?import_done&num=<?php echo $nums?>");
                 </script>
                 <?php
                 exit();
@@ -191,7 +212,7 @@ if (is_dir($settings["log_dir"])) {
             } else {
                 ?>
                 <script>
-                    location.replace("/Admin/import.php?batches_left=<?php echo $batches_left;?>&num=<?php echo $nums;?>");
+                    location.replace("/Admin/import.php?batches_left=<?php echo $batches_left?>&num=<?php echo $nums?>");
                 </script>
                 <?php
                 exit();

@@ -41,13 +41,19 @@ if (isset($_GET["system"])) {
 /**
  * get string if system already mapped
  */
-$res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT string
-                                                    FROM user_system_map
-                                                    WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system) . "'
-                                                    LIMIT 1");
-$arr = mysqli_fetch_assoc($res);
+$esc_system_name = $mysqli->real_escape_string($system);
 
-$string = $arr["string"];
+$query = "  SELECT string
+            FROM user_system_map
+            WHERE system_name = '$esc_system_name'
+            LIMIT 1";
+
+$result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+$obj = $result->fetch_object();
+
+$string = $obj->string;
+
+$result->close();
 
 $link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http://map.edtb.xyz?v1=' . $string . '" target="_blank" id="maplink" title="View on map.edtb.xyz">View on map.edtb.xyz</a></span>' : '<span id="mlink"></span>';
 ?>
@@ -68,7 +74,7 @@ $link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http
                 ( Very experimental )
             </span>
             <div class="sm_system">System map for: <?php echo $system . $link_map?></div>
-            <div id="smsys" style="display:none"><?php echo $system;?></div>
+            <div id="smsys" style="display:none"><?php echo $system?></div>
             <span class="text" style="margin-right:20px">Add bodies :</span>
             <?php
             $types = array("star", "planet", "other");
@@ -76,10 +82,10 @@ $link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http
             foreach ($types as $type) {
                 $border = $type == "other" ? ' style="border-right:1px solid #333"' : "";
                 ?>
-                <div class="categories" id="<?php echo $type;?>_click"<?php echo $border?>>
-                    <?php echo $type;?>
+                <div class="categories" id="<?php echo $type?>_click"<?php echo $border?>>
+                    <?php echo $type?>
                 </div>
-                <div class="stars_planets" id="<?php echo $type;?>" style="display:none">
+                <div class="stars_planets" id="<?php echo $type?>" style="display:none">
                 <?php
                 $json_file = "bodies.json";
                 $json_string = file_get_contents($json_file);

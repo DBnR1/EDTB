@@ -91,8 +91,8 @@ class DbCreate
          */
         $query = $this->link->query("   SELECT COLUMN_NAME FROM
                                         information_schema.COLUMNS
-                                        WHERE TABLE_SCHEMA = '" . $database . "'
-                                        AND TABLE_NAME = '" . $table . "'") or write_log("Table " . $table . " doesn't exist, attempting to create it", $file, $line);
+                                        WHERE TABLE_SCHEMA = '$database'
+                                        AND TABLE_NAME = '$table'") or write_log("Table " . $table . " doesn't exist, attempting to create it", $file, $line);
 
         $num = mysqli_num_rows($query);
 
@@ -112,9 +112,9 @@ class DbCreate
                  */
                 $column_query = $this->link->query("    SELECT COLUMN_NAME FROM
                                                         information_schema.COLUMNS
-                                                        WHERE TABLE_SCHEMA = '" . $database . "'
-                                                        AND TABLE_NAME = '" . $table . "'
-                                                        AND COLUMN_NAME = '" . $column_name . "'
+                                                        WHERE TABLE_SCHEMA = '$database'
+                                                        AND TABLE_NAME = '$table'
+                                                        AND COLUMN_NAME = '$column_name'
                                                         LIMIT 1") or write_log(mysqli_error($this->link), $file, $line);
 
                 $num_column = mysqli_num_rows($column_query);

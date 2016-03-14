@@ -36,7 +36,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 
 $poi_id = 0 + $_GET["Poi_id"];
-$data = array();
+$data = [];
 
 if ($poi_id == "0") {
     $data["poi_edit_id"] = "";
@@ -48,28 +48,33 @@ if ($poi_id == "0") {
     $data["poi_name"] = "";
     $data["category_id"] = "0";
 } else {
-    $poi_res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT id, poi_name, system_name, text, category_id, x, y, z
-                                                            FROM user_poi
-                                                            WHERE id = '" . $poi_id . "'
-                                                            LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-    $poi_arr = mysqli_fetch_assoc($poi_res);
+    $query = "  SELECT id, poi_name, system_name, text, category_id, x, y, z
+                FROM user_poi
+                WHERE id = '$poi_id'
+                LIMIT 1";
 
-    $data["poi_edit_id"] = $poi_arr["id"];
-    $data["system_33"] = $poi_arr["system_name"];
+    $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
 
-    if (isset($poi_arr["x"])) {
-        $data["coordsx_33"] = $poi_arr["x"];
-        $data["coordsy_33"] = $poi_arr["y"];
-        $data["coordsz_33"] = $poi_arr["z"];
+    $poi_obj = $result->fetch_object();
+
+    $data["poi_edit_id"] = $poi_obj->id;
+    $data["system_33"] = $poi_obj->system_name;
+
+    if (isset($poi_obj->x)) {
+        $data["coordsx_33"] = $poi_obj->x;
+        $data["coordsy_33"] = $poi_obj->y;
+        $data["coordsz_33"] = $poi_obj->z;
     } else {
         $data["coordsx_33"] = "";
         $data["coordsy_33"] = "";
         $data["coordsz_33"] = "";
     }
 
-    $data["poi_text"] = $poi_arr["text"];
-    $data["poi_name"] = $poi_arr["poi_name"];
-    $data["category_id"] = $poi_arr["category_id"];
+    $data["poi_text"] = $poi_obj->text;
+    $data["poi_name"] = $poi_obj->poi_name;
+    $data["category_id"] = $poi_obj->category_id;
+
+    $result->close();
 }
 
 echo json_encode($data);

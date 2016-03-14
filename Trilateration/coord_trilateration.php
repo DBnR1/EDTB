@@ -121,7 +121,7 @@ function vector_length($p1, $p2)
  */
 function vector_sum($v1, $v2)
 {
-    $v = array();
+    $v = [];
     $v[0] = $v1[0] + $v2[0];
     $v[1] = $v1[1] + $v2[1];
     $v[2] = $v1[2] + $v2[2];
@@ -138,7 +138,7 @@ function vector_sum($v1, $v2)
  */
 function vector_cross($v1, $v2)
 {
-    $v = array();
+    $v = [];
     $v[0] = ($v1[1] * $v2[2]) - ($v1[2] * $v2[1]);
     $v[1] = ($v1[2] * $v2[0]) - ($v1[0] * $v2[2]);
     $v[2] = ($v1[0] * $v2[1]) - ($v1[1] * $v2[0]);

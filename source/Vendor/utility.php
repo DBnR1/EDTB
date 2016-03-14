@@ -24,8 +24,8 @@ class utility
         $dirMap = array('desc' => 1, 'asc' => -1);
         $def = $ascending ? -1 : 1;
 
-        $keyAry = array();
-        $dirAry = array();
+        $keyAry = [];
+        $dirAry = [];
         foreach ($keys as $key) {
             $key2 = explode(' ', trim($key));
             $keyAry[] = trim($key2[0]);

@@ -47,17 +47,16 @@
  */
 function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
 {
-    global $curSys;
-
     $this_row = "";
 
     // Regular Expression filter for links
     $reg_exUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
 
-    if ($value == "") {
-        $value = "n/a";
-    }
+    $value = $value == "" ? "n/a" : $value;
 
+    /**
+     * show distances
+     */
     if ($dist !== false) {
         // figure out what coords to calculate from
         $usable_coords = usable_coords();
@@ -68,71 +67,85 @@ function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
 
         if (valid_coordinates($d_x, $d_y, $d_z)) {
             $distance = number_format(sqrt(pow(($d_x-($usex)), 2)+pow(($d_y-($usey)), 2)+pow(($d_z-($usez)), 2)), 2);
-            $this_row .= '<td style="padding:10px;white-space:nowrap;vertical-align:middle">' . $distance . $exact . '</td>';
+            $this_row .= '<td class="datapoint_td" style="white-space:nowrap">' . $distance . $exact . '</td>';
         } else {
-            $this_row .= '<td style="padding:10px;vertical-align:middle">n/a</td>';
+            $this_row .= '<td class="datapoint_td">n/a</td>';
         }
 
         $dist = false;
     }
-    // make a link for systems with an id
+    /**
+     * make a link for systems with an id
+     */
     if ($key == "system_id" && $value != "0") {
-        $this_row .= '<td style="padding:10px;vertical-align:middle">';
+        $this_row .= '<td class="datapoint_td">';
         $this_row .= '<a href="/System?system_id=' . $value . '">' . $value . '</a>';
         $this_row .= '</td>';
     }
-    // make a link for systems with system name
+    /**
+     * make a link for systems with system name
+     */
     elseif (strpos($key, "system_name") !== false && $value != "0" || $key == "name" && $table == "edtb_systems") {
         /**
          * provide crosslinks to screenshot gallery, log page, etc
          */
         $item_crosslinks = System::crosslinks($value);
 
-        $this_row .= '<td style="padding:10px;vertical-align:middle">';
+        $this_row .= '<td class="datapoint_td">';
         $this_row .= '<a href="/System?system_name=' . urlencode($value) . '">' . $value . $item_crosslinks . '</a>';
         $this_row .= '</td>';
     }
-    // number format some values
+    /**
+     * number format some values
+     */
     elseif (strpos($key, "price") !== false || strpos($key, "ls") !== false || strpos($key, "population") !== false || strpos($key, "distance") !== false) {
         if (is_numeric($value) && $value != null) {
-            $this_row .= '<td style="padding:10px;vertical-align:middle">' . number_format($value) . '</td>';
+            $this_row .= '<td class="datapoint_td">' . number_format($value) . '</td>';
         } else {
-            $this_row .= '<td style="padding:10px;vertical-align:middle">n/a</td>';
+            $this_row .= '<td class="datapoint_td">n/a</td>';
         }
     }
-    // make links
+    /**
+     * make links
+     */
     elseif (preg_match($reg_exUrl, $value, $url)) {
         if (mb_strlen($value) >= 80) {
             $urli = substr($value, 0, 80) . "...";
         } else {
             $urli = $value;
         }
-        $this_row .= '<td style="padding:10px;vertical-align:middle">';
-        $this_row .= preg_replace($reg_exUrl, "<a href='" . $url[0] . "' target='_blank'>" . $urli . "</a> ", $value);
+        $this_row .= '<td class="datapoint_td">';
+        $this_row .= preg_replace($reg_exUrl, '<a href="' . $url[0] . '" target="_blank">' . $urli . '</a> ', $value);
         $this_row .= '</td>';
     }
-    // make 0,1 human readable
+    /**
+     * make 0,1 human readable
+     */
     elseif ($enum !== false) {
-        $real_value = "n/a";
-        if ($value == "0") {
-            $real_value = "<span class='enum_no'>&#10799;</span>";
+        switch ($value) {
+            case "0":
+                $real_value = '<span class="enum_no">&#10799;</span>';
+                break;
+            case "1":
+                $real_value = '<span class="enum_yes">&#10003;</span>';
+                break;
+            default:
+                $real_value = "n/a";
         }
 
-        if ($value == "1") {
-            $real_value = "<span class='enum_yes'>&#10003;</span>";
-        }
-
-        $this_row .= '<td style="padding:10px;text-align:center;vertical-align:middle">' .  $real_value . '</td>';
+        $this_row .= '<td class="datapoint_td" style="text-align:center">' .  $real_value . '</td>';
     } else {
-        $this_row .= '<td style="padding:10px;vertical-align:middle">' . substr(strip_tags($value), 0, 100) . '</td>';
+        $this_row .= '<td class="datapoint_td">' . substr(strip_tags($value), 0, 100) . '</td>';
     }
 
-    // parse log entries
+    /**
+     *  parse log entries
+     */
     if ($key == "log_entry") {
         if (mb_strlen($value) >= 100) {
-            $this_row = '<td style="padding:10px;vertical-align:middle">' . substr(strip_tags($value), 0, 100) . '...</td>';
+            $this_row = '<td class="datapoint_td">' . substr(strip_tags($value), 0, 100) . '...</td>';
         } else {
-            $this_row = '<td style="padding:10px;vertical-align:middle">' . $value . '</td>';
+            $this_row = '<td class="datapoint_td">' . $value . '</td>';
         }
     }
 

@@ -41,27 +41,29 @@ if (empty($system)) {
     exit;
 }
 
+$esc_system = $mysqli->real_escape_string($system);
+
 /**
  * check if system has screenshots
  */
-
 $screenshots = System::has_screenshots($system) ? '<a href="/Gallery?spgmGal=' . urlencode(strip_invalid_dos_chars($system)) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" class="icon" style="margin-left:5px;vertical-align:top" /></a>' : "";
 
 /**
  * check if system is in the bookmarks
  */
+$query = "  SELECT user_bookmarks.comment, user_bookmarks.added_on
+            FROM user_bookmarks
+            WHERE user_bookmarks.system_name = '$esc_system'
+            LIMIT 1";
 
-$ress2 = mysqli_query($GLOBALS["___mysqli_ston"], " SELECT user_bookmarks.comment, user_bookmarks.added_on
-                                                    FROM user_bookmarks
-                                                    WHERE user_bookmarks.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system) . "'
-                                                    LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+$result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
 
-$count2 = mysqli_num_rows($ress2);
+$count2 = $result->num_rows;
 
 if ($count2 > 0) {
-    $arras = mysqli_fetch_assoc($ress2);
-    $comment = $arras["comment"];
-    $added_on = $arras["added_on"];
+    $obj = $result->fetch_object();
+    $comment = $obj->comment;
+    $added_on = $obj->added_on;
 
     if ($comment != "") {
         echo 'Bookmark comment: ' . $comment . ' - ';
@@ -71,39 +73,35 @@ if ($count2 > 0) {
     echo '<br />';
 }
 
+$result->close();
+
 /**
  * check if system is point of interest
  */
+$query = "  SELECT user_poi.text AS text, user_visited_systems.visit AS visit
+            FROM user_poi LEFT JOIN user_visited_systems ON user_visited_systems.system_name = user_poi.system_name
+            WHERE user_poi.system_name = '$esc_system'
+            OR user_visited_systems.system_name = '$esc_system'
+            UNION SELECT user_poi.text AS text, user_visited_systems.visit AS visit
+            FROM user_poi RIGHT JOIN user_visited_systems ON user_visited_systems.system_name = user_poi.system_name
+            WHERE user_poi.system_name = '$esc_system'
+            OR user_poi.poi_name = '$esc_system'
+            OR user_visited_systems.system_name = '$esc_system'
+            LIMIT 1";
 
-$ress = mysqli_query($GLOBALS["___mysqli_ston"], "  SELECT user_poi.text AS text, user_visited_systems.visit AS visit
-                                                    FROM user_poi LEFT JOIN user_visited_systems ON user_visited_systems.system_name = user_poi.system_name
-                                                    WHERE user_poi.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system) . "'
-                                                    OR user_visited_systems.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system) . "'
-                                                    UNION SELECT user_poi.text AS text, user_visited_systems.visit AS visit
-                                                    FROM user_poi RIGHT JOIN user_visited_systems ON user_visited_systems.system_name = user_poi.system_name
-                                                    WHERE user_poi.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system) . "'
-                                                    OR user_poi.poi_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system) . "'
-                                                    OR user_visited_systems.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system) . "'
-                                                    LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+$result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
 
-$count = mysqli_num_rows($ress);
+$count = $result->num_rows;
 
 if ($count > 0) {
-    $arra = mysqli_fetch_assoc($ress);
-    $text = htmlspecialchars($arra["text"]);
-    $visit = $arra["visit"];
-    $visit_og = $arra["visit"];
+    $obja = $result->fetch_object();
+    $text = htmlspecialchars($obja->text);
+    $visit = $obja->visit;
+    $visit_og = $obja->visit;
 
     if (!$visit && !$text) {
-        echo '<a href="System.php?system_name=' . urlencode($system) . '" style="color:inherit">' . $system . '</a>' . $screenshots . '<br />No additional information';
+        echo '<a href="/System?system_name=' . urlencode($system) . '" style="color:inherit">' . $system . '</a>' . $screenshots . '<br />No additional information';
     } else {
-        $logres = mysqli_query($GLOBALS["___mysqli_ston"], "    SELECT id, LEFT(log_entry , 100) AS text
-                                                                FROM user_log
-                                                                WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system) . "'
-                                                                ORDER BY stardate
-                                                                LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-        $logged = mysqli_num_rows($logres);
-
         if (isset($visit)) {
             $visit = date_create($visit);
             $visit_date = date_modify($visit, "+1286 years");
@@ -116,9 +114,12 @@ if ($count > 0) {
         }
 
         if (!empty($visit)) {
-            $visits = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "    SELECT id
-                                                                                    FROM user_visited_systems
-                                                                                    WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system) . "'"));
+            $query = "  SELECT id
+                        FROM user_visited_systems
+                        WHERE system_name = '$esc_system'";
+
+            $visits = $mysqli->query($query)->num_rows;
+
             $visit_unix = strtotime($visit_og);
             $visit_ago = get_timeago($visit_unix);
             echo '<a href="/System?system_name=' . urlencode($system) . '" style="color:inherit">';
@@ -129,16 +130,27 @@ if ($count > 0) {
             echo '<a href="/System?system_name=' . urlencode($system) . '" style="color:inherit">' . $system . '</a>';
         }
 
+        $query = "  SELECT id, LEFT(log_entry, 100) AS text
+                    FROM user_log
+                    WHERE system_name = '$esc_system'
+                    ORDER BY stardate
+                    LIMIT 1";
+
+        $log_result = $mysqli->query($query);
+
+        $logged = $log_result->num_rows;
         if ($logged > 0) {
-            $logarr = mysqli_fetch_assoc($logres);
-            $text = $logarr["text"];
+            $log_obj = $log_result->fetch_object();
+            $text = $log_obj->text;
 
             echo '<br />';
             echo '<a href="/Log?system=' . urlencode($system) . '" style="color:inherit;font-weight:700" title="View the log for this system">';
             echo $text . ' ...';
             echo '</a>';
         }
+        $log_result->close();
     }
+    $result->close();
     exit;
 }
 

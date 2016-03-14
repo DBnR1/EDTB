@@ -38,46 +38,52 @@ if (isset($_GET["do"])) {
     /** @require MySQL */
     require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 
-    $data = json_decode($_REQUEST["input"], true);
+    $data = json_decode($_REQUEST["input"]);
 
-    $p_system = $data["poi_system_name"];
-    $p_name = $data["poi_name"];
-    $p_x = $data["poi_coordx"];
-    $p_y = $data["poi_coordy"];
-    $p_z = $data["poi_coordz"];
+    $p_system = $data->{"poi_system_name"};
+    $p_name = $data->{"poi_name"};
+    $p_x = $data->{"poi_coordx"};
+    $p_y = $data->{"poi_coordy"};
+    $p_z = $data->{"poi_coordz"};
 
     if (valid_coordinates($p_x, $p_y, $p_z)) {
-        $addc = ", x = '" . $p_x . "', y = '" . $p_y . "', z = '" . $p_z . "'";
-        $addb = ", '" . $p_x . "', '" . $p_y . "', '" . $p_z . "'";
+        $addc = ", x = '$p_x', y = '$p_y', z = '$p_z'";
+        $addb = ", '$p_x', '$p_y', '$p_z'";
     } else {
         $addc = ", x = null, y = null, z = null";
         $addb = ", null, null, null";
     }
 
-    $p_entry = $data["poi_text"];
-    $p_id = $data["poi_edit_id"];
-    $category_id = $data["category_id"];
+    $p_entry = $data->{"poi_text"};
+    $p_id = $data->{"poi_edit_id"};
+    $category_id = $data->{"category_id"};
+
+    $esc_name = $mysqli->real_escape_string($p_name);
+    $esc_sysname = $mysqli->real_escape_string($p_system);
+    $esc_entry= $mysqli->real_escape_string($p_entry);
 
     if ($p_id != "") {
-        mysqli_query($GLOBALS["___mysqli_ston"], "  UPDATE user_poi SET
-                                                    poi_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $p_name) . "',
-                                                    system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $p_system) . "',
-                                                    text = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $p_entry) . "',
-                                                    category_id = '" . $category_id . "'" . $addc . "
-                                                    WHERE id = '" . $p_id . "'") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+        $stmt = "  UPDATE user_poi SET
+                    poi_name = '$esc_name',
+                    system_name = '$esc_sysname',
+                    text = '$esc_entry',
+                    category_id = '$category_id'" . $addc . "
+                    WHERE id = '$p_id'";
     } elseif (isset($_GET["deleteid"])) {
-        mysqli_query($GLOBALS["___mysqli_ston"], "  DELETE FROM user_poi
-                                                    WHERE id = '" . $_GET["deleteid"] . "'
-                                                    LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+        $stmt = "  DELETE FROM user_poi
+                    WHERE id = '" . $_GET["deleteid"] . "'
+                    LIMIT 1";
     } else {
-        mysqli_query($GLOBALS["___mysqli_ston"], "  INSERT INTO user_poi (poi_name, system_name, text, category_id, x, y, z, added_on)
-                                                    VALUES
-                                                        ('" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $p_name) . "',
-                                                        '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $p_system) . "',
-                                                        '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $p_entry) . "',
-                                                        '" . $category_id . "'" . $addb . ",
-                                                        UNIX_TIMESTAMP())") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+        $stmt = "  INSERT INTO user_poi (poi_name, system_name, text, category_id, x, y, z, added_on)
+                    VALUES
+                    ('$esc_name',
+                    '$esc_sysname',
+                    '$esc_entry',
+                    '$category_id'" . $addb . ",
+                    UNIX_TIMESTAMP())";
     }
+
+    $mysqli->query($stmt) or write_log($mysqli->error, __FILE__, __LINE__);
 
     exit;
 }
@@ -115,11 +121,14 @@ if (isset($_GET["do"])) {
                         <select title="Category" class="selectbox" name="category_id" id="category_id" style="width:auto">
                             <option value="0">Category (optional)</option>
                             <?php
-                            $pcat_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT id, name FROM user_poi_categories");
+                            $query = "SELECT id, name FROM user_poi_categories";
+                            $result = $mysqli->query($query);
 
-                            while ($pcat_arr = mysqli_fetch_assoc($pcat_res)) {
-                                echo '<option value="' . $pcat_arr["id"] . '">' . $pcat_arr["name"] . '</option>';
+                            while ($obj = $result->fetch_object()) {
+                                echo '<option value="' . $obj->id . '">' . $obj->name . '</option>';
                             }
+
+                            $result->close();
                             ?>
                         </select>
                     </td>

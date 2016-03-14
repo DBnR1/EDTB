@@ -30,6 +30,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
+/** @var string $notify */
 $notify = "";
 
 /** @var string pagetitle */
@@ -41,9 +42,9 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 if (isset($_POST["code"])) {
     $code = $_POST["code"];
     if (file_put_contents($ini_file, $code)) {
-        $notify = "<div class='notify_success'>Settings succesfully edited.</div>";
+        $notify = '<div class="notify_success">Settings succesfully edited.</div>';
     } else {
-        $notify = "<div class='notify_deleted'>Edit unsuccesfull.</div>";
+        $notify = '<div class="notify_deleted">Edit unsuccesfull.</div>';
     }
 }
 
@@ -54,7 +55,7 @@ $ini = file_get_contents($ini_file);
 <script type="text/javascript" src="/source/Vendor/codemirror/lib/codemirror.js"></script>
 <script type="text/javascript" src="/source/Vendor/codemirror/mode/properties/properties.js"></script>
 
-<?php echo $notify;?>
+<?php echo $notify?>
 <div class="entries">
     <div class="entries_inner" style="margin-bottom:20px">
     <h2>

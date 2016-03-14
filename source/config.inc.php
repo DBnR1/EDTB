@@ -34,27 +34,31 @@
 date_default_timezone_set('UTC');
 
 /** @require ini config */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config_ini.inc.php");
+require_once(__DIR__ . "/config_ini.inc.php");
 /** @require server config */
 require_once($settings["install_path"] . "/data/server_config.inc.php");
 /** @require MySQL */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
+require_once(__DIR__ . "/MySQL.php");
 /** @require functions */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions_safe.php");
+require_once(__DIR__ . "/functions_safe.php");
 
 /**
  * Expand the $settings global variable with stuff from the database
  */
-$settings_res = mysqli_query($GLOBALS["___mysqli_ston"], "  SELECT SQL_CACHE user_settings.variable, user_settings.value, edtb_settings_info.type
-                                                            FROM user_settings
-                                                            LEFT JOIN edtb_settings_info ON edtb_settings_info.variable = user_settings.variable")
-                                                            or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+$settings_res = " SELECT SQL_CACHE user_settings.variable, user_settings.value, edtb_settings_info.type
+                  FROM user_settings
+                  LEFT JOIN edtb_settings_info ON edtb_settings_info.variable = user_settings.variable";
 
-while ($settings_arr = mysqli_fetch_assoc($settings_res)) {
-    $variable = $settings_arr["variable"];
-    $value = $settings_arr["value"];
+$result = $mysqli->query($settings_res) or write_log($mysqli->error, __FILE__, __LINE__);
 
-    if ($settings_arr["type"] == "array") {
+/**
+ * fetch object array
+ */
+while ($obj = $result->fetch_object()) {
+    $variable = $obj->variable;
+    $value = $obj->value;
+
+    if ($obj->type == "array") {
         // split by new line
         $values = preg_split("/\r\n|\r|\n|" . PHP_EOL . "/", $value);
 
@@ -80,7 +84,8 @@ while ($settings_arr = mysqli_fetch_assoc($settings_res)) {
                 }
             }
         }
-    } elseif ($settings_arr["type"] == "csl") {
+        unset($arvalue);
+    } elseif ($obj->type == "csl") {
         $values = explode(",", $value);
 
         $i = 0;
@@ -88,10 +93,13 @@ while ($settings_arr = mysqli_fetch_assoc($settings_res)) {
             $settings[$variable][$i] = trim($arvalue);
             $i++;
         }
+        unset($arvalue);
     } else {
         $settings[$variable] = $value;
     }
 }
+
+$result->close();
 
 $maplink = $settings["default_map"] == "galaxy_map" ? "/GalMap" : "/Map";
 $dropdown = $settings["dropdown"];
@@ -110,8 +118,8 @@ $links = array( "ED ToolBox--log.png--true" => "/",
                 "Screenshot Gallery--gallery.png--false" => "/Gallery",
                 "System Log--log.png--true" => "/");
 
-/** @var string galnet_feed feed url for galnet news page */
-$galnet_feed = "http://feed43.com/8865261068171800.xml";
+/** @constant string galnet_feed feed url for galnet news page */
+define("GALNET_FEED", "http://feed43.com/8865261068171800.xml");
 
 /** @var string new_screendir */
 $settings["new_screendir"] = empty($settings["new_screendir"]) ? $settings["install_path"] . "/EDTB/screenshots" : $settings["new_screendir"];
@@ -122,8 +130,6 @@ $settings["agent"] = "Mozilla/5.0 (iPhone; CPU iPhone OS 7_1_2 like Mac OS X) Ap
 $settings["cookie_file"] =  $_SERVER["DOCUMENT_ROOT"] . "\\cache\\cookies";
 /** @var string curl_exe path to curl executable file */
 $settings["curl_exe"] = $settings["install_path"] . "\\bin\\curl.exe";
-
-global $settings;
 
 /**
  * parse data from companion json
@@ -138,12 +144,11 @@ if (file_exists($profile_file)) {
         $api["ship"] = "no_data";
         $api["stored_ships"] = "no_data";
     } else {
-        $profile = json_decode($profile_file, true);
+        $profile = json_decode($profile_file);
 
-        $api["commander"] = $profile["commander"];
-        $api["ship"] = $profile["ship"];
-        $api["stored_ships"] = $profile["ships"];
+        $api["commander"] = $profile->{"commander"};
+        $api["ship"] = $profile->{"ship"};
+        $api["stored_ships"] = $profile->{"ships"};
     }
 }
 
-global $api;

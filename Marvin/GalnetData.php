@@ -44,15 +44,15 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 $ga_last_update = edtb_common("last_galnet_update", "unixtime") + 30 * 60; // 30 minutes
 
 if ($ga_last_update < time()) {
-    $xml2 = xml2array($galnet_feed);
+    $xml = simplexml_load_file(GALNET_FEED);
 
     $in = 1;
-    foreach ($xml2["rss"]["channel"]["item"] as $dataga) {
-        $gatitle = $dataga["title"];
+    foreach ($xml->{"channel"}->{"item"} as $dataga) {
+        $gatitle = $dataga->{"title"};
         $ga_title = explode(" - ", $gatitle);
         $ga_title = $ga_title[0];
 
-        $text = $dataga["description"];
+        $text = $dataga->{"description"};
         $text = str_replace('<p><sub><i>-- Delivered by <a href="http://feed43.com/">Feed43</a> service</i></sub></p>', "", $text);
         $text = str_replace('<br />', PHP_EOL, $text);
         $text = str_replace(' – ', ', ', $text);

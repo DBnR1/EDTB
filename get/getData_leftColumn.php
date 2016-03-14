@@ -48,26 +48,26 @@ if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
 
     $bookmarked = 0;
     if ($curSys["id"] != "-1") {
-        $bres = mysqli_query($GLOBALS["___mysqli_ston"], "  SELECT id
-                                                            FROM user_bookmarks
-                                                            WHERE system_id = '" . $curSys["id"] . "'
-                                                            AND system_id != ''
-                                                            LIMIT 1");
-        $bookmarked = mysqli_num_rows($bres);
+        $b_query = "SELECT id
+                    FROM user_bookmarks
+                    WHERE system_id = '" . $curSys["id"] . "'
+                    AND system_id != ''
+                    LIMIT 1";
     } else {
-        $bres = mysqli_query($GLOBALS["___mysqli_ston"], "  SELECT id
-                                                            FROM user_bookmarks
-                                                            WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'
-                                                            LIMIT 1");
-        $bookmarked = mysqli_num_rows($bres);
+        $b_query = "SELECT id
+                    FROM user_bookmarks
+                    WHERE system_name = '$esc_cursys_name'
+                    LIMIT 1";
     }
+    $bookmarked = $mysqli->query($b_query)->num_rows;
 
-    $pres = mysqli_query($GLOBALS["___mysqli_ston"], "  SELECT id
-                                                        FROM user_poi
-                                                        WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'
-                                                        AND system_name != ''
-                                                        LIMIT 1");
-    $poid = mysqli_num_rows($pres);
+    $p_query = "SELECT id
+                FROM user_poi
+                WHERE system_name = '$esc_cursys_name'
+                AND system_name != ''
+                LIMIT 1";
+
+    $poid = $mysqli->query($p_query)->num_rows;
 
     $class = $bookmarked > 0 ? "bookmarked" : "title";
     $class = $poid > 0 ? "poid" : $class;
@@ -156,54 +156,56 @@ if (empty($curSys["coordinates"]) && !empty($curSys["name"])) {
  * Stations for the left column
  */
 if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
-    $ress = mysqli_query($GLOBALS["___mysqli_ston"], "  SELECT SQL_CACHE
-                                                        id, name, ls_from_star, max_landing_pad_size, faction, government, allegiance,
-                                                        state, type, import_commodities, export_commodities,
-                                                        prohibited_commodities, economies, selling_ships, shipyard,
-                                                        outfitting, commodities_market, black_market, refuel, repair, rearm, is_planetary
-                                                        FROM edtb_stations
-                                                        WHERE system_id = '" . $curSys["id"] . "'
-                                                        ORDER BY -ls_from_star DESC, name
-                                                        LIMIT 5") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-    $count = mysqli_num_rows($ress);
+    $query = "  SELECT SQL_CACHE
+                id, name, ls_from_star, max_landing_pad_size, faction, government, allegiance,
+                state, type, import_commodities, export_commodities,
+                prohibited_commodities, economies, selling_ships, shipyard,
+                outfitting, commodities_market, black_market, refuel, repair, rearm, is_planetary
+                FROM edtb_stations
+                WHERE system_id = '" . $curSys["id"] . "'
+                ORDER BY -ls_from_star DESC, name
+                LIMIT 5";
+
+    $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+    $count = $result->num_rows;
 
     if ($count > 0) {
         $c = 0;
-        while ($arra = mysqli_fetch_assoc($ress)) {
-            $station_name = $arra["name"];
+        while ($station_obj = $result->fetch_object()) {
+            $station_name = $station_obj->name;
 
             if ($c == 0) {
-                $first_station_name = $arra["name"];
-                $first_station_ls_from_star = $arra["ls_from_star"];
+                $first_station_name = $station_obj->name;
+                $first_station_ls_from_star = $station_obj->ls_from_star;
             }
 
-            $ls_from_star = $arra["ls_from_star"];
-            $max_landing_pad_size = $arra["max_landing_pad_size"] == "" ? "" : "<strong>Landing pad:</strong> " . $arra["max_landing_pad_size"] . "<br />";
-            $station_id = $arra["id"];
+            $ls_from_star = $station_obj->ls_from_star;
+            $max_landing_pad_size = $station_obj->max_landing_pad_size == "" ? "" : "<strong>Landing pad:</strong> " . $station_obj->max_landing_pad_size . "<br />";
+            $station_id = $station_obj->id;
 
-            $faction = $arra["faction"] == "" ? "" : "<strong>Faction:</strong> " . $arra["faction"] . "<br />";
-            $government = $arra["government"] == "" ? "" : "<strong>Government:</strong> " . $arra["government"] . "<br />";
-            $allegiance = $arra["allegiance"] == "" ? "" : "<strong>Allegiance:</strong> " . $arra["allegiance"] . "<br />";
+            $faction = $station_obj->faction == "" ? "" : "<strong>Faction:</strong> " . $station_obj->faction . "<br />";
+            $government = $station_obj->government == "" ? "" : "<strong>Government:</strong> " . $station_obj->government . "<br />";
+            $allegiance = $station_obj->allegiance == "" ? "" : "<strong>Allegiance:</strong> " . $station_obj->allegiance . "<br />";
 
-            $state = $arra["state"] == "" ? "" : "<strong>State:</strong> " . $arra["state"] . "<br />";
-            $s_type = $arra["type"];
-            $type = $arra["type"] == "" ? "" : "<strong>Type:</strong> " . $arra["type"] . "<br />";
-            $economies = $arra["economies"] == "" ? "" : "<strong>Economies:</strong> " . $arra["economies"] . "<br />";
+            $state = $station_obj->state == "" ? "" : "<strong>State:</strong> " . $station_obj->state . "<br />";
+            $s_type = $station_obj->type;
+            $type = $station_obj->type == "" ? "" : "<strong>Type:</strong> " . $station_obj->type . "<br />";
+            $economies = $station_obj->economies == "" ? "" : "<strong>Economies:</strong> " . $station_obj->economies . "<br />";
 
-            $import_commodities = $arra["import_commodities"] == "" ? "" : "<br /><strong>Import commodities:</strong> " . $arra["import_commodities"] . "<br />";
-            $export_commodities = $arra["export_commodities"] == "" ? "" : "<strong>Export commodities:</strong> " . $arra["export_commodities"] . "<br />";
-            $prohibited_commodities = $arra["prohibited_commodities"] == "" ? "" : "<strong>Prohibited commodities:</strong> " . $arra["prohibited_commodities"] . "<br />";
+            $import_commodities = $station_obj->import_commodities == "" ? "" : "<br /><strong>Import commodities:</strong> " . $station_obj->import_commodities . "<br />";
+            $export_commodities = $station_obj->export_commodities == "" ? "" : "<strong>Export commodities:</strong> " . $station_obj->export_commodities . "<br />";
+            $prohibited_commodities = $station_obj->prohibited_commodities == "" ? "" : "<strong>Prohibited commodities:</strong> " . $station_obj->prohibited_commodities . "<br />";
 
-            $selling_ships = $arra["selling_ships"] == "" ? "" : "<br /><strong>Selling ships:</strong> " . str_replace("'", "", $arra["selling_ships"]) . "<br />";
+            $selling_ships = $station_obj->selling_ships == "" ? "" : "<br /><strong>Selling ships:</strong> " . str_replace("'", "", $station_obj->selling_ships) . "<br />";
 
-            $shipyard = $arra["shipyard"];
-            $outfitting = $arra["outfitting"];
-            $commodities_market = $arra["commodities_market"];
-            $black_market = $arra["black_market"];
-            $refuel = $arra["refuel"];
-            $repair = $arra["repair"];
-            $rearm = $arra["rearm"];
-            $is_planetary = $arra["is_planetary"];
+            $shipyard = $station_obj->shipyard;
+            $outfitting = $station_obj->outfitting;
+            $commodities_market = $station_obj->commodities_market;
+            $black_market = $station_obj->black_market;
+            $refuel = $station_obj->refuel;
+            $repair = $station_obj->repair;
+            $rearm = $station_obj->rearm;
+            $is_planetary = $station_obj->is_planetary;
 
             $icon = get_station_icon($s_type, $is_planetary, "margin:3px;margin-left:0px;margin-right:6px");
 
@@ -257,6 +259,7 @@ if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
         $station_data .= $calc_coord;
         $station_data .= 'No station data available';
     }
+    $result->close();
 } else {
     $station_data .= $calc_coord;
 }
@@ -264,16 +267,20 @@ if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
 /**
  * if system coords are user calculated, show calc button
  */
-$system_user_calculated = mysqli_query($GLOBALS["___mysqli_ston"], "    SELECT id, edsm_message
-                                                                        FROM user_systems_own
-                                                                        WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'
-                                                                        LIMIT 1");
+$query = "  SELECT id, edsm_message
+            FROM user_systems_own
+            WHERE name = '$esc_cursys_name'
+            LIMIT 1";
 
-$is_user_calculated = mysqli_num_rows($system_user_calculated);
+$system_user_calculated = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+
+$is_user_calculated = $system_user_calculated->num_rows;
 
 if ($is_user_calculated > 0 && !empty($curSys["name"])) {
-    $c_arr = mysqli_fetch_assoc($system_user_calculated);
-    $edsm_ms = $c_arr["edsm_message"];
+    $c_obj = $system_user_calculated->fetch_object();
+    $edsm_ms = $c_obj->edsm_message;
+    $system_user_calculated->close();
+
     $parts = explode(":::", $edsm_ms);
 
     $msg_num = $parts[0];
@@ -284,33 +291,26 @@ if ($is_user_calculated > 0 && !empty($curSys["name"])) {
     if ($msg_num != "102" && $msg_num != "104") {
         if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
             $station_data .= '<span style="float:right;margin-right:2px;margin-top:6px">';
-            $station_data .= '<a href="javascript:void(0)" onclick="set_reference_systems(false, true);tofront(\'calculate\');get_cs(\'target_system\')" title="Supply more distances">';
-            $station_data .= '<img class="icon24" src="/style/img/calculator2.png" alt="Calculate" />';
-            $station_data .= '</a><a href="javascript:void(0)" onclick="set_reference_systems(false);tofront(\'calculate\');get_cs(\'target_system\')" title="Review distances">';
-            $station_data .= '<img class="icon24" src="/style/img/calculator.png" alt="Calculate" />';
-            $station_data .= '</a></span>';
         } else {
             $station_data .= '<span style="float:right;margin-top:3px;text-align:center;white-space:nowrap">';
-            $station_data .= '<a href="javascript:void(0)" onclick="set_reference_systems(false, true);tofront(\'calculate\');get_cs(\'target_system\')" title="Supply more distances">';
-            $station_data .= '<img class="icon24" src="/style/img/calculator2.png" alt="Calculate" />';
-            $station_data .= '</a><a href="javascript:void(0)" onclick="set_reference_systems(false);tofront(\'calculate\');get_cs(\'target_system\')" title="Review distances">';
-            $station_data .= '<img class="icon24" src="/style/img/calculator.png" alt="Calculate" />';
-            $station_data .= '</a></span>';
         }
+        $station_data .= '<a href="javascript:void(0)" onclick="set_reference_systems(false, true);tofront(\'calculate\');get_cs(\'target_system\')" title="Supply more distances">';
+        $station_data .= '<img class="icon24" src="/style/img/calculator2.png" alt="Calculate" />';
+        $station_data .= '</a><a href="javascript:void(0)" onclick="set_reference_systems(false);tofront(\'calculate\');get_cs(\'target_system\')" title="Review distances">';
+        $station_data .= '<img class="icon24" src="/style/img/calculator.png" alt="Calculate" />';
+        $station_data .= '</a></span>';
     } else {
         /**
          *  show review distances
          */
         if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
             $station_data .= '<span style="float:right;margin-right:8px;margin-top:6px">';
-            $station_data .= '<a href="javascript:void(0)" onclick="set_reference_systems(false);tofront(\'calculate\');get_cs(\'target_system\')" title="Review distances">';
-            $station_data .= '<img class="icon24" src="/style/img/calculator.png" alt="Calculate" />';
-            $station_data .= '</a></span>';
         } else {
-            $station_data .= '<span style="float:right;margin-top:3px;margin-right:13px;text-align:center"><a href="javascript:void(0)" onclick="set_reference_systems(false);tofront(\'calculate\');get_cs(\'target_system\')" title="Review distances">';
-            $station_data .= '<img class="icon24" src="/style/img/calculator.png" alt="Calculate" />';
-            $station_data .= '</a></span>';
+            $station_data .= '<span style="float:right;margin-top:3px;margin-right:13px;text-align:center">';
         }
+        $station_data .= '<a href="javascript:void(0)" onclick="set_reference_systems(false);tofront(\'calculate\');get_cs(\'target_system\')" title="Review distances">';
+        $station_data .= '<img class="icon24" src="/style/img/calculator.png" alt="Calculate" />';
+        $station_data .= '</a></span>';
     }
 }
 

@@ -37,7 +37,7 @@ if (!$logsystem) {
 }
 
 $logsystem_id = !isset($_GET["system_id"]) ? "-1" : 0 + $_GET["system_id"];
-/**if (!$logsystem_id) exit("No system id set"); */
+/*if (!$logsystem_id) exit("No system id set"); */
 
 /** @var string pagetitle */
 $pagetitle = "ED ToolBox";
@@ -45,30 +45,38 @@ $pagetitle = "ED ToolBox";
 /** @require header file */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 /** @require functions file */
-require_once("functions.php");
+require_once("MakeLog.class.php");
 ?>
 <div class="entries">
     <div class="entries_inner">
         <?php
-        // get system-specific log
-        $log_res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT user_log.id, user_log.station_id, user_log.system_name, user_log.log_entry, user_log.stardate,
-                                                                user_log.pinned, user_log.type, user_log.title, user_log.audio,
-                                                                edtb_stations.name AS station_name
-                                                                FROM user_log
-                                                                LEFT JOIN edtb_stations ON edtb_stations.id = user_log.station_id
-                                                                WHERE user_log.system_id = '" . $logsystem_id . "'
-                                                                OR user_log.system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], urldecode($logsystem)) . "'
-                                                                ORDER BY -user_log.pinned, user_log.weight, user_log.stardate DESC")
-                                                                or write_log(mysqli_error($GLOBALS["___mysqli_ston"]));
-        $num = mysqli_num_rows($log_res);
+        /**
+         * get system-specific log
+         */
+        $esc_logsys_name = $mysqli->real_escape_string($logsystem);
+        $query = "  SELECT user_log.id, user_log.station_id, user_log.system_name, user_log.log_entry, user_log.stardate,
+                    user_log.pinned, user_log.type, user_log.title, user_log.audio,
+                    edtb_stations.name AS station_name
+                    FROM user_log
+                    LEFT JOIN edtb_stations ON edtb_stations.id = user_log.station_id
+                    WHERE user_log.system_id = '$logsystem_id'
+                    OR user_log.system_name = '$esc_logsys_name'
+                    ORDER BY -user_log.pinned, user_log.weight, user_log.stardate DESC";
+
+        $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+
+        $num = $result->num_rows;
 
         if ($num > 0) {
-            echo make_log_entries($log_res, "log");
+            $log = new MakeLog();
+            echo $log->make_log_entries($result, "log");
         } else {
             echo '<h2>No log entries for ' . $logsystem . '</h2><br />';
             echo '<a href="javascript:void(0)" id="toggle" onclick="toggle_log(\'' . addslashes($logsystem) . '\')" title="Add log entry" style="color:inherit">';
             echo 'Click here to add one</a>';
         }
+
+        $result->close();
         ?>
     </div>
 </div>

@@ -79,15 +79,15 @@ if (isset($_POST["code"])) {
         $queries = explode(">>BREAK<<", $code);
 
         foreach ($queries as $query) {
-            if (!mysqli_query($GLOBALS["___mysqli_ston"], "" . $query . "")) {
-                $error = mysqli_error($GLOBALS["___mysqli_ston"]);
+            if (!$mysqli->query($query)) {
+                $error = $mysqli->error;
                 $notify = '<div class="notify_deleted">Execution failed:<br />' . $error . '</div>';
             } else {
-                if ($rows = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "" . $query . ""))) {
-                    $error = mysqli_info($GLOBALS["___mysqli_ston"]);
+                if ($rows = $mysqli->query($query)->num_rows) {
+                    $error = $mysqli->info;
                     $notify = '<div class="notify_success">Query succesfully executed.<br />' . $error . '<br />Rows: ' . number_format($rows) . '</div>';
                 } else {
-                    $error = mysqli_info($GLOBALS["___mysqli_ston"]);
+                    $error = $mysqli->info;
                     $notify = '<div class="notify_success">Query succesfully executed.<br />' . $error . '</div>';
                 }
             }

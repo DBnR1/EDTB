@@ -119,7 +119,7 @@ body, html {
     height:100%;
     background-color:#3d3d3d;
     margin:auto;
-    overflow:auto;
+    overflow:hidden;
 }
 
 body {
@@ -1224,6 +1224,11 @@ fieldset {
     border:0;
 }
 
+.poi_minmax
+{
+    min-width:390px;
+    max-width:480px;
+}
 /* the additional info for systems on map.php */
 #report {
     display:none;
@@ -1920,6 +1925,12 @@ div.tooltip {
     border:1px solid #000;
     border-top:0;
     padding:6px;
+}
+
+.datapoint_td
+{
+    padding:10px;
+    vertical-align:middle;
 }
 
 /* -------------------------------------------------------------------------- */

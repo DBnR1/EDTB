@@ -128,7 +128,7 @@ if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"])) {
         <div id="map_settings">
             <?php
             if (isset($_GET["mode"]) && $_GET["mode"] == "2d") {
-                $linkto = "/Map/";
+                $linkto = "/Map";
                 $linkname = "Switch to 3D mode";
                 $mode = "2d";
             } else {
@@ -150,6 +150,7 @@ if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"])) {
 
                         echo '<option value="' . $value . '"' . $selected . '>Range ' . $value . ' ly</option>';
                     }
+                    unset($value);
                     ?>
                 </select>
             </form>

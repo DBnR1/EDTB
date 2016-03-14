@@ -39,7 +39,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 /** @require curSys */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/curSys.php");
 /** @require MakeGallery class */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Gallery/MakeGallery.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Gallery/MakeGallery.class.php");
 
 $action = isset($_GET["action"]) ? $_GET["action"] : "";
 $request = isset($_GET["request"]) ? $_GET["request"] : 0;
@@ -54,10 +54,10 @@ if ($action == "onlycoordinates") {
     /**
      * make screenshot gallery
      */
-    /*if (MakeGallery::go()) {
+    if (MakeGallery::go()) {
         $gallery = new MakeGallery();
         $gallery->make_gallery($curSys["name"]);
-    }*/
+    }
 
     exit;
 } elseif ($action == "onlyid") {
@@ -66,7 +66,10 @@ if ($action == "onlycoordinates") {
     exit;
 }
 
-$data = array();
+/** @var string $esc_cursys_name */
+$esc_cursys_name = $mysqli->real_escape_string($curSys["name"]);
+
+$data = [];
 
 /**
  * Now Playing

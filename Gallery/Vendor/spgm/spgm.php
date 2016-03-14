@@ -151,7 +151,7 @@ $strVarPageIndex   = PARAM_NAME_PAGE;
 $strVarFilterFlags = PARAM_NAME_FILTER;
 
 global $spgm_cfg;
-$spgm_cfg                                       = array();
+$spgm_cfg                                       = [];
 $spgm_cfg['conf']['newStatusDuration']          = 120; //minutes
 $spgm_cfg['conf']['thumbnailsPerPage']          = 12;
 $spgm_cfg['conf']['thumbnailsPerRow']           = 3;
@@ -178,8 +178,8 @@ $spgm_cfg['conf']['popupFitPicture']            = false;
 $spgm_cfg['conf']['popupWidth']                 = 1920;
 $spgm_cfg['conf']['popupHeight']                = 1080;
 $spgm_cfg['conf']['filters']                    = '';
-$spgm_cfg['conf']['exifInfo']                   = array();
-$spgm_cfg['conf']['zoomFactors']                = array();
+$spgm_cfg['conf']['exifInfo']                   = [];
+$spgm_cfg['conf']['zoomFactors']                = [];
 $spgm_cfg['conf']['galleryIconType']            = GALICON_NONE;
 $spgm_cfg['conf']['galleryIconHeight']          = ORIGINAL_SIZE;
 $spgm_cfg['conf']['galleryIconWidth']           = ORIGINAL_SIZE;
@@ -245,13 +245,13 @@ $spgm_cfg['global']['URLExtraParams']   = ''; // Contains the extra paramaters f
 
 function spgm_Error($strErrorMessage)
 {
-    echo '<div style="color:#ff0000;font-size:12pt;font-weight: bold">' . $strErrorMessage . '</div>' . "\n";
+    echo '<div style="color:#ff0000;font-size:12pt;font-weight:700">' . $strErrorMessage . '</div>' . "\n";
 }
 
 function spgm_Warning($strWarningMessage)
 {
     if (MODE_WARNING) {
-        echo '<div style="color:#0000ff;font-size:12pt;font-weight: bold">' . $strWarningMessage . '</div>' . "\n";
+        echo '<div style="color:#0000ff;font-size:12pt;font-weight:700">' . $strWarningMessage . '</div>' . "\n";
     }
 }
 
@@ -796,7 +796,7 @@ function spgm_PostInitCheck()
         )
     );
 
-    $dim             = array();
+    $dim             = [];
     $iIconNumber     = count($arrIconInfo);
     $strIconFileName = '';
     $_key            = '';
@@ -958,7 +958,7 @@ function spgm_CreateGalleryArray($strGalleryId, $bToBeDisplayed)
         $strSortFilePath = $strPathToGallery . '/' . FILE_GAL_SORT;
     }
 
-    $arrSubGalleries = array();
+    $arrSubGalleries = [];
     if (spgm_CheckPerms($strSortFilePath)) {
         $strGalleryNames = file($strSortFilePath);
         $iGalleryNumber  = count($strGalleryNames);
@@ -1019,7 +1019,7 @@ function spgm_CreatePictureArray($strGalleryId, $strFilterFlags, $bForDisplayPur
 
     spgm_Trace('<p>function spgm_CreatePictureArray</p>' . "\n" . 'strGalleryId: ' . $strGalleryId . '<br />' . "\n" . 'strFilterFlags: ' . $strFilterFlags . '<br />' . "\n" . 'strPathToGallery: ' . $strPathToGallery . '<br />' . "\n" . 'bForDisplayPurpose: ' . $bForDisplayPurpose . '<br />' . "\n");
 
-    $arrPictureFilenames = array();
+    $arrPictureFilenames = [];
     $strPathToSortFile   = $strPathToGallery . FILE_PIC_SORT;
     if (spgm_CheckPerms($strPathToSortFile)) {
         $arrSortedPictureFilenames = file($strPathToSortFile);
@@ -1294,7 +1294,7 @@ function spgm_DisplayGalleryHierarchy($strGalleryId, $iGalleryDepth, $strFilterF
 
         // should never happen
         if ($iPictureNumber < 0 || $iNewPictureNumber < 0) {
-            spgm_Error('Error while generating gallery ' + ERRMSG_INVALID_NUMBER_OF_PICTURES);
+            spgm_Error('Error while generating gallery ' . ERRMSG_INVALID_NUMBER_OF_PICTURES);
         } else {
             if ($spgm_cfg['conf']['thumbnailsPerPage'] > 0) {
                 $strUrlParamPage = '&amp;' . PARAM_NAME_PAGE . '=1';
@@ -1578,7 +1578,7 @@ function spgm_DisplayPicture($strGalleryId, $iPictureId, $strFilterFlags)
 
                 echo '<tr><td>' . "\n";
                 $strExifData = spgm_LoadExif($strPictureURL);
-                echo '[<span onmouseover="return overlib(\'' . $strExifData . '\', CAPTION, \'' . $spgm_cfg['locale']['exifHeading'] . ' ' . $strPictureFilename . '\', STICKY)" onmouseout="return nd()" style="color: #2e408d; font-weight: bold; font-size: 9pt">Exif</span>]';
+                echo '[<span onmouseover="return overlib(\'' . $strExifData . '\', CAPTION, \'' . $spgm_cfg['locale']['exifHeading'] . ' ' . $strPictureFilename . '\', STICKY)" onmouseout="return nd()" style="color: #2e408d; font-weight:700; font-size: 9pt">Exif</span>]';
                 echo '</td></tr>' . "\n";
             }
         }
@@ -1587,7 +1587,7 @@ function spgm_DisplayPicture($strGalleryId, $iPictureId, $strFilterFlags)
         if ($bSlideshowMode) {
             echo '<script>' . "\n";
             $iPictureNumber  = count($arrPictureFilenames);
-            $_dim            = array();
+            $_dim            = [];
             $_strPicturePath = '';
             for ($i = 0; $i < $iPictureNumber; $i++) {
                 $_strPicturePath    = $strPathToPictures . $arrPictureFilenames[$i];

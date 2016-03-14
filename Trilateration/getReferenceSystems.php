@@ -36,24 +36,25 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 /** @require curSys */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/curSys.php");
-/** @require referenceSystems class */
-require_once("referenceSystems.php");
+/** @require ReferenceSystems class */
+require_once("ReferenceSystems.class.php");
 
 /**
  * check if system already has distances
  */
-$system_res = mysqli_query($GLOBALS["___mysqli_ston"], "    SELECT id, reference_distances, edsm_message
-                                                            FROM user_systems_own
-                                                            WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $curSys["name"]) . "'
-                                                            LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+$query = "  SELECT id, reference_distances, edsm_message
+            FROM user_systems_own
+            WHERE name = '" . $curSys["esc_name"] . "'
+            LIMIT 1";
 
-$system_exists = mysqli_num_rows($system_res);
+$result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+$system_exists = $result->num_rows;
 
 $do = true;
-$ref = array();
+$ref = [];
 if ($system_exists > 0) {
-    $system_arr = mysqli_fetch_assoc($system_res);
-    $edsm_msg = $system_arr["edsm_message"];
+    $system_arr = $result->fetch_object();
+    $edsm_msg = $sys_obj->edsm_message;
     $parts = explode(":::", $edsm_msg);
 
     $msg_num = $parts[0];
@@ -65,7 +66,7 @@ if ($system_exists > 0) {
         $do = false;
     } else {
         $do = true;
-        $values = explode("---", $system_arr["reference_distances"]);
+        $values = explode("---", $sys_obj->reference_distances);
 
         if (!isset($_GET["force"])) {
             $i = 1;
@@ -76,6 +77,7 @@ if ($system_exists > 0) {
                 $ref[$i]["distance"] = $values2[1];
                 $i++;
             }
+            unset($value);
 
             $systems = new ReferenceSystems();
             $systems->standard = isset($_GET["standard"]) ? true : false;
@@ -89,12 +91,13 @@ if ($system_exists > 0) {
             /**
              * put already used systems into an array so we don't use them again
              */
-            $used = array();
+            $used = [];
             foreach ($values as $value) {
                 $values2 = explode(":::", $value);
 
                 $used[] = $values2[0];
             }
+            unset($value);
 
             $systems = new ReferenceSystems();
             $systems->standard = false;
@@ -112,6 +115,8 @@ if ($system_exists > 0) {
     $systems->standard = isset($_GET["standard"]) ? true : false;
     $referencesystems = $systems->reference_systems();
 }
+
+$result->close();
 ?>
 <script>
     $("a.send").click(function()
@@ -201,7 +206,6 @@ if ($system_exists > 0) {
                     </td>
                 </tr>
                 <?php
-
             }
             ?>
             <tr>

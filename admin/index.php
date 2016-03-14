@@ -38,14 +38,18 @@ if (isset($_GET["do"])) {
     /** @require MySQL */
     require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 
-    $data = json_decode($_REQUEST["input"], true);
+    $data = json_decode($_REQUEST["input"]);
 
     foreach ($data as $var => $value) {
-        mysqli_query($GLOBALS["___mysqli_ston"], "  UPDATE user_settings
-                                                    SET value = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $value) . "'
-                                                    WHERE variable = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $var) . "'
-                                                    LIMIT 1")
-                                                    or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+        $esc_val = $mysqli->real_escape_string($value);
+        $esc_var = $mysqli->real_escape_string($var);
+
+        $query = "  UPDATE user_settings
+                    SET value = '$esc_val'
+                    WHERE variable = '$esc_var'
+                    LIMIT 1";
+
+        $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
     }
 
     exit;
@@ -69,15 +73,16 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
     <?php
     echo'<ul class="pagination">';
 
-    $cat_res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT id, name
-                                                            FROM edtb_settings_categories
-                                                            ORDER BY weight")
-                                                            or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+    $query = "  SELECT id, name
+                FROM edtb_settings_categories
+                ORDER BY weight";
+
+    $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
 
     $i = 0;
-    while ($cat_arr = mysqli_fetch_assoc($cat_res)) {
-        $id = $cat_arr["id"];
-        $name = $cat_arr["name"];
+    while ($obj = $result->fetch_object()) {
+        $id = $obj->id;
+        $name = $obj->name;
 
         if ($id == $cat_id) {
             $active = " class='actives'";
@@ -93,22 +98,23 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
         echo '<li' . $active . '><a data-replace="true" data-target=".rightpanel" class="mtelink" href="/Admin?cat_id=' . $id . '">' . $name . '</a></li>';
         $i++;
     }
+    $result->close();
 
     echo '</ul>';
 
-    $res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT
-                                                        user_settings.id,
-                                                        edtb_settings_info.name,
-                                                        user_settings.variable,
-                                                        edtb_settings_info.type,
-                                                        edtb_settings_info.info,
-                                                        user_settings.value
-                                                        FROM user_settings
-                                                        LEFT JOIN edtb_settings_info ON edtb_settings_info.variable = user_settings.variable
-                                                        WHERE edtb_settings_info.category_id = '" . $cat_id . "'
-                                                        ORDER BY edtb_settings_info.weight")
-                                                        or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+    $query = "  SELECT
+                user_settings.id,
+                edtb_settings_info.name,
+                user_settings.variable,
+                edtb_settings_info.type,
+                edtb_settings_info.info,
+                user_settings.value
+                FROM user_settings
+                LEFT JOIN edtb_settings_info ON edtb_settings_info.variable = user_settings.variable
+                WHERE edtb_settings_info.category_id = '$cat_id'
+                ORDER BY edtb_settings_info.weight";
 
+    $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
     ?>
     <form method="post" id="settings_form" action="/Admin">
         <table style="max-width:720px;margin-bottom:15px">
@@ -117,12 +123,12 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
             </tr>
             <?php
             $i = 0;
-            while ($arr = mysqli_fetch_assoc($res)) {
-                $name = $arr["name"];
-                $type = $arr["type"];
-                $variable = $arr["variable"];
-                $info = !empty($arr["info"]) ? '<div class="settings_info">' . $arr["info"] . '</div>' : "";
-                $value = $arr["value"];
+            while ($obj = $result->fetch_object()) {
+                $name = $obj->name;
+                $type = $obj->type;
+                $variable = $obj->variable;
+                $info = !empty($obj->info) ? '<div class="settings_info">' . $obj->info . '</div>' : "";
+                $value = $obj->value;
 
                 $tdclass = $i % 2 ? "dark" : "light";
 
@@ -210,6 +216,7 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
                 }
                 $i++;
             }
+            $result->close();
 
             $lclass = $tdclass == "dark" ? "light" : "dark";
             ?>

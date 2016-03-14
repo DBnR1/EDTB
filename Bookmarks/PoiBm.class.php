@@ -34,25 +34,41 @@
 class PoiBm
 {
     /**
+     * PoiBm constructor.
+     */
+    public function __construct()
+    {
+        $ini_dir = str_replace("/EDTB", "", $_SERVER["DOCUMENT_ROOT"]);
+        require_once($ini_dir . "/data/server_config.inc.php");
+
+        $this->mysqli = new mysqli($server, $user, $pwd, $db);
+
+        if ($this->mysqli->connect_error) {
+            write_log($this->mysqli->connect_error);
+            exit;
+        }
+    }
+
+    /**
      * Make items
      *
-     * @param array $arr
+     * @param object $obj
      * @param string $type
      * @param int $i
      * @return string
      * @author Mauri Kujala <contact@edtb.xyz>
      */
-    public function makeitem($arr, $type, &$i)
+    private function makeitem($obj, $type, &$i)
     {
         global $usex, $usey, $usez, $system_time;
 
-        $item_id = $arr["id"];
-        $item_text = $arr["text"];
-        $item_name = $arr["item_name"];
-        $item_system_name = $arr["system_name"];
-        $item_system_id = $arr["system_id"];
-        $item_cat_name = $arr["catname"];
-        $item_added_on = $arr["added_on"];
+        $item_id = $obj->id;
+        $item_text = $obj->text;
+        $item_name = $obj->item_name;
+        $item_system_name = $obj->system_name;
+        $item_system_id = $obj->system_id;
+        $item_cat_name = $obj->catname;
+        $item_added_on = $obj->added_on;
 
         $item_added_ago = "";
 
@@ -64,9 +80,9 @@ class PoiBm
             $item_added_on = $item_added_on->format("j M Y, H:i");
         }
 
-        $item_coordx = $arr["item_coordx"];
-        $item_coordy = $arr["item_coordy"];
-        $item_coordz = $arr["item_coordz"];
+        $item_coordx = $obj->item_coordx;
+        $item_coordy = $obj->item_coordy;
+        $item_coordz = $obj->item_coordz;
 
         $distance = "n/a";
         if (valid_coordinates($item_coordx, $item_coordy, $item_coordz)) {
@@ -76,10 +92,14 @@ class PoiBm
         /**
          * if visited, change border color
          */
-        $visited = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT id
-                                                                                FROM user_visited_systems
-                                                                                WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $item_system_name) . "'
-                                                                                LIMIT 1"));
+        $esc_item_sys_name = $this->mysqli->real_escape_string($item_system_name);
+
+        $query = "  SELECT id
+                    FROM user_visited_systems
+                    WHERE system_name = '$esc_item_sys_name'
+                    LIMIT 1";
+
+        $visited = $this->mysqli->query($query)->num_rows;
 
         $style_override = $visited ? ' style="border-left: 3px solid #3da822"' : "";
 
@@ -91,7 +111,7 @@ class PoiBm
         $item_crosslinks = System::crosslinks($item_system_name);
 
         echo '<tr>';
-        echo '<td class="' . $tdclass . '" style="min-width:420px;max-width:500px">';
+        echo '<td class="' . $tdclass . ' poi_minmax">';
         echo '<div class="poi"' . $style_override . '>';
         echo '<a href="javascript:void(0)" onclick="update_values(\'/Bookmarks/get' . $type . 'EditData.php?' . $type . '_id=' . $item_id . '\', \'' . $item_id . '\');tofront(\'add' . $type . '\')" style="color:inherit" title="Click to edit entry">';
 
@@ -136,14 +156,14 @@ class PoiBm
     {
         global $curSys;
 
-        $num = mysqli_num_rows($res);
+        $num = $res->num_rows;
 
         echo '<table>';
 
         if ($num > 0) {
             if (!valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"])) {
                 echo '<tr>';
-                echo '<td class="dark" style="min-width:420px;max-width:500px">';
+                echo '<td class="dark poi_minmax">';
                 echo '<p><strong>No coordinates for current location, last known location used.</strong></p>';
                 echo '</td>';
                 echo '</tr>';
@@ -151,14 +171,14 @@ class PoiBm
 
             $i = 0;
             $to_last = [];
-            while ($arr = mysqli_fetch_assoc($res)) {
-                echo $this->makeitem($arr, $type, $i);
+            while ($obj = $res->fetch_object()) {
+                echo $this->makeitem($obj, $type, $i);
             }
         } else {
             if ($type == "Poi") {
                 ?>
                 <tr>
-                    <td class="dark" style="min-width:420px;max-width:500px">
+                    <td class="dark poi_minmax">
                         <strong>No points of interest.<br/>Click the "Points of Interest" text to add one.</strong>
                     </td>
                 </tr>
@@ -166,7 +186,7 @@ class PoiBm
             } else {
                 ?>
                 <tr>
-                    <td class="dark" style="min-width:420px;max-width:500px">
+                    <td class="dark poi_minmax">
                         <strong>No bookmarks.<br/>Click the allegiance icon on the top left corner to add one.</strong>
                     </td>
                 </tr>

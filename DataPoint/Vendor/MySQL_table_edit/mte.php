@@ -8,7 +8,9 @@ if (strtolower(basename($_SERVER['PHP_SELF'])) == strtolower(basename(__FILE__))
 
 /**
  * Class MySQLtabledit
- */
+ *
+ * @property string debug_html
+*/
 class MySQLtabledit
 {
     /**
@@ -39,37 +41,31 @@ class MySQLtabledit
 
     public $version = '0.3'; // 03 jan 2011
 
-    # text
+    // text
     public $text;
 
-    # language
+    // language
     public $language = 'en';
 
-    # database settings
-    public $database;
-    public $host;
-    public $user;
-    public $pass;
-
-    # table of the database
+    // table of the database
     public $table;
 
-    # the primary key of the table
+    // the primary key of the table
     public $primary_key;
 
-    # the fields you want to see in "list view"
+    // the fields you want to see in "list view"
     public $fields_in_list_view;
 
-    # numbers of rows/records in "list view"
+    // numbers of rows/records in "list view"
     public $num_rows_list_view = 15;
 
-    # required fields in edit or add record
+    // required fields in edit or add record
     public $fields_required;
 
-    # help text
+    // help text
     public $help_text;
 
-    # visible name of the fields
+    // visible name of the fields
     public $show_text;
 
     public $width_editor = '100%';
@@ -77,39 +73,25 @@ class MySQLtabledit
     public $width_text_fields = '698px';
     public $height_text_fields = '200px';
 
-    # warning no .htacces ('on' or 'off')
-    public $no_htaccess_warning = 'on';
+    // warning no .htacces ('on' or 'off')
+    public $no_htaccess_warning = 'off';
 
-    # Forget this - working on it...
-    # needed in Joomla for images/css, example: 'http://www.website.com/administrator/components/com_componentname'
+    // Forget this - working on it...
+    // needed in Joomla for images/css, example: 'http://www.website.com/administrator/components/com_componentname'
     public $url_base;
-    # needed in Joomla, example: 'option=com_componentname'
+    // needed in Joomla, example: 'option=com_componentname'
     public $query_joomla_component;
 
-    ###########################
-    public function database_connect()
-    {
-        if (!($GLOBALS["___mysqli_ston"] = mysqli_connect($this->host,  $this->user,  $this->pass))) {
-            die('Could not connect: ' . ((is_object($GLOBALS["___mysqli_ston"])) ? mysqli_error($GLOBALS["___mysqli_ston"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)));
-        }
-        ((bool)mysqli_query($GLOBALS["___mysqli_ston"], "USE " . $this->database));
-    }
-
-    ##############################
-    public function database_disconnect()
-    {
-        ((is_null($___mysqli_res = mysqli_close($GLOBALS["___mysqli_ston"]))) ? false : $___mysqli_res);
-    }
-
-
-    ################
+    /**
+     *
+     */
     public function do_it()
     {
         // Sorry: in Joomla, remove the next two lines and place the language vars instead
         require_once($_SERVER["DOCUMENT_ROOT"] . "/DataPoint/Vendor/MySQL_table_edit/lang/en.php");
         require_once($_SERVER["DOCUMENT_ROOT"] . "/DataPoint/Vendor/MySQL_table_edit/lang/" . $this->language . ".php");
 
-        # No cache
+        // No cache
         if (!headers_sent()) {
             header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
             header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
@@ -123,9 +105,9 @@ class MySQLtabledit
             $this->url_base = '.';
         }
 
-        # name of the script
-        //$break = explode('/', $_SERVER["SCRIPT_NAME"]);
-        //$this->url_script = $break[count($break) - 1];
+        // name of the script
+        $break = explode('/', $_SERVER["SCRIPT_NAME"]);
+        $this->url_script = $break[count($break) - 1];
 
         if ($_GET['mte_a'] == 'edit') {
             $this->edit_rec();
@@ -142,14 +124,18 @@ class MySQLtabledit
         $this->close_and_print();
     }
 
-    ####################
+    /**
+     *
+     */
     public function show_list()
     {
-        # message after add or edit
+        global $mysqli;
+
+        // message after add or edit
         $this->content_saved = $_SESSION['content_saved'];
         $_SESSION['content_saved'] = '';
 
-        # default sort (a = ascending)
+        // default sort (a = ascending)
         $ad = 'a';
 
         if ($_GET['sort'] && in_array($_GET['sort'], $this->fields_in_list_view)) {
@@ -164,7 +150,7 @@ class MySQLtabledit
             $order_by = "ORDER by $this->primary_key DESC";
         }
 
-        # navigation 1/3
+        // navigation 1/3
         $start = $_GET["start"];
         if (!$start) {
             $start = 0;
@@ -186,7 +172,7 @@ class MySQLtabledit
         //table
         $query_string .= '&table=' . $_GET['table']  . '';
 
-        # search
+        // search
         if ($_GET['s'] && $_GET['f']) {
             $in_search = addslashes(stripslashes($_GET['s']));
             $in_search_field = $_GET['f'];
@@ -198,8 +184,8 @@ class MySQLtabledit
             }
         }
 
-        # select
-        $sql = "SELECT * FROM `$this->table` $where_search $order_by";
+        // select
+        $sql = "SELECT SQL_CACHE * FROM `$this->table` $where_search $order_by";
 
         /**
          * if sorting by distance
@@ -218,20 +204,22 @@ class MySQLtabledit
             $rusey = $usable_coords["y"];
             $rusez = $usable_coords["z"];
 
-            $res2 = mysqli_query($GLOBALS["___mysqli_ston"], "  SHOW COLUMNS
-                                                                FROM `$this->table`")
-                                                                or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+            $query = "SHOW COLUMNS FROM `$this->table`";
 
-            while ($rij3 = mysqli_fetch_assoc($res2)) {
-                $fields[] = $this->table . '.' . $rij3["Field"];
+            $columns = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+
+            while ($obj = $columns->fetch_object()) {
+                $fields[] = $this->table . '.' . $obj->Field;
             }
+
+            $columns->close();
 
             $fieldss = join(",", $fields);
 
             if ($asc_des == "DESC") {
-                $order_by = "ORDER BY -(sqrt(pow((ritem_coordx-(" . $rusex . ")),2)+pow((ritem_coordy-(" . $rusey . ")),2)+pow((ritem_coordz-(" . $rusez . ")),2)))" . $asc_des;
+                $order_by = "ORDER BY -(sqrt(pow((ritem_coordx-($rusex)),2)+pow((ritem_coordy-($rusey)),2)+pow((ritem_coordz-($rusez)),2)))" . $asc_des;
             } else {
-                $order_by = "ORDER BY sqrt(pow((ritem_coordx-(" . $rusex . ")),2)+pow((ritem_coordy-(" . $rusey . ")),2)+pow((ritem_coordz-(" . $rusez . ")),2)) DESC";
+                $order_by = "ORDER BY sqrt(pow((ritem_coordx-($rusex)),2)+pow((ritem_coordy-($rusey)),2)+pow((ritem_coordz-($rusez)),2)) DESC";
             }
 
             if ($this->table == "edtb_systems") {
@@ -256,35 +244,35 @@ class MySQLtabledit
                                                 LEFT JOIN user_systems_own ON $this->table.system_name = user_systems_own.name
                                                 $order_by";
             }
-            //write_log($sql);
         }
 
-        $result = mysqli_query($GLOBALS["___mysqli_ston"], $sql);
+        $hits = $mysqli->query($sql) or write_log($mysqli->error, __FILE__, __LINE__);
 
-        # navigation 2/3
-        $hits_total = mysqli_num_rows($result);
+        // navigation 2/3
+        $hits_total = $hits->num_rows;
+        $hits->close();
 
         $sql .= " LIMIT $start, $this->num_rows_list_view";
-        $result = mysqli_query($GLOBALS["___mysqli_ston"], $sql) or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+        $result = $mysqli->query($sql) or write_log($mysqli->error, __FILE__, __LINE__);
 
-        if (mysqli_num_rows($result) > 0) {
-            $result2 = mysqli_query($GLOBALS["___mysqli_ston"], "SHOW COLUMNS FROM `$this->table`") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+        if ($result->num_rows > 0) {
+            $query = "SHOW COLUMNS FROM `$this->table`";
+            $cols = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
 
-            while ($rij2 = mysqli_fetch_assoc($result2)) {
-                extract($rij2);
+            while ($obj = $cols->fetch_object()) {
+                $Field = $obj->Field;
+                $Type = $obj->Type;
                 $field_type[$Field] = $Type;
             }
 
+            $cols->close();
+
             $count = 0;
-            while ($rij = mysqli_fetch_assoc($result)) {
+            while ($data = $result->fetch_object()) {
                 $count++;
                 $this_row = '';
 
-                if ($background == '#38484F') {
-                    $background='#273238';
-                } else {
-                    $background='#38484F';
-                }
+                $background = $background == '#38484f' ? '#273238' : '#38484f';
 
                 $dist = false;
                 $dist1 = false;
@@ -293,65 +281,75 @@ class MySQLtabledit
                 $d_y = "";
                 $d_z = "";
 
-                if (array_key_exists("x", $rij) && array_key_exists("y", $rij) && array_key_exists("z", $rij) || array_key_exists("system_name", $rij) || array_key_exists("system_id", $rij)) {
+                $esc_sys_name = $mysqli->real_escape_string($data->system_name);
+
+                if (property_exists($data, "x") && property_exists($data, "y") && property_exists($data, "z") || property_exists($data, "system_name") || property_exists($data, "system_id")) {
                     $dist = true;
                     $dist1 = true;
 
-                    if (isset($rij["x"]) && isset($rij["y"]) && isset($rij["z"])) {
-                        $d_x = $rij["x"];
-                        $d_y = $rij["y"];
-                        $d_z = $rij["z"];
-                    } elseif (isset($rij["system_id"])) {
-                        $sys_res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT x, y, z
-                                                                                FROM edtb_systems
-                                                                                WHERE id = '" . $rij["system_id"] . "'
-                                                                                LIMIT 1");
-                        $found = mysqli_num_rows($sys_res);
+                    if (isset($data->x) && isset($data->y) && isset($data->z)) {
+                        $d_x = $data->x;
+                        $d_y = $data->y;
+                        $d_z = $data->z;
+                    } elseif (isset($data->system_id)) {
+                        $query = "  SELECT x, y, z
+                                    FROM edtb_systems
+                                    WHERE id = '$data->system_id'
+                                    LIMIT 1";
+
+                        $coord_result = $mysqli->query($query);
+                        $found = $coord_result->num_rows;
 
                         if ($found > 0) {
-                            $sys_arr = mysqli_fetch_assoc($sys_res);
+                            $obj = $coord_result->fetch_object();
 
-                            $d_x = $sys_arr["x"];
-                            $d_y = $sys_arr["y"];
-                            $d_z = $sys_arr["z"];
+                            $d_x = $obj->x;
+                            $d_y = $obj->y;
+                            $d_z = $obj->z;
                         }
-                    } elseif (isset($rij["system_name"]) || $found == 0) {
-                        if (valid_coordinates($rij["ritem_coordx"], $rij["ritem_coordy"], $rij["ritem_coordz"])) {
-                            $d_x = $rij["ritem_coordx"];
-                            $d_y = $rij["ritem_coordy"];
-                            $d_z = $rij["ritem_coordz"];
+                        $coord_result->close();
+                    } elseif (isset($data->system_name) || $found == 0) {
+                        if (valid_coordinates($data->ritem_coordx, $data->ritem_coordy, $data->ritem_coordz)) {
+                            $d_x = $data->ritem_coordx;
+                            $d_y = $data->ritem_coordy;
+                            $d_z = $data->ritem_coordz;
                         } else {
-                            $sys_res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT x, y, z
-                                                                                    FROM edtb_systems
-                                                                                    WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $rij["system_name"]) . "'
-                                                                                    LIMIT 1");
+                            $query = "  SELECT x, y, z
+                                        FROM edtb_systems
+                                        WHERE name = '$esc_sys_name'
+                                        LIMIT 1";
 
-                            $found = mysqli_num_rows($sys_res);
+                            $coord_result = $mysqli->query($query);
+                            $found = $coord_result->num_rows;
 
                             if ($found > 0) {
-                                $sys_arr = mysqli_fetch_assoc($sys_res);
+                                $obj = $coord_result->fetch_object();
 
-                                $d_x = $sys_arr["x"];
-                                $d_y = $sys_arr["y"];
-                                $d_z = $sys_arr["z"];
+                                $d_x = $obj->x;
+                                $d_y = $obj->y;
+                                $d_z = $obj->z;
                             } else {
-                                $sys_own_res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT x, y, z
-                                                                                            FROM user_systems_own
-                                                                                            WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $rij["system_name"]) . "'
-                                                                                            LIMIT 1");
-                                $own_found = mysqli_num_rows($sys_own_res);
-                                if ($own_found > 0) {
-                                    $sys_own_arr = mysqli_fetch_assoc($sys_own_res);
+                                $query = "  SELECT x, y, z
+                                            FROM user_systems_own
+                                            WHERE name = '$esc_sys_name'
+                                            LIMIT 1";
 
-                                    $d_x = $sys_own_arr["x"];
-                                    $d_y = $sys_own_arr["y"];
-                                    $d_z = $sys_own_arr["z"];
+                                $coord_result = $mysqli->query($query);
+                                $own_found = $coord_result->num_rows;
+
+                                if ($own_found > 0) {
+                                    $obj = $coord_result->fetch_object();
+
+                                    $d_x = $obj->x;
+                                    $d_y = $obj->y;
+                                    $d_z = $obj->z;
                                 } else {
                                     $d_x = "";
                                     $d_y = "";
                                     $d_z = "";
                                 }
                             }
+                            $coord_result->close();
                         }
                     } else {
                         $d_x = "";
@@ -361,7 +359,7 @@ class MySQLtabledit
                 }
 
                 $ii = 0;
-                foreach ($rij as $key => $value) {
+                foreach ($data as $key => $value) {
                     $field_kind = $field_type[$key];
 
                     $enum = false;
@@ -445,24 +443,25 @@ class MySQLtabledit
                         $ii++;
                     }
                 }
+                unset($value);
                 $rows .= "<tr style='border-bottom:1px solid #000;background:$background'>$buttons $this_row</tr>";
             }
         } else {
             $head = "<td style='padding:40px'>{$this->text['Nothing_found']}...</td>";
         }
 
-        # navigation 3/3
+        // navigation 3/3
 
-        # remove start= from url
+        // remove start= from url
         $query_nav = preg_replace('/&(start|mte_a|id)=[^&]*/', '', $query_string);
 
-        # this page
-        $this_page = ($this->num_rows_list_view + $start)/$this->num_rows_list_view;
+        // this page
+        $this_page = ($this->num_rows_list_view + $start) / $this->num_rows_list_view;
 
-        # last page
-        $last_page = ceil($hits_total/$this->num_rows_list_view);
+        // last page
+        $last_page = ceil($hits_total / $this->num_rows_list_view);
 
-        # navigatie numbers
+        // navigatie numbers
         if ($this_page>10) {
             $vanaf = $this_page - 10;
         } else {
@@ -475,9 +474,8 @@ class MySQLtabledit
             $tot = $last_page;
         }
 
-
         for ($f=$vanaf;$f<=$tot;$f++) {
-            $nav_toon = $this->num_rows_list_view * ($f-1);
+            $nav_toon = $this->num_rows_list_view * ($f - 1);
 
             if ($f == $this_page) {
                 $navigation .= "<td class='mte_nav' style='color:#fffffa;background-color:#808080;font-weight:700'>$f</td> ";
@@ -489,13 +487,13 @@ class MySQLtabledit
             $navigation = '';
         }
 
-        # Previous if
+        // Previous if
         if ($this_page > 1) {
             $last =  (($this_page - 1) * $this->num_rows_list_view) - $this->num_rows_list_view;
             $last_page_html = "<a data-replace='true' data-target='.rightpanel' href='$this->url_script?$query_nav&start=$last' class='mte_nav_prev_next'>{$this->text['Previous']}</a>";
         }
 
-        # Next if:
+        // Next if:
         if ($this_page != $last_page && $hits_total>1) {
             $next =  $start + $this->num_rows_list_view;
             $next_page_html =  "<a data-replace='true' data-target='.rightpanel' href='$this->url_script?$query_nav&start=$next' class='mte_nav_prev_next'>{$this->text['Next']}</a>";
@@ -530,7 +528,7 @@ class MySQLtabledit
             ";
         }
 
-        # Search form + Add Record button
+        // Search form + Add Record button
         foreach ($this->fields_in_list_view as $option) {
             if (
                 $this->show_text[$option]) {
@@ -545,6 +543,7 @@ class MySQLtabledit
                 $options .= "<option value='$option'>$show_option</option>";
             }
         }
+        unset($option);
 
         $in_search_value = htmlentities(trim(stripslashes($_GET['s'])), ENT_QUOTES);
 
@@ -592,7 +591,7 @@ class MySQLtabledit
                 }
             }
         ";
-        # page content
+        // page content
         $this->content = "
             <div style='width: $this->width_editor;background:transparent;margin:0;border:none'>$seach_form</div>
             <table style='text-align:left;margin:0;border-collapse:collapse;border-spacing:0;width:$this->width_editor'>
@@ -604,14 +603,19 @@ class MySQLtabledit
         ";
     }
 
-    ##################
+
+    /**
+     *
+     */
     public function del_rec()
     {
-        ##################
+        global $mysqli;
 
         $in_id = $_GET['id'];
 
-        if (mysqli_query($GLOBALS["___mysqli_ston"], "DELETE FROM " . $this->table . " WHERE `" . $this->primary_key . "` = '" . $in_id . "'")) {
+        $stmt = "DELETE FROM " . $this->table . " WHERE `" . $this->primary_key . "` = '$in_id'";
+
+        if ($mysqli->query($stmt)) {
             $this->content_deleted = "
                 <div class='notify_deleted'>
                     Record {$this->show_text[$this->primary_key]} $in_id {$this->text['deleted']}
@@ -621,34 +625,37 @@ class MySQLtabledit
         } else {
             $this->content = "
             </div>
-                <div style='padding:2px 20px 20px 20px;margin: 0 0 20px 0; background: #DF0000; color: #fff'><h3>Error</h3>" .
-                ((is_object($GLOBALS["___mysqli_ston"])) ? mysqli_error($GLOBALS["___mysqli_ston"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)).
-                "</div><a href='$this->url_script'>List records...</a>
+                <div style='padding:2px 20px 20px 20px;margin: 0 0 20px 0; background: #DF0000; color: #fff'><h3>Error</h3>" . $mysqli->error . "</div><a href='$this->url_script'>List records...</a>
             </div>";
         }
     }
 
-    ###################
+
+    /**
+     *
+     */
     public function edit_rec()
     {
-        ###################
+        global $mysqli;
 
         $in_id = $_GET['id'];
 
-        # edit or new?
+        // edit or new?
         if ($_GET['mte_a'] == 'edit') {
-            $edit=1;
+            $edit = 1;
         }
 
         $count_required = 0;
 
-        $result = mysqli_query($GLOBALS["___mysqli_ston"], "SHOW COLUMNS FROM `$this->table`");
+        $query = "SHOW COLUMNS FROM `$this->table`";
+        $types = $mysqli->query($query);
 
-        # get field types
-        while ($rij = mysqli_fetch_array($result)) {
-            extract($rij);
-            $field_type[$Field] = $Type;
+        // get field types
+        while ($obj = $types->fetch_object()) {
+            $field_type[$obj->Field] = $obj->Type;
         }
+
+        $types->close();
 
         if (!$edit) {
             $rij = $field_type;
@@ -656,8 +663,11 @@ class MySQLtabledit
             if ($edit) {
                 $where_edit = "WHERE `$this->primary_key` = $in_id";
             }
-            $result = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT * FROM `$this->table` $where_edit LIMIT 1 ;");
-            $rij = mysqli_fetch_assoc($result);
+
+            $query = "SELECT * FROM `$this->table` $where_edit LIMIT 1";
+            $results = $mysqli->query($query);
+            $rij = $results->fetch_assoc();
+            $results->close();
         }
 
         foreach ($rij as $key => $value) {
@@ -681,12 +691,12 @@ class MySQLtabledit
 
             $field_kind = $field_type[$key];
 
-            # different fields
-            # textarea
+            // different fields
+            // textarea
             if (preg_match("/text/", $field_kind)) {
                 $field = "<textarea class='textarea' name='$key' $style $field_id>$value</textarea>";
             }
-            # select/options
+            // select/options
             elseif (preg_match("/enum\((.*)\)/", $field_kind, $matches)) {
                 $all_options = substr($matches[1], 1, -1);
                 $options_array = explode("','", $all_options);
@@ -697,9 +707,10 @@ class MySQLtabledit
                         $options .= "<option>$option</option>";
                     }
                 }
+                unset($option);
                 $field = "<select class='selectbox' name='$key' $style $field_id>$options</select>";
             }
-            # input
+            // input
             elseif (!preg_match("/blob/", $field_kind)) {
                 if (preg_match("/\(*(.*)\)*/", $field_kind, $matches)) {
                     if ($key == $this->primary_key) {
@@ -713,31 +724,30 @@ class MySQLtabledit
                         // add ajax system name for some fields
                         if ($key == "system_name") {
                             $field = '  <input class="textbox" type="text" id="' . $key . '" name="' . $key . '" value="' . $value_htmlentities . '" maxlength="' . $matches[1] . '" ' . $style . ' ' . $readonly . ' ' . $field_id . ' onkeyup="showResult(this.value, \'37\', \'no\', \'no\', \'no\', \'no\', \'yes\')">
-                                        <div class="suggestions" id="suggestions_37" style="margin-left:1px;"></div>';
+                                        <div class="suggestions" id="suggestions_37" style="margin-left:1px"></div>';
                         } else {
                             $field = "<input class='textbox' type='text' id='$key' name='$key' value='$value_htmlentities' maxlength='{$matches[1]}' $style $readonly $field_id>";
                         }
                     }
                 }
             }
-            # blob: don't show
+            // blob: don't show
             elseif (preg_match("/blob/", $field_kind)) {
                 $field = '[<i>binary</i>]';
             }
 
-            # make table row
-            if ($background == '#273238') {
-                $background='#38484F';
-            } else {
-                $background='#273238';
-            }
+            // make table row
+            $background = $background == '#38484f' ? '#273238' : '#38484f';
+
             if ($this->show_text[$key]) {
                 $show_key = $this->show_text[$key];
             } else {
                 $show_key = $key;
             }
+
             $rows .= "\n\n<tr style='border-bottom:1px solid #000;background:$background'>\n<td style='vertical-align:middle;padding:8px'><strong>$show_key</strong></td>\n<td style='padding:8px'>$field</td></tr>";
         }
+        unset($value);
 
         $this->javascript = "
             function submitform() {
@@ -777,11 +787,13 @@ class MySQLtabledit
 
                     <table style='border-collapse:collapse;border-spacing:0'>
                         <tr>
-                        <td>
-                            <button onclick='window.location=\"{$_SESSION['hist_page']}\"' style='margin: 20px 15px 25px 15px'>{$this->text['Go_back']}</button></td>
-                        <td>
-                            <form method=post action='/DataPoint?table=" . $_GET["table"] . "' onsubmit='return submitform()'>
-                            <input class='button' type='submit' value='{$this->text['Save']}' style='width: 80px;margin: 20px 0 25px 0'></td>
+                            <td>
+                                <button onclick='window.location=\"{$_SESSION['hist_page']}\"' style='margin: 20px 15px 25px 15px'>{$this->text['Go_back']}</button>
+                            </td>
+                            <td>
+                                <form method='post' action='/DataPoint?table=" . $_GET["table"] . "' onsubmit='return submitform()'>
+                                <input class='button' type='submit' value='{$this->text['Save']}' style='width: 80px;margin: 20px 0 25px 0'>
+                            </td>
                         </tr>
                     </table>
 
@@ -807,10 +819,13 @@ class MySQLtabledit
         ";
     }
 
-    ###################
+
+    /**
+     *
+     */
     public function save_rec()
     {
-        ###################
+        global $mysqli;
 
         $in_mte_new_rec = $_POST['mte_new_rec'];
 
@@ -830,23 +845,26 @@ class MySQLtabledit
                 }
             }
         }
+        unset($value);
+
         $insert_fields = substr($insert_fields, 0, -1);
         $insert_values = substr($insert_values, 0, -1);
         $updates = substr($updates, 0, -1);
 
-        # new record:
+        // new record:
         if ($in_mte_new_rec) {
             $sql = "INSERT INTO `$this->table` ($insert_fields) VALUES ($insert_values); ";
         }
-        # edit record:
+        // edit record:
         else {
             $sql = "UPDATE `$this->table` SET $updates WHERE $where LIMIT 1; ";
         }
 
-        //echo $sql; exit;
-        if (mysqli_query($GLOBALS["___mysqli_ston"], $sql)) {
+        write_log($sql);
+
+        if ($mysqli->query($sql)) {
             if ($in_mte_new_rec) {
-                $saved_id = ((is_null($___mysqli_res = mysqli_insert_id($GLOBALS["___mysqli_ston"]))) ? false : $___mysqli_res);
+                $saved_id = $mysqli->insert_id;
                 $_GET['s'] = $saved_id;
                 $_GET['f'] = $this->primary_key;
             } else {
@@ -869,16 +887,14 @@ class MySQLtabledit
                 if ($this->query_joomla_component) {
                     echo '&option=' . $this->query_joomla_component ;
                 }
-                echo "'</script>";
+                echo "</script>";
             } else {
                 echo "<script>window.location='" . $_SESSION['hist_page'] . "'</script>";
             }
         } else {
             $this->content = "
                 <div style='width: $this->width_editor'>
-                    <div style='padding:2px 20px 20px 20px;margin:0 0 20px 0;background:#DF0000;color:#fff'><h3>Error</h3>" .
-                    ((is_object($GLOBALS["___mysqli_ston"])) ? mysqli_error($GLOBALS["___mysqli_ston"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)) .
-                    "</div><a href='{$_SESSION['hist_page']}'>{$this->text['Go_back']}...</a>
+                    <div style='padding:2px 20px 20px 20px;margin:0 0 20px 0;background:#DF0000;color:#fff'><h3>Error</h3>" . $mysqli->error . "</div><a href='{$_SESSION['hist_page']}'>{$this->text['Go_back']}...</a>
                 </div>";
         }
     }
@@ -888,7 +904,7 @@ class MySQLtabledit
     {
         ##########################
 
-        # debug and warning no htaccess
+        // debug and warning no htaccess
         if ($this->debug) {
             $this->debug .= '<br />';
         }
@@ -903,7 +919,7 @@ class MySQLtabledit
             </div>";
         }
 
-        # save page location
+        // save page location
         $session_hist_page = $this->url_script . '?' . $_SERVER['QUERY_STRING'];
         if ($this->query_joomla_component && !preg_match("/option=$this->query_joomla_component/", $session_hist_page)) {
             $session_hist_page .= '&option=' . $this->query_joomla_component;
@@ -925,7 +941,7 @@ class MySQLtabledit
         </script>
             <div class='mte_head_1' style='text-align:center'><ul class='pagination'>";
 
-        $count = count($this->links_to_db);
+        //$count = count($this->links_to_db);
         $i = 0;
         foreach ($this->links_to_db as $link_h => $link_t) {
             if ($this->table == $link_h) {
@@ -935,7 +951,7 @@ class MySQLtabledit
             }
 
             if (($i % 7) == 0) {
-                echo "</ul><br /><ul class='pagination' style='margin-top:-26px'>";
+                echo '</ul><br /><ul class="pagination" style="margin-top:-26px">';
             }
 
             echo '<li' . $active . '><a data-replace="true" data-target=".rightpanel" class="mtelink" href="/DataPoint?table=' . $link_h . '">' . $link_t . '</a></li>';

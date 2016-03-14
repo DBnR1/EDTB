@@ -98,7 +98,7 @@ if (!valid_coordinates($ucoordx, $ucoordy, $ucoordz)) {
             withHudPanel: true,
             startAnim: false,
             effectScaleSystem: [15,50],
-            playerPos: [<?php echo $ucoordx;?>,<?php echo $ucoordy;?>,<?php echo $ucoordz;?>]
+            playerPos: [<?php echo $ucoordx?>,<?php echo $ucoordy?>,<?php echo $ucoordz?>]
         });
     </script>
 </div>

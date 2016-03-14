@@ -85,7 +85,9 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
                         $error = implode("", $error);
 
                         if (preg_match($reg_exUrl, $error, $url)) {
-                            $error = preg_replace($reg_exUrl, "<a href='" . $url[0] . "' target='_blank'>" . $url[0] . "</a>", $error);
+                            $error = preg_replace($reg_exUrl, '<a href="' . $url[0] . '" target="_blank">' . $url[0] . '</a>', $error);
+                        } else {
+                            $error = strip_tags($error);
                         }
 
                         $tdclass = $line_num % 2 ? "dark" : "light";
@@ -106,7 +108,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
                                 <?php echo $error_line?>
                             </td>
                             <td class="<?php echo $tdclass?>">
-                                <?php echo strip_tags($error)?>
+                                <?php echo $error?>
                             </td>
                         </tr>
                         <?php

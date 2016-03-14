@@ -174,19 +174,26 @@ class MakeGallery
      */
     function make_gallery($gallery_name)
     {
-        global $settings, $system_time;
+        global $settings, $system_time, $mysqli;
 
         /**
          * get visit time for the system so we can tell if the screenshots were taken in that system
          */
-        $res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT visit
-                                                            FROM user_visited_systems
-                                                            WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $gallery_name) . "'
-                                                            ORDER BY visit DESC
-                                                            LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-        $arr = mysqli_fetch_assoc($res);
+        $esc_gallery_name = $mysqli->real_escape_string($gallery_name);
 
-        $visit_time = isset($arr["visit"]) ? strtotime($arr["visit"]) : time();
+        $query = "  SELECT visit
+                    FROM user_visited_systems
+                    WHERE system_name = '$esc_gallery_name'
+                    ORDER BY visit DESC
+                    LIMIT 1";
+
+        $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+
+        $obj = $result->fetch_object();
+
+        $visit_time = isset($obj->visit) ? strtotime($obj->visit) : time();
+
+        $result->close();
 
         /**
          * scan screenshot directory
@@ -278,6 +285,7 @@ class MakeGallery
                 $this->move_file($old_file_bmp, $old_file_og);
             }
         }
+        unset($file);
 
         /**
          * make thumbnails for the gallery

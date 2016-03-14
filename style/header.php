@@ -255,7 +255,7 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
                 <div class="rightpanel-pagetitle">
                     <span class="titletext">
                         <a href="javascript:void(0)" onclick="tofront('search_system');$('#system_22').focus()" title="Search for a system" id="pagetitle">
-                        CMDR <?php echo $settings["cmdr_name"];?>
+                        CMDR <?php echo $settings["cmdr_name"]?>
                         </a>
                     </span>
                     <?php
@@ -319,7 +319,6 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
                     /**
                      * show ship status
                      */
-
                     if (isset($api["ship"]) && $settings["show_ship_status"] == "true") {
                         $ship_cache = "";
                         if (file_exists($_SERVER["DOCUMENT_ROOT"] . "/cache/ship_status.html")) {
@@ -337,7 +336,6 @@ $action = isset($_GET["action"]) ? $_GET["action"] : "";
                         /**
                          * show refresh button
                          */
-
                         if (isset($api["commander"]) || isset($api["ship"])) {
                             ?>
                             <a id="api_refresh" href="javascript:void(0)" onclick="refresh_api()" title="Refresh API data">

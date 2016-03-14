@@ -75,18 +75,19 @@ $last_row = "";
  * fetch point of interest data for the map
  */
 if ($settings["nmap_show_pois"] == "true") {
-    $result = mysqli_query($GLOBALS["___mysqli_ston"], "    SELECT poi_name, system_name, x, y, z
-                                                            FROM user_poi
-                                                            WHERE x != '' AND y != '' AND z != ''")
-                                                            or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+    $query = "  SELECT poi_name, system_name, x, y, z
+                FROM user_poi
+                WHERE x != '' AND y != '' AND z != ''";
 
-    while ($row = mysqli_fetch_array($result)) {
-        $name = $row["system_name"];
-        $disp_name = $row["poi_name"] != "" ? $row["poi_name"] : $row["system_name"];
+    $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
 
-        $poi_coordx = $row["x"];
-        $poi_coordy = $row["y"];
-        $poi_coordz = $row["z"];
+    while ($obj = $result->fetch_object()) {
+        $name = $obj->system_name;
+        $disp_name = $obj->poi_name != "" ? $obj->poi_name : $obj->system_name;
+
+        $poi_coordx = $obj->x;
+        $poi_coordy = $obj->y;
+        $poi_coordz = $obj->z;
 
         $coord = "$poi_coordx,$poi_coordy,$poi_coordz";
 
@@ -97,11 +98,14 @@ if ($settings["nmap_show_pois"] == "true") {
 
         // only show systems if distance is less than the limit set by the user
         if ($distance_from_current != "" && $distance_from_current <= $settings["maxdistance"]) {
-            $visited = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT id
-                                                                                    FROM user_visited_systems
-                                                                                    WHERE
-                                                                                    system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $name) . "'
-                                                                                    LIMIT 1"));
+            $esc_name = $mysqli->real_escape_string($name);
+            $query = "  SELECT id, visit
+                        FROM user_visited_systems
+                        WHERE system_name = '$esc_name'
+                        ORDER BY visit ASC
+                        LIMIT 1";
+
+            $visited = $mysqli->query($query)->num_rows;
 
             if ($name == "SOL") {
                 $marker = 'marker:{symbol:"circle",radius:3,fillColor:"#37bf1c"}';
@@ -116,72 +120,98 @@ if ($settings["nmap_show_pois"] == "true") {
             $last_row = "," . $data;
         }
     }
+    $result->close();
 }
 
 /**
  *  fetch bookmark data for the map
  */
 if ($settings["nmap_show_bookmarks"] == "true") {
-    $bm_result = mysqli_query($GLOBALS["___mysqli_ston"], " SELECT user_bookmarks.comment, user_bookmarks.added_on,
-                                                            edtb_systems.name AS system_name, edtb_systems.x, edtb_systems.y, edtb_systems.z,
-                                                            user_bm_categories.name AS category_name
-                                                            FROM user_bookmarks
-                                                            LEFT JOIN edtb_systems ON user_bookmarks.system_id = edtb_systems.id
-                                                            LEFT JOIN user_bm_categories ON user_bookmarks.category_id = user_bm_categories.id
-                                                            WHERE edtb_systems.x != '' AND edtb_systems.y != '' AND edtb_systems.z != ''")
-                                                            or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+    $query = "  SELECT user_bookmarks.comment, user_bookmarks.added_on,
+                edtb_systems.name AS system_name, edtb_systems.x, edtb_systems.y, edtb_systems.z,
+                user_bm_categories.name AS category_name
+                FROM user_bookmarks
+                LEFT JOIN edtb_systems ON user_bookmarks.system_name = edtb_systems.name
+                LEFT JOIN user_bm_categories ON user_bookmarks.category_id = user_bm_categories.id";
 
-    while ($bm_row = mysqli_fetch_array($bm_result)) {
-        $bm_system_name = $bm_row["system_name"];
-        $bm_comment = $bm_row["comment"];
-        $bm_added_on = $bm_row["added_on"];
-        $bm_category_name = $bm_row["category_name"];
+    $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+
+    while ($bm_obj = $result->fetch_object()) {
+        $bm_system_name = $bm_obj->system_name;
+        $bm_comment = $bm_obj->comment;
+        $bm_added_on = $bm_obj->added_on;
+        $bm_category_name = $bm_obj->category_name;
 
         // coordinates for distance calculations
-        $bm_coordx = $bm_row["x"];
-        $bm_coordy = $bm_row["y"];
-        $bm_coordz = $bm_row["z"];
-        $coord = $bm_row["x"] . "," . $bm_row["y"] . "," . $bm_row["z"];
+        $bm_coordx = $bm_obj->x;
+        $bm_coordy = $bm_obj->y;
+        $bm_coordz = $bm_obj->z;
+        $coord = $bm_obj->x . "," . $bm_obj->y . "," . $bm_obj->z;
 
-        $distance_from_current = "";
-        if (valid_coordinates($bm_coordx, $bm_coordy, $bm_coordz)) {
-            $distance_from_current = sqrt(pow(($bm_coordx-($curSys["x"])), 2)+pow(($bm_coordy-($curSys["y"])), 2)+pow(($bm_coordz-($curSys["z"])), 2));
+        /**
+         * if coords are not set, see if user has calculated them
+         */
+        if (!valid_coordinates($bm_coordx, $bm_coordy, $bm_coordz)) {
+            $esc_name = $mysqli->real_escape_string($bm_system_name);
+            $query = "  SELECT x, y, z
+                        FROM user_systems_own
+                        WHERE name = '$esc_name'
+                        LIMIT 1";
+
+            $coord_res = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+            $obj = $coord_res->fetch_object();
+
+            $bm_coordx = $obj->x == "" ? "" : $obj->x;
+            $bm_coordy = $obj->y == "" ? "" : $obj->y;
+            $bm_coordz = $obj->z == "" ? "" : $obj->z;
+
+            $coord_res->close();
         }
 
-        // only show systems if distance is less than the limit set by the user
-        if ($distance_from_current != "" && $distance_from_current <= $settings["maxdistance"]) {
-            $marker = 'marker:{symbol:"url(/style/img/bm.png)"}';
+        if (valid_coordinates($bm_coordx, $bm_coordy, $bm_coordz)) {
+            $distance_from_current = "";
+            if (valid_coordinates($bm_coordx, $bm_coordy, $bm_coordz)) {
+                $distance_from_current = sqrt(pow(($bm_coordx - ($curSys["x"])), 2) + pow(($bm_coordy - ($curSys["y"])), 2) + pow(($bm_coordz - ($curSys["z"])), 2));
+            }
 
-            $data = "{name:\"" . $bm_system_name . "\",data:[[" . $coord . "]]," . $marker . "}" . $last_row;
+            // only show systems if distance is less than the limit set by the user
+            if ($distance_from_current != "" && $distance_from_current <= $settings["maxdistance"]) {
+                $marker = 'marker:{symbol:"url(/style/img/bm.png)"}';
 
-            $last_row = "," . $data;
+                $data = "{name:\"" . $bm_system_name . "\",data:[[" . $coord . "]]," . $marker . "}" . $last_row;
+
+                $last_row = "," . $data;
+            }
         }
     }
+    $result->close();
 }
 
 /**
  *  fetch rares data for the map
  */
 if ($settings["nmap_show_rares"] == "true") {
-    $rare_result = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT
-                                                                edtb_rares.item, edtb_rares.station, edtb_rares.system_name, edtb_rares.ls_to_star,
-                                                                edtb_systems.x, edtb_systems.y, edtb_systems.z
-                                                                FROM edtb_rares
-                                                                LEFT JOIN edtb_systems ON edtb_rares.system_name = edtb_systems.name")
-                                                                or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+    $query = "  SELECT
+                edtb_rares.item, edtb_rares.station, edtb_rares.system_name, edtb_rares.ls_to_star,
+                edtb_systems.x, edtb_systems.y, edtb_systems.z
+                FROM edtb_rares
+                LEFT JOIN edtb_systems ON edtb_rares.system_name = edtb_systems.name
+                WHERE edtb_rares.system_name != ''";
 
-    while ($rare_row = mysqli_fetch_array($rare_result)) {
-        $rare_item = $rare_row["item"];
-        $rare_station = $rare_row["station"];
-        $rare_system = $rare_row["system_name"];
-        $rare_dist_to_star = number_format($rare_row["ls_to_star"]);
+    $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+
+    while ($rare_obj = $result->fetch_object()) {
+        $rare_item = $rare_obj->item;
+        $rare_station = $rare_obj->station;
+        $rare_system = $rare_obj->system_name;
+        $rare_dist_to_star = number_format($rare_obj->ls_to_star);
 
         $rare_disp_name = $rare_item . " - " . $rare_system . " (" . $rare_station . " - " . $rare_dist_to_star . " ls)";
 
         // coordinates for distance calculations
-        $rare_coordx = $rare_row["x"];
-        $rare_coordy = $rare_row["y"];
-        $rare_coordz = $rare_row["z"];
+        $rare_coordx = $rare_obj->x;
+        $rare_coordy = $rare_obj->y;
+        $rare_coordz = $rare_obj->z;
 
         $rare_coord = $rare_coordx . "," . $rare_coordy . "," . $rare_coordz;
 
@@ -199,45 +229,48 @@ if ($settings["nmap_show_rares"] == "true") {
             $last_row = "," . $data;
         }
     }
+    $result->close();
 }
 
 /**
  * fetch visited systems data for the map
  */
 if ($settings["nmap_show_visited_systems"] == "true") {
-    $result = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT
-                                                        user_visited_systems.system_name AS system_name,
-                                                        edtb_systems.x, edtb_systems.y, edtb_systems.z, edtb_systems.id AS sysid, edtb_systems.allegiance
-                                                        FROM user_visited_systems
-                                                        LEFT JOIN edtb_systems ON user_visited_systems.system_name = edtb_systems.name
-                                                        GROUP BY user_visited_systems.system_name
-                                                        ORDER BY user_visited_systems.visit ASC")
-                                                        or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+    $query = "  SELECT
+                user_visited_systems.system_name AS system_name, user_visited_systems.visit,
+                edtb_systems.x, edtb_systems.y, edtb_systems.z, edtb_systems.id AS sysid, edtb_systems.allegiance
+                FROM user_visited_systems
+                LEFT JOIN edtb_systems ON user_visited_systems.system_name = edtb_systems.name
+                GROUP BY user_visited_systems.system_name
+                ORDER BY user_visited_systems.visit ASC";
 
-    while ($row = mysqli_fetch_array($result)) {
-        $name = $row["system_name"];
-        $sysid = $row["sysid"];
+    $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+
+    while ($obj = $result->fetch_object()) {
+        $name = $obj->system_name;
+        $esc_name = $mysqli->real_escape_string($name);
+        $sysid = $obj->sysid;
 
         // coordinates for distance calculations
-        $vs_coordx = $row["x"];
-        $vs_coordy = $row["y"];
-        $vs_coordz = $row["z"];
+        $vs_coordx = $obj->x;
+        $vs_coordy = $obj->y;
+        $vs_coordz = $obj->z;
 
         /**
          * if coords are not set, see if user has calculated them
          */
         if (!valid_coordinates($vs_coordx, $vs_coordy, $vs_coordz)) {
-            $cb_res = mysqli_query($GLOBALS["___mysqli_ston"], "    SELECT x, y, z
-                                                                    FROM user_systems_own
-                                                                    WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $name) . "'
-                                                                    LIMIT 1")
-                                                                    or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+            $query = "  SELECT x, y, z
+                        FROM user_systems_own
+                        WHERE name = '$esc_name'
+                        LIMIT 1";
 
-            $cb_arr = mysqli_fetch_assoc($cb_res);
+            $coord_res = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+            $obj = $coord_res->fetch_object();
 
-            $vs_coordx = $cb_arr["x"] == "" ? "" : $cb_arr["x"];
-            $vs_coordy = $cb_arr["y"] == "" ? "" : $cb_arr["y"];
-            $vs_coordz = $cb_arr["z"] == "" ? "" : $cb_arr["z"];
+            $vs_coordx = $obj->x == "" ? "" : $obj->x;
+            $vs_coordy = $obj->y == "" ? "" : $obj->y;
+            $vs_coordz = $obj->z == "" ? "" : $obj->z;
         }
 
         $distance_from_current = "";
@@ -248,11 +281,16 @@ if ($settings["nmap_show_visited_systems"] == "true") {
 
             // only show systems if distance is less than the limit set by the user
             if ($distance_from_current <= $settings["maxdistance"]) {
-                $logged = mysqli_num_rows(mysqli_query($GLOBALS["___mysqli_ston"], "    SELECT id
-                                                                                        FROM user_log
-                                                                                        WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $name) . "'
-                                                                                        LIMIT 1"));
-                $allegiance = $row["allegiance"];
+                $query = "  SELECT id
+                            FROM user_log
+                            WHERE system_name = '$esc_name'
+                            LIMIT 1";
+
+                $logged_result = $mysqli->query($query);
+
+                $logged = $logged_result->num_rows;
+
+                $allegiance = $obj->allegiance;
 
                 switch ($allegiance) {
                     case "Empire":
@@ -286,6 +324,7 @@ if ($settings["nmap_show_visited_systems"] == "true") {
             }
         }
     }
+    $result->close();
 }
 
 /**
@@ -311,44 +350,34 @@ if (valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"])) {
  * change between 3D and 2D maps
  */
 if (isset($_GET["mode"]) && $_GET["mode"] == "2d") {
-    ?>
-    /** http://stackoverflow.com/questions/524696/how-to-create-a-style-tag-with-javascript */
-    var css = '#container {left:-12px;top:-20px;}',
-        head = document.head || document.getElementsByTagName('head')[0],
-        style = document.createElement('style');
-
-    style.type = 'text/css';
-    if (style.styleSheet){
-        style.styleSheet.cssText = css;
-    } else {
-        style.appendChild(document.createTextNode(css));
-    }
-
-    head.appendChild(style);
-
-    /** custom tooltip format */
-    function tooltipFormatter() {
-        return this.series.name.toUpperCase();
-    }
-
-    <?php
     $threed = "false";
     $zoomtype = "zoomType: 'xy',";
     $panning = "true";
     $pankey = "panKey: 'shift',";
 } else {
-    ?>
-    /** custom tooltip format */
-    function tooltipFormatter() {
-        return this.series.name.toUpperCase() + " is " + Math.round(Math.sqrt(Math.pow((this.x-(<?php echo $curSys["x"] ?>)), 2)+Math.pow((this.y-(<?php echo $curSys["y"] ?>)), 2)+Math.pow((this.point.z-(<?php echo $curSys["z"] ?>)), 2))) + " ly away";
-    }
-    <?php
     $threed = "true";
     $zoomtype = "";
     $panning = "false";
     $pankey = "";
 }
 ?>
+/** custom tooltip format */
+function tooltipFormatter() {
+    var value;
+    <?php
+    if (isset($_GET["mode"]) && $_GET["mode"] == "2d") {
+        ?>
+        value = this.series.name.toUpperCase();
+        <?php
+    } else {
+        ?>
+        value = this.series.name.toUpperCase() + " is " + Math.round(Math.sqrt(Math.pow((this.x-(<?php echo $curSys["x"]?>)), 2)+Math.pow((this.y-(<?php echo $curSys["y"]?>)), 2)+Math.pow((this.point.z-(<?php echo $curSys["z"]?>)), 2))) + " ly away";
+        <?php
+    }
+    ?>
+    return value;
+}
+
 $(function ()
 {
     // Give the points a 3D feel by adding a radial gradient

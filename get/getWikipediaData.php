@@ -43,12 +43,12 @@ if (isset($_GET["search"]) && !empty($_GET["search"])) {
     $url = "https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&redirects=&exsectionformat=plain&titles=" . strtolower($search) . "_(disambiguation)";
 
     if ($result = file_get_contents($url)) {
-        $json_data = json_decode($result, true);
-        $titles = $json_data["query"]["pages"];
+        $json_data = json_decode($result);
+        $titles = $json_data->{"query"}->{"pages"};
 
         $count = 0;
         foreach ($titles as $title) {
-            $title_extract = $title["extract"];
+            $title_extract = $title->{"extract"};
 
             preg_match_all("/\<p>.*?\<\/p>/", $title_extract, $matches);
 
@@ -83,7 +83,9 @@ if (isset($_GET["search"]) && !empty($_GET["search"])) {
 
                     break;
                 }
+                unset($title_m);
             }
+            unset($match);
 
             if ($count == 0 && strpos($title_rest, 'refer') === false) {
                 $text = '<div class="searchtitle">' . $_GET["search"] . ' may' . $also . ' refer to:</div>';
@@ -117,9 +119,12 @@ if (isset($_GET["search"]) && !empty($_GET["search"])) {
 
                     $i++;
                 }
+                unset($title_m);
             }
+            unset($match);
             $count++;
         }
+        unset($title);
     } else {
         write_log("Error: Failed to contact Wikipedia", __FILE__, __LINE__);
     }
@@ -131,11 +136,11 @@ if (isset($_GET["search"]) && !empty($_GET["search"])) {
         $url = "https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exsectionformat=plain&titles=" . strtolower($search);
 
         if ($result = file_get_contents($url)) {
-            $json_data = json_decode($result, true);
-            $titles = $json_data["query"]["pages"];
+            $json_data = json_decode($result);
+            $titles = $json_data->{"query"}->{"pages"};
 
             foreach ($titles as $title) {
-                $title_extract = $title["extract"];
+                $title_extract = $title->{"extract"};
 
                 preg_match_all("/\<li>.*?\<\/li>/", $title_extract, $matches);
 
@@ -157,8 +162,11 @@ if (isset($_GET["search"]) && !empty($_GET["search"])) {
 
                         $i++;
                     }
+                    unset($title_m);
                 }
+                unset($match);
             }
+            unset($title);
         } else {
             write_log("Error: Failed to contact Wikipedia", __FILE__, __LINE__);
         }
@@ -167,7 +175,6 @@ if (isset($_GET["search"]) && !empty($_GET["search"])) {
     /**
      * if nothing's still found, give up
      */
-
     if ($i == 0) {
         echo '<li>Nothing found...</li>';
     }

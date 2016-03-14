@@ -31,7 +31,7 @@
  */
 
 /** @require ini config */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config_ini.inc.php");
+require_once(__DIR__ . "/config_ini.inc.php");
 
 /**
  * Display notice message
@@ -66,7 +66,6 @@ function getBrowser()
 
     $bname = 'Unknown';
     $platform = 'Unknown';
-    $version= "";
 
     //First get the platform?
     if (preg_match('/linux/i', $u_agent)) {
@@ -177,6 +176,7 @@ function getOS()
             $os_platform = $value;
         }
     }
+    unset($value);
 
     return $os_platform;
 }

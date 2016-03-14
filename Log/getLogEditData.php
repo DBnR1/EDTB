@@ -37,27 +37,32 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 
 $log_id = 0 + $_GET["logid"];
 
-$log_res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT user_log.id, user_log.system_id, user_log.system_name AS log_system_name,
-                                                        user_log.station_id, user_log.log_entry, user_log.stardate, user_log.title,
-                                                        user_log.weight, user_log.pinned, user_log.type, user_log.audio,
-                                                        edtb_systems.name AS system_name,
-                                                        edtb_stations.name AS station_name
-                                                        FROM user_log
-                                                        LEFT JOIN edtb_systems ON user_log.system_id = edtb_systems.id
-                                                        LEFT JOIN edtb_stations ON user_log.station_id = edtb_stations.id
-                                                        WHERE user_log.id = '" . $log_id . "'
-                                                        LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-$log_arr = mysqli_fetch_assoc($log_res);
+$query = "  SELECT user_log.id, user_log.system_id, user_log.system_name AS log_system_name,
+            user_log.station_id, user_log.log_entry, user_log.stardate, user_log.title,
+            user_log.weight, user_log.pinned, user_log.type, user_log.audio,
+            edtb_systems.name AS system_name,
+            edtb_stations.name AS station_name
+            FROM user_log
+            LEFT JOIN edtb_systems ON user_log.system_id = edtb_systems.id
+            LEFT JOIN edtb_stations ON user_log.station_id = edtb_stations.id
+            WHERE user_log.id = '$log_id'
+            LIMIT 1";
 
-$data = array();
-$data["edit_id"] = $log_arr["id"];
-$data["system_1"] = $log_arr["system_name"] == "" ? $log_arr["log_system_name"] : $log_arr["system_name"];
-$data["statname"] = $log_arr["station_name"];
-$data["html"] = $log_arr["log_entry"];
-$data["log_type"] = $log_arr["type"];
-$data["title"] = $log_arr["title"];
-$data["pinned"] = $log_arr["pinned"];
-$data["weight"] = $log_arr["weight"];
-$data["audiofiles"] = $log_arr["audio"];
+$result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+
+$obj = $result->fetch_object();
+
+$data = [];
+$data["edit_id"] = $obj->id;
+$data["system_1"] = $obj->system_name == "" ? $obj->log_system_name : $obj->system_name;
+$data["statname"] = $obj->station_name;
+$data["html"] = $obj->log_entry;
+$data["log_type"] = $obj->type;
+$data["title"] = $obj->title;
+$data["pinned"] = $obj->pinned;
+$data["weight"] = $obj->weight;
+$data["audiofiles"] = $obj->audio;
+
+$result->close();
 
 echo json_encode($data);

@@ -36,7 +36,7 @@
 class ReferenceSystems
 {
     public $standard = false;
-    public $used = array();
+    public $used = [];
 
     /**
      * Count how many jumps user has made since last known
@@ -47,16 +47,20 @@ class ReferenceSystems
      */
     private function fuzziness()
     {
+        global $mysqli;
+
         /**
          * if user wants the standard references, we don't need any of this
          */
         if ($this->standard !== true) {
-            $res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT system_name
-                                                                FROM user_visited_systems
-                                                                ORDER BY visit DESC
-                                                                LIMIT 30")
-                                                                or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-            $count = mysqli_num_rows($res);
+            $query = "  SELECT system_name
+                        FROM user_visited_systems
+                        ORDER BY visit DESC
+                        LIMIT 30";
+
+            $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+
+            $count = $result->num_rows;
 
             if ($count > 0) {
                 $last_known = last_known_system(true);
@@ -64,13 +68,13 @@ class ReferenceSystems
 
                 if (!empty($last_known_name)) {
                     $num = 0;
-                    $value = array();
+                    $value = [];
 
                     /**
                      * loop for as long as it takes to find the last visited system with known cooords
                      */
-                    while ($arr = mysqli_fetch_assoc($res)) {
-                        $visited_system_name = $arr["system_name"];
+                    while ($obj = $result->fetch_object()) {
+                        $visited_system_name = $obj->system_name;
 
                         if ($visited_system_name == $last_known_name) {
                             break;
@@ -87,6 +91,8 @@ class ReferenceSystems
                     $value["x"] = $last_known["x"];
                     $value["y"] = $last_known["y"];
                     $value["z"] = $last_known["z"];
+
+                    $result->close();
 
                     return $value;
                 } else {
@@ -110,6 +116,8 @@ class ReferenceSystems
      */
     public function reference_systems()
     {
+        global $mysqli;
+
         try {
             $start_point = $this->fuzziness();
 
@@ -120,45 +128,52 @@ class ReferenceSystems
 
             $fuzziness = $start_point["fuzziness"];
 
-            $res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT name, x, y, z
-                                                                FROM edtb_systems
-                                                                WHERE x BETWEEN (" . $start_x . " - " . $fuzziness . ") AND (" . $start_x . " + " . $fuzziness . ")
-                                                                AND y BETWEEN (" . $start_y . " - " . $fuzziness . ") AND (" . $start_y . " + " . $fuzziness . ")
-                                                                AND z BETWEEN (" . $start_z . " - " . $fuzziness . ") AND (" . $start_z . " + " . $fuzziness . ")
-                                                                AND sqrt(pow((x-(" . $start_x . ")), 2)+pow((y-(" . $start_y . ")), 2)+pow((z-(" . $start_z . ")), 2)) < " . $fuzziness . "
-                                                                AND name != '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $start_name) . "'
-                                                                ORDER BY sqrt(pow((x-(" . $start_x . ")), 2)+pow((y-(" . $start_y . ")), 2)+pow((z-(" . $start_z . ")), 2)) DESC")
-                                                                or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+            $esc_start_name = $mysqli->real_escape_string($start_name);
 
-            $num = mysqli_num_rows($res);
+            $query = "  SELECT name, x, y, z
+                        FROM edtb_systems
+                        WHERE x BETWEEN (" . $start_x . " - " . $fuzziness . ") AND (" . $start_x . " + " . $fuzziness . ")
+                        AND y BETWEEN (" . $start_y . " - " . $fuzziness . ") AND (" . $start_y . " + " . $fuzziness . ")
+                        AND z BETWEEN (" . $start_z . " - " . $fuzziness . ") AND (" . $start_z . " + " . $fuzziness . ")
+                        AND sqrt(pow((x-(" . $start_x . ")), 2)+pow((y-(" . $start_y . ")), 2)+pow((z-(" . $start_z . ")), 2)) < " . $fuzziness . "
+                        AND name != '$esc_start_name'
+                        ORDER BY sqrt(pow((x-(" . $start_x . ")), 2)+pow((y-(" . $start_y . ")), 2)+pow((z-(" . $start_z . ")), 2)) DESC";
+
+            $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+            $num = $result->num_rows;
 
             if ($num <= 4) {
-                $res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT name, x, y, z
-                                                                    FROM edtb_systems
-                                                                    WHERE x NOT BETWEEN (" . $start_x . " - " . $fuzziness . ") AND (" . $start_x . " + " . $fuzziness . ")
-                                                                    AND y NOT BETWEEN (" . $start_y . " - " . $fuzziness . ") AND (" . $start_y . " + " . $fuzziness . ")
-                                                                    AND z NOT BETWEEN (" . $start_z . " - " . $fuzziness . ") AND (" . $start_z . " + " . $fuzziness . ")
-                                                                    AND sqrt(pow((x-(" . $start_x . ")), 2)+pow((y-(" . $start_y . ")), 2)+pow((z-(" . $start_z . ")), 2)) > " . $fuzziness . "
-                                                                    AND name != '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $start_name) . "'
-                                                                    ORDER BY sqrt(pow((x-(" . $start_x . ")), 2)+pow((y-(" . $start_y . ")), 2)+pow((z-(" . $start_z . ")), 2)) ASC LIMIT 500")
-                                                                    or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+                $result->close();
+
+                $query = "  SELECT name, x, y, z
+                            FROM edtb_systems
+                            WHERE x NOT BETWEEN (" . $start_x . " - " . $fuzziness . ") AND (" . $start_x . " + " . $fuzziness . ")
+                            AND y NOT BETWEEN (" . $start_y . " - " . $fuzziness . ") AND (" . $start_y . " + " . $fuzziness . ")
+                            AND z NOT BETWEEN (" . $start_z . " - " . $fuzziness . ") AND (" . $start_z . " + " . $fuzziness . ")
+                            AND sqrt(pow((x-(" . $start_x . ")), 2)+pow((y-(" . $start_y . ")), 2)+pow((z-(" . $start_z . ")), 2)) > " . $fuzziness . "
+                            AND name != '$esc_start_name'
+                            ORDER BY sqrt(pow((x-(" . $start_x . ")), 2)+pow((y-(" . $start_y . ")), 2)+pow((z-(" . $start_z . ")), 2)) ASC LIMIT 500";
+
+                $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
             }
 
             $i = 0;
-            $pool = array();
-            while ($arr = mysqli_fetch_assoc($res)) {
-                $pool[$i]["name"] = $arr["name"];
-                $pool[$i]["x"] = $arr["x"];
-                $pool[$i]["y"] = $arr["y"];
-                $pool[$i]["z"] = $arr["z"];
+            $pool = [];
+            while ($obj = $result->fetch_object()) {
+                $pool[$i]["name"] = $obj->name;
+                $pool[$i]["x"] = $obj->x;
+                $pool[$i]["y"] = $obj->y;
+                $pool[$i]["z"] = $obj->z;
 
                 $i++;
             }
 
+            $result->close();
+
             $orders = array("z DESC", "z ASC", "x DESC", "x ASC");
 
             //$lastname = "";
-            $references = array();
+            $references = [];
             foreach ($orders as $order) {
                 Utility::orderBy($pool, $order);
 

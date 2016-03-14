@@ -41,7 +41,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
 
 // CACHE
 $html = __c("files")->get("galnet");
-
+$html = null;
 if ($html == null) {
     ob_start();
     ?>
@@ -50,13 +50,13 @@ if ($html == null) {
             <h2><img class="icon24" src="/style/img/galnet.png" alt="GalNet" style="margin-right:6px" />Latest Galnet News</h2>
             <hr>
             <?php
-            $xml = xml2array($galnet_feed) or die("Error: Cannot create object");
+            $xml = simplexml_load_file(GALNET_FEED) or die("Error: Cannot create object");
 
             $i = 0;
-            foreach ($xml["rss"]["channel"]["item"] as $data) {
-                $title = $data["title"];
-                $link = $data["link"];
-                $text = $data["description"];
+            foreach ($xml->{"channel"}->{"item"} as $data) {
+                $title = $data->{"title"};
+                $link = $data->{"link"};
+                $text = $data->{"description"};
 
                 // exclude stuff
                 $continue = true;
@@ -70,19 +70,20 @@ if ($html == null) {
                         break 1;
                     }
                 }
+                unset($exclude);
 
                 if ($continue !== false) {
                     ?>
                     <h3>
-                        <a href="javascript:void(0)" onclick="$('#<?php echo $i;?>').fadeToggle()">
-                            <img class="icon" src="/style/img/plus.png" alt="expand" style="padding-bottom:3px" /><?php echo $title;?>
+                        <a href="javascript:void(0)" onclick="$('#<?php echo $i?>').fadeToggle()">
+                            <img class="icon" src="/style/img/plus.png" alt="expand" style="padding-bottom:3px" /><?php echo $title?>
                         </a>
                     </h3>
-                    <p id="<?php echo $i;?>" style="display:none;padding-left:22px;max-width:800px">
-                        <?php echo str_replace('<p><sub><i>-- Delivered by <a href="http://feed43.com/">Feed43</a> service</i></sub></p>', "", $text);?>
+                    <p id="<?php echo $i?>" style="display:none;padding-left:22px;max-width:800px">
+                        <?php echo str_replace('<p><sub><i>-- Delivered by <a href="http://feed43.com/">Feed43</a> service</i></sub></p>', "", $text)?>
                         <br /><br /><br />
                         <span style="margin-bottom:15px">
-                            <a href="<?php echo $link;?>" target="_blank">
+                            <a href="<?php echo $link?>" target="_blank">
                                 Read on elitedangerous.com
                             </a><img class="ext_icon" src="/style/img/external_link.png" style="margin-bottom:3px" alt="ext" />
                         </span>
@@ -91,6 +92,7 @@ if ($html == null) {
                     $i++;
                 }
             }
+            unset($data);
             ?>
         </div>
     </div>

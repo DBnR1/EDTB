@@ -42,6 +42,9 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/curSys.php");
 if (isset($_GET["string"]) && isset($_GET["system"])) {
     $string = $_GET["string"];
     $system = $_GET["system"];
+
+    $esc_system_name = $mysqli->real_escape_string($system);
+    $esc_string = $mysqli->real_escape_string($string);
 } else {
     write_log("Error: String or system not set", __FILE__, __LINE__);
     exit;
@@ -50,16 +53,16 @@ if (isset($_GET["string"]) && isset($_GET["system"])) {
 /**
  * insert / update
  */
-
 if ($string == "delete") {
-    mysqli_query($GLOBALS["___mysqli_ston"], "  DELETE FROM user_system_map
-                                                WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system) . "'
-                                                LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+    $stmt = "DELETE FROM user_system_map
+             WHERE system_name = '$esc_system_name'
+             LIMIT 1";
 } else {
-    mysqli_query($GLOBALS["___mysqli_ston"], "  INSERT INTO user_system_map (system_name, string)
-                                                VALUES
-                                                ('" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $system) . "',
-                                                '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $string) . "')
-                                                ON DUPLICATE KEY UPDATE string = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $string) . "'")
-                                                or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+    $stmt = "   INSERT INTO user_system_map (system_name, string)
+                VALUES
+                ('$esc_system_name',
+                '$esc_string')
+                ON DUPLICATE KEY UPDATE string = '$esc_string'";
 }
+
+$mysqli->query($stmt) or write_log($mysqli->error, __FILE__, __LINE__);

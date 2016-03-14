@@ -76,51 +76,54 @@ $last_row = "";
 /**
  * fetch visited systems data for the map
  */
-
 if ($settings["galmap_show_visited_systems"] == "true") {
-    $result = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT
-                                                        user_visited_systems.system_name AS system_name, user_visited_systems.visit,
-                                                        edtb_systems.x, edtb_systems.y, edtb_systems.z, edtb_systems.id AS sysid, edtb_systems.allegiance
-                                                        FROM user_visited_systems
-                                                        LEFT JOIN edtb_systems ON user_visited_systems.system_name = edtb_systems.name
-                                                        GROUP BY user_visited_systems.system_name
-                                                        ORDER BY user_visited_systems.visit ASC")
-                                                        or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+    $query = "  SELECT
+                user_visited_systems.system_name AS system_name, user_visited_systems.visit,
+                edtb_systems.x, edtb_systems.y, edtb_systems.z, edtb_systems.id AS sysid, edtb_systems.allegiance
+                FROM user_visited_systems
+                LEFT JOIN edtb_systems ON user_visited_systems.system_name = edtb_systems.name
+                GROUP BY user_visited_systems.system_name
+                ORDER BY user_visited_systems.visit ASC";
 
-    while ($row = mysqli_fetch_array($result)) {
+    $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+
+    while ($row = $result->fetch_object()) {
         $info = "";
 
-        $name = $row["system_name"];
+        $name = $row->system_name;
 
-        $sysid = $row["sysid"];
+        $sysid = $row->sysid;
         // coordinates
-        $vs_coordx = $row["x"];
-        $vs_coordy = $row["y"];
-        $vs_coordz = $row["z"];
+        $vs_coordx = $row->x;
+        $vs_coordy = $row->y;
+        $vs_coordz = $row->z;
 
         /**
          * if coords are not set, see if user has calculated them
          */
         if (!valid_coordinates($vs_coordx, $vs_coordy, $vs_coordz)) {
-            $cb_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT x, y, z
-                                                                FROM user_systems_own
-                                                                WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $name) . "'
-                                                                LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+            $esc_name = $mysqli->real_escape_string($name);
 
-            $cb_arr = mysqli_fetch_assoc($cb_res);
+            $query = "  SELECT x, y, z
+                        FROM user_systems_own
+                        WHERE name = '$esc_name'
+                        LIMIT 1";
 
-            $vs_coordx = $cb_arr["x"] == "" ? "" : $cb_arr["x"];
-            $vs_coordy = $cb_arr["y"] == "" ? "" : $cb_arr["y"];
-            $vs_coordz = $cb_arr["z"] == "" ? "" : $cb_arr["z"];
+            $coord_res = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+            $obj = $coord_res->fetch_object();
+
+            $vs_coordx = $obj->x == "" ? "" : $obj->x;
+            $vs_coordy = $obj->y == "" ? "" : $obj->y;
+            $vs_coordz = $obj->z == "" ? "" : $obj->z;
         }
 
         /**
          * if we now have valid coordinates, get on with it
          */
         if (valid_coordinates($vs_coordx, $vs_coordy, $vs_coordz)) {
-            $allegiance = $row["allegiance"];
-            $visit = $row["visit"];
-            $visit_og = $row["visit"];
+            $allegiance = $row->allegiance;
+            $visit = $row->visit;
+            $visit_og = $row->visit;
 
             switch ($allegiance) {
                 case "Empire":
@@ -164,42 +167,45 @@ if ($settings["galmap_show_visited_systems"] == "true") {
             $last_row = "," . $data;
         }
     }
+    $result->close();
 }
 
 /**
  *  fetch point of interest data for the map
  */
-
 if ($settings["galmap_show_pois"] == "true") {
-    $result = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT user_poi.poi_name, user_poi.system_name,
-                                                        user_poi.x, user_poi.y, user_poi.z, user_poi.text,
-                                                        user_poi_categories.name AS category_name
-                                                        FROM user_poi
-                                                        LEFT JOIN user_poi_categories ON user_poi.category_id = user_poi_categories.id
-                                                        WHERE user_poi.x != '' AND user_poi.y != '' AND user_poi.z != ''")
-                                                        or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+    $query = "  SELECT user_poi.poi_name, user_poi.system_name,
+                user_poi.x, user_poi.y, user_poi.z, user_poi.text,
+                user_poi_categories.name AS category_name
+                FROM user_poi
+                LEFT JOIN user_poi_categories ON user_poi.category_id = user_poi_categories.id
+                WHERE user_poi.x != '' AND user_poi.y != '' AND user_poi.z != ''";
 
-    while ($row = mysqli_fetch_array($result)) {
+    $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+
+    while ($row = $result->fetch_object()) {
         $info = "";
         $cat = "";
-        $name = $row["system_name"];
+        $name = $row->system_name;
 
         if (strtolower($name) != strtolower($curSys["name"])) {
-            $disp_name = $row["system_name"];
-            $poi_name = $row["poi_name"];
-            $text = $row["text"];
-            $category_name = $row["category_name"];
+            $esc_name = $mysqli->real_escape_string($name);
+            $disp_name = $row->system_name;
+            $poi_name = $row->poi_name;
+            $text = $row->text;
+            $category_name = $row->category_name;
 
-            $poi_coordx = $row["x"];
-            $poi_coordy = $row["y"];
-            $poi_coordz = $row["z"];
+            $poi_coordx = $row->x;
+            $poi_coordy = $row->y;
+            $poi_coordz = $row->z;
 
-            $visitres = mysqli_query($GLOBALS["___mysqli_ston"], "  SELECT id, visit
-                                                                    FROM user_visited_systems
-                                                                    WHERE system_name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $name) . "'
-                                                                    ORDER BY visit ASC
-                                                                    LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-            $visited = mysqli_num_rows($visitres);
+            $query = "  SELECT id, visit
+                        FROM user_visited_systems
+                        WHERE system_name = '$esc_name'
+                        ORDER BY visit ASC
+                        LIMIT 1";
+
+            $visited = $mysqli->query($query)->num_rows;
 
             $cat = $visited > 0 ? ',"cat":[8]' :  ',"cat":[7]';
 
@@ -215,54 +221,57 @@ if ($settings["galmap_show_pois"] == "true") {
             $last_row = "," . $data;
         }
     }
+    $result->close();
 }
 
 /**
  *  fetch bookmark data for the map
  */
-
 if ($settings["galmap_show_bookmarks"] == "true") {
-    $bm_result = mysqli_query($GLOBALS["___mysqli_ston"], " SELECT user_bookmarks.comment, user_bookmarks.added_on,
-                                                            edtb_systems.name AS system_name, edtb_systems.x, edtb_systems.y, edtb_systems.z,
-                                                            user_bm_categories.name AS category_name
-                                                            FROM user_bookmarks
-                                                            LEFT JOIN edtb_systems ON user_bookmarks.system_name = edtb_systems.name
-                                                            LEFT JOIN user_bm_categories ON user_bookmarks.category_id = user_bm_categories.id")
-                                                            or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+    $query = "  SELECT user_bookmarks.comment, user_bookmarks.added_on,
+                edtb_systems.name AS system_name, edtb_systems.x, edtb_systems.y, edtb_systems.z,
+                user_bm_categories.name AS category_name
+                FROM user_bookmarks
+                LEFT JOIN edtb_systems ON user_bookmarks.system_name = edtb_systems.name
+                LEFT JOIN user_bm_categories ON user_bookmarks.category_id = user_bm_categories.id";
 
+    $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
 
-    while ($bm_row = mysqli_fetch_array($bm_result)) {
+    while ($row = $result->fetch_object()) {
         $info = "";
         $cat = "";
-        $bm_system_name = $bm_row["system_name"];
+        $bm_system_name = $row->system_name;
 
         // coordinates
-        $bm_coordx = $bm_row["x"];
-        $bm_coordy = $bm_row["y"];
-        $bm_coordz = $bm_row["z"];
+        $bm_coordx = $row->x;
+        $bm_coordy = $row->y;
+        $bm_coordz = $row->z;
 
         /**
          * if coords are not set, see if user has calculated them
          */
-
         if (!valid_coordinates($bm_coordx, $bm_coordy, $bm_coordz)) {
-            $bb_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT x, y, z
-                                                                FROM user_systems_own
-                                                                WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $bm_system_name) . "'
-                                                                LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+            $esc_name = $mysqli->real_escape_string($bm_system_name);
+            $query = "  SELECT x, y, z
+                        FROM user_systems_own
+                        WHERE name = '$esc_name'
+                        LIMIT 1";
 
-            $bb_arr = mysqli_fetch_assoc($bb_res);
+            $coord_res = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+            $obj = $coord_res->fetch_object();
 
-            $bm_coordx = $bb_arr["x"] == "" ? "" : $bb_arr["x"];
-            $bm_coordy = $bb_arr["y"] == "" ? "" : $bb_arr["y"];
-            $bm_coordz = $bb_arr["z"] == "" ? "" : $bb_arr["z"];
+            $bm_coordx = $obj->x == "" ? "" : $obj->x;
+            $bm_coordy = $obj->y == "" ? "" : $obj->y;
+            $bm_coordz = $obj->z == "" ? "" : $obj->z;
+
+            $coord_res->close();
         }
 
         if (valid_coordinates($bm_coordx, $bm_coordy, $bm_coordz)) {
             if (strtolower($bm_system_name) != strtolower($curSys["name"])) {
-                $bm_comment = $bm_row["comment"];
-                $bm_added_on = $bm_row["added_on"];
-                $bm_category_name = $bm_row["category_name"];
+                $bm_comment = $row->comment;
+                $bm_added_on = $row->added_on;
+                $bm_category_name = $row->category_name;
 
                 $cat = ',"cat":[6]';
 
@@ -290,37 +299,37 @@ if ($settings["galmap_show_bookmarks"] == "true") {
             }
         }
     }
+    $result->close();
 }
 
 /**
  *  fetch rares data for the map
  */
-
 if ($settings["galmap_show_rares"] == "true") {
-    $rare_result = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT
-                                                                edtb_rares.item, edtb_rares.station, edtb_rares.system_name, edtb_rares.ls_to_star,
-                                                                edtb_systems.x, edtb_systems.y, edtb_systems.z
-                                                                FROM edtb_rares
-                                                                LEFT JOIN edtb_systems ON edtb_rares.system_name = edtb_systems.name
-                                                                WHERE edtb_rares.system_name != ''")
-                                                                or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+    $query = "  SELECT
+                edtb_rares.item, edtb_rares.station, edtb_rares.system_name, edtb_rares.ls_to_star,
+                edtb_systems.x, edtb_systems.y, edtb_systems.z
+                FROM edtb_rares
+                LEFT JOIN edtb_systems ON edtb_rares.system_name = edtb_systems.name
+                WHERE edtb_rares.system_name != ''";
 
-    while ($rare_row = mysqli_fetch_array($rare_result)) {
+    $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+
+    while ($row = $result->fetch_object()) {
         $info = "";
         $cat = "";
-        $rare_system = $rare_row["system_name"];
+        $rare_system = $row->system_name;
 
         // coordinates
-        $rare_coordx = $rare_row["x"];
-        $rare_coordy = $rare_row["y"];
-        $rare_coordz = $rare_row["z"];
+        $rare_coordx = $row->x;
+        $rare_coordy = $row->y;
+        $rare_coordz = $row->z;
 
         if (strtolower($rare_system) != strtolower($curSys["name"]) && valid_coordinates($rare_coordx, $rare_coordy, $rare_coordz)) {
-            $rare_item = $rare_row["item"];
-            $rare_station = $rare_row["station"];
-            $rare_dist_to_star = number_format($rare_row["ls_to_star"]);
+            $rare_item = $row->item;
+            $rare_station = $row->station;
+            $rare_dist_to_star = number_format($row->ls_to_star);
             $rare_disp_name = $rare_system;
-
 
             $cat = ',"cat":[10]';
 
@@ -336,47 +345,54 @@ if ($settings["galmap_show_rares"] == "true") {
             $last_row = "," . $data;
         }
     }
+    $result->close();
 }
 
 /**
  *  fetch logged systems data for the map
  */
+$query = "  SELECT user_log.id, user_log.stardate, user_log.log_entry, user_log.system_name,
+            edtb_systems.x, edtb_systems.y, edtb_systems.z
+            FROM user_log
+            LEFT JOIN edtb_systems ON user_log.system_name = edtb_systems.name
+            WHERE user_log.system_name != ''";
 
-$log_result = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT user_log.id, user_log.stardate, user_log.log_entry, user_log.system_name,
-                                                            edtb_systems.x, edtb_systems.y, edtb_systems.z
-                                                            FROM user_log
-                                                            LEFT JOIN edtb_systems ON user_log.system_name = edtb_systems.name
-                                                            WHERE user_log.system_name != ''")
-                                                            or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+$result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
 
-while ($log_row = mysqli_fetch_array($log_result)) {
+while ($row = $result->fetch_object()) {
     $info = "";
     $cat = "";
-    $log_system = $log_row["system_name"];
+    $log_system = $row->system_name;
 
     // coordinates
-    $log_coordx = $log_row["x"];
-    $log_coordy = $log_row["y"];
-    $log_coordz = $log_row["z"];
+    $log_coordx = $row->x;
+    $log_coordy = $row->y;
+    $log_coordz = $row->z;
 
     if (!valid_coordinates($log_coordx, $log_coordy, $log_coordz)) {
-        $lb_res = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT x, y, z
-                                                            FROM user_systems_own
-                                                            WHERE name = '" . mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $log_system) . "'
-                                                            LIMIT 1") or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+        $esc_log_sys_name = $mysqli->real_escape_string($log_system);
 
-        $lb_arr = mysqli_fetch_assoc($lb_res);
+        $esc_name = $mysqli->real_escape_string($log_system);
+        $query = "  SELECT x, y, z
+                    FROM user_systems_own
+                    WHERE name = '$esc_log_sys_name'
+                    LIMIT 1";
 
-        $log_coordx = $lb_arr["x"] == "" ? "" : $lb_arr["x"];
-        $log_coordy = $lb_arr["y"] == "" ? "" : $lb_arr["y"];
-        $log_coordz = $lb_arr["z"] == "" ? "" : $lb_arr["z"];
+        $coord_res = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+        $obj = $coord_res->fetch_object();
+
+        $log_coordx = $obj->x == "" ? "" : $obj->x;
+        $log_coordy = $obj->y == "" ? "" : $obj->y;
+        $log_coordz = $obj->z == "" ? "" : $obj->z;
+
+        $coord_res->close();
     }
 
     if (valid_coordinates($log_coordx, $log_coordy, $log_coordz)) {
-        $log_date = $log_row["stardate"];
+        $log_date = $row->stardate;
         $date = date_create($log_date);
         $log_added = date_modify($date, "+1286 years");
-        $text = $log_row["log_entry"];
+        $text = $row->log_entry;
 
         if (mb_strlen($text) > 40) {
             $text = substr($text, 0, 40) . "...";
@@ -398,6 +414,7 @@ while ($log_row = mysqli_fetch_array($log_result)) {
         $last_row = "," . $data;
     }
 }
+$result->close();
 
 //$info = '</div>';
 $cur_sys_data = "";

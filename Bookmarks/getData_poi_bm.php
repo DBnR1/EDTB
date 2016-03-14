@@ -35,8 +35,10 @@
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 /** @require curSys */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/curSys.php");
+/** @require MySQL */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 /** @require PoiBm class */
-require_once("PoiBm.php");
+require_once("PoiBm.class.php");
 
 /**
  * get usable coordinates
@@ -56,53 +58,70 @@ $usez = $usable["z"];
 </script>
 <table>
     <tr>
-        <td class="heading" style="min-width:400px">
+        <td class="heading poi_minmax">
             <a href="javascript:void(0)" id="addp" title="Add point of interest">Points of Interest</a>
         </td>
-        <td class="heading" style="min-width:400px">
+        <td class="heading poi_minmax">
             Bookmarks
         </td>
     </tr>
     <tr>
-        <td style="vertical-align:top;padding:0">
+        <td class="poi_minmax" style="vertical-align:top;padding:0">
             <?php
-            // get poi in correct order
-            $poi_res = mysqli_query($GLOBALS["___mysqli_ston"], "   SELECT SQL_CACHE user_poi.id, user_poi.poi_name AS item_name,
-                                                                    user_poi.system_name, user_poi.text, user_poi.added_on,
-                                                                    IFNULL(user_poi.x, user_systems_own.x) AS item_coordx,
-                                                                    IFNULL(user_poi.y, user_systems_own.y) AS item_coordy,
-                                                                    IFNULL(user_poi.z, user_systems_own.z) AS item_coordz,
-                                                                    edtb_systems.id AS system_id,
-                                                                    user_poi_categories.name AS catname
-                                                                    FROM user_poi
-                                                                    LEFT JOIN edtb_systems ON user_poi.system_name = edtb_systems.name
-                                                                    LEFT JOIN user_poi_categories ON user_poi_categories.id = user_poi.category_id
-                                                                    LEFT JOIN user_systems_own ON user_poi.system_name = user_systems_own.name
-                                                                    ORDER BY -(sqrt(pow((item_coordx-(" . $usex . ")),2)+pow((item_coordy-(" . $usey . ")),2)+pow((item_coordz-(" . $usez . ")),2))) DESC, poi_name, system_name")
-                                                                    or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
-            //echo maketable($poi_res, "Poi");
+            /**
+             * fetch poi in correct order
+             */
+            $query = "  SELECT SQL_CACHE user_poi.id, user_poi.poi_name AS item_name,
+                        user_poi.system_name, user_poi.text, user_poi.added_on,
+                        IFNULL(user_poi.x, user_systems_own.x) AS item_coordx,
+                        IFNULL(user_poi.y, user_systems_own.y) AS item_coordy,
+                        IFNULL(user_poi.z, user_systems_own.z) AS item_coordz,
+                        edtb_systems.id AS system_id,
+                        user_poi_categories.name AS catname
+                        FROM user_poi
+                        LEFT JOIN edtb_systems ON user_poi.system_name = edtb_systems.name
+                        LEFT JOIN user_poi_categories ON user_poi_categories.id = user_poi.category_id
+                        LEFT JOIN user_systems_own ON user_poi.system_name = user_systems_own.name
+                        ORDER BY -(sqrt(pow((item_coordx-($usex)), 2)+pow((item_coordy-($usey)), 2)+pow((item_coordz-($usez)), 2))) DESC,
+                        poi_name,
+                        system_name";
+
+            $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+
             $poi = new PoiBm();
-            echo $poi->maketable($poi_res, "Poi");
+            $poi->mysqli = $mysqli;
+            echo $poi->maketable($result, "Poi");
+
+            $result->close();
             ?>
         </td>
-        <td style="vertical-align:top;padding:0">
+        <td class="poi_minmax" style="vertical-align:top;padding:0">
             <?php
-            // get bookmarks
-            $bm_res = mysqli_query($GLOBALS["___mysqli_ston"], "    SELECT SQL_CACHE user_bookmarks.id, user_bookmarks.system_id, user_bookmarks.system_name,
-                                                                    user_bookmarks.comment as text, user_bookmarks.added_on,
-                                                                    IFNULL(edtb_systems.x, user_systems_own.x) AS item_coordx,
-                                                                    IFNULL(edtb_systems.y, user_systems_own.y) AS item_coordy,
-                                                                    IFNULL(edtb_systems.z, user_systems_own.z) AS item_coordz,
-                                                                    user_bm_categories.name AS catname
-                                                                    FROM user_bookmarks
-                                                                    LEFT JOIN edtb_systems ON user_bookmarks.system_name = edtb_systems.name
-                                                                    LEFT JOIN user_bm_categories ON user_bookmarks.category_id = user_bm_categories.id
-                                                                    LEFT JOIN user_systems_own ON user_bookmarks.system_name = user_systems_own.name
-                                                                    ORDER BY -(sqrt(pow((item_coordx-(" . $usex . ")),2)+pow((item_coordy-(" . $usey . ")),2)+pow((item_coordz-(" . $usez . ")),2))) DESC, system_name, user_bookmarks.added_on DESC")
-                                                                    or write_log(mysqli_error($GLOBALS["___mysqli_ston"]), __FILE__, __LINE__);
+            /**
+             * fetch bookmarks
+             */
+            $query = "  SELECT SQL_CACHE user_bookmarks.id, user_bookmarks.system_id, user_bookmarks.system_name,
+                        user_bookmarks.comment as text, user_bookmarks.added_on,
+                        IFNULL(edtb_systems.x, user_systems_own.x) AS item_coordx,
+                        IFNULL(edtb_systems.y, user_systems_own.y) AS item_coordy,
+                        IFNULL(edtb_systems.z, user_systems_own.z) AS item_coordz,
+                        user_bm_categories.name AS catname
+                        FROM user_bookmarks
+                        LEFT JOIN edtb_systems ON user_bookmarks.system_name = edtb_systems.name
+                        LEFT JOIN user_bm_categories ON user_bookmarks.category_id = user_bm_categories.id
+                        LEFT JOIN user_systems_own ON user_bookmarks.system_name = user_systems_own.name
+                        ORDER BY -(sqrt(pow((item_coordx-($usex)), 2)+pow((item_coordy-($usey)), 2)+pow((item_coordz-($usez)), 2))) DESC,
+                        system_name,
+                        user_bookmarks.added_on DESC";
+
+            $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+
             $i = 0;
             $bm = new PoiBm();
-            echo $bm->maketable($bm_res, "Bm");
+            $bm->mysqli = $mysqli;
+            echo $bm->maketable($result, "Bm");
+
+            $result->close();
             ?>
         </td>
     </tr>
