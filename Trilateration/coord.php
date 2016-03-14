@@ -36,8 +36,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 /** @require MySQL */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
-/** @require trilateration function */
-require_once("coord_trilateration.php");
+/** @require trilateration class */
+require_once("Trilateration.class.php");
 
 if (isset($_GET["do"])) {
     $data = json_decode($_REQUEST["input"]);
@@ -120,7 +120,8 @@ if (isset($_GET["do"])) {
         $system3 = array($reference_3[0], $reference_3[1], $reference_3[2], $reference_3_distance);
         $system4 = array($reference_4[0], $reference_4[1], $reference_4[2], $reference_4_distance);
 
-        $newcoords = trilateration3d($system1, $system2, $system3, $system4);
+        $coords_calc = new Trilateration();
+        $newcoords = $coords_calc->trilateration3d($system1, $system2, $system3, $system4);
         $newcoords_x = $newcoords[0];
         $newcoords_y = $newcoords[1];
         $newcoords_z = $newcoords[2];
@@ -131,7 +132,7 @@ if (isset($_GET["do"])) {
 
         $system_exists = System::exists($target_system, true);
 
-        if ($system_exists) {
+        if (!$system_exists) {
             $stmt = "   INSERT INTO user_systems_own
                         (name, x, y, z, reference_distances, edsm_message)
                         VALUES

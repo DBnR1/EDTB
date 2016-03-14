@@ -33,7 +33,7 @@
 /**
  * Class ReferenceSystems
  */
-class ReferenceSystems
+class ReferenceSystems extends Trilateration
 {
     public $standard = false;
     public $used = [];

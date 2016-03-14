@@ -53,7 +53,7 @@ $system_exists = $result->num_rows;
 $do = true;
 $ref = [];
 if ($system_exists > 0) {
-    $system_arr = $result->fetch_object();
+    $sys_obj = $result->fetch_object();
     $edsm_msg = $sys_obj->edsm_message;
     $parts = explode(":::", $edsm_msg);
 
