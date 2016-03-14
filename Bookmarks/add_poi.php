@@ -35,55 +35,13 @@ if (isset($_GET["do"])) {
     require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
     /** @require functions */
     require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
-    /** @require MySQL */
-    require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
+    /** @require PoiBm class */
+    require_once("PoiBm.class.php");
 
     $data = json_decode($_REQUEST["input"]);
 
-    $p_system = $data->{"poi_system_name"};
-    $p_name = $data->{"poi_name"};
-    $p_x = $data->{"poi_coordx"};
-    $p_y = $data->{"poi_coordy"};
-    $p_z = $data->{"poi_coordz"};
-
-    if (valid_coordinates($p_x, $p_y, $p_z)) {
-        $addc = ", x = '$p_x', y = '$p_y', z = '$p_z'";
-        $addb = ", '$p_x', '$p_y', '$p_z'";
-    } else {
-        $addc = ", x = null, y = null, z = null";
-        $addb = ", null, null, null";
-    }
-
-    $p_entry = $data->{"poi_text"};
-    $p_id = $data->{"poi_edit_id"};
-    $category_id = $data->{"category_id"};
-
-    $esc_name = $mysqli->real_escape_string($p_name);
-    $esc_sysname = $mysqli->real_escape_string($p_system);
-    $esc_entry= $mysqli->real_escape_string($p_entry);
-
-    if ($p_id != "") {
-        $stmt = "  UPDATE user_poi SET
-                    poi_name = '$esc_name',
-                    system_name = '$esc_sysname',
-                    text = '$esc_entry',
-                    category_id = '$category_id'" . $addc . "
-                    WHERE id = '$p_id'";
-    } elseif (isset($_GET["deleteid"])) {
-        $stmt = "  DELETE FROM user_poi
-                    WHERE id = '" . $_GET["deleteid"] . "'
-                    LIMIT 1";
-    } else {
-        $stmt = "  INSERT INTO user_poi (poi_name, system_name, text, category_id, x, y, z, added_on)
-                    VALUES
-                    ('$esc_name',
-                    '$esc_sysname',
-                    '$esc_entry',
-                    '$category_id'" . $addb . ",
-                    UNIX_TIMESTAMP())";
-    }
-
-    $mysqli->query($stmt) or write_log($mysqli->error, __FILE__, __LINE__);
+    $AddPoi = new PoiBm();
+    $AddPoi->add_poi($data);
 
     exit;
 }

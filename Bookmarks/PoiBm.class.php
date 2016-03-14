@@ -34,22 +34,6 @@
 class PoiBm
 {
     /**
-     * PoiBm constructor.
-     */
-    public function __construct()
-    {
-        $ini_dir = str_replace("/EDTB", "", $_SERVER["DOCUMENT_ROOT"]);
-        require_once($ini_dir . "/data/server_config.inc.php");
-
-        $this->mysqli = new mysqli($server, $user, $pwd, $db);
-
-        if ($this->mysqli->connect_error) {
-            write_log($this->mysqli->connect_error);
-            exit;
-        }
-    }
-
-    /**
      * Make items
      *
      * @param object $obj
@@ -60,7 +44,7 @@ class PoiBm
      */
     private function makeitem($obj, $type, &$i)
     {
-        global $usex, $usey, $usez, $system_time;
+        global $usex, $usey, $usez, $system_time, $mysqli;
 
         $item_id = $obj->id;
         $item_text = $obj->text;
@@ -92,14 +76,14 @@ class PoiBm
         /**
          * if visited, change border color
          */
-        $esc_item_sys_name = $this->mysqli->real_escape_string($item_system_name);
+        $esc_item_sys_name = $mysqli->real_escape_string($item_system_name);
 
         $query = "  SELECT id
                     FROM user_visited_systems
                     WHERE system_name = '$esc_item_sys_name'
                     LIMIT 1";
 
-        $visited = $this->mysqli->query($query)->num_rows;
+        $visited = $mysqli->query($query)->num_rows;
 
         $style_override = $visited ? ' style="border-left: 3px solid #3da822"' : "";
 
@@ -195,5 +179,97 @@ class PoiBm
         }
 
         echo '</table>';
+    }
+
+    /**
+     * @param object $data
+     */
+    public function add_poi($data)
+    {
+        global $mysqli;
+
+        $p_system = $data->{"poi_system_name"};
+        $p_name = $data->{"poi_name"};
+        $p_x = $data->{"poi_coordx"};
+        $p_y = $data->{"poi_coordy"};
+        $p_z = $data->{"poi_coordz"};
+
+        if (valid_coordinates($p_x, $p_y, $p_z)) {
+            $addc = ", x = '$p_x', y = '$p_y', z = '$p_z'";
+            $addb = ", '$p_x', '$p_y', '$p_z'";
+        } else {
+            $addc = ", x = null, y = null, z = null";
+            $addb = ", null, null, null";
+        }
+
+        $p_entry = $data->{"poi_text"};
+        $p_id = $data->{"poi_edit_id"};
+        $category_id = $data->{"category_id"};
+
+        $esc_name = $mysqli->real_escape_string($p_name);
+        $esc_sysname = $mysqli->real_escape_string($p_system);
+        $esc_entry= $mysqli->real_escape_string($p_entry);
+
+        if ($p_id != "") {
+            $stmt = "   UPDATE user_poi SET
+                        poi_name = '$esc_name',
+                        system_name = '$esc_sysname',
+                        text = '$esc_entry',
+                        category_id = '$category_id'" . $addc . "
+                        WHERE id = '$p_id'";
+        } elseif (isset($_GET["deleteid"])) {
+            $stmt = "   DELETE FROM user_poi
+                        WHERE id = '" . $_GET["deleteid"] . "'
+                        LIMIT 1";
+        } else {
+            $stmt = "   INSERT INTO user_poi (poi_name, system_name, text, category_id, x, y, z, added_on)
+                        VALUES
+                        ('$esc_name',
+                        '$esc_sysname',
+                        '$esc_entry',
+                        '$category_id'" . $addb . ",
+                        UNIX_TIMESTAMP())";
+        }
+
+        $mysqli->query($stmt) or write_log($mysqli->error, __FILE__, __LINE__);
+    }
+
+    /**
+     * @param object $data
+     */
+    public function add_bm($data)
+    {
+        global $mysqli;
+
+        $bm_system_id = $data->{"bm_system_id"};
+        $bm_system_name = $data->{"bm_system_name"};
+        $bm_catid = $data->{"bm_catid"};
+        $bm_entry = $data->{"bm_text"};
+        $bm_id = $data->{"bm_edit_id"};
+
+        $esc_entry = $mysqli->real_escape_string($bm_entry);
+        $esc_sysname = $mysqli->real_escape_string($bm_system_name);
+
+        if ($bm_id != "") {
+            $query = "  UPDATE user_bookmarks SET
+                        comment = '$esc_entry',
+                        system_name = '$esc_sysname',
+                        category_id = '$bm_catid'
+                        WHERE id = '$bm_id' LIMIT 1";
+        } elseif (isset($_GET["deleteid"])) {
+            $query = "  DELETE FROM user_bookmarks
+                        WHERE id = '" . $_GET["deleteid"] . "'
+                        LIMIT 1";
+        } else {
+            $query = "  INSERT INTO user_bookmarks (system_id, system_name, comment, category_id, added_on)
+                        VALUES
+                        ('$bm_system_id',
+                        '$esc_sysname',
+                        '$esc_entry',
+                        '$bm_catid',
+                        UNIX_TIMESTAMP())";
+        }
+
+        $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
     }
 }

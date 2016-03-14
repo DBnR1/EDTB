@@ -44,7 +44,7 @@ $pagetitle = "ED ToolBox";
 
 /** @require header file */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
-/** @require functions file */
+/** @require MakeLog class */
 require_once("MakeLog.class.php");
 ?>
 <div class="entries">

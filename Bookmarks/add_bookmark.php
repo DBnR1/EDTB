@@ -33,41 +33,13 @@
 if (isset($_GET["do"])) {
     /** @require functions */
     require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
-    /** @require MySQL */
-    require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
+    /** @require PoiBm class */
+    require_once("PoiBm.class.php");
 
     $data = json_decode($_REQUEST["input"]);
 
-    $bm_system_id = $data->{"bm_system_id"};
-    $bm_system_name = $data->{"bm_system_name"};
-    $bm_catid = $data->{"bm_catid"};
-    $bm_entry = $data->{"bm_text"};
-    $bm_id = $data->{"bm_edit_id"};
-
-    $esc_entry = $mysqli->real_escape_string($bm_entry);
-    $esc_sysname = $mysqli->real_escape_string($bm_system_name);
-
-    if ($bm_id != "") {
-        $query = "  UPDATE user_bookmarks SET
-                    comment = '$esc_entry',
-                    system_name = '$esc_sysname',
-                    category_id = '$bm_catid'
-                    WHERE id = '$bm_id' LIMIT 1";
-    } elseif (isset($_GET["deleteid"])) {
-        $query = "  DELETE FROM user_bookmarks
-                    WHERE id = '" . $_GET["deleteid"] . "'
-                    LIMIT 1";
-    } else {
-        $query = "  INSERT INTO user_bookmarks (system_id, system_name, comment, category_id, added_on)
-                    VALUES
-                    ('$bm_system_id',
-                    '$esc_sysname',
-                    '$esc_entry',
-                    '$bm_catid',
-                    UNIX_TIMESTAMP())";
-    }
-
-    $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+    $AddBm = new PoiBm();
+    $AddBm->add_bm($data);
 
     exit;
 }

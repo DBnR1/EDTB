@@ -36,123 +36,14 @@ if (isset($_GET["do"])) {
     /** @require functions */
     require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
     /** @require MySQL */
-    require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
+    //require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
+    /** @require MakeLog class */
+    require_once("MakeLog.class.php");
 
     $data = json_decode($_REQUEST["input"]);
 
-    $l_system_name = $data->{"system_name"};
-    $l_station_name = $data->{"station_name"};
-    $l_entry = $data->{"log_entry"};
-    $l_id = $data->{"edit_id"};
-    $l_type = $data->{"log_type"};
-    $l_pinned = $data->{"pinned"} == "1" ? "1" : "0";
-    $l_weight = $data->{"weight"};
-    $l_title = $data->{"title"};
-    $l_audiofiles = $data->{"audiofiles"};
-
-    $esc_system_name = $mysqli->real_escape_string($l_system_name);
-    $esc_station_name = $mysqli->real_escape_string($l_station_name);
-    $esc_entry = $mysqli->real_escape_string($l_entry);
-    $esc_title = $mysqli->real_escape_string($l_title);
-    $esc_audiofiles = $mysqli->real_escape_string($l_audiofiles);
-
-    /**
-     * get system id
-     */
-    $query = "  SELECT id AS system_id
-                FROM edtb_systems
-                WHERE name = '$esc_system_name'
-                LIMIT 1";
-
-    $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
-    $arr = $result->fetch_object();
-    $l_system = $arr->system_id;
-
-    $result->close();
-
-    /**
-     * get station id
-     */
-    $query = "  SELECT id AS station_id
-                FROM edtb_stations
-                WHERE name = '$esc_station_name'
-                AND system_id = '$l_system'
-                LIMIT 1";
-
-    $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
-    $arr2 = $result->fetch_object();
-    $l_station = $arr2->station_id;
-
-    $result->close();
-
-    if ($l_system_name == "") {
-        $l_system = "0";
-        $l_system_name = "";
-    }
-
-    if ($l_id != "") {
-        $query = "  UPDATE user_log SET
-                    system_id = '$l_system',
-                    system_name = '$esc_system_name',
-                    station_id = '$l_station',
-                    log_entry = '$esc_entry',
-                    title = '$esc_title',
-                    type = '$l_type',
-                    weight = '$l_weight',
-                    pinned = '$l_pinned',
-                    audio = '$esc_audiofiles'
-                    WHERE id = '$l_id'
-                    LIMIT 1";
-
-        $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
-
-    } elseif (isset($_GET["deleteid"])) {
-        $query = "  SELECT audio
-                    FROM user_log
-                    WHERE id = '" . $_GET["deleteid"] . "'
-                    LIMIT 1";
-
-        $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
-        $arr = $result->fetch_object();
-
-        $audio = $arr->audio;
-        $result->close();
-
-        $audio_files = explode(", ", $audio);
-
-        foreach ($audio_files as $audio_file) {
-            $file = $_SERVER["DOCUMENT_ROOT"] . "/audio_logs/" . $audio_file;
-
-            if (file_exists($file) && is_file($file)) {
-                if (!unlink($file)) {
-                    $error = error_get_last();
-                    write_log("Error: " . $error["message"], __FILE__, __LINE__);
-                }
-            }
-        }
-        unset($audio_file);
-
-        $query = "  DELETE FROM user_log
-                    WHERE id = '" . $_GET["deleteid"] . "'
-                    LIMIT 1";
-
-        $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
-
-    } else {
-        $query = "  INSERT INTO user_log (system_id, system_name, station_id, log_entry, title, weight, pinned, type, audio)
-                    VALUES
-                    ('$l_system',
-                    '$esc_system_name',
-                    '$l_station',
-                    '$esc_entry',
-                    '$esc_title',
-                    '$l_weight',
-                    '$l_pinned',
-                    '$l_type',
-                    '$esc_audiofiles')";
-
-        $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
-    }
+    $addLog = new MakeLog();
+    $addLog->add_log($data);
 
     exit;
 }
@@ -310,6 +201,7 @@ if (isset($_GET["do"])) {
 </script>
 <script>
     var log_type = $("#log_type");
+
     log_type.change(function()
     {
         log_type.find("option:selected").each(function()

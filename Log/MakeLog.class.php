@@ -36,13 +36,15 @@ class MakeLog
      * @param string $sort
      * @return string
      */
-    private function get_sort($sort)
+    private function get_sort($to_sort)
     {
-        if (isset($sort) && $sort != "undefined") {
-            if ($sort == "asc") {
+        $gsort = $_GET[$to_sort . "_sort"];
+
+        if (isset($gsort) && $gsort != "undefined") {
+            if ($gsort == "asc") {
                 $sort = "desc";
             }
-            if ($sort == "desc") {
+            if ($gsort == "desc") {
                 $sort = "asc";
             }
         } else {
@@ -138,10 +140,10 @@ class MakeLog
 
                     $sortable = "";
                     if ($i == 0 && $type != "log") {
-                        $sssort = $this->get_sort($_GET["slog_sort"]);
+                        $sssort = $this->get_sort("slog");
 
                         $sortable = '<span class="right">';
-                        $sortable .= '<a href="/index.php?slog_sort=' . $sssort . '" title="Sort by date asc/desc">';
+                        $sortable .= '<a href="/?slog_sort=' . $sssort . '" title="Sort by date asc/desc">';
                         $sortable .= '<img class="icon" src="/style/img/sort.png" alt="Sort" style="margin-right:0" />';
                         $sortable .= '</a></span>';
                     }
@@ -157,10 +159,10 @@ class MakeLog
                     $logdata .= '</a>' . $l_crosslinks . $add . $sortable . '</h2></header>';
                     $logdata .= '<hr>';
                 } elseif ($type == "general" && $i == 0) {
-                    $gssort = $this->get_sort($_GET["glog_sort"]);
+                    $gssort = $this->get_sort("glog");
 
                     $sortable = '<span class="right">';
-                    $sortable .= '<a href="/index.php?glog_sort=' . $gssort . '" title="Sort by date asc/desc">';
+                    $sortable .= '<a href="/?glog_sort=' . $gssort . '" title="Sort by date asc/desc">';
                     $sortable .= '<img class="icon" src="/style/img/sort.png" alt="Sort" style="margin-right:0" />';
                     $sortable .= '</a></span>';
 
@@ -201,5 +203,158 @@ class MakeLog
         }
 
         return $logdata;
+    }
+
+    /**
+     * @param string $what
+     * @param string $esc_system_name
+     * @param string $esc_station_name
+     * @param string $l_system
+     * @return mixed
+     */
+    public function get_id($what, $esc_system_name = "", $esc_station_name = "", $l_system = "")
+    {
+        global $mysqli;
+
+        if ($what == "system") {
+            $query = "  SELECT id AS system_id
+                        FROM edtb_systems
+                        WHERE name = '$esc_system_name'
+                        LIMIT 1";
+
+            $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+            $arr = $result->fetch_object();
+
+            $retval = $arr->system_id;
+
+            $result->close();
+        } elseif ($what == "station") {
+            $query = "  SELECT id AS station_id
+                        FROM edtb_stations
+                        WHERE name = '$esc_station_name'
+                        AND system_id = '$l_system'
+                        LIMIT 1";
+
+            $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+            $arr = $result->fetch_object();
+
+            $retval = $arr->station_id;
+
+            $result->close();
+        }
+
+        return $retval;
+    }
+
+    /**
+     *
+     */
+    private function delete_log()
+    {
+        global $mysqli;
+
+        $query = "  SELECT audio
+                    FROM user_log
+                    WHERE id = '" . $_GET["deleteid"] . "'
+                    LIMIT 1";
+
+        $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+        $arr = $result->fetch_object();
+
+        $audio = $arr->audio;
+
+        $result->close();
+
+        $audio_files = explode(", ", $audio);
+
+        foreach ($audio_files as $audio_file) {
+            $file = $_SERVER["DOCUMENT_ROOT"] . "/audio_logs/" . $audio_file;
+
+            if (file_exists($file) && is_file($file)) {
+                if (!unlink($file)) {
+                    $error = error_get_last();
+                    write_log("Error: " . $error["message"], __FILE__, __LINE__);
+                }
+            }
+        }
+        unset($audio_file);
+
+        $query = "  DELETE FROM user_log
+                    WHERE id = '" . $_GET["deleteid"] . "'
+                    LIMIT 1";
+
+        $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+    }
+
+    /**
+     * @param object $data
+     */
+    public function add_log($data)
+    {
+        global $mysqli;
+
+        $l_system_name = $data->{"system_name"};
+        $l_station_name = $data->{"station_name"};
+        $l_entry = $data->{"log_entry"};
+        $l_id = $data->{"edit_id"};
+        $l_type = $data->{"log_type"};
+        $l_pinned = $data->{"pinned"} == "1" ? "1" : "0";
+        $l_weight = $data->{"weight"};
+        $l_title = $data->{"title"};
+        $l_audiofiles = $data->{"audiofiles"};
+
+        $esc_system_name = $mysqli->real_escape_string($l_system_name);
+        $esc_station_name = $mysqli->real_escape_string($l_station_name);
+        $esc_entry = $mysqli->real_escape_string($l_entry);
+        $esc_title = $mysqli->real_escape_string($l_title);
+        $esc_audiofiles = $mysqli->real_escape_string($l_audiofiles);
+
+        /**
+         * get system id
+         */
+        $l_system = $this->get_id("system", $esc_system_name);
+
+        /**
+         * get station id
+         */
+        $l_station = $this->get_id("station", "", $esc_station_name, $l_system);
+
+        if ($l_system_name == "") {
+            $l_system = "0";
+        }
+
+        if ($l_id != "") {
+            $query = "  UPDATE user_log SET
+                        system_id = '$l_system',
+                        system_name = '$esc_system_name',
+                        station_id = '$l_station',
+                        log_entry = '$esc_entry',
+                        title = '$esc_title',
+                        type = '$l_type',
+                        weight = '$l_weight',
+                        pinned = '$l_pinned',
+                        audio = '$esc_audiofiles'
+                        WHERE id = '$l_id'
+                        LIMIT 1";
+
+            $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+
+        } elseif (isset($_GET["deleteid"])) {
+            $this->delete_log();
+        } else {
+            $query = "  INSERT INTO user_log (system_id, system_name, station_id, log_entry, title, weight, pinned, type, audio)
+                        VALUES
+                        ('$l_system',
+                        '$esc_system_name',
+                        '$l_station',
+                        '$esc_entry',
+                        '$esc_title',
+                        '$l_weight',
+                        '$l_pinned',
+                        '$l_type',
+                        '$esc_audiofiles')";
+
+            $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+        }
     }
 }
