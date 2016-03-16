@@ -1,55 +1,69 @@
-            <?php
-            /**
-             * Footer file
-             *
-             * No description
-             *
-             * @package EDTB\Main
-             * @author Mauri Kujala <contact@edtb.xyz>
-             * @copyright Copyright (C) 2016, Mauri Kujala
-             * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
-             */
+<?php
+/**
+ * Footer class
+ *
+ * @package EDTB\Backend
+ * @author Mauri Kujala <contact@edtb.xyz>
+ * @copyright Copyright (C) 2016, Mauri Kujala
+ * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
+ */
 
-             /*
-             * ED ToolBox, a companion web app for the video game Elite Dangerous
-             * (C) 1984 - 2016 Frontier Developments Plc.
-             * ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
-             *
-             * This program is free software; you can redistribute it and/or
-             * modify it under the terms of the GNU General Public License
-             * as published by the Free Software Foundation; either version 2
-             * of the License, or (at your option) any later version.
-             *
-             * This program is distributed in the hope that it will be useful,
-             * but WITHOUT ANY WARRANTY; without even the implied warranty of
-             * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-             * GNU General Public License for more details.
-             *
-             * You should have received a copy of the GNU General Public License
-             * along with this program; if not, write to the Free Software
-             * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-             */
+ /*
+ * ED ToolBox, a companion web app for the video game Elite Dangerous
+ * (C) 1984 - 2016 Frontier Developments Plc.
+ * ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ */
 
-            ?>
+/** @require installer script */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/install_script.php");
+/** @require config */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
+/** @require MySQL */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
+/** @require functions */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+/** @require curSys */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/source/curSys.php");
+/** @require Theme */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.class.php");
+
+/**
+ * Class Footer
+ */
+class Footer extends Theme
+{
+    /**
+     * Display footer
+     */
+    public function display_footer()
+    {
+        global $mysqli;
+        ?>
             <div class="rightpanel-content">
                 <?php
                 /** @include log */
                 include_once($_SERVER["DOCUMENT_ROOT"] . "/Log/add_log.php");
                 //
 
-                // add and edit stations
-                //include_once("/add/stationData.php");
-                //
-
                 // calculate coordinates
                 include_once($_SERVER["DOCUMENT_ROOT"] . "/Trilateration/coord.php");
                 //
 
-                // edit system
-                //include_once("/add/systemData.php");
-                //
-
-                // add/edit bookmakrs
+                // add/edit bookmarks
                 include_once($_SERVER["DOCUMENT_ROOT"] . "/Bookmarks/add_bookmark.php");
                 //
                 ?>
@@ -82,11 +96,11 @@
                         <table>
                             <tr>
                                 <td class="heading" colspan="2">Calculate Distances
-                                    <span class="right">
-                                        <a href="javascript:void(0)" onclick="tofront('distance')" title="Close form">
-                                            <img src="/style/img/close.png" class="icon" alt="X" />
-                                        </a>
-                                    </span>
+                                                <span class="right">
+                                                    <a href="javascript:void(0)" onclick="tofront('distance')" title="Close form">
+                                                        <img src="/style/img/close.png" class="icon" alt="X" />
+                                                    </a>
+                                                </span>
                                 </td>
                             </tr>
                             <tr>
@@ -130,11 +144,11 @@
                         <table>
                             <tr>
                                 <td class="heading" colspan="2">Search Systems and Stations
-                                    <span class="right">
-                                        <a href="javascript:void(0)" onclick="tofront('search_system')" title="Close form">
-                                            <img src="/style/img/close.png" class="icon" alt="X" />
-                                        </a>
-                                    </span>
+                                                <span class="right">
+                                                    <a href="javascript:void(0)" onclick="tofront('search_system')" title="Close form">
+                                                        <img src="/style/img/close.png" class="icon" alt="X" />
+                                                    </a>
+                                                </span>
                                 </td>
                             </tr>
                             <tr>
@@ -279,13 +293,6 @@
                     toggle_log("");
                 });
 
-                // $("#toggle").click(function()
-                // {
-                    // tofront("distance");
-                    // get_cs("system_2", "coords_2");
-                    // $("#system_6").focus();
-                // });
-
                 $("#calc_click").click(function()
                 {
                     calcDist($("#coordsx_2").val(), $("#coordsy_2").val(), $("#coordsz_2").val(), $("#coordsx_6").val(), $("#coordsy_6").val(),$("#coordsz_6").val(), $("#system_2").val(), $("#system_6").val());
@@ -318,5 +325,8 @@
                 });
             });
         </script>
-    </body>
-</html>
+        </body>
+        </html>
+        <?php
+    }
+}

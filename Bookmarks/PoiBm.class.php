@@ -33,6 +33,23 @@
  */
 class PoiBm
 {
+    public $usex, $usey, $usez;
+    public $time_difference = 0;
+
+    /**
+     * PoiBm constructor.
+     */
+    public function __construct()
+    {
+        global $server, $user, $pwd, $db;
+
+        $this->mysqli = new mysqli($server, $user, $pwd, $db);
+
+        if ($this->mysqli->connect_errno) {
+            echo "Failed to connect to MySQL: " . $this->mysqli->connect_error;
+        }
+    }
+
     /**
      * Make items
      *
@@ -42,10 +59,8 @@ class PoiBm
      * @return string
      * @author Mauri Kujala <contact@edtb.xyz>
      */
-    private function makeitem($obj, $type, &$i)
+    private function make_item($obj, $type, &$i)
     {
-        global $usex, $usey, $usez, $system_time, $mysqli;
-
         $item_id = $obj->id;
         $item_text = $obj->text;
         $item_name = $obj->item_name;
@@ -59,7 +74,7 @@ class PoiBm
         if (!empty($item_added_on)) {
             $item_added_ago = get_timeago($item_added_on, false);
 
-            $item_added_on = new DateTime(date("Y-m-d\TH:i:s\Z", ($item_added_on + $system_time * 60 * 60)));
+            $item_added_on = new DateTime(date("Y-m-d\TH:i:s\Z", ($item_added_on + $this->time_difference * 60 * 60)));
             $item_added_on = date_modify($item_added_on, "+1286 years");
             $item_added_on = $item_added_on->format("j M Y, H:i");
         }
@@ -70,21 +85,13 @@ class PoiBm
 
         $distance = "n/a";
         if (valid_coordinates($item_coordx, $item_coordy, $item_coordz)) {
-            $distance = number_format(sqrt(pow(($item_coordx - ($usex)), 2) + pow(($item_coordy - ($usey)), 2) + pow(($item_coordz - ($usez)), 2)), 1) . " ly";
+            $distance = number_format(sqrt(pow(($item_coordx - ($this->usex)), 2) + pow(($item_coordy - ($this->usey)), 2) + pow(($item_coordz - ($this->usez)), 2)), 1) . " ly";
         }
 
         /**
          * if visited, change border color
          */
-        $esc_item_sys_name = $mysqli->real_escape_string($item_system_name);
-
-        $query = "  SELECT id
-                    FROM user_visited_systems
-                    WHERE system_name = '$esc_item_sys_name'
-                    LIMIT 1";
-
-        $visited = $mysqli->query($query)->num_rows;
-
+        $visited = System::num_visits($item_system_name);
         $style_override = $visited ? ' style="border-left: 3px solid #3da822"' : "";
 
         $tdclass = $i % 2 ? "dark" : "light";
@@ -136,7 +143,7 @@ class PoiBm
      * @return string
      * @author Mauri Kujala <contact@edtb.xyz>
      */
-    public function maketable($res, $type)
+    public function make_table($res, $type)
     {
         global $curSys;
 
@@ -156,7 +163,7 @@ class PoiBm
             $i = 0;
             $to_last = [];
             while ($obj = $res->fetch_object()) {
-                echo $this->makeitem($obj, $type, $i);
+                echo $this->make_item($obj, $type, $i);
             }
         } else {
             if ($type == "Poi") {
@@ -186,8 +193,6 @@ class PoiBm
      */
     public function add_poi($data)
     {
-        global $mysqli;
-
         $p_system = $data->{"poi_system_name"};
         $p_name = $data->{"poi_name"};
         $p_x = $data->{"poi_coordx"};
@@ -206,9 +211,9 @@ class PoiBm
         $p_id = $data->{"poi_edit_id"};
         $category_id = $data->{"category_id"};
 
-        $esc_name = $mysqli->real_escape_string($p_name);
-        $esc_sysname = $mysqli->real_escape_string($p_system);
-        $esc_entry= $mysqli->real_escape_string($p_entry);
+        $esc_name = $this->mysqli->real_escape_string($p_name);
+        $esc_sysname = $this->mysqli->real_escape_string($p_system);
+        $esc_entry= $this->mysqli->real_escape_string($p_entry);
 
         if ($p_id != "") {
             $stmt = "   UPDATE user_poi SET
@@ -231,7 +236,7 @@ class PoiBm
                         UNIX_TIMESTAMP())";
         }
 
-        $mysqli->query($stmt) or write_log($mysqli->error, __FILE__, __LINE__);
+        $this->mysqli->query($stmt) or write_log($this->mysqli->error, __FILE__, __LINE__);
     }
 
     /**
@@ -239,16 +244,14 @@ class PoiBm
      */
     public function add_bm($data)
     {
-        global $mysqli;
-
         $bm_system_id = $data->{"bm_system_id"};
         $bm_system_name = $data->{"bm_system_name"};
         $bm_catid = $data->{"bm_catid"};
         $bm_entry = $data->{"bm_text"};
         $bm_id = $data->{"bm_edit_id"};
 
-        $esc_entry = $mysqli->real_escape_string($bm_entry);
-        $esc_sysname = $mysqli->real_escape_string($bm_system_name);
+        $esc_entry = $this->mysqli->real_escape_string($bm_entry);
+        $esc_sysname = $this->mysqli->real_escape_string($bm_system_name);
 
         if ($bm_id != "") {
             $query = "  UPDATE user_bookmarks SET
@@ -270,6 +273,6 @@ class PoiBm
                         UNIX_TIMESTAMP())";
         }
 
-        $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+        $this->mysqli->query($query) or write_log($this->mysqli->error, __FILE__, __LINE__);
     }
 }

@@ -30,11 +30,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-/** @var string pagetitle */
-$pagetitle = "Companion API login";
+/** @require Theme class */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.class.php");
 
-/** @require header file */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
+/**
+ * initiate page header
+ */
+$header = new Header();
+
+/** @var string page_title */
+$header->page_title = "Companion API login";
+
+/**
+ * display the header
+ */
+$header->display_header();
 
 /**
  * send login details
@@ -82,7 +92,10 @@ if (isset($_GET["sendcode"])) {
                             </tr>
                             <tr>
                                 <td class="dark">
-                                    <span class="left"><img src="/style/img/about.png" class="icon32" alt="Info" /></span>If your email and password were correct,<br />you should now have received a verification code to your email.<br />Copy and paste it here, then click Send.
+                                    <span class="left"><img src="/style/img/about.png" class="icon32" alt="Info" /></span>
+                                    If your email and password were correct,<br />
+                                    you should now have received a verification code to your email.<br />
+                                    Copy and paste it here, then click Send.
                                 </td>
                             </tr>
                             <tr>
@@ -121,7 +134,8 @@ if (isset($_GET["sendcode"])) {
                                 </tr>
                                 <tr>
                                     <td class="dark">
-                                        <span class="left"><img src="/style/img/about.png" alt="Info" class="icon32" /></span>Provide the email address and password you use to login to <strong>Elite Dangerous</strong>.
+                                        <span class="left"><img src="/style/img/about.png" alt="Info" class="icon32" /></span>
+                                        Provide the email address and password you use to login to <strong>Elite Dangerous</strong>.
                                     </td>
                                 </tr>
                                 <tr>
@@ -150,4 +164,12 @@ if (isset($_GET["sendcode"])) {
     </div>
 </div>
 <?php
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");
+/**
+ * initiate page footer
+ */
+$footer = new Footer();
+
+/**
+ * display the footer
+ */
+$footer->display_footer();

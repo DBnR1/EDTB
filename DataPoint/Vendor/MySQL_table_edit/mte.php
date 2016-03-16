@@ -83,6 +83,20 @@ class MySQLtabledit
     public $query_joomla_component;
 
     /**
+     * MySQLtabledit constructor.
+     */
+    public function __construct()
+    {
+        global $server, $user, $pwd, $db;
+
+        $this->mysqli = new mysqli($server, $user, $pwd, $db);
+
+        if ($this->mysqli->connect_errno) {
+            echo "Failed to connect to MySQL: " . $this->mysqli->connect_error;
+        }
+    }
+
+    /**
      *
      */
     public function do_it()
@@ -129,8 +143,6 @@ class MySQLtabledit
      */
     public function show_list()
     {
-        global $mysqli;
-
         // message after add or edit
         $this->content_saved = $_SESSION['content_saved'];
         $_SESSION['content_saved'] = '';
@@ -206,7 +218,7 @@ class MySQLtabledit
 
             $query = "SHOW COLUMNS FROM `$this->table`";
 
-            $columns = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+            $columns = $this->mysqli->query($query) or write_log($this->mysqli->error, __FILE__, __LINE__);
 
             while ($obj = $columns->fetch_object()) {
                 $fields[] = $this->table . '.' . $obj->Field;
@@ -246,18 +258,18 @@ class MySQLtabledit
             }
         }
 
-        $hits = $mysqli->query($sql) or write_log($mysqli->error, __FILE__, __LINE__);
+        $hits = $this->mysqli->query($sql) or write_log($this->mysqli->error, __FILE__, __LINE__);
 
         // navigation 2/3
         $hits_total = $hits->num_rows;
         $hits->close();
 
         $sql .= " LIMIT $start, $this->num_rows_list_view";
-        $result = $mysqli->query($sql) or write_log($mysqli->error, __FILE__, __LINE__);
+        $result = $this->mysqli->query($sql) or write_log($this->mysqli->error, __FILE__, __LINE__);
 
         if ($result->num_rows > 0) {
             $query = "SHOW COLUMNS FROM `$this->table`";
-            $cols = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+            $cols = $this->mysqli->query($query) or write_log($this->mysqli->error, __FILE__, __LINE__);
 
             while ($obj = $cols->fetch_object()) {
                 $Field = $obj->Field;
@@ -281,7 +293,7 @@ class MySQLtabledit
                 $d_y = "";
                 $d_z = "";
 
-                $esc_sys_name = $mysqli->real_escape_string($data->system_name);
+                $esc_sys_name = $this->mysqli->real_escape_string($data->system_name);
 
                 if (property_exists($data, "x") && property_exists($data, "y") && property_exists($data, "z") || property_exists($data, "system_name") || property_exists($data, "system_id")) {
                     $dist = true;
@@ -297,7 +309,7 @@ class MySQLtabledit
                                     WHERE id = '$data->system_id'
                                     LIMIT 1";
 
-                        $coord_result = $mysqli->query($query);
+                        $coord_result = $this->mysqli->query($query);
                         $found = $coord_result->num_rows;
 
                         if ($found > 0) {
@@ -319,7 +331,7 @@ class MySQLtabledit
                                         WHERE name = '$esc_sys_name'
                                         LIMIT 1";
 
-                            $coord_result = $mysqli->query($query);
+                            $coord_result = $this->mysqli->query($query);
                             $found = $coord_result->num_rows;
 
                             if ($found > 0) {
@@ -334,7 +346,7 @@ class MySQLtabledit
                                             WHERE name = '$esc_sys_name'
                                             LIMIT 1";
 
-                                $coord_result = $mysqli->query($query);
+                                $coord_result = $this->mysqli->query($query);
                                 $own_found = $coord_result->num_rows;
 
                                 if ($own_found > 0) {
@@ -468,13 +480,13 @@ class MySQLtabledit
             $vanaf = 1;
         }
 
-        if ($last_page>$this_page + 10) {
+        if ($last_page > $this_page + 10) {
             $tot = $this_page + 10;
         } else {
             $tot = $last_page;
         }
 
-        for ($f=$vanaf;$f<=$tot;$f++) {
+        for ($f = $vanaf; $f <= $tot; $f++) {
             $nav_toon = $this->num_rows_list_view * ($f - 1);
 
             if ($f == $this_page) {
@@ -483,7 +495,7 @@ class MySQLtabledit
                 $navigation .= "<td class='mte_nav' style='background-color:#0e0e11'><a data-replace='true' data-target='.rightpanel' class='mtelink' href='$this->url_script?$query_nav&start=$nav_toon'>$f</a></td>";
             }
         }
-        if ($hits_total<$this->num_rows_list_view) {
+        if ($hits_total < $this->num_rows_list_view) {
             $navigation = '';
         }
 
@@ -609,13 +621,11 @@ class MySQLtabledit
      */
     public function del_rec()
     {
-        global $mysqli;
-
         $in_id = $_GET['id'];
 
         $stmt = "DELETE FROM " . $this->table . " WHERE `" . $this->primary_key . "` = '$in_id'";
 
-        if ($mysqli->query($stmt)) {
+        if ($this->mysqli->query($stmt)) {
             $this->content_deleted = "
                 <div class='notify_deleted'>
                     Record {$this->show_text[$this->primary_key]} $in_id {$this->text['deleted']}
@@ -625,7 +635,7 @@ class MySQLtabledit
         } else {
             $this->content = "
             </div>
-                <div style='padding:2px 20px 20px 20px;margin: 0 0 20px 0; background: #DF0000; color: #fff'><h3>Error</h3>" . $mysqli->error . "</div><a href='$this->url_script'>List records...</a>
+                <div style='padding:2px 20px 20px 20px;margin: 0 0 20px 0; background: #DF0000; color: #fff'><h3>Error</h3>" . $this->mysqli->error . "</div><a href='$this->url_script'>List records...</a>
             </div>";
         }
     }
@@ -636,8 +646,6 @@ class MySQLtabledit
      */
     public function edit_rec()
     {
-        global $mysqli;
-
         $in_id = $_GET['id'];
 
         // edit or new?
@@ -648,7 +656,7 @@ class MySQLtabledit
         $count_required = 0;
 
         $query = "SHOW COLUMNS FROM `$this->table`";
-        $types = $mysqli->query($query);
+        $types = $this->mysqli->query($query);
 
         // get field types
         while ($obj = $types->fetch_object()) {
@@ -665,7 +673,7 @@ class MySQLtabledit
             }
 
             $query = "SELECT * FROM `$this->table` $where_edit LIMIT 1";
-            $results = $mysqli->query($query);
+            $results = $this->mysqli->query($query);
             $rij = $results->fetch_assoc();
             $results->close();
         }
@@ -825,8 +833,6 @@ class MySQLtabledit
      */
     public function save_rec()
     {
-        global $mysqli;
-
         $in_mte_new_rec = $_POST['mte_new_rec'];
 
         $updates = '';
@@ -862,9 +868,9 @@ class MySQLtabledit
 
         write_log($sql);
 
-        if ($mysqli->query($sql)) {
+        if ($this->mysqli->query($sql)) {
             if ($in_mte_new_rec) {
-                $saved_id = $mysqli->insert_id;
+                $saved_id = $this->mysqli->insert_id;
                 $_GET['s'] = $saved_id;
                 $_GET['f'] = $this->primary_key;
             } else {
@@ -894,7 +900,7 @@ class MySQLtabledit
         } else {
             $this->content = "
                 <div style='width: $this->width_editor'>
-                    <div style='padding:2px 20px 20px 20px;margin:0 0 20px 0;background:#DF0000;color:#fff'><h3>Error</h3>" . $mysqli->error . "</div><a href='{$_SESSION['hist_page']}'>{$this->text['Go_back']}...</a>
+                    <div style='padding:2px 20px 20px 20px;margin:0 0 20px 0;background:#DF0000;color:#fff'><h3>Error</h3>" . $this->mysqli->error . "</div><a href='{$_SESSION['hist_page']}'>{$this->text['Go_back']}...</a>
                 </div>";
         }
     }

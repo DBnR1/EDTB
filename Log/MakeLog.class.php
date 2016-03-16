@@ -32,85 +32,20 @@
 
 class MakeLog
 {
-    /**
-     * @param string $sort
-     * @return string
-     */
-    private function get_sort($to_sort)
-    {
-        $gsort = $_GET[$to_sort . "_sort"];
+    public $time_difference = 0;
 
-        if (isset($gsort) && $gsort != "undefined") {
-            if ($gsort == "asc") {
-                $sort = "desc";
-            }
-            if ($gsort == "desc") {
-                $sort = "asc";
-            }
-        } else {
-            $sort = "asc";
+    /**
+     * MakeLog constructor.
+     */
+    public function __construct()
+    {
+        global $server, $user, $pwd, $db;
+
+        $this->mysqli = new mysqli($server, $user, $pwd, $db);
+
+        if ($this->mysqli->connect_errno) {
+            echo "Failed to connect to MySQL: " . $this->mysqli->connect_error;
         }
-
-        return $sort;
-    }
-
-    /**
-     * @param object $obj
-     * @return string
-     */
-    private function title_icons($obj)
-    {
-        // check if log is pinned
-        $pinned = $obj->pinned == "1" ? '<img class="icon" src="/style/img/pinned.png" alt="Pinned" />' : "";
-
-        // check if log is personal
-        $personal .= $obj->type == "personal" ? '<img class="icon" src="/style/img/user.png" alt="Personal" />' : "";
-
-        // check if log has audio
-        $audio .= $obj->audio != "" ? '<a href="javascript:void(0)" onclick="$(\'#' . $obj->id . '\').fadeToggle(\'fast\')" title="Listen to audio logs"><img class="icon" src="/style/img/audio.png" alt="Audio" /></a>' : "";
-
-        return $pinned . $personal . $audio;
-    }
-
-    /**
-     * @param object $obj
-     * @return string
-     */
-    private function get_audio($obj)
-    {
-        global $system_time;
-
-        $logdata .= '<div class="audio" id="' . $obj->id . '" style="display:none">';
-
-        $audio_files = explode(", ", $obj->audio);
-
-        foreach ($audio_files as $audio_file) {
-            $file = $_SERVER["DOCUMENT_ROOT"] . "/audio_logs/" . $audio_file;
-            $file_src = "/audio_logs/" . $audio_file;
-
-            if (file_exists($file)) {
-                $timestamp = filemtime($file) + ($system_time * 60 * 60);
-                $record_date = date("Y-m-d H:i:s", $timestamp);
-                $date = date_create($record_date);
-                $record = date_modify($date, "+1286 years");
-                $record_added = date_format($record, "j M Y, H:i");
-                $added_ago = get_timeago($timestamp);
-
-                $logdata .= '<div style="margin-bottom:4px;margin-top:6px;margin-left:3px">';
-                $logdata .= 'Added: ' . $record_added . ' (' . $added_ago . ')';
-                $logdata .= '</div>';
-                $logdata .= '<div>';
-                $logdata .= '<audio controls>';
-                $logdata .= '<source src="' . $file_src . '" type="audio/mp3">';
-                $logdata .= 'Your browser does not support the audio element.';
-                $logdata .= '</audio>';
-                $logdata .= '</div>';
-            }
-        }
-        unset($audio_file);
-        $logdata .= '</div>';
-
-        return $logdata;
     }
 
     /**
@@ -206,93 +141,98 @@ class MakeLog
     }
 
     /**
-     * @param string $what
-     * @param string $esc_system_name
-     * @param string $esc_station_name
-     * @param string $l_system
-     * @return mixed
+     * Get sort ascending/descending
+     *
+     * @param string $to_sort
+     * @return string
+     * @internal param string $sort
      */
-    public function get_id($what, $esc_system_name = "", $esc_station_name = "", $l_system = "")
+    private function get_sort($to_sort)
     {
-        global $mysqli;
+        $gsort = $_GET[$to_sort . "_sort"];
 
-        if ($what == "system") {
-            $query = "  SELECT id AS system_id
-                        FROM edtb_systems
-                        WHERE name = '$esc_system_name'
-                        LIMIT 1";
-
-            $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
-            $arr = $result->fetch_object();
-
-            $retval = $arr->system_id;
-
-            $result->close();
-        } elseif ($what == "station") {
-            $query = "  SELECT id AS station_id
-                        FROM edtb_stations
-                        WHERE name = '$esc_station_name'
-                        AND system_id = '$l_system'
-                        LIMIT 1";
-
-            $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
-            $arr = $result->fetch_object();
-
-            $retval = $arr->station_id;
-
-            $result->close();
+        if (isset($gsort) && $gsort != "undefined") {
+            if ($gsort == "asc") {
+                $sort = "desc";
+            }
+            if ($gsort == "desc") {
+                $sort = "asc";
+            }
+        } else {
+            $sort = "asc";
         }
 
-        return $retval;
+        return $sort;
     }
 
     /**
+     * Get icons for the title
      *
+     * @param object $obj
+     * @return string
      */
-    private function delete_log()
+    private function title_icons($obj)
     {
-        global $mysqli;
+        // check if log is pinned
+        $pinned = $obj->pinned == "1" ? '<img class="icon" src="/style/img/pinned.png" alt="Pinned" />' : "";
 
-        $query = "  SELECT audio
-                    FROM user_log
-                    WHERE id = '" . $_GET["deleteid"] . "'
-                    LIMIT 1";
+        // check if log is personal
+        $personal .= $obj->type == "personal" ? '<img class="icon" src="/style/img/user.png" alt="Personal" />' : "";
 
-        $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
-        $arr = $result->fetch_object();
+        // check if log has audio
+        $audio .= $obj->audio != "" ? '<a href="javascript:void(0)" onclick="$(\'#' . $obj->id . '\').fadeToggle(\'fast\')" title="Listen to audio logs"><img class="icon" src="/style/img/audio.png" alt="Audio" /></a>' : "";
 
-        $audio = $arr->audio;
+        return $pinned . $personal . $audio;
+    }
 
-        $result->close();
+    /**
+     * Get audio log files
+     *
+     * @param object $obj
+     * @return string
+     */
+    private function get_audio($obj)
+    {
+        $logdata .= '<div class="audio" id="' . $obj->id . '" style="display:none">';
 
-        $audio_files = explode(", ", $audio);
+        $audio_files = explode(", ", $obj->audio);
 
         foreach ($audio_files as $audio_file) {
             $file = $_SERVER["DOCUMENT_ROOT"] . "/audio_logs/" . $audio_file;
+            $file_src = "/audio_logs/" . $audio_file;
 
-            if (file_exists($file) && is_file($file)) {
-                if (!unlink($file)) {
-                    $error = error_get_last();
-                    write_log("Error: " . $error["message"], __FILE__, __LINE__);
-                }
+            if (file_exists($file)) {
+                $timestamp = filemtime($file) + ($this->time_difference * 60 * 60);
+                $record_date = date("Y-m-d H:i:s", $timestamp);
+                $date = date_create($record_date);
+                $record = date_modify($date, "+1286 years");
+                $record_added = date_format($record, "j M Y, H:i");
+                $added_ago = get_timeago($timestamp);
+
+                $logdata .= '<div style="margin-bottom:4px;margin-top:6px;margin-left:3px">';
+                $logdata .= 'Added: ' . $record_added . ' (' . $added_ago . ')';
+                $logdata .= '</div>';
+                $logdata .= '<div>';
+                $logdata .= '<audio controls>';
+                $logdata .= '<source src="' . $file_src . '" type="audio/mp3">';
+                $logdata .= 'Your browser does not support the audio element.';
+                $logdata .= '</audio>';
+                $logdata .= '</div>';
             }
         }
         unset($audio_file);
+        $logdata .= '</div>';
 
-        $query = "  DELETE FROM user_log
-                    WHERE id = '" . $_GET["deleteid"] . "'
-                    LIMIT 1";
-
-        $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+        return $logdata;
     }
 
     /**
+     * Add or update log entry
+     *
      * @param object $data
      */
     public function add_log($data)
     {
-        global $mysqli;
-
         $l_system_name = $data->{"system_name"};
         $l_station_name = $data->{"station_name"};
         $l_entry = $data->{"log_entry"};
@@ -303,11 +243,11 @@ class MakeLog
         $l_title = $data->{"title"};
         $l_audiofiles = $data->{"audiofiles"};
 
-        $esc_system_name = $mysqli->real_escape_string($l_system_name);
-        $esc_station_name = $mysqli->real_escape_string($l_station_name);
-        $esc_entry = $mysqli->real_escape_string($l_entry);
-        $esc_title = $mysqli->real_escape_string($l_title);
-        $esc_audiofiles = $mysqli->real_escape_string($l_audiofiles);
+        $esc_system_name = $this->mysqli->real_escape_string($l_system_name);
+        $esc_station_name = $this->mysqli->real_escape_string($l_station_name);
+        $esc_entry = $this->mysqli->real_escape_string($l_entry);
+        $esc_title = $this->mysqli->real_escape_string($l_title);
+        $esc_audiofiles = $this->mysqli->real_escape_string($l_audiofiles);
 
         /**
          * get system id
@@ -337,7 +277,7 @@ class MakeLog
                         WHERE id = '$l_id'
                         LIMIT 1";
 
-            $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+            $this->mysqli->query($query) or write_log($this->mysqli->error, __FILE__, __LINE__);
 
         } elseif (isset($_GET["deleteid"])) {
             $this->delete_log();
@@ -354,7 +294,86 @@ class MakeLog
                         '$l_type',
                         '$esc_audiofiles')";
 
-            $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+            $this->mysqli->query($query) or write_log($this->mysqli->error, __FILE__, __LINE__);
         }
+    }
+
+    /**
+     * Get system or station id
+     *
+     * @param string $what
+     * @param string $esc_system_name
+     * @param string $esc_station_name
+     * @param string $l_system
+     * @return mixed
+     */
+    public function get_id($what, $esc_system_name = "", $esc_station_name = "", $l_system = "")
+    {
+        if ($what == "system") {
+            $query = "  SELECT id AS system_id
+                        FROM edtb_systems
+                        WHERE name = '$esc_system_name'
+                        LIMIT 1";
+
+            $result = $this->mysqli->query($query) or write_log($this->mysqli->error, __FILE__, __LINE__);
+            $arr = $result->fetch_object();
+
+            $retval = $arr->system_id;
+
+            $result->close();
+        } elseif ($what == "station") {
+            $query = "  SELECT id AS station_id
+                        FROM edtb_stations
+                        WHERE name = '$esc_station_name'
+                        AND system_id = '$l_system'
+                        LIMIT 1";
+
+            $result = $this->mysqli->query($query) or write_log($this->mysqli->error, __FILE__, __LINE__);
+            $arr = $result->fetch_object();
+
+            $retval = $arr->station_id;
+
+            $result->close();
+        }
+
+        return $retval;
+    }
+
+    /**
+     * Delete log entry
+     */
+    private function delete_log()
+    {
+        $query = "  SELECT audio
+                    FROM user_log
+                    WHERE id = '" . $_GET["deleteid"] . "'
+                    LIMIT 1";
+
+        $result = $this->mysqli->query($query) or write_log($this->mysqli->error, __FILE__, __LINE__);
+        $arr = $result->fetch_object();
+
+        $audio = $arr->audio;
+
+        $result->close();
+
+        $audio_files = explode(", ", $audio);
+
+        foreach ($audio_files as $audio_file) {
+            $file = $_SERVER["DOCUMENT_ROOT"] . "/audio_logs/" . $audio_file;
+
+            if (file_exists($file) && is_file($file)) {
+                if (!unlink($file)) {
+                    $error = error_get_last();
+                    write_log("Error: " . $error["message"], __FILE__, __LINE__);
+                }
+            }
+        }
+        unset($audio_file);
+
+        $query = "  DELETE FROM user_log
+                    WHERE id = '" . $_GET["deleteid"] . "'
+                    LIMIT 1";
+
+        $this->mysqli->query($query) or write_log($this->mysqli->error, __FILE__, __LINE__);
     }
 }

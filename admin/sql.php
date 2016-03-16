@@ -30,13 +30,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-/** @var string pagetitle */
-$pagetitle = "SQL";
+/** @var string $notify */
 $notify = "";
 
-/** @require header file */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
+/** @require Theme class */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.class.php");
 
+/**
+ * initiate page header
+ */
+$header = new Header();
+
+/** @var string page_title */
+$header->page_title = "SQL";
+
+/**
+ * display the header
+ */
+$header->display_header();
+
+
+/**
+ * execute SQL queries
+ */
 if (isset($_POST["code"])) {
     $code = $_POST["code"];
 
@@ -140,4 +156,12 @@ if (isset($_POST["code"])) {
     </div>
 </div>
 <?php
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");
+/**
+ * initiate page footer
+ */
+$footer = new Footer();
+
+/**
+ * display the footer
+ */
+$footer->display_footer();

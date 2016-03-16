@@ -1,11 +1,8 @@
 <?php
 /**
- * System information
+ * Theme class
  *
- * Front-end file for System information.
- * The back-end file is /get/getData_systemInfo.php
- *
- * @package EDTB\Main
+ * @package EDTB\Backend
  * @author Mauri Kujala <contact@edtb.xyz>
  * @copyright Copyright (C) 2016, Mauri Kujala
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
@@ -31,25 +28,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-/** @var string pagetitle */
-$pagetitle = "System Information";
+/** @require header class */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Header.class.php");
+/** @require footer class */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Footer.class.php");
 
-/** @require header file */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
-?>
-<div class="entries">
-    <div class="entries_inner" id="system_page">
-        <h2 id="si_name"></h2>
-        <hr>
-        <div class="systeminfo_st">
-            <!-- STATIONS -->
-            <div class="systeminfo_stations" id="si_stations"></div>
-        </div>
-        <div class="systeminfo_sy">
-            <!-- SYSTEM INFO -->
-            <div class="systeminfo_system" id="si_detailed"></div>
-        </div>
-    </div>
-</div>
-<?php
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");
+/**
+ * Class Theme
+ */
+class Theme
+{
+    /**
+     * Get the sidebar style the user is using
+     *
+     * @return string
+     */
+    static function sidebar_style()
+    {
+        if (isset($_COOKIE["style"]) && $_COOKIE["style"] == "narrow") {
+            return "narrow";
+        } else {
+            return "normal";
+        }
+    }
+
+}

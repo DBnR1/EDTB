@@ -33,10 +33,24 @@
 /**
  * Class ReferenceSystems
  */
-class ReferenceSystems extends Trilateration
+class ReferenceSystems
 {
     public $standard = false;
     public $used = [];
+
+    /**
+     * ReferenceSystems constructor.
+     */
+    public function __construct()
+    {
+        global $server, $user, $pwd, $db;
+
+        $this->mysqli = new mysqli($server, $user, $pwd, $db);
+
+        if ($this->mysqli->connect_errno) {
+            echo "Failed to connect to MySQL: " . $this->mysqli->connect_error;
+        }
+    }
 
     /**
      * Count how many jumps user has made since last known
@@ -47,8 +61,6 @@ class ReferenceSystems extends Trilateration
      */
     private function fuzziness()
     {
-        global $mysqli;
-
         /**
          * if user wants the standard references, we don't need any of this
          */
@@ -58,7 +70,7 @@ class ReferenceSystems extends Trilateration
                         ORDER BY visit DESC
                         LIMIT 30";
 
-            $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+            $result = $this->mysqli->query($query) or write_log($this->mysqli->error, __FILE__, __LINE__);
 
             $count = $result->num_rows;
 
@@ -116,8 +128,6 @@ class ReferenceSystems extends Trilateration
      */
     public function reference_systems()
     {
-        global $mysqli;
-
         try {
             $start_point = $this->fuzziness();
 
@@ -128,7 +138,7 @@ class ReferenceSystems extends Trilateration
 
             $fuzziness = $start_point["fuzziness"];
 
-            $esc_start_name = $mysqli->real_escape_string($start_name);
+            $esc_start_name = $this->mysqli->real_escape_string($start_name);
 
             $query = "  SELECT name, x, y, z
                         FROM edtb_systems
@@ -139,7 +149,7 @@ class ReferenceSystems extends Trilateration
                         AND name != '$esc_start_name'
                         ORDER BY sqrt(pow((x-(" . $start_x . ")), 2)+pow((y-(" . $start_y . ")), 2)+pow((z-(" . $start_z . ")), 2)) DESC";
 
-            $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+            $result = $this->mysqli->query($query) or write_log($this->mysqli->error, __FILE__, __LINE__);
             $num = $result->num_rows;
 
             if ($num <= 4) {
@@ -154,7 +164,7 @@ class ReferenceSystems extends Trilateration
                             AND name != '$esc_start_name'
                             ORDER BY sqrt(pow((x-(" . $start_x . ")), 2)+pow((y-(" . $start_y . ")), 2)+pow((z-(" . $start_z . ")), 2)) ASC LIMIT 500";
 
-                $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+                $result = $this->mysqli->query($query) or write_log($this->mysqli->error, __FILE__, __LINE__);
             }
 
             $i = 0;

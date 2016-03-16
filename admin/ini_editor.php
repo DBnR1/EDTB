@@ -33,11 +33,21 @@
 /** @var string $notify */
 $notify = "";
 
-/** @var string pagetitle */
-$pagetitle = "Variable Editor";
+/** @require Theme class */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.class.php");
 
-/** @require header file */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
+/**
+ * initiate page header
+ */
+$header = new Header();
+
+/** @var string page_title */
+$header->page_title = "Variable Editor";
+
+/**
+ * display the header
+ */
+$header->display_header();
 
 if (isset($_POST["code"])) {
     $code = $_POST["code"];
@@ -76,4 +86,12 @@ $ini = file_get_contents($ini_file);
     </div>
 </div>
 <?php
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");
+/**
+ * initiate page footer
+ */
+$footer = new Footer();
+
+/**
+ * display the footer
+ */
+$footer->display_footer();

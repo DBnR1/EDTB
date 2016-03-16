@@ -31,7 +31,7 @@
  */
 
 /**
- * Class ReferenceSystems
+ * Class Trilateration
  */
 class Trilateration
 {

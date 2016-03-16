@@ -89,8 +89,13 @@ $usez = $usable["z"];
             $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
 
             $poi = new PoiBm();
-            $poi->mysqli = $mysqli;
-            echo $poi->maketable($result, "Poi");
+
+            $poi->usex = $usex;
+            $poi->usey = $usey;
+            $poi->usez = $usez;
+            $poi->time_difference = $system_time;
+
+            echo $poi->make_table($result, "Poi");
 
             $result->close();
             ?>
@@ -118,8 +123,13 @@ $usez = $usable["z"];
 
             $i = 0;
             $bm = new PoiBm();
-            $bm->mysqli = $mysqli;
-            echo $bm->maketable($result, "Bm");
+
+            $bm->usex = $usex;
+            $bm->usey = $usey;
+            $bm->usez = $usez;
+            $bm->time_difference = $system_time;
+
+            echo $bm->make_table($result, "Bm");
 
             $result->close();
             ?>

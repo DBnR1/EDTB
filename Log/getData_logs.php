@@ -30,7 +30,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-/** @require functions file */
+/** @require MakeLog class */
 require_once("MakeLog.class.php");
 
 /**
@@ -123,12 +123,16 @@ if (!empty($curSys["name"])) {
                     user_log.stardate " . $ssort . "
                     LIMIT 10";
     }
+    //write_log($query);
     $log_res = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
 
     $num = $log_res->num_rows;
 
     if ($num > 0) {
         $logs = new MakeLog();
+
+        $logs->time_difference = $system_time;
+
         $logdata = $logs->make_log_entries($log_res, "system");
     }
 
@@ -160,6 +164,9 @@ $gnum = $glog_res->num_rows;
 
 if ($gnum > 0) {
     $general_logs = new MakeLog();
+
+    $general_logs->time_difference = $system_time;
+
     $logdata .= $general_logs->make_log_entries($glog_res, "general");
 }
 

@@ -30,14 +30,32 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-/** @var string pagetitle */
-$pagetitle = "Page Not Found!";
+/** @require Theme class */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.class.php");
 
-/** @require header file */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
+/**
+ * initiate page header
+ */
+$header = new Header();
+
+/** @var string page_title */
+$header->page_title = "Page not found!";
+
+/**
+ * display the header
+ */
+$header->display_header();
 ?>
 <div class="entries" style="position:fixed;bottom:0;background: url(/style/img/404.jpg) no-repeat center bottom;">
     <div class="entries_inner">&nbsp;</div>
 </div>
 <?php
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");
+/**
+ * initiate page footer
+ */
+$footer = new Footer();
+
+/**
+ * display the footer
+ */
+$footer->display_footer();

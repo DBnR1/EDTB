@@ -55,10 +55,21 @@ if (isset($_GET["do"])) {
     exit;
 }
 
-$pagetitle = "Settings";
+/** @require Theme class */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.class.php");
 
-/** @require header file */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
+/**
+ * initiate page header
+ */
+$header = new Header();
+
+/** @var string page_title */
+$header->page_title = "Settings";
+
+/**
+ * display the header
+ */
+$header->display_header();
 
 $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
 
@@ -71,6 +82,9 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
     </h2>
     <hr>
     <?php
+    /**
+     * fetch setting categories
+     */
     echo'<ul class="pagination">';
 
     $query = "  SELECT id, name
@@ -232,4 +246,13 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
     </div>
 </div>
 <?php
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");
+/**
+ * initiate page footer
+ */
+$footer = new Footer();
+
+/**
+ * display the footer
+ */
+$footer->display_footer();
+

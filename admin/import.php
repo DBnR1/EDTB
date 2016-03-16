@@ -30,11 +30,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-/** @var string pagetitle */
-$pagetitle = "Import Log Files";
+/** @require Theme class */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.class.php");
 
-/** @require header file */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
+/**
+ * initiate page header
+ */
+$header = new Header();
+
+/** @var string page_title */
+$header->page_title = "Import Log Files";
+
+/**
+ * display the header
+ */
+$header->display_header();
 
 /** @var int $batch_limit */
 $batch_limit = 104857600; // 100 MB
@@ -74,7 +84,7 @@ if (is_dir($settings["log_dir"])) {
         $text = 'No unimported netLog files located.';
         echo notice($text, "Import Logs");
     } elseif ($total_size < $batch_limit && $batches_left == "") {
-        $text = 'Located ' . $num . ' netLog files totaling ' . FileSizeConvert($total_size) . '.';
+        $text = 'Located ' . $num . ' netLog files totaling ' . FileSizeConvert($total_size) . '. ';
         $text .= 'Do you want to import them?<br /><br /><a href="/Admin/Import.php?import">Import logs</a>';
         echo notice($text, "Import Logs");
     } else {
@@ -160,14 +170,6 @@ if (is_dir($settings["log_dir"])) {
                             $result->close();
 
                             if ($exists == 0) {
-                                /*$query = "INSERT INTO user_visited_systems (system_name, visit)
-                                          VALUES ('$esc_sys', '$visited_on')";
-
-                                $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
-
-                                if ($mysqli->affected_rows >= 1) {
-                                    $i++;
-                                }*/
                                 $stmt->execute();
 
                                 if ($mysqli->affected_rows >= 1) {
@@ -224,4 +226,12 @@ if (is_dir($settings["log_dir"])) {
 }
 echo '</div></div>';
 
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");
+/**
+ * initiate page footer
+ */
+$footer = new Footer();
+
+/**
+ * display the footer
+ */
+$footer->display_footer();

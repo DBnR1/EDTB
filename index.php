@@ -31,11 +31,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-/** @var string pagetitle */
-$pagetitle = "ED ToolBox";
+/** @require Theme class */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.class.php");
 
-/** @require header file */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
+/**
+ * initiate page header
+ */
+$header = new Header();
+
+/** @var string page_title */
+$header->page_title = "ED ToolBox";
+
+/**
+ * display the header
+ */
+$header->display_header();
 
 /**
  * if the user is coming from importing log entries
@@ -80,7 +90,16 @@ if (isset($_GET["import_done"])) {
         </div>
     </div>
     <?php
-    require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");
+    /**
+     * initiate page footer
+     */
+    $footer = new Footer();
+
+    /**
+     * display the footer
+     */
+    $footer->display_footer();
+
     exit;
 }
 ?>
@@ -89,4 +108,12 @@ if (isset($_GET["import_done"])) {
     </div>
 </div>
 <?php
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");
+/**
+ * initiate page footer
+ */
+$footer = new Footer();
+
+/**
+ * display the footer
+ */
+$footer->display_footer();

@@ -101,22 +101,8 @@ while ($obj = $result->fetch_object()) {
 
 $result->close();
 
-$maplink = $settings["default_map"] == "galaxy_map" ? "/GalMap" : "/Map";
 $dropdown = $settings["dropdown"];
 array_push($dropdown, $settings["maxdistance"]);
-
-/**
- * Links for the navigation panel
- */
-$links = array( "ED ToolBox--log.png--true" => "/",
-                "System Information--info.png--true" => "/System",
-                "Galaxy Map&nbsp;&nbsp;&&nbsp;&nbsp;Neighborhood Map--grid.png--true" => $maplink,
-                "Points of Interest&nbsp;&nbsp;&&nbsp;&nbsp;Bookmarks--poi.png--true" => "/Bookmarks",
-                "Nearest Systems&nbsp;&nbsp;&&nbsp;&nbsp;Stations--find.png--false" => "/NearestSystems",
-                "Data Point--dataview.png--false" => "/DataPoint",
-                "Galnet News--news.png--false" => "/GalNet",
-                "Screenshot Gallery--gallery.png--false" => "/Gallery",
-                "System Log--log.png--true" => "/");
 
 /** @constant string galnet_feed feed url for galnet news page */
 define("GALNET_FEED", "http://feed43.com/8865261068171800.xml");

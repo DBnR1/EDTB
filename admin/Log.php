@@ -30,11 +30,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-/** @var string pagetitle */
-$pagetitle = "Error Log";
+/** @require Theme class */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.class.php");
 
-/** @require header file */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
+/**
+ * initiate page header
+ */
+$header = new Header();
+
+/** @var string page_title */
+$header->page_title = "Error Log";
+
+/**
+ * display the header
+ */
+$header->display_header();
 ?>
 <div class="entries">
     <div class="entries_inner">
@@ -64,12 +74,16 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
              */
             if (!empty($lines)) {
                 foreach (array_reverse($lines) as $line_num => $line) {
-                    // only show first 600 lines
+                    /**
+                     * only show first 600 lines
+                     */
                     if ($line_num <= 599) {
                         // Regular Expression filter for links
                         $reg_exUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
 
-                        // split data and define variables
+                        /**
+                         * split data and define variables
+                         */
                         $data = explode("]", $line);
                         $time = str_replace("[", "", $data[0]);
 
@@ -132,4 +146,13 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
     var clipboard = new Clipboard('.copy');
 </script>
 <?php
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");
+/**
+ * initiate page footer
+ */
+$footer = new Footer();
+
+/**
+ * display the footer
+ */
+$footer->display_footer();
+
