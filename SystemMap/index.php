@@ -30,9 +30,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-/** @require header file */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/header.php");
+/** @require Theme class */
+require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.class.php");
 
+/**
+ * initiate page header
+ */
+$header = new Header();
+
+/** @var string page_title */
+$header->page_title = "System Map";
+
+/**
+ * display the header
+ */
+$header->display_header();
+
+/**
+ * determine what system to display
+ */
 $system = $curSys["name"];
 if (isset($_GET["system"])) {
     $system = $_GET["system"];
@@ -105,7 +121,7 @@ $link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http
                         $img = str_replace(",", "", $img);
                         $img = strtolower($img);
 
-                        $imgfiles = glob($_SERVER["DOCUMENT_ROOT"] . "/style/img/bodies/" . $img . "_*");
+                        $imgfiles = glob($_SERVER["DOCUMENT_ROOT"] . "/SystemMap/bodies/" . $img . "_*");
 
                         $name = $arr["name"];
                         $id = $arr["id"];
@@ -199,7 +215,16 @@ $link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http
                  });
                  });*/
             })();
+            /**
+             * size of the grid
+             */
             var gridsize = 6;
+
+            /**
+             * location of body images
+             * @type {string}
+             */
+            var bodies = "/SystemMap/bodies";
         </script>
     </div>
 </section>
@@ -426,4 +451,12 @@ $link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http
     });
 </script>
 <?php
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/footer.php");
+/**
+ * initiate page footer
+ */
+$footer = new Footer();
+
+/**
+ * display the footer
+ */
+$footer->display_footer();

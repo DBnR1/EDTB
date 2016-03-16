@@ -37,7 +37,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 /** @require MySQL */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 /** @require curSys */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/curSys.php");
+//require_once($_SERVER["DOCUMENT_ROOT"] . "/source/curSys.php");
 
 if (isset($_GET["string"]) && isset($_GET["system"])) {
     $string = $_GET["string"];

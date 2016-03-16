@@ -400,7 +400,7 @@ function add_body(options) {
                 shuffle(rings);
                 ring = rings[0];
 
-                uniqs.append('<img class="ring" id="ring_img_' + uniqid + '" src="/style/img/bodies/' + ring + '" style="position:absolute;top:-' + ring_offset + 'px;left:-' + ring_offset + 'px;width:' + ring_width + 'px;height:auto" />');
+                uniqs.append('<img class="ring" id="ring_img_' + uniqid + '" src="' + bodies + '/' + ring + '" style="position:absolute;top:-' + ring_offset + 'px;left:-' + ring_offset + 'px;width:' + ring_width + 'px;height:auto" />');
             } else {
                 $("#ring_img_" + uniqid).remove();
             }
@@ -427,7 +427,7 @@ function add_body(options) {
                     ringwidth = Math.ceil(1.5625 * width),
                     ringoffset = Math.ceil(0.44444444444444 * width);
 
-                uniqs.append('<img class="landable" id="landable_img_' + uniqid + '" src="/style/img/bodies/landable.png" style="position:absolute;top:-' + ringoffset + 'px;left:-' + ringoffset + 'px;width:' + ringwidth + 'px;height:auto" />');
+                uniqs.append('<img class="landable" id="landable_img_' + uniqid + '" src="' + bodies + '/landable.png" style="position:absolute;top:-' + ringoffset + 'px;left:-' + ringoffset + 'px;width:' + ringwidth + 'px;height:auto" />');
             } else {
                 $("#landable_img_" + uniqid).remove();
             }
