@@ -1,4 +1,5 @@
 <?php
+/** @require functions */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 
 // no direct access
@@ -39,19 +40,7 @@ class MySQLtabledit
     *
     */
 
-    public $version = '0.3'; // 03 jan 2011
-
-    // text
-    public $text;
-
-    // language
-    public $language = 'en';
-
-    // table of the database
-    public $table;
-
-    // the primary key of the table
-    public $primary_key;
+    public $table, $primary_key, $text, $links_to_db, $url_script, $skip;
 
     // the fields you want to see in "list view"
     public $fields_in_list_view;
@@ -72,15 +61,13 @@ class MySQLtabledit
     public $width_input_fields = '700px';
     public $width_text_fields = '698px';
     public $height_text_fields = '200px';
-
-    // warning no .htacces ('on' or 'off')
     public $no_htaccess_warning = 'off';
 
-    // Forget this - working on it...
-    // needed in Joomla for images/css, example: 'http://www.website.com/administrator/components/com_componentname'
     public $url_base;
-    // needed in Joomla, example: 'option=com_componentname'
-    public $query_joomla_component;
+
+    protected $mysqli;
+
+    private $order_by, $where_search, $content, $content_saved, $content_deleted, $nav_top, $nav_bottom, $debug, $javascript;
 
     /**
      * MySQLtabledit constructor.
@@ -101,9 +88,7 @@ class MySQLtabledit
      */
     public function do_it()
     {
-        // Sorry: in Joomla, remove the next two lines and place the language vars instead
         require_once($_SERVER["DOCUMENT_ROOT"] . "/DataPoint/Vendor/MySQL_table_edit/lang/en.php");
-        require_once($_SERVER["DOCUMENT_ROOT"] . "/DataPoint/Vendor/MySQL_table_edit/lang/" . $this->language . ".php");
 
         // No cache
         if (!headers_sent()) {
@@ -120,8 +105,8 @@ class MySQLtabledit
         }
 
         // name of the script
-        $break = explode('/', $_SERVER["SCRIPT_NAME"]);
-        $this->url_script = $break[count($break) - 1];
+        //$break = explode('/', $_SERVER["SCRIPT_NAME"]);
+        //$this->url_script = $break[count($break) - 1];
 
         if ($_GET['mte_a'] == 'edit') {
             $this->edit_rec();
@@ -139,9 +124,228 @@ class MySQLtabledit
     }
 
     /**
+     * Edit record
+     */
+    private function edit_rec()
+    {
+        $in_id = $_GET['id'];
+
+        // edit or new?
+        $edit = $_GET['mte_a'] == 'edit' ? 1 : 0;
+
+        $count_required = 0;
+
+        $query = "SHOW COLUMNS FROM `$this->table`";
+        $types = $this->mysqli->query($query);
+
+        // get field types
+        while ($obj = $types->fetch_object()) {
+            $field_type[$obj->Field] = $obj->Type;
+        }
+
+        $types->close();
+
+        if (!$edit) {
+            $rij = $field_type;
+        } else {
+            if ($edit) {
+                $where_edit = "WHERE `$this->primary_key` = $in_id";
+            }
+
+            $query = "SELECT * FROM `$this->table` $where_edit LIMIT 1";
+            $results = $this->mysqli->query($query);
+            $rij = $results->fetch_assoc();
+            $results->close();
+        }
+
+        $rows = $this->get_fields($rij);
+
+        $this->javascript = "
+            function submitform() {
+                var ok = 0;
+                for (f = 1; f <= $count_required; f++)
+                {
+
+                    var elem = document.getElementById('id_' + f);
+
+                    if (elem.options) {
+                        if (elem.options[elem.selectedIndex].text!=null && elem.options[elem.selectedIndex].text!='') {
+                            ok++;
+                        }
+                    }
+                    else {
+                        if (elem.value!=null && elem.value!='') {
+                            ok++;
+                        }
+                    }
+                }
+
+                if (ok == $count_required) {
+                    return true;
+                } else {
+                    alert('{$this->text['Check_the_required_fields']}...')
+                    return false;
+                }
+            }
+        ";
+
+        $this->content = "
+                <div style='width: $this->width_editor;background:transparent'>
+                    <table style='border-collapse:collapse;border-spacing:0'>
+                        <tr>
+                            <td>
+                                <button onclick='window.location=\"{$_SESSION['hist_page']}\"' style='margin: 20px 15px 25px 15px'>{$this->text['Go_back']}</button>
+                            </td>
+                            <td>
+                                <form method='post' action='/DataPoint?table=" . $_GET["table"] . "' onsubmit='return submitform()'>
+                                <input class='button' type='submit' value='{$this->text['Save']}' style='width: 80px;margin: 20px 0 25px 0'>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div style='width: $this->width_editor'>
+                    <table style='margin-bottom:20px;border-collapse:collapse;border-spacing:0'>
+                        $rows
+                    </table>
+                </div>
+        ";
+
+        if (!$edit) {
+            $this->content .= "<input type='hidden' name='mte_new_rec' value='1'>";
+        }
+
+        $this->content .= "
+                <input type='hidden' name='mte_a' value='save'>
+            </form>
+        ";
+    }
+
+    /**
+     * @param array $rij
+     * @return string
+     */
+    private function get_fields($rij)
+    {
+        // edit or new?
+        $edit = $_GET['mte_a'] == 'edit' ? 1 : 0;
+
+        foreach ($rij as $key => $value) {
+            if (!$edit) {
+                $value = '';
+            }
+
+            $field = '';
+            $options = '';
+            $style = '';
+            $field_id = '';
+            $readonly = '';
+
+            if (isset($this->fields_required)) {
+                if (in_array($key, $this->fields_required)) {
+                    $count_required++;
+                    $style = "class='mte_req'";
+                    $field_id = "id='id_" . $count_required . "'";
+                }
+            }
+
+            $field_kind = $field_type[$key];
+
+            /**
+             * different fields
+             */
+            // textarea
+            if (preg_match("/text/", $field_kind)) {
+                $field = "<textarea class='textarea' name='$key' $style $field_id>$value</textarea>";
+            }
+            // select/options
+            elseif (preg_match("/enum\((.*)\)/", $field_kind, $matches)) {
+                $all_options = substr($matches[1], 1, -1);
+                $options_array = explode("','", $all_options);
+                foreach ($options_array as $option) {
+                    if ($option == $value) {
+                        $options .= "<option selected>$option</option>";
+                    } else {
+                        $options .= "<option>$option</option>";
+                    }
+                }
+                unset($option);
+                $field = "<select class='selectbox' name='$key' $style $field_id>$options</select>";
+            }
+            // input
+            elseif (!preg_match("/blob/", $field_kind)) {
+                if (preg_match("/\(*(.*)\)*/", $field_kind, $matches)) {
+                    if ($key == $this->primary_key) {
+                        $style = "style='background:#ccc'";
+                        $readonly = 'readonly';
+                    }
+                    $value_htmlentities = htmlentities($value, ENT_QUOTES);
+                    if (!$edit && $key == $this->primary_key) {
+                        $field = "<input type='hidden' name='$key' value=''>[auto increment]";
+                    } else {
+                        // add ajax system name for some fields
+                        if ($key == "system_name") {
+                            $field = '  <input class="textbox" type="text" id="' . $key . '" name="' . $key . '" value="' . $value_htmlentities . '" maxlength="' . $matches[1] . '" ' . $style . ' ' . $readonly . ' ' . $field_id . ' onkeyup="showResult(this.value, \'37\', \'no\', \'no\', \'no\', \'no\', \'yes\')">
+                                                    <div class="suggestions" id="suggestions_37" style="margin-left:1px"></div>';
+                        } else {
+                            $field = "<input class='textbox' type='text' id='$key' name='$key' value='$value_htmlentities' maxlength='{$matches[1]}' $style $readonly $field_id>";
+                        }
+                    }
+                }
+            }
+            // blob: don't show
+            elseif (preg_match("/blob/", $field_kind)) {
+                $field = '[<i>binary</i>]';
+            }
+
+            // make table row
+            $background = $background == '#38484f' ? '#273238' : '#38484f';
+
+            if ($this->show_text[$key]) {
+                $show_key = $this->show_text[$key];
+            } else {
+                $show_key = $key;
+            }
+
+            $rows .= '<tr style="border-bottom:1px solid #000;background:' . $background . '">
+                            <td style="vertical-align:middle;padding:8px">
+                                <strong>' . $show_key . '</strong>
+                            </td>
+                            <td style="padding:8px">' . $field . '</td>
+                      </tr>';
+        }
+        unset($value);
+
+        return $rows;
+    }
+
+    /**
+     * delete record
+     */
+    private function del_rec()
+    {
+        $in_id = $_GET['id'];
+
+        $stmt = "DELETE FROM " . $this->table . " WHERE `" . $this->primary_key . "` = '$in_id'";
+
+        if ($this->mysqli->query($stmt)) {
+            $this->content_deleted = "
+                <div class='notify_deleted'>
+                    Record {$this->show_text[$this->primary_key]} $in_id {$this->text['deleted']}
+                </div>
+            ";
+            $this->show_list();
+        } else {
+            $this->content = "
+            </div>
+                <div style='padding:2px 20px 20px 20px;margin: 0 0 20px 0; background: #DF0000; color: #fff'><h3>Error</h3>" . $this->mysqli->error . "</div><a href='$this->url_script'>List records...</a>
+            </div>";
+        }
+    }
+
+    /**
      *
      */
-    public function show_list()
+    private function show_list()
     {
         // message after add or edit
         $this->content_saved = $_SESSION['content_saved'];
@@ -157,9 +361,9 @@ class MySQLtabledit
             if ($_GET['ad'] == 'd') {
                 $asc_des = 'DESC';
             }
-            $order_by = "ORDER by " . $_GET['sort'] . ' ' . $asc_des ;
+            $this->order_by = "ORDER by " . $_GET['sort'] . ' ' . $asc_des ;
         } else {
-            $order_by = "ORDER by $this->primary_key DESC";
+            $this->order_by = "ORDER by $this->primary_key DESC";
         }
 
         // navigation 1/3
@@ -170,11 +374,9 @@ class MySQLtabledit
             $start *=1;
         }
 
-        // build query_string
-        // query_joomla_component (joomla)
-        if ($this->query_joomla_component) {
-            $query_string = '&option=' . $this->query_joomla_component ;
-        }
+        /**
+         * build query_string
+         */
         // navigation
         $query_string .= '&start=' . $start;
         // sorting
@@ -184,87 +386,31 @@ class MySQLtabledit
         //table
         $query_string .= '&table=' . $_GET['table']  . '';
 
-        // search
+        /**
+         * search
+         */
         if ($_GET['s'] && $_GET['f']) {
             $in_search = addslashes(stripslashes($_GET['s']));
             $in_search_field = $_GET['f'];
 
             if ($in_search_field == $this->primary_key) {
-                $where_search = "WHERE $in_search_field = '$in_search' ";
+                $this->where_search = "WHERE $in_search_field = '$in_search' ";
             } else {
-                $where_search = "WHERE $in_search_field LIKE '%$in_search%' ";
+                $this->where_search = "WHERE $in_search_field LIKE '%$in_search%' ";
             }
         }
 
-        // select
-        $sql = "SELECT SQL_CACHE * FROM `$this->table` $where_search $order_by";
-
-        /**
-         * if sorting by distance
-         */
-        if ($_GET['sort'] && $_GET['sort'] == "distance") {
-            if ($_GET['ad'] == 'a') {
-                $asc_des = 'DESC';
-            }
-            if ($_GET['ad'] == 'd') {
-                $asc_des = 'ASC';
-            }
-
-            // figure out what coords to calculate from
-            $usable_coords = usable_coords();
-            $rusex = $usable_coords["x"];
-            $rusey = $usable_coords["y"];
-            $rusez = $usable_coords["z"];
-
-            $query = "SHOW COLUMNS FROM `$this->table`";
-
-            $columns = $this->mysqli->query($query) or write_log($this->mysqli->error, __FILE__, __LINE__);
-
-            while ($obj = $columns->fetch_object()) {
-                $fields[] = $this->table . '.' . $obj->Field;
-            }
-
-            $columns->close();
-
-            $fieldss = join(",", $fields);
-
-            if ($asc_des == "DESC") {
-                $order_by = "ORDER BY -(sqrt(pow((ritem_coordx-($rusex)),2)+pow((ritem_coordy-($rusey)),2)+pow((ritem_coordz-($rusez)),2)))" . $asc_des;
-            } else {
-                $order_by = "ORDER BY sqrt(pow((ritem_coordx-($rusex)),2)+pow((ritem_coordy-($rusey)),2)+pow((ritem_coordz-($rusez)),2)) DESC";
-            }
-
-            if ($this->table == "edtb_systems") {
-                $sql = "SELECT " . $fieldss . ",edtb_systems.x AS ritem_coordx,
-                                                edtb_systems.y AS ritem_coordy,
-                                                edtb_systems.z AS ritem_coordz
-                                                FROM $this->table
-                                                $order_by";
-            } elseif ($this->table == "edtb_stations") {
-                $sql = "SELECT " . $fieldss . ",edtb_systems.x AS ritem_coordx,
-                                                edtb_systems.y AS ritem_coordy,
-                                                edtb_systems.z AS ritem_coordz
-                                                FROM $this->table
-                                                LEFT JOIN edtb_systems ON $this->table.system_id = edtb_systems.id
-                                                $order_by";
-            } else {
-                $sql = "SELECT " . $fieldss . ",IFNULL(edtb_systems.x, user_systems_own.x) AS ritem_coordx,
-                                                IFNULL(edtb_systems.y, user_systems_own.y) AS ritem_coordy,
-                                                IFNULL(edtb_systems.z, user_systems_own.z) AS ritem_coordz
-                                                FROM $this->table
-                                                LEFT JOIN edtb_systems ON $this->table.system_name = edtb_systems.name
-                                                LEFT JOIN user_systems_own ON $this->table.system_name = user_systems_own.name
-                                                $order_by";
-            }
-        }
+        $sql = $this->get_sql();
 
         $hits = $this->mysqli->query($sql) or write_log($this->mysqli->error, __FILE__, __LINE__);
 
         // navigation 2/3
         $hits_total = $hits->num_rows;
+
         $hits->close();
 
         $sql .= " LIMIT $start, $this->num_rows_list_view";
+
         $result = $this->mysqli->query($sql) or write_log($this->mysqli->error, __FILE__, __LINE__);
 
         if ($result->num_rows > 0) {
@@ -569,16 +715,11 @@ class MySQLtabledit
                             <input class='textbox' type='text' name='s' value='$in_search_value' style='width:220px'>
                             <input class='button' type='submit' value='{$this->text['Search']}' style='width:80px'>
                 ";
-        if ($this->query_joomla_component) {
-            $seach_form .= "<input type='hidden' value='$this->query_joomla_component' name='option'>";
-        }
+
         $seach_form .= "</form>";
 
         if ($_GET['s'] && $_GET['f']) {
-            if ($this->query_joomla_component) {
-                $add_joomla = '?option=' . $this->query_joomla_component;
-            }
-            $seach_form .= "<button class='button' style='margin-left:0;margin-top:6px' onclick='window.location=\"$this->url_script$add_joomla\"' style='margin: 0 0 10px 10px'>{$this->text['Clear_search']}</button>";
+            $seach_form .= "<button class='button' style='margin-left:0;margin-top:6px' onclick='window.location=\"$this->url_script\"' style='margin: 0 0 10px 10px'>{$this->text['Clear_search']}</button>";
         }
 
         $seach_form .= "
@@ -615,223 +756,82 @@ class MySQLtabledit
         ";
     }
 
-
     /**
-     *
+     * @return string
      */
-    public function del_rec()
+    private function get_sql()
     {
-        $in_id = $_GET['id'];
+        /**
+         * select
+         */
+        $sql = "SELECT SQL_CACHE * FROM `$this->table` $this->where_search $this->order_by";
 
-        $stmt = "DELETE FROM " . $this->table . " WHERE `" . $this->primary_key . "` = '$in_id'";
-
-        if ($this->mysqli->query($stmt)) {
-            $this->content_deleted = "
-                <div class='notify_deleted'>
-                    Record {$this->show_text[$this->primary_key]} $in_id {$this->text['deleted']}
-                </div>
-            ";
-            $this->show_list();
-        } else {
-            $this->content = "
-            </div>
-                <div style='padding:2px 20px 20px 20px;margin: 0 0 20px 0; background: #DF0000; color: #fff'><h3>Error</h3>" . $this->mysqli->error . "</div><a href='$this->url_script'>List records...</a>
-            </div>";
-        }
-    }
-
-
-    /**
-     *
-     */
-    public function edit_rec()
-    {
-        $in_id = $_GET['id'];
-
-        // edit or new?
-        if ($_GET['mte_a'] == 'edit') {
-            $edit = 1;
-        }
-
-        $count_required = 0;
-
-        $query = "SHOW COLUMNS FROM `$this->table`";
-        $types = $this->mysqli->query($query);
-
-        // get field types
-        while ($obj = $types->fetch_object()) {
-            $field_type[$obj->Field] = $obj->Type;
-        }
-
-        $types->close();
-
-        if (!$edit) {
-            $rij = $field_type;
-        } else {
-            if ($edit) {
-                $where_edit = "WHERE `$this->primary_key` = $in_id";
+        /**
+         * if sorting by distance
+         */
+        if ($_GET['sort'] && $_GET['sort'] == "distance") {
+            if ($_GET['ad'] == 'a') {
+                $asc_des = 'DESC';
+            }
+            if ($_GET['ad'] == 'd') {
+                $asc_des = 'ASC';
             }
 
-            $query = "SELECT * FROM `$this->table` $where_edit LIMIT 1";
-            $results = $this->mysqli->query($query);
-            $rij = $results->fetch_assoc();
-            $results->close();
-        }
+            // figure out what coords to calculate from
+            $usable_coords = usable_coords();
+            $rusex = $usable_coords["x"];
+            $rusey = $usable_coords["y"];
+            $rusez = $usable_coords["z"];
 
-        foreach ($rij as $key => $value) {
-            if (!$edit) {
-                $value = '';
-            }
-            $field = '';
-            $options = '';
-            $style = '';
-            $field_id = '';
-            $readonly = '';
-            $value_htmlentities = '';
+            $query = "SHOW COLUMNS FROM `$this->table`";
 
-            if (isset($this->fields_required)) {
-                if (in_array($key, $this->fields_required)) {
-                    $count_required++;
-                    $style = "class='mte_req'";
-                    $field_id = "id='id_" . $count_required . "'";
-                }
+            $columns = $this->mysqli->query($query) or write_log($this->mysqli->error, __FILE__, __LINE__);
+
+            while ($obj = $columns->fetch_object()) {
+                $fields[] = $this->table . '.' . $obj->Field;
             }
 
-            $field_kind = $field_type[$key];
+            $columns->close();
 
-            // different fields
-            // textarea
-            if (preg_match("/text/", $field_kind)) {
-                $field = "<textarea class='textarea' name='$key' $style $field_id>$value</textarea>";
-            }
-            // select/options
-            elseif (preg_match("/enum\((.*)\)/", $field_kind, $matches)) {
-                $all_options = substr($matches[1], 1, -1);
-                $options_array = explode("','", $all_options);
-                foreach ($options_array as $option) {
-                    if ($option == $value) {
-                        $options .= "<option selected>$option</option>";
-                    } else {
-                        $options .= "<option>$option</option>";
-                    }
-                }
-                unset($option);
-                $field = "<select class='selectbox' name='$key' $style $field_id>$options</select>";
-            }
-            // input
-            elseif (!preg_match("/blob/", $field_kind)) {
-                if (preg_match("/\(*(.*)\)*/", $field_kind, $matches)) {
-                    if ($key == $this->primary_key) {
-                        $style = "style='background:#ccc'";
-                        $readonly = 'readonly';
-                    }
-                    $value_htmlentities = htmlentities($value, ENT_QUOTES);
-                    if (!$edit && $key == $this->primary_key) {
-                        $field = "<input type='hidden' name='$key' value=''>[auto increment]";
-                    } else {
-                        // add ajax system name for some fields
-                        if ($key == "system_name") {
-                            $field = '  <input class="textbox" type="text" id="' . $key . '" name="' . $key . '" value="' . $value_htmlentities . '" maxlength="' . $matches[1] . '" ' . $style . ' ' . $readonly . ' ' . $field_id . ' onkeyup="showResult(this.value, \'37\', \'no\', \'no\', \'no\', \'no\', \'yes\')">
-                                        <div class="suggestions" id="suggestions_37" style="margin-left:1px"></div>';
-                        } else {
-                            $field = "<input class='textbox' type='text' id='$key' name='$key' value='$value_htmlentities' maxlength='{$matches[1]}' $style $readonly $field_id>";
-                        }
-                    }
-                }
-            }
-            // blob: don't show
-            elseif (preg_match("/blob/", $field_kind)) {
-                $field = '[<i>binary</i>]';
-            }
+            $fieldss = join(",", $fields);
 
-            // make table row
-            $background = $background == '#38484f' ? '#273238' : '#38484f';
-
-            if ($this->show_text[$key]) {
-                $show_key = $this->show_text[$key];
+            if ($asc_des == "DESC") {
+                $this->order_by = "ORDER BY -(sqrt(pow((ritem_coordx-($rusex)),2)+pow((ritem_coordy-($rusey)),2)+pow((ritem_coordz-($rusez)),2)))" . $asc_des;
             } else {
-                $show_key = $key;
+                $this->order_by = "ORDER BY sqrt(pow((ritem_coordx-($rusex)),2)+pow((ritem_coordy-($rusey)),2)+pow((ritem_coordz-($rusez)),2)) DESC";
             }
 
-            $rows .= "\n\n<tr style='border-bottom:1px solid #000;background:$background'>\n<td style='vertical-align:middle;padding:8px'><strong>$show_key</strong></td>\n<td style='padding:8px'>$field</td></tr>";
-        }
-        unset($value);
-
-        $this->javascript = "
-            function submitform() {
-                var ok = 0;
-                for (f = 1; f <= $count_required; f++)
-                {
-
-                    var elem = document.getElementById('id_' + f);
-
-                    if (elem.options) {
-                        if (elem.options[elem.selectedIndex].text!=null && elem.options[elem.selectedIndex].text!='') {
-                            ok++;
-                        }
-                    }
-                    else {
-                        if (elem.value!=null && elem.value!='') {
-                            ok++;
-                        }
-                    }
-                }
-                //  alert($count_required + ' ' + ok);
-
-                if (ok == $count_required)
-                {
-                    return true;
-                }
-                else
-                {
-                    alert('{$this->text['Check_the_required_fields']}...')
-                    return false;
-                }
+            if ($this->table == "edtb_systems") {
+                $sql = "SELECT " . $fieldss . ",edtb_systems.x AS ritem_coordx,
+                                                edtb_systems.y AS ritem_coordy,
+                                                edtb_systems.z AS ritem_coordz
+                                                FROM $this->table
+                                                $this->order_by";
+            } elseif ($this->table == "edtb_stations") {
+                $sql = "SELECT " . $fieldss . ",edtb_systems.x AS ritem_coordx,
+                                                edtb_systems.y AS ritem_coordy,
+                                                edtb_systems.z AS ritem_coordz
+                                                FROM $this->table
+                                                LEFT JOIN edtb_systems ON $this->table.system_id = edtb_systems.id
+                                                $this->order_by";
+            } else {
+                $sql = "SELECT " . $fieldss . ",IFNULL(edtb_systems.x, user_systems_own.x) AS ritem_coordx,
+                                                IFNULL(edtb_systems.y, user_systems_own.y) AS ritem_coordy,
+                                                IFNULL(edtb_systems.z, user_systems_own.z) AS ritem_coordz
+                                                FROM $this->table
+                                                LEFT JOIN edtb_systems ON $this->table.system_name = edtb_systems.name
+                                                LEFT JOIN user_systems_own ON $this->table.system_name = user_systems_own.name
+                                                $this->order_by";
             }
-        ";
-
-        $this->content = "
-                <div style='width: $this->width_editor;background:transparent'>
-
-                    <table style='border-collapse:collapse;border-spacing:0'>
-                        <tr>
-                            <td>
-                                <button onclick='window.location=\"{$_SESSION['hist_page']}\"' style='margin: 20px 15px 25px 15px'>{$this->text['Go_back']}</button>
-                            </td>
-                            <td>
-                                <form method='post' action='/DataPoint?table=" . $_GET["table"] . "' onsubmit='return submitform()'>
-                                <input class='button' type='submit' value='{$this->text['Save']}' style='width: 80px;margin: 20px 0 25px 0'>
-                            </td>
-                        </tr>
-                    </table>
-
-                </div>
-
-                <div style='width: $this->width_editor'>
-                    <table style='margin-bottom:20px;border-collapse:collapse;border-spacing:0'>
-                        $rows
-                    </table>
-                </div>
-        ";
-
-        if (!$edit) {
-            $this->content .= "<input type='hidden' name='mte_new_rec' value='1'>";
-        }
-        if ($this->query_joomla_component) {
-            $this->content .= "<input type='hidden' name='option' value='$this->query_joomla_component'>";
         }
 
-        $this->content .= "
-                <input type='hidden' name='mte_a' value='save'>
-            </form>
-        ";
+        return $sql;
     }
-
 
     /**
      *
      */
-    public function save_rec()
+    private function save_rec()
     {
         $in_mte_new_rec = $_POST['mte_new_rec'];
 
@@ -890,9 +890,6 @@ class MySQLtabledit
                 ";
             if ($in_mte_new_rec) {
                 echo "<script>window.location='?start=0&f=&sort=" . $this->primary_key . "&ad=d";
-                if ($this->query_joomla_component) {
-                    echo '&option=' . $this->query_joomla_component ;
-                }
                 echo "</script>";
             } else {
                 echo "<script>window.location='" . $_SESSION['hist_page'] . "'</script>";
@@ -905,11 +902,8 @@ class MySQLtabledit
         }
     }
 
-    ##########################
-    public function close_and_print()
+    private function close_and_print()
     {
-        ##########################
-
         // debug and warning no htaccess
         if ($this->debug) {
             $this->debug .= '<br />';
@@ -927,17 +921,10 @@ class MySQLtabledit
 
         // save page location
         $session_hist_page = $this->url_script . '?' . $_SERVER['QUERY_STRING'];
-        if ($this->query_joomla_component && !preg_match("/option=$this->query_joomla_component/", $session_hist_page)) {
-            $session_hist_page .= '&option=' . $this->query_joomla_component;
-        }
 
         // no page history on the edit page because after refresh the Go Back is useless
         if (!$_GET['mte_a']) {
             $_SESSION['hist_page'] = $session_hist_page;
-        }
-
-        if ($this->query_joomla_component) {
-            $add_joomla = '?option=' . $this->query_joomla_component;
         }
 
         echo "

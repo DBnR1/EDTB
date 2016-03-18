@@ -187,7 +187,9 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"])) {
 
                         $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
 
-                        // export to EDSM
+                        /**
+                         * export to EDSM
+                         */
                         if ($settings["edsm_api_key"] != "" && $settings["edsm_export"] == "true" && $settings["edsm_cmdr_name"] != "") {
                             $visited_on_utc = date("Y-m-d H:i:s");
                             $export = file_get_contents("http://www.edsm.net/api-logs-v1/set-log?commanderName=" . urlencode($settings["edsm_cmdr_name"]) . "&apiKey=" . $settings["edsm_api_key"] . "&systemName=" . urlencode($curSys["name"]) . "&dateVisited=" . urlencode($visited_on_utc) . "");
@@ -211,8 +213,6 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"])) {
                 } else {
                     $newSystem = false;
                 }
-
-                global $curSys, $newSystem;
 
                 break;
             }

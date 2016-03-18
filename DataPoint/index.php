@@ -56,6 +56,7 @@ require_once("functions.php");
 /** @require MySQL table edit class */
 require_once("Vendor/MySQL_table_edit/mte.php");
 
+/** @var string $data_table */
 $data_table = $_GET["table"] != "" ? $_GET["table"] : $settings["data_view_default_table"];
 
 /**
@@ -63,8 +64,12 @@ $data_table = $_GET["table"] != "" ? $_GET["table"] : $settings["data_view_defau
  */
 $tabledit = new MySQLtabledit();
 
+/** @var string table */
 $tabledit->table = $data_table;
 
+/**
+ * get column comment from database to use as a name for the fields
+ */
 $query = "  SELECT COLUMN_NAME, COLUMN_COMMENT
             FROM INFORMATION_SCHEMA.COLUMNS
             WHERE table_name = '$data_table'";
@@ -81,8 +86,10 @@ while ($column_obj = $result->fetch_object()) {
 
 $result->close();
 
+/** @var array links_to_db */
 $tabledit->links_to_db = $settings["data_view_table"];
 
+/** @var array skip */
 $tabledit->skip = $settings["data_view_ignore"][$data_table];
 
 /** @var string primary_key the primary key of the table (must be AUTO_INCREMENT) */
@@ -97,10 +104,13 @@ $tabledit->num_rows_list_view = 10;
 /** @var array fields_required required fields in edit or add record */
 //$tabledit->fields_required = array('name');
 
+/** @var string url_base */
 $tabledit->url_base = "Vendor/MySQL_table_edit/";
 
+/** @var string url_script */
 $tabledit->url_script = "/DataPoint";
 
+/** @var array show_text */
 $tabledit->show_text = $showt;
 ?>
     <div class="entries">

@@ -51,6 +51,59 @@ class PoiBm
     }
 
     /**
+     * Make item table
+     *
+     * @param mysqli_result $res
+     * @param string $type
+     * @return string
+     * @author Mauri Kujala <contact@edtb.xyz>
+     */
+    public function make_table($res, $type)
+    {
+        global $curSys;
+
+        $num = $res->num_rows;
+
+        echo '<table>';
+
+        if ($num > 0) {
+            if (!valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"])) {
+                echo '<tr>';
+                echo '<td class="dark poi_minmax">';
+                echo '<p><strong>No coordinates for current location, last known location used.</strong></p>';
+                echo '</td>';
+                echo '</tr>';
+            }
+
+            $i = 0;
+            $to_last = [];
+            while ($obj = $res->fetch_object()) {
+                echo $this->make_item($obj, $type, $i);
+            }
+        } else {
+            if ($type == "Poi") {
+                ?>
+                <tr>
+                    <td class="dark poi_minmax">
+                        <strong>No points of interest.<br/>Click the "Points of Interest" text to add one.</strong>
+                    </td>
+                </tr>
+                <?php
+            } else {
+                ?>
+                <tr>
+                    <td class="dark poi_minmax">
+                        <strong>No bookmarks.<br/>Click the allegiance icon on the top left corner to add one.</strong>
+                    </td>
+                </tr>
+                <?php
+            }
+        }
+
+        echo '</table>';
+    }
+
+    /**
      * Make items
      *
      * @param object $obj
@@ -136,59 +189,8 @@ class PoiBm
     }
 
     /**
-     * Make item table
+     * Add, update or delete poi from the database
      *
-     * @param mysqli_result $res
-     * @param string $type
-     * @return string
-     * @author Mauri Kujala <contact@edtb.xyz>
-     */
-    public function make_table($res, $type)
-    {
-        global $curSys;
-
-        $num = $res->num_rows;
-
-        echo '<table>';
-
-        if ($num > 0) {
-            if (!valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"])) {
-                echo '<tr>';
-                echo '<td class="dark poi_minmax">';
-                echo '<p><strong>No coordinates for current location, last known location used.</strong></p>';
-                echo '</td>';
-                echo '</tr>';
-            }
-
-            $i = 0;
-            $to_last = [];
-            while ($obj = $res->fetch_object()) {
-                echo $this->make_item($obj, $type, $i);
-            }
-        } else {
-            if ($type == "Poi") {
-                ?>
-                <tr>
-                    <td class="dark poi_minmax">
-                        <strong>No points of interest.<br/>Click the "Points of Interest" text to add one.</strong>
-                    </td>
-                </tr>
-                <?php
-            } else {
-                ?>
-                <tr>
-                    <td class="dark poi_minmax">
-                        <strong>No bookmarks.<br/>Click the allegiance icon on the top left corner to add one.</strong>
-                    </td>
-                </tr>
-                <?php
-            }
-        }
-
-        echo '</table>';
-    }
-
-    /**
      * @param object $data
      */
     public function add_poi($data)
@@ -240,6 +242,8 @@ class PoiBm
     }
 
     /**
+     * Add, update or delete bookmarks
+     *
      * @param object $data
      */
     public function add_bm($data)

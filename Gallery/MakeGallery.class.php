@@ -51,7 +51,7 @@ class MakeGallery
              * check if current screenshot dir exists and is writable
              */
             if (!is_dir($dir) && !is_writable($dir)) {
-                write_log("Error: " . $dir . " is not writable", __FILE__, __LINE__);
+                write_log("Error: " . $dir . " is not writable or doesn't exist", __FILE__, __LINE__);
 
                 return false;
             }
@@ -60,7 +60,7 @@ class MakeGallery
              * check if new screenshot dir exists and is writable
              */
             if (!is_dir($newdir) && !is_writable($newdir)) {
-                write_log("Error: " . $newdir . " is not writable", __FILE__, __LINE__);
+                write_log("Error: " . $newdir . " is not writable or doesn't exist", __FILE__, __LINE__);
 
                 return false;
             }
