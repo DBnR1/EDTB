@@ -83,7 +83,12 @@ if ((isset($settings["nowplaying_file"]) && !empty($settings["nowplaying_file"])
      *  from file
      */
     if (isset($settings["nowplaying_file"]) && !empty($settings["nowplaying_file"])) {
-        $nowplaying .= file_get_contents($settings["nowplaying_file"]);
+		if (file_exists($settings["nowplaying_file"]))
+		{
+			$nowplaying .= file_get_contents($settings["nowplaying_file"]);
+		} else {
+			$nowplaying .= "File doesn't exist";
+		}
     }
 
     /**

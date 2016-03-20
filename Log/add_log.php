@@ -115,10 +115,10 @@ if (isset($_GET["do"])) {
                                     Enable audio
                                 </a>
                                 <a href="javascript:void(0)" title="Start recording audio" id="record_click" style="display:none">
-                                    <img class="icon24" src="/style/img/record.png" id="record" style="margin-top:10px;margin-bottom:10px" />
+                                    <img class="icon24" src="/style/img/record.png" alt="Rec" id="record" style="margin-top:10px;margin-bottom:10px" />
                                 </a>
                                 <a href="javascript:void(0)" title="Stop recording audio" id="stop_click" style="display:none">
-                                    <img class="icon24" src="/style/img/stop.png" id="stop" style="margin-top:10px;margin-bottom:10px" />
+                                    <img class="icon24" src="/style/img/stop.png" alt="Stop" id="stop" style="margin-top:10px;margin-bottom:10px" />
                                 </a>
                             </span>
                             <ul id="recordingslist"></ul>

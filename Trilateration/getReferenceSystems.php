@@ -192,7 +192,7 @@ $result->close();
                             <strong><?php echo $ref_rname?></strong>
                         </td>
                         <td class="dark">
-                            <input class="textbox" type="number" step="any" min="0" id="ref_<?php echo $i?>_dist" name="reference_<?php echo $i?>_distance" value="<?php echo $ref[$i]["distance"]?>" placeholder="1234.56" style="width:100px" autocomplete="off" /><br />
+                            <input class="textbox" type="number" step="any" min="0" id="ref_<?php echo $i?>_dist" name="reference_<?php echo $i?>_distance" value="<?php echo $ref[$i]["distance"]?>" placeholder="1234.56" style="width:100px" autocomplete="off" required="required" /><br />
                         </td>
                     </tr>
                     <?php
