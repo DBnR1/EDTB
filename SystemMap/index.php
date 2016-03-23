@@ -307,7 +307,7 @@ $link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http
                             bodyname = replaceAll(bodyname, ",", "");
                             bodyname = bodyname.toLowerCase();
 
-                            options["src"] = '/style/img/bodies/' + bodyname + '_' + options["imgid"] + '.png';
+                            options["src"] = '/SystemMap/bodies/' + bodyname + '_' + options["imgid"] + '.png';
 
                             break;
                         }

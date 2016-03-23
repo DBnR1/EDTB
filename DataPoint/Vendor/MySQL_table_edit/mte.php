@@ -3,42 +3,42 @@
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 
 // no direct access
-if (strtolower(basename($_SERVER['PHP_SELF'])) == strtolower(basename(__FILE__))) {
-    die('No access...');
+if (strtolower(basename($_SERVER["PHP_SELF"])) == strtolower(basename(__FILE__))) {
+    die("No access...");
 }
 
 /**
  * Class MySQLtabledit
  *
  * @property string debug_html
-*/
+ */
 class MySQLtabledit
 {
     /**
-    *
-    * MySQL Edit Table
-    *
-    * Copyright (c) 2010 Martin Meijer - Browserlinux.com
-    *
-    * Permission is hereby granted, free of charge, to any person obtaining a copy
-    * of this software and associated documentation files (the "Software"), to deal
-    * in the Software without restriction, including without limitation the rights
-    * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    * copies of the Software, and to permit persons to whom the Software is
-    * furnished to do so, subject to the following conditions:
-    *
-    * The above copyright notice and this permission notice shall be included in
-    * all copies or substantial portions of the Software.
-    *
-    * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-    * THE SOFTWARE.
-    *
-    */
+     *
+     * MySQL Edit Table
+     *
+     * Copyright (c) 2010 Martin Meijer - Browserlinux.com
+     *
+     * Permission is hereby granted, free of charge, to any person obtaining a copy
+     * of this software and associated documentation files (the "Software"), to deal
+     * in the Software without restriction, including without limitation the rights
+     * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+     * copies of the Software, and to permit persons to whom the Software is
+     * furnished to do so, subject to the following conditions:
+     *
+     * The above copyright notice and this permission notice shall be included in
+     * all copies or substantial portions of the Software.
+     *
+     * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+     * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+     * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+     * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+     * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+     * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+     * THE SOFTWARE.
+     *
+     */
 
     public $table, $primary_key, $text, $links_to_db, $url_script, $skip;
 
@@ -57,11 +57,10 @@ class MySQLtabledit
     // visible name of the fields
     public $show_text;
 
-    public $width_editor = '100%';
-    public $width_input_fields = '700px';
-    public $width_text_fields = '698px';
-    public $height_text_fields = '200px';
-    public $no_htaccess_warning = 'off';
+    public $width_editor = "100%";
+    public $width_input_fields = "700px";
+    public $width_text_fields = "698px";
+    public $height_text_fields = "200px";
 
     public $url_base;
 
@@ -101,20 +100,20 @@ class MySQLtabledit
         }*/
 
         if (!$this->url_base) {
-            $this->url_base = '.';
+            $this->url_base = ".";
         }
 
         // name of the script
-        //$break = explode('/', $_SERVER["SCRIPT_NAME"]);
+        //$break = explode("/", $_SERVER["SCRIPT_NAME"]);
         //$this->url_script = $break[count($break) - 1];
 
-        if ($_GET["mte_a"] == 'edit') {
+        if ($_GET["mte_a"] == "edit") {
             $this->edit_rec();
-        } elseif ($_GET["mte_a"] == 'new') {
+        } elseif ($_GET["mte_a"] == "new") {
             $this->edit_rec();
-        } elseif ($_GET["mte_a"] == 'del') {
+        } elseif ($_GET["mte_a"] == "del") {
             $this->del_rec();
-        } elseif ($_POST["mte_a"] == 'save') {
+        } elseif ($_POST["mte_a"] == "save") {
             $this->save_rec();
         } else {
             $this->show_list();
@@ -131,7 +130,7 @@ class MySQLtabledit
         $in_id = $_GET["id"];
 
         // edit or new?
-        $edit = $_GET["mte_a"] == 'edit' ? 1 : 0;
+        $edit = $_GET["mte_a"] == "edit" ? 1 : 0;
 
         $this->count_required = 0;
 
@@ -189,19 +188,19 @@ class MySQLtabledit
         ";
 
         if (!$edit) {
-            $close_form .= "<input type='hidden' name='mte_new_rec' value='1'>";
+            $close_form .= '<input type="hidden" name="mte_new_rec" value="1">';
         }
         $close_form .= '
                     <tr>
                         <td colspan="2">
                             <input type="hidden" name="mte_a" value="save">
-                            <input class="button" type="submit" value="Save" style="width: 80px;margin: 20px 0 25px 0">
+                            <input class="button" type="submit" value="Save" style="width:80px;margin:20px 0 25px 0">
                         </td>
                     </tr>';
 
         $this->content .= '
                 <div style="width:' . $this->width_editor . '">
-                    <form method="post" action="/DataPoint?table=' . $_GET["table"] . '" onsubmit="return submitform()">
+                    <form method="post" action="/DataPoint/index.php?table=' . $_GET["table"] . '" onsubmit="return submitform()">
                         <table style="margin-bottom:20px;border-collapse:collapse;border-spacing:0">
                             <tr>
                                 <td>
@@ -224,18 +223,18 @@ class MySQLtabledit
     private function get_fields($rij)
     {
         // edit or new?
-        $edit = $_GET["mte_a"] == 'edit' ? 1 : 0;
+        $edit = $_GET["mte_a"] == "edit" ? 1 : 0;
 
         foreach ($rij as $key => $value) {
             if (!$edit) {
-                $value = '';
+                $value = "";
             }
 
-            $field = '';
-            $options = '';
-            $style = '';
-            $field_id = '';
-            $readonly = '';
+            $field = "";
+            $options = "";
+            $style = "";
+            $field_id = "";
+            $readonly = "";
 
             if (isset($this->fields_required)) {
                 if (in_array($key, $this->fields_required)) {
@@ -273,7 +272,7 @@ class MySQLtabledit
                 if (preg_match("/\(*(.*)\)*/", $field_kind, $matches)) {
                     if ($key == $this->primary_key) {
                         $style = "style='background:#ccc'";
-                        $readonly = 'readonly';
+                        $readonly = "readonly";
                     }
                     $value_htmlentities = htmlentities($value, ENT_QUOTES);
                     if (!$edit && $key == $this->primary_key) {
@@ -293,11 +292,11 @@ class MySQLtabledit
             }
             // blob: don't show
             elseif (preg_match("/blob/", $field_kind)) {
-                $field = '[<i>binary</i>]';
+                $field = "[<i>binary</i>]";
             }
 
             // make table row
-            $background = $background == '#38484f' ? '#273238' : '#38484f';
+            $background = $background == "#38484f" ? "#273238" : "#38484f";
 
             if ($this->show_text[$key]) {
                 $show_key = $this->show_text[$key];
@@ -336,7 +335,7 @@ class MySQLtabledit
         } else {
             $this->content = "
             </div>
-                <div style='padding:2px 20px 20px 20px;margin: 0 0 20px 0; background: #DF0000; color: #fff'><h3>Error</h3>" . $this->mysqli->error . "</div><a href='$this->url_script'>List records...</a>
+                <div style='padding:2px 20px 20px 20px;margin: 0 0 20px 0;background:#DF0000;color:#fff'><h3>Error</h3>" . $this->mysqli->error . "</div><a href='$this->url_script'>List records...</a>
             </div>";
         }
     }
@@ -347,20 +346,20 @@ class MySQLtabledit
     private function show_list()
     {
         // message after add or edit
-        $this->content_saved = $_SESSION['content_saved'];
-        $_SESSION['content_saved'] = '';
+        $this->content_saved = $_SESSION["content_saved"];
+        $_SESSION["content_saved"] = "";
 
         // default sort (a = ascending)
-        $ad = 'a';
+        $ad = "a";
 
         if ($_GET["sort"] && in_array($_GET["sort"], $this->fields_in_list_view)) {
-            if ($_GET["ad"] == 'a') {
-                $asc_des = 'ASC';
+            if ($_GET["ad"] == "a") {
+                $asc_des = "ASC";
             }
-            if ($_GET["ad"] == 'd') {
-                $asc_des = 'DESC';
+            if ($_GET["ad"] == "d") {
+                $asc_des = "DESC";
             }
-            $this->order_by = "ORDER by " . $_GET["sort"] . ' ' . $asc_des ;
+            $this->order_by = "ORDER by " . $_GET["sort"] . " " . $asc_des ;
         } else {
             $this->order_by = "ORDER by $this->primary_key DESC";
         }
@@ -377,13 +376,13 @@ class MySQLtabledit
          * build query_string
          */
         // navigation
-        $query_string .= '&start=' . $start;
+        $query_string .= "&start=" . $start;
         // sorting
-        $query_string .= '&ad=' . $_GET["ad"]  . '&sort=' . $_GET["sort"] ;
+        $query_string .= "&ad=" . $_GET["ad"]  . "&sort=" . $_GET["sort"] ;
         // searching
-        $query_string .= '&s=' . $_GET["s"]  . '&f=' . $_GET["f"] ;
+        $query_string .= "&s=" . $_GET["s"]  . "&f=" . $_GET["f"] ;
         //table
-        $query_string .= '&table=' . $_GET["table"]  . '';
+        $query_string .= "&table=" . $_GET["table"];
 
         /**
          * search
@@ -399,6 +398,9 @@ class MySQLtabledit
             }
         }
 
+        /**
+         * get sql query
+         */
         $sql = $this->get_sql();
 
         $hits = $this->mysqli->query($sql) or write_log($this->mysqli->error, __FILE__, __LINE__);
@@ -427,9 +429,9 @@ class MySQLtabledit
             $count = 0;
             while ($data = $result->fetch_object()) {
                 $count++;
-                $this_row = '';
+                $this_row = "";
 
-                $background = $background == '#38484f' ? '#273238' : '#38484f';
+                $background = $background == "#38484f" ? "#273238" : "#38484f";
 
                 $dist = false;
                 $dist1 = false;
@@ -527,7 +529,7 @@ class MySQLtabledit
                     }
                     //echo $field_kind;
 
-                    $sort_image = '';
+                    $sort_image = "";
                     if (in_array($key, $this->fields_in_list_view)) {
                         if ($count == 1) {
                             // show nice text of a value
@@ -538,13 +540,13 @@ class MySQLtabledit
                             }
 
                             // sorting
-                            if ($_GET["sort"] == $key && $_GET["ad"] == 'a') {
+                            if ($_GET["sort"] == $key && $_GET["ad"] == "a") {
                                 $sort_image = "<img src='/style/img/sort_a.png' style='width:9px;height:8px;border:none' alt=''>";
-                                $ad = 'd';
+                                $ad = "d";
                             }
-                            if ($_GET["sort"] == $key && $_GET["ad"] == 'd') {
+                            if ($_GET["sort"] == $key && $_GET["ad"] == "d") {
                                 $sort_image = "<img src='/style/img/sort_d.png' style='width:9px;height:8px;border:none' alt=''>";
-                                $ad = 'a';
+                                $ad = "a";
                             }
 
                             // remove sort  and ad and add new ones
@@ -561,13 +563,13 @@ class MySQLtabledit
 
                             // add distance if x,y,z are defined
                             if ($dist1 !== false) {
-                                if ($_GET["sort"] == "distance" && $_GET["ad"] == 'a') {
+                                if ($_GET["sort"] == "distance" && $_GET["ad"] == "a") {
                                     $sort_image = "<img src='/style/img/sort_a.png' style='width:9px;height:8px;border:none' alt=''>";
-                                    $ad = 'd';
+                                    $ad = "d";
                                 }
-                                if ($_GET["sort"] == "distance" && $_GET["ad"] == 'd') {
+                                if ($_GET["sort"] == "distance" && $_GET["ad"] == "d") {
                                     $sort_image = "<img src='/style/img/sort_d.png' style='width:9px;height:8px;border:none' alt=''>";
-                                    $ad = 'a';
+                                    $ad = "a";
                                 }
 
                                 $query_sort_d = preg_replace('/&(sort|ad)=[^&]*/', '', $query_string) . "&sort=distance&ad=$ad";
@@ -641,7 +643,7 @@ class MySQLtabledit
             }
         }
         if ($hits_total < $this->num_rows_list_view) {
-            $navigation = '';
+            $navigation = "";
         }
 
         // Previous if
@@ -658,7 +660,7 @@ class MySQLtabledit
 
         $this->nav_bottom = '<span class="right" style="padding-top:6px">Number of entries: ';
         $this->nav_bottom .= number_format($hits_total);
-        $this->nav_bottom .= '</span>';
+        $this->nav_bottom .= "</span>";
 
         if ($navigation) {
             $nav_table = "
@@ -689,7 +691,7 @@ class MySQLtabledit
          */
         foreach ($this->fields_in_list_view as $option) {
             if (
-                $this->show_text[$option]) {
+            $this->show_text[$option]) {
                 $show_option = $this->show_text[$option];
             } else {
                 $show_option = $option;
@@ -722,10 +724,10 @@ class MySQLtabledit
             $seach_form .= "<button class='button' onclick='window.location=\"$this->url_script\"' style='margin: 0 0 10px 10px'>{$this->text['Clear_search']}</button>";
         }
 
-        $seach_form .= "
+        $seach_form .= '
                     </td>
 
-                    <td style='text-align:right;width:$this->width_editor'>";
+                    <td style="text-align:right;width:$this->width_editor">';
         if (substr($this->table, 0, 4) != "edtb") {
             $seach_form .= "<button class='button' onclick='window.location=\"$this->url_script?$query_string&mte_a=new\"' style='margin: 0 0 10px 10px'>{$this->text['Add_Record']}</button>";
         } else {
@@ -772,11 +774,11 @@ class MySQLtabledit
          * if sorting by distance
          */
         if ($_GET["sort"] && $_GET["sort"] == "distance") {
-            if ($_GET["ad"] == 'a') {
-                $asc_des = 'DESC';
+            if ($_GET["ad"] == "a") {
+                $asc_des = "DESC";
             }
-            if ($_GET["ad"] == 'd') {
-                $asc_des = 'ASC';
+            if ($_GET["ad"] == "d") {
+                $asc_des = "ASC";
             }
 
             // figure out what coords to calculate from
@@ -790,7 +792,7 @@ class MySQLtabledit
             $columns = $this->mysqli->query($query) or write_log($this->mysqli->error, __FILE__, __LINE__);
 
             while ($obj = $columns->fetch_object()) {
-                $fields[] = $this->table . '.' . $obj->Field;
+                $fields[] = $this->table . " . " . $obj->Field;
             }
 
             $columns->close();
@@ -838,14 +840,14 @@ class MySQLtabledit
         //write_log("sdds");
         $in_mte_new_rec = $_POST["mte_new_rec"];
 
-        $updates = '';
+        $updates = "";
 
         foreach ($_POST as $key => $value) {
             if ($key == $this->primary_key) {
                 $in_id = $value;
                 $where = "$key = $value";
             }
-            if ($key != 'mte_a' && $key != 'mte_new_rec' && $key != 'option') {
+            if ($key != "mte_a" && $key != "mte_new_rec" && $key != "option") {
                 if ($in_mte_new_rec) {
                     $insert_fields .= " `$key`,";
                     $insert_values .= " '" . addslashes(stripslashes($value)) . "',";
@@ -860,16 +862,14 @@ class MySQLtabledit
         $insert_values = substr($insert_values, 0, -1);
         $updates = substr($updates, 0, -1);
 
-        // new record:
+        // new record
         if ($in_mte_new_rec) {
             $sql = "INSERT INTO `$this->table` ($insert_fields) VALUES ($insert_values); ";
         }
-        // edit record:
+        // edit record
         else {
             $sql = "UPDATE `$this->table` SET $updates WHERE $where LIMIT 1; ";
         }
-
-        //write_log($sql);
 
         if ($this->mysqli->query($sql)) {
             if ($in_mte_new_rec) {
@@ -886,7 +886,7 @@ class MySQLtabledit
                 $show_primary_key = $this->primary_key;
             }
 
-            $_SESSION['content_saved'] = "
+            $_SESSION["content_saved"] = "
                 <div class='notify_success'>
                     Record $show_primary_key $saved_id {$this->text['saved']}
                 </div>
@@ -912,10 +912,7 @@ class MySQLtabledit
     {
         // debug and warning no htaccess
         if ($this->debug) {
-            $this->debug .= '<br />';
-        }
-        if (!file_exists('./.htaccess') && $this->no_htaccess_warning == 'on') {
-            $this->debug .= "{$this->text['Protect_this_directory_with']} .htaccess";
+            $this->debug .= "<br />";
         }
 
         if ($this->debug) {
@@ -926,11 +923,11 @@ class MySQLtabledit
         }
 
         // save page location
-        $session_hist_page = $this->url_script . '?' . $_SERVER['QUERY_STRING'];
+        $session_hist_page = $this->url_script . '?' . $_SERVER["QUERY_STRING"];
 
         // no page history on the edit page because after refresh the Go Back is useless
         if (!$_GET["mte_a"]) {
-            $_SESSION['hist_page'] = $session_hist_page;
+            $_SESSION["hist_page"] = $session_hist_page;
         }
 
         echo "
@@ -944,7 +941,7 @@ class MySQLtabledit
         $i = 0;
         foreach ($this->links_to_db as $link_h => $link_t) {
             if ($this->table == $link_h) {
-                $active = " class='actives'";
+                $active = ' class="actives"';
             } else {
                 $active = "";
             }
@@ -956,6 +953,7 @@ class MySQLtabledit
             echo '<li' . $active . '><a data-replace="true" data-target=".rightpanel" class="mtelink" href="/DataPoint?table=' . $link_h . '">' . $link_t . '</a></li>';
             $i++;
         }
+
         echo "</ul></div>
             $this->nav_top
             $this->debug_html

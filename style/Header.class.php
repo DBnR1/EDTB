@@ -29,7 +29,7 @@
  */
 
 /** @require installer script */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/install_script.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Install/install_script.php");
 /** @require config */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
 /** @require MySQL */

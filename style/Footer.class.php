@@ -29,7 +29,7 @@
  */
 
 /** @require installer script */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/install_script.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Install/install_script.php");
 /** @require config */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
 /** @require MySQL */
@@ -96,11 +96,11 @@ class Footer extends Theme
                         <table>
                             <tr>
                                 <td class="heading" colspan="2">Calculate Distances
-                                                <span class="right">
-                                                    <a href="javascript:void(0)" onclick="tofront('distance')" title="Close form">
-                                                        <img src="/style/img/close.png" class="icon" alt="X" />
-                                                    </a>
-                                                </span>
+                                    <span class="right">
+                                        <a href="javascript:void(0)" onclick="tofront('distance')" title="Close form">
+                                            <img src="/style/img/close.png" class="icon" alt="X" />
+                                        </a>
+                                    </span>
                                 </td>
                             </tr>
                             <tr>
@@ -144,11 +144,11 @@ class Footer extends Theme
                         <table>
                             <tr>
                                 <td class="heading" colspan="2">Search Systems and Stations
-                                                <span class="right">
-                                                    <a href="javascript:void(0)" onclick="tofront('search_system')" title="Close form">
-                                                        <img src="/style/img/close.png" class="icon" alt="X" />
-                                                    </a>
-                                                </span>
+                                    <span class="right">
+                                        <a href="javascript:void(0)" onclick="tofront('search_system')" title="Close form">
+                                            <img src="/style/img/close.png" class="icon" alt="X" />
+                                        </a>
+                                    </span>
                                 </td>
                             </tr>
                             <tr>
@@ -203,9 +203,11 @@ class Footer extends Theme
                 });
             });
         </script>
+
         <!-- update data every x ms -->
         <script>
-            var int = self.setInterval(get_data, 10000);
+            var int = self.setInterval(get_data, 10001);
+            var int2 = self.setInterval(make_gallery, 11111);
         </script>
 
         <!-- show loader icon -->
