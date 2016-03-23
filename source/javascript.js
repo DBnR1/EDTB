@@ -221,8 +221,7 @@ var requestno = 0;
  * @param override boolean
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function get_data(override)
-{
+function get_data(override) {
     override = override || false;
 
     if (override === true)
@@ -377,6 +376,29 @@ $(function()
 });
 
 /**
+ * Call MakeGallery class
+ */
+function make_gallery() {
+    $.ajax(
+    {
+        url: "/get/getData.php?action=makegallery",
+        cache: false,
+        success: function()
+        {
+            log("Gallery called");
+        }
+    });
+}
+
+$(function()
+{
+    setTimeout(function()
+    {
+        make_gallery();
+    }, 2000);
+});
+
+/**
  * Get the current system when called
  *
  * @param {string} formid
@@ -384,8 +406,7 @@ $(function()
  * @param {bool|string} onlyid
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function get_cs(formid, coordformid, onlyid)
-{
+function get_cs(formid, coordformid, onlyid) {
     coordformid = coordformid || false;
     onlyid = onlyid || false;
     $.ajax(
@@ -1219,7 +1240,7 @@ function savelog(log)
     $.ajax(
     {
         type: "POST",
-        url: "/action/sessionLogSave.php",
+        url: "/action/saveSessionLog.php",
         data: { logtext: data }
     })
     .done(function(msg)
@@ -1281,7 +1302,7 @@ function imgurUpload(file, fileurl)
             // write to file so we can retrieve url later
             $.ajax(
             {
-                url: "/add/imgurURL.php?url=" + url + "&file=" + fileurl,
+                url: "/action/addImgurURL.php?url=" + url + "&file=" + fileurl,
                 cache: false,
                 dataType: "html",
                 success: function(re)
@@ -1475,7 +1496,7 @@ function edsm_comment(comment, send)
             success: function(result)
             {
                 $.ajax({
-                    url: "/add/EDSMComment.php?system_name=" + result + "&comment=" + comment,
+                    url: "/action/addEDSMComment.php?system_name=" + result + "&comment=" + comment,
                     cache: false,
                     dataType: "json",
                     success: function(res)
@@ -1500,14 +1521,13 @@ function edsm_comment(comment, send)
                 success: function(result)
                 {
                     $.ajax({
-                        url: "/get/getEDSMComment.php?system_name=" + result,
+                        url: "/action/addEDSMComment.php?system_name=" + result,
                         cache: false,
                         dataType: 'text',
                         success: function(res)
                         {
                             if (res !== "")
                             {
-                                //log("/get/getEDSMComment.php?system_name=" + result);
                                 $("#comment2").val(res);
                             }
                         }

@@ -51,18 +51,19 @@ if ($action == "onlycoordinates") {
 } elseif ($action == "onlysystem") {
     echo $curSys["name"];
 
-    /**
-     * make screenshot gallery
-     */
-    if (MakeGallery::go()) {
-        $gallery = new MakeGallery();
-        $gallery->make_gallery($curSys["name"]);
-    }
-
     exit;
 } elseif ($action == "onlyid") {
     echo $curSys["id"];
 
+    exit;
+} elseif ($action == "makegallery") {
+    /**
+     * make screenshot gallery
+     */
+    if (MakeGallery::go()) {
+    $gallery = new MakeGallery();
+    $gallery->make_gallery($curSys["name"]);
+    }
     exit;
 }
 
@@ -206,14 +207,6 @@ if ($newSystem !== false || $request == 0) {
     $data["renew"] = "true";
 } else {
     $data["renew"] = "false";
-}
-
-/**
- * make screenshot gallery
- */
-if (MakeGallery::go()) {
-    $gallery = new MakeGallery();
-    $gallery->make_gallery($curSys["name"]);
 }
 
 echo json_encode($data);
