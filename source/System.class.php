@@ -78,6 +78,8 @@ class System
      */
     static function has_screenshots($system_name)
     {
+        global $settings;
+
         $system_name = strip_invalid_dos_chars($system_name);
 
         if (empty($system_name)) {
@@ -230,8 +232,11 @@ class System
     }
 
     /**
+     * Return the number of visits user has made to system $system
+     *
      * @param $system
      * @return int
+     * @author Mauri Kujala <contact@edtb.xyz>
      */
     static function num_visits($system)
     {
