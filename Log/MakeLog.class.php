@@ -30,8 +30,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
+/**
+ * Class MakeLog
+ */
 class MakeLog
 {
+    /** @var int $time_difference local time difference from UTC */
     public $time_difference = 0;
 
     /**

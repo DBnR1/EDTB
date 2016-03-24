@@ -33,7 +33,10 @@
  */
 class NearestSystems
 {
-    public $system, $usex, $usey, $usez;
+    /** @var string $system the system to use as a starting point */
+    public $system;
+    /** @var float $usex, $usey, $usez x, y and z coords to use for calculations */
+    public $usex, $usey, $usez;
 
     /** @var string power_params parameters to add to Power links */
     private $power_params = "";
@@ -41,11 +44,16 @@ class NearestSystems
     /** @var string allegiance_params parameters to add to Allegiance links */
     private $allegiance_params = "";
 
+    /** @var string $text the info text */
     private $text = "Nearest";
+    /** @var string $add_to_query */
     private $add_to_query = "";
+    /** @var string $hidden_inputs */
     private $hidden_inputs = "";
 
+    /** @var bool $stations */
     private $stations = true;
+    /** @var string $main_query */
     private $main_query;
 
     /**

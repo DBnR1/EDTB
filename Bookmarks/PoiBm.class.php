@@ -33,7 +33,9 @@
  */
 class PoiBm
 {
+    /** @var float $usex, $usey, $usez x, y and z coords to use for calculations */
     public $usex, $usey, $usez;
+    /** @var int $time_difference local time difference from UTC */
     public $time_difference = 0;
 
     /**

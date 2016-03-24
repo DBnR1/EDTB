@@ -46,7 +46,9 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.class.php");
  */
 class Header extends Theme
 {
+    /** @var string $page_title */
     public $page_title = "";
+
     /**
      * Display the header
      */
@@ -298,7 +300,7 @@ class Header extends Theme
     }
 
     /**
-     *
+     * the top panel
      */
     private function top_panel()
     {

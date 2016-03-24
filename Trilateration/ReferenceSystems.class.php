@@ -35,7 +35,9 @@
  */
 class ReferenceSystems
 {
+    /** @var bool $standard wether to use the standard set of references or not */
     public $standard = false;
+    /** @var array $used reference systems already submitted */
     public $used = [];
 
     /**
