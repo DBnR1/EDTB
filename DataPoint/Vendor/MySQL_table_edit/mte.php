@@ -42,19 +42,19 @@ class MySQLtabledit
 
     public $table, $primary_key, $text, $links_to_db, $url_script, $skip;
 
-    // the fields you want to see in "list view"
+    /** the fields you want to see in "list view" */
     public $fields_in_list_view;
 
-    // numbers of rows/records in "list view"
+    /** numbers of rows/records in "list view" */
     public $num_rows_list_view = 15;
 
-    // required fields in edit or add record
+    /** required fields in edit or add record */
     public $fields_required;
 
-    // help text
+    /** help text */
     public $help_text;
 
-    // visible name of the fields
+    /** visible name of the fields */
     public $show_text;
 
     public $width_editor = "100%";
@@ -134,15 +134,7 @@ class MySQLtabledit
 
         $this->count_required = 0;
 
-        $query = "SHOW COLUMNS FROM `$this->table`";
-        $types = $this->mysqli->query($query);
-
-        // get field types
-        while ($obj = $types->fetch_object()) {
-            $field_type[$obj->Field] = $obj->Type;
-        }
-
-        $types->close();
+        $field_type = $this->get_field_types();
 
         if (!$edit) {
             $rij = $field_type;
@@ -215,6 +207,26 @@ class MySQLtabledit
     }
 
     /**
+     * Get field types for the table
+     *
+     * @return mixed
+     */
+    private function get_field_types()
+    {
+        $query = "SHOW COLUMNS FROM `$this->table`";
+        $types = $this->mysqli->query($query);
+
+        // get field types
+        while ($obj = $types->fetch_object()) {
+            $field_type[$obj->Field] = $obj->Type;
+        }
+
+        $types->close();
+
+        return $field_type;
+    }
+
+    /**
      * Get fields for editing/adding entries
      *
      * @param array $rij
@@ -222,8 +234,11 @@ class MySQLtabledit
      */
     private function get_fields($rij)
     {
+
         // edit or new?
         $edit = $_GET["mte_a"] == "edit" ? 1 : 0;
+
+        $field_type = $this->get_field_types();
 
         foreach ($rij as $key => $value) {
             if (!$edit) {
@@ -435,7 +450,6 @@ class MySQLtabledit
 
                 $dist = false;
                 $dist1 = false;
-                $exact = "";
                 $d_x = "";
                 $d_y = "";
                 $d_z = "";
@@ -690,25 +704,16 @@ class MySQLtabledit
          * Search form + Add Record button
          */
         foreach ($this->fields_in_list_view as $option) {
-            if (
-            $this->show_text[$option]) {
-                $show_option = $this->show_text[$option];
-            } else {
-                $show_option = $option;
-            }
+            $show_option = $this->show_text[$option] ? $this->show_text[$option] : $option;
 
-            if ($option == $in_search_field) {
-                $options .= "<option selected value='$option'>$show_option</option>";
-            } else {
-                $options .= "<option value='$option'>$show_option</option>";
-            }
+            $options .= $option == $in_search_field ? '<option selected value="' . $option . '">' . $show_option . '</option>' : '<option value="' . $option . '">' . $show_option . '</option>';
         }
         unset($option);
 
         $in_search_value = htmlentities(trim(stripslashes($_GET["s"])), ENT_QUOTES);
 
         $seach_form = "
-            <table style='margin-left:0;padding-left:0;border-collapse:collapse;border-spacing:0'>
+            <table style='margin-left:0;padding-left:0;border-collapse:collapse;border-spacing:0;width:100%'>
                 <tr>
                     <td style='white-space:nowrap;padding-bottom:20px'>
                         <form method=get action='$this->url_script'>
@@ -727,7 +732,7 @@ class MySQLtabledit
         $seach_form .= '
                     </td>
 
-                    <td style="text-align:right;width:$this->width_editor">';
+                    <td style="text-align:right">';
         if (substr($this->table, 0, 4) != "edtb") {
             $seach_form .= "<button class='button' onclick='window.location=\"$this->url_script?$query_string&mte_a=new\"' style='margin: 0 0 10px 10px'>{$this->text['Add_Record']}</button>";
         } else {
@@ -837,7 +842,6 @@ class MySQLtabledit
      */
     private function save_rec()
     {
-        //write_log("sdds");
         $in_mte_new_rec = $_POST["mte_new_rec"];
 
         $updates = "";
