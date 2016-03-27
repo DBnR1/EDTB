@@ -1,0 +1,156 @@
+.markItUp
+  *
+    margin: 0
+    padding: 0
+    outline: none
+
+  .markItUpButton1 a
+    background-image: $markItUp_bold
+
+  .markItUpButton2 a
+    background-image: $markItUp_italic
+
+  .markItUpButton3 a
+    background-image: $markItUp_stroke
+
+  .markItUpButton4 a
+    background-image: $markItUp_bullet
+
+  .markItUpButton5 a
+    background-image: $markItUp_numeric
+
+  .markItUpButton6 a
+    background-image: $markItUp_item
+
+  .markItUpButton7 a
+    background-image: $markItUp_picture
+
+  .markItUpButton8 a
+    background-image: $markItUp_thumb
+
+  .markItUpButton9 a
+    background-image: $markItUp_link
+
+  .clean a
+    background-image: $markItUp_clean
+
+  .preview a
+    background-image: $markItUp_preview
+
+.markItUp
+  width: 765px
+  margin: 5px 0
+
+.poi_bm
+  .markItUp
+    width: 600px
+    margin: 5px 0
+
+  .markItUpEditor
+    height: 200px
+
+
+.markItUpContainer
+  border-radius: 4px
+  border: 1px solid $color_steel_gray_approx
+  background-color: $color_river_bed_approx
+  padding: 5px
+
+.markItUpEditor
+  padding: 5px
+  border: none
+  width: 98%
+  height: 400px
+  background-color: $color_cinder_approx
+  clear: both
+  line-height: 18px
+  overflow: auto
+  resize: none
+  font-family: $main_font, $fallback
+  color: $color_ceramic_approx
+  font-size: 12px
+
+.markItUpPreviewFrame
+  overflow: auto
+  background-color: $color_cinder_approx
+  border: 1px solid $color_astral_approx
+  width: 99.9%
+  height: 200px
+  margin: 5px 0
+
+.markItUpFooter
+  width: 100%
+  cursor: n-resize
+
+.markItUpEditor
+  height: 400px
+
+.markItUpHeader ul
+  li
+    list-style: none
+    float: left
+    position: relative
+    ul
+      display: none
+
+    &:hover > ul
+      display: block
+
+  .markItUpDropMenu
+    background: transparent $markItUp_menu no-repeat 115% 50%
+    margin-right: 5px
+    li
+      margin-right: 0
+
+  .markItUpSeparator
+    margin: 0 10px
+    width: 1px
+    height: 16px
+    overflow: hidden
+    background-color: $color_celeste_approx
+
+  ul
+    display: none
+    position: absolute
+    top: 18px
+    left: 0
+    background: $color_wild_sand_approx
+    border: 1px solid $color_astral_approx
+    height: inherit
+    .markItUpSeparator
+      width: auto
+      height: 1px
+      margin: 0
+
+    li
+      float: none
+      border-bottom: 1px solid $color_astral_approx
+
+    .markItUpDropMenu
+      background: $color_wild_sand_approx $markItUp_submenu no-repeat 100% 50%
+
+    ul
+      position: absolute
+      top: -1px
+      left: 150px
+      li
+        float: none
+
+    a
+      display: block
+      text-indent: 0
+      width: 120px
+      padding: 5px 5px 5px 25px
+      background-position: 2px 50%
+      &:hover
+        color: $white
+        background-color: $color_astral_approx
+
+  a
+    display: block
+    width: 16px
+    height: 16px
+    text-indent: -10000px
+    background-repeat: no-repeat
+    padding: 3px
+    margin: 0

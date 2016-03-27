@@ -1,0 +1,171 @@
+.explor_entries
+  position: absolute
+  bottom: 0
+  top: 0
+  left: 0
+  right: 0
+  overflow: hidden
+  height: auto
+  width: auto
+
+.cat_name
+  font-size: 14px
+  display: inline-block
+  vertical-align: top
+  padding: 5px
+  margin-right: 3px
+  text-align: center
+  min-width: 70px
+  max-width: 100px
+
+.draggable
+  position: absolute
+  text-align: center
+  width: auto
+  height: auto
+
+.panzoom
+  background-image: repeating-linear-gradient(0deg, transparent, transparent 20px, $color_mine_shaft_approx 20px, $color_mine_shaft_approx 21px), repeating-linear-gradient(90deg, transparent, transparent 20px, $color_mine_shaft_approx 20px, $color_mine_shaft_approx 21px)
+  background-size: 21px 21px
+  width: 100%
+  height: 100%
+  position: relative
+
+.top
+  text-align: left
+  background-image: linear-gradient($color_mine_shaft_approx, $color_woodsmoke_approx)
+  position: absolute
+  top: 1px
+  right: 0
+  left: 0
+  width: auto
+  padding: 10px 10px 10px 20px
+  vertical-align: middle
+  z-index: 1000002
+  font-size: 0
+
+#value
+  padding: 5px
+  color: $color_ceramic_approx
+  font-size: 13px
+
+.stars_planets
+  position: absolute
+  left: 0
+  top: 46px
+  right: 0
+  padding: 5px
+  color: $color_ceramic_approx
+  background: $color_mine_shaft_approx
+  z-index: 1000002
+  vertical-align: top
+  width: auto
+  opacity: 0.93
+
+.categories
+  display: inline-block
+  padding: 5px 10px
+  border-left: 1px solid $color_mine_shaft_approx
+  text-transform: uppercase
+  text-align: center
+  white-space: nowrap
+  &:hover
+    //If you use compass, instead of the line below you could use + text-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+    text-shadow: 1px 1px 4px $black
+    background: $color_mine_shaft_approx linear-gradient($color_woodsmoke_approx, $color_mine_shaft_approx)
+    cursor: $cursor_url, auto
+
+  &:active
+    //If you use compass, instead of the line below you could use + text-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+    text-shadow: 1px 1px 4px $black
+    background: $color_mine_shaft_approx linear-gradient($color_woodsmoke_approx, $color_mine_shaft_approx)
+    cursor: $cursor_url, auto
+
+
+.add
+  padding: 5px
+
+.add_img_star
+  width: 50px
+  height: auto
+  &:hover
+    opacity: 0.7
+
+
+.add_img_planet
+  width: 50px
+  height: auto
+  &:hover
+    opacity: 0.7
+
+
+.add_img_other
+  width: 50px
+  height: auto
+  &:hover
+    opacity: 0.7
+
+
+.draggable_img_star
+  max-width: 100%
+  max-height: 100%
+  margin: auto auto 8px
+  display: block
+
+.draggable_img_planet
+  max-width: 100%
+  max-height: 100%
+  margin: auto auto 8px
+  display: block
+
+.draggable_img_other
+  max-width: 100%
+  max-height: 100%
+  margin: auto
+  display: block
+
+.ring
+  z-index: 1
+
+.landable
+  z-index: 0
+
+.name
+  text-align: center
+
+.in
+  display: inline-block
+  margin-left: 4px
+
+.delete_body
+  //If you use compass, instead of the line below you could use + border-radius($radius, $vertical-radius)
+  border-radius: 4px
+  font-family: $main_font, $fallback
+  color: $color_ceramic_approx
+  text-align: center
+  font-size: 12px
+  background-color: $color_copper_rust_approx
+  border: 1px solid $color_mirage_approx
+  resize: none
+  font-weight: 700
+  width: 200px
+  letter-spacing: normal
+  padding: 5px
+  margin-top: 10px
+  right: 8px
+  bottom: 8px
+  outline: 0
+  cursor: $cursor_url, auto
+  text-transform: uppercase
+  &:hover
+    border: 1px solid $color_celeste_approx
+
+
+.sm_system
+  position: absolute
+  left: 40%
+  top: 47px
+  background-image: linear-gradient($color_mine_shaft_approx, $color_woodsmoke_approx)
+  border: 1px solid $black
+  border-top: 0
+  padding: 6px

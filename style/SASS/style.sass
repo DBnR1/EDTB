@@ -1,0 +1,1908 @@
+//colors
+$color_celeste_approx: #ccc
+$color_ceramic_approx: #fffffa
+$color_neptune_approx: #70a4bd
+$black: #000
+$color_blue_bayoux_approx: #4a6682
+$color_bright_gray_approx: #343f4a
+$color_silk_approx: #bcafab
+$color_cape_cod_approx: #404040
+$color_outer_space_approx: #2e3436
+$color_jaguar_approx: #06060d
+$color_half_baked_approx: #75bdd1
+$color_curious_blue_approx: #1499d3
+$color_eastern_blue_approx: #168cc0
+$color_log_cabin_approx: #222
+$color_green_pea_approx: #1b5c36
+$color_galliano_approx: #d6a80f
+$gallery: #efefef
+$color_danube_approx: #6694cd
+$color_mine_shaft_approx: #333
+$color_fog_approx: #d1d5ff
+$color_woodsmoke_approx: #0e0e11
+$white: #fff
+$color_cutty_sark_approx: #56707d
+$color_horizon_approx: #6084b1
+$color_boston_blue_approx: #4794b5
+$color_limed_spruce_approx: #38484f
+$color_river_bed_approx: #41545e
+$color_steel_gray_approx: #1b2133
+$color_mirage_approx: #131722
+$color_gravel_approx: #4a484a
+$color_copper_rust_approx: #964d4d
+$color_alto_approx: #ddd
+$color_gallery_approx: #eee
+$color_astronaut_blue_approx: #024b63
+$color_martinique_approx: #2d2d49
+$color_aztec_approx: #0c1d24
+$color_hunter_green_approx: #171717
+$color_cinder_approx: #111017
+$color_storm_dust_approx: #666
+$color_deep_cerulean_approx: #1483a8
+$color_azure_radiance_approx: #0d86ff
+$color_chicago_approx: #5a5f61
+$color_lima_approx: #67b915
+$color_flush_orange_approx: #ff8000
+$color_bunker_approx: #141414
+$color_conifer_approx: #9ede5f
+$color_roman_approx: #de5f5f
+$color_contessa_approx: #c26b6c
+$color_rangoon_green_90_approx: rgba(30,30,30,0.9)
+$color_west_side_approx: #ff8c0d
+$color_astral_approx: #3c769d
+$color_wild_sand_approx: #f5f5f5
+$color_vulcan_approx: #121619
+$color_william_approx: #39657b
+$color_chambray_approx: #374f8d
+$color_fuscous_gray_approx: #555
+$color_nepal_approx: #8ca0bf
+$color_spindle_approx: #b7cce0
+$color_mountain_mist_approx: #999
+$color_tapa_approx: #777
+$color_tundora_approx: #444
+$color_boulder_approx: #797979
+$color_witch_haze_approx: #fff897
+$color_ship_gray_approx: #3c3c40
+
+//fonts
+$title_font: Eurocaps
+$clock_font: Telegrama
+$main_font: Sintony
+$fallback: sans-serif
+
+//urls
+$title_font_url: url(/style/fonts/EUROCAPS.TTF)
+$clock_font_file: url(/style/fonts/telegrama_render.otf)
+$main_font_file: url(/style/fonts/Sintony-Regular.ttf)
+$cursor_url: url(/style/img/cursor.png)
+$left_panel_backg: url(/style/img/back.jpg)
+$station_img: url(/style/img/station.png)
+$backg_img: url(/style/img/backg.jpg)
+$not_pinned: url(/style/img/pinned_not.png)
+$pinned: url(/style/img/pinned.png)
+$tooltip_gradient: url(/style/img/css-tooltip-gradient-bg.png)
+$markItUp_menu: url(/style/img/markItUp/menu.png)
+$markItUp_submenu: url(/style/img/markItUp/submenu.png)
+$markItUp_bold: url(/style/img/markItUp/bold.png)
+$markItUp_italic: url(/style/img/markItUp/italic.png)
+$markItUp_stroke: url(/style/img/markItUp/stroke.png)
+$markItUp_bullet: url(/style/img/markItUp/list-bullet.png)
+$markItUp_numeric: url(/style/img/markItUp/list-numeric.png)
+$markItUp_item: url(/style/img/markItUp/list-item.png)
+$markItUp_picture: url(/style/img/markItUp/picture.png)
+$markItUp_thumb: url(/style/img/markItUp/thumbnail.png)
+$markItUp_link: url(/style/img/markItUp/link.png)
+$markItUp_clean: url(/style/img/markItUp/clean.png)
+$markItUp_preview: url(/style/img/markItUp/preview.png)
+
+/*
+ * Main stylesheet file
+ *
+ * No description
+ *
+ * @package EDTB\Backend
+ * @author Mauri Kujala <contact@edtb.xyz>
+ * @copyright Copyright (C) 2016, Mauri Kujala
+ * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
+
+ * ED ToolBox, a companion web app for the video game Elite Dangerous
+ * (C) 1984 - 2016 Frontier Developments Plc.
+ * ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.    See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA    02110-1301, USA
+ */
+
+html, body
+    cursor: url(/style/img/cursor.png), auto !important
+    height: 100%
+    background-color: #3d3d3d
+    margin: auto
+    overflow: hidden
+
+body
+    letter-spacing: -1px
+    vertical-align: middle
+
+img
+    vertical-align: middle
+    &.img-picture
+        border: 1px solid $color_mine_shaft_approx
+
+    &.img-folder
+        border: 0
+
+    &.img-galicon
+        border: 1px solid $color_fuscous_gray_approx
+
+    &.img-thumbnail
+        border: 1px solid $color_mine_shaft_approx
+
+    &.img-thumbnail-selected
+        border: 1px solid $color_nepal_approx
+
+    &.img-picture-prev
+        border: 0
+
+    &.img-picture-next
+        border: 0
+
+    &.img-thmbnavi-prev
+        border: 0
+
+    &.img-thmbnavi-next
+        border: 0
+
+    &.img-new
+        border: 0
+
+
+.icon
+    width: 16px
+    height: 16px
+    margin-right: 5px
+
+.icon18
+    width: 18px
+    height: 18px
+    margin-right: 5px
+
+.icon20
+    width: 20px
+    height: 20px
+    margin-right: 5px
+
+.icon24
+    width: 24px
+    height: 24px
+    margin-right: 5px
+
+.btn
+    width: 24px
+    height: 24px
+    margin-right: 5px
+
+.icon26
+    width: 26px
+    height: 26px
+    margin-right: 5px
+
+.icon32
+    width: 32px
+    height: 32px
+    margin-right: 5px
+
+.allegiance_icon
+    width: 45px
+    height: 45px
+    margin-right: 5px
+
+.ext_icon
+    width: 10px
+    height: 10px
+    margin-bottom: 3px
+    margin-left: 2px
+
+.thumbnail_img
+    border: 1px solid transparent
+    &:hover
+        border: 1px solid $color_celeste_approx
+
+.log_img
+    max-width: 100%
+    height: auto
+
+
+@font-face
+    font-family: $title_font
+    src: $title_font_url
+
+@font-face
+    font-family: $clock_font
+    src: $clock_font_file
+
+@font-face
+    font-family: $main_font
+    font-style: normal
+    font-weight: 400
+    src: local("Sintony"), $main_font_file
+    unicode-range: U +0000-00FF, U +0131, U +0152-0153, U +02C6, U +02DA, U +02DC, U +2000-206F, U +2074, U +20AC, U +2212, U +2215, U +E0FF, U +EFFD, U +F000
+
+
+div
+    cursor: $cursor_url, auto
+    font-family: $main_font, $fallback
+    color: $color_ceramic_approx
+    font-size: 13px
+    &.tooltip
+        font-family: $main_font, $fallback
+        font-size: 13px
+        display: none
+        padding: 14px 20px
+        line-height: 16px
+        z-index: 1000000 !important
+        border: 2px solid $white
+        color: $color_gallery_approx
+        background: $color_mine_shaft_approx $tooltip_gradient repeat-x 0 0
+        border-radius: 2px
+        box-shadow: 0 0 8px 4px $color_storm_dust_approx
+
+    &.div-thumbnails-caption
+        color: $white
+        font-size: 8pt
+        font-weight: 400
+        background-color: transparent
+
+    &.div-galheader
+        font-size: 10pt
+        font-weight: 700
+        color: $white
+        margin-bottom: 10px
+        padding: 1px
+        width: 100%
+        text-align: left
+
+
+h2
+    font-size: 13px
+    font-family: $main_font, $fallback
+    color: $color_ceramic_approx
+
+h3
+    font-size: 13px
+    font-family: $main_font, $fallback
+    color: $color_neptune_approx
+    font-weight: 400
+    text-shadow: 1px 1px 1px $black
+    margin-top: 20px
+
+hr
+    background-color: $color_blue_bayoux_approx
+    color: $color_blue_bayoux_approx
+    border: 0
+    margin-top: 10px
+    height: 1px
+    border-top: 1px outset $color_bright_gray_approx
+    border-bottom: 1px outset $color_bright_gray_approx
+
+a
+    text-decoration: none
+    color: $color_ceramic_approx
+    font-weight: 700
+    cursor: $cursor_url, auto
+    &:visited
+        text-decoration: none
+        color: $color_ceramic_approx
+        font-weight: 700
+        cursor: $cursor_url, auto
+
+    &:hover
+        text-shadow: 1px 1px 4px $color_silk_approx
+        cursor: $cursor_url, auto
+        img
+            opacity: 0.7
+
+    &.title
+        font-family: $title_font, $fallback
+        color: $color_cape_cod_approx
+        font-size: 22px
+        line-height: 1
+        letter-spacing: normal
+        vertical-align: middle
+        white-space: nowrap
+        &:hover
+            font-family: $title_font, $fallback
+            color: $color_cape_cod_approx
+            font-size: 22px
+            line-height: 1
+            letter-spacing: normal
+            vertical-align: middle
+            opacity: 0.7
+
+    &.bookmarked
+        font-family: $title_font, $fallback
+        color: $color_green_pea_approx
+        font-size: 22px
+        line-height: 1
+        letter-spacing: normal
+        vertical-align: middle
+        &:hover
+            font-family: $title_font, $fallback
+            color: $color_green_pea_approx
+            font-size: 22px
+            line-height: 1
+            letter-spacing: normal
+            vertical-align: middle
+            opacity: 0.7
+
+    &.poid
+        font-family: $title_font, $fallback
+        color: $color_galliano_approx
+        font-size: 22px
+        line-height: 1
+        letter-spacing: normal
+        vertical-align: middle
+        &:hover
+            font-family: $title_font, $fallback
+            color: $color_galliano_approx
+            font-size: 22px
+            line-height: 1
+            letter-spacing: normal
+            vertical-align: middle
+            opacity: 0.7
+
+    &.a-spgm-link
+        color: $color_spindle_approx
+        font-size: 8pt
+        background-color: transparent
+
+    &.mte_head
+        color: $white
+
+
+.body
+    height: 100%
+    width: 100%
+
+#header
+    width: 100%
+
+.leftpanel
+    float: left
+    margin-top: 0
+    display: block
+    height: 100%
+    width: 350px
+    position: absolute
+    z-index: 150 !important
+    background: $color_cape_cod_approx $left_panel_backg repeat-x
+    border-right: 3px double $color_outer_space_approx
+
+.minmax
+    margin-right: 5px
+    transform: rotate(90deg)
+    &:hover
+        filter: invert(100%)
+
+
+.leftpanel-top
+    display: block
+    height: 60px
+    vertical-align: middle
+    border-bottom: 1px solid $color_jaguar_approx
+    background: $color_half_baked_approx radial-gradient(ellipse at center, $color_half_baked_approx 0, $color_curious_blue_approx 0, $color_eastern_blue_approx 11%, $color_log_cabin_approx 100%)
+    width: 100%
+
+.rightpanel-top
+    display: block
+    height: 60px
+    vertical-align: middle
+    border-bottom: 1px solid $color_jaguar_approx
+    background: $color_half_baked_approx radial-gradient(ellipse at center, $color_half_baked_approx 0, $color_curious_blue_approx 0, $color_eastern_blue_approx 11%, $color_log_cabin_approx 100%)
+    position: fixed
+    right: 0
+    left: 353px
+    z-index: 10000
+    font-size: 0
+
+.leftpanel-add-data
+    position: absolute
+    left: 6px
+    top: 6px
+    height: 60px
+
+.leftpanel-title
+    margin-left: 5px
+    height: 60px
+    display: inline-block
+    vertical-align: middle
+    white-space: nowrap
+
+#ltitle
+    vertical-align: middle
+    display: inline-block
+    line-height: 56px
+    height: 60px
+    width: auto
+    position: relative
+    transition: right 1s
+    right: 0
+    &.moveright
+        right: 50px
+
+.leftpanel-title-text
+    display: inline-block
+    vertical-align: middle
+    position: absolute
+    left: 56px
+    width: 288px
+    height: 61px
+    overflow: hidden
+    line-height: 56px
+    white-space: nowrap
+
+#t1
+    text-shadow: 1px 1px 6px $gallery
+    width: 240px
+    height: 61px
+
+.leftpanel-clock
+    position: absolute
+    top: 92px
+    right: 10px
+    font-family: $clock_font, $fallback
+    color: $color_celeste_approx
+    font-size: 13px
+    text-shadow: 2px 2px 2px $black
+    margin-left: 257px
+    height: 20px
+    z-index: 10002
+
+.leftpanel-date
+    position: absolute
+    top: 67px
+    right: 10px
+    font-family: $main_font, $fallback
+    z-index: 10002
+    color: $color_celeste_approx
+    text-shadow: 2px 2px 2px $black
+    font-size: 14px
+    display: block
+    height: 20px
+    margin-left: 257px
+    font-weight: 700
+    white-space: nowrap
+
+.leftpanel-ext_links
+    display: none
+    position: absolute
+    max-width: 250px
+    float: right
+    top: 117px
+    left: 194px
+    padding: 10px
+    font-family: $main_font, $fallback
+    font-size: 12px
+    width: 135px
+    text-align: right
+    line-height: 2
+    background-image: linear-gradient($color_outer_space_approx, $color_outer_space_approx)
+    border: 1px solid $black
+    border-right: none
+    border-top: none
+    color: $color_ceramic_approx
+    text-shadow: 1px 1px 1px $black
+    z-index: 100001
+
+.leftpanel-ext_links_link
+    width: auto
+    margin-bottom: 2px
+    &:hover
+        width: auto
+        color: inherit
+        font-weight: 700
+        cursor: $cursor_url, auto
+        text-shadow: 1px 1px 4px $color_silk_approx
+        margin-bottom: 2px
+
+.leftpanel-systeminfo
+    height: 55px
+    width: 100%
+    border-bottom: 1px solid $color_jaguar_approx
+
+#systeminfo
+    display: block
+    position: absolute
+    width: 100%
+    height: 52px
+    padding: 2px 0 2px 3px
+
+#img
+    display: block
+    position: absolute
+
+.subtitle
+    font-family: $main_font, $fallback
+    color: $color_curious_blue_approx
+    font-size: 12px
+
+#t2
+    position: absolute
+    margin-left: 5px
+    margin-top: 8px
+    font-weight: 800
+    color: $color_danube_approx
+    text-shadow: 1px 1px 1px $color_mine_shaft_approx
+
+.text
+    font-family: $main_font, $fallback
+    text-shadow: 1px 1px 1px $black
+    color: $color_ceramic_approx
+    font-size: 13px
+
+#t3
+    position: absolute
+    margin-left: 7px
+    margin-top: 28px
+    color: $color_ceramic_approx
+    font-size: 12px
+
+.leftpanel-stations
+    font-family: $main_font, $fallback
+    color: $color_ceramic_approx
+    padding-left: 7px
+    padding-top: 3px
+    font-size: 12px
+    letter-spacing: normal
+    height: 115px
+    overflow: hidden
+    background: $station_img no-repeat right -27px bottom -27px
+    border-bottom: 1px solid $color_jaguar_approx
+
+.stationinfo
+    display: none
+    position: fixed
+    left: 28px
+    line-height: 2
+    padding: 8px
+    max-width: 400px
+    background-image: linear-gradient($color_outer_space_approx, $color_outer_space_approx)
+    border: 1px solid $black
+    color: $color_ceramic_approx
+    text-shadow: 1px 1px 1px $black
+    z-index: 11696
+
+.stationinfo_ns
+    display: none
+    position: absolute
+    font-family: $main_font, $fallback
+    color: $color_ceramic_approx
+    font-size: 12px
+    letter-spacing: normal
+    font-weight: 400
+    margin-bottom: 10px
+    line-height: 2
+    padding: 8px
+    max-width: 500px
+    background-image: linear-gradient($color_outer_space_approx, $color_outer_space_approx)
+    border: 1px solid $black
+    text-shadow: 1px 1px 1px $black
+    z-index: 1169600
+
+.facilityinfo
+    position: absolute
+    display: none
+    line-height: 2
+    width: 210px
+    text-align: center
+    padding: 8px
+    margin-top: 6px
+    background-image: linear-gradient($color_outer_space_approx, $color_outer_space_approx)
+    border: 1px solid $black
+    color: $color_ceramic_approx
+    text-shadow: 1px 1px 1px $black
+    z-index: 11696
+
+.raresinfo
+    display: none
+    position: absolute
+    top: 40px
+    left: 600px
+    line-height: 1.5
+    padding: 8px
+    background-image: linear-gradient($color_outer_space_approx, $color_outer_space_approx)
+    border: 1px solid $black
+    color: $color_ceramic_approx
+    text-shadow: 1px 1px 1px $black
+    z-index: 1000
+    max-height: 630px
+    overflow: auto
+    white-space: nowrap
+
+.info
+    display: none
+    position: absolute
+    font-family: $main_font, $fallback
+    color: $color_ceramic_approx
+    font-size: 12px
+    letter-spacing: normal
+    font-weight: 400
+    line-height: 1.5
+    padding: 8px
+    background-image: linear-gradient($color_outer_space_approx, $color_outer_space_approx)
+    border: 1px solid $black
+    text-shadow: 1px 1px 1px $black
+    z-index: 100000000
+    overflow: auto
+    white-space: nowrap
+    opacity: 1
+
+.addstations
+    display: none
+    vertical-align: top
+    width: 16px
+    height: 16px
+
+.leftpanel-links
+    width: 100%
+
+.links
+    position: absolute
+    z-index: 100
+    line-height: 30px
+    height: 30px
+
+.link
+    font-family: $main_font, $fallback
+    color: $color_ceramic_approx
+    text-shadow: 1px 1px 4px $color_mine_shaft_approx
+    line-height: 90%!important
+    font-size: 13px
+    text-transform: uppercase
+    width: 323px
+    padding: 7px
+    background-color: $color_woodsmoke_approx
+    margin-top: 8px
+    margin-left: 7px
+    &:hover
+        background-color: $color_blue_bayoux_approx
+
+    &:focus
+        background-color: $color_blue_bayoux_approx
+
+    &:active
+        background-color: $black
+
+.active
+    font-family: $main_font, $fallback
+    color: $white
+    background-color: $color_woodsmoke_approx
+    line-height: 90%!important
+    font-size: 13px
+    text-shadow: 1px 1px 4px $color_mine_shaft_approx
+    text-transform: uppercase
+    width: 323px
+    padding: 7px 7px 7px 4px
+    margin-top: 8px
+    margin-left: 7px
+    border-left: 3px solid $color_cutty_sark_approx
+    &:hover
+        background-color: $color_blue_bayoux_approx
+        width: 323px
+        border-left: 3px solid $color_horizon_approx
+
+    &:focus
+        background-color: $color_blue_bayoux_approx
+        width: 323px
+        border-left: 3px solid $color_horizon_approx
+
+    &:active
+        background-color: $black
+
+.leftpanel-sessionlog
+    position: absolute
+    height: auto
+    bottom: 0
+    top: 545px
+    vertical-align: top
+    font-family: $main_font, $fallback
+    color: $white
+    font-size: 13px
+    padding-left: 4px
+    width: 100%
+    z-index: 200
+
+.seslog
+    vertical-align: top
+    border: none
+    height: 100%
+    width: 93%
+    text-align: right
+    z-index: 200
+
+#seslogsuccess
+    z-index: 1110
+    position: absolute
+    bottom: 10px
+    right: 10px
+
+.seslogtext
+    position: relative
+    background-color: transparent
+    border: none
+    color: $color_ceramic_approx
+    resize: none
+    padding: 5px
+    cursor: $cursor_url, auto
+    width: 100%
+    height: 90%
+    outline: none
+    z-index: 200
+
+#nowplaying
+    font-size: 13px
+    overflow: hidden
+    width: 340px
+    white-space: nowrap
+    position: absolute
+    bottom: 10px
+
+.rightpanel
+    position: absolute
+    z-index: 1
+    height: 100%
+    left: 352px
+    right: 0
+    width: auto
+    background: $black $backg_img
+    background-size: cover
+    overflow: auto
+    text-align: center
+
+.titletext
+    font-family: $title_font, $fallback
+    color: $color_cape_cod_approx
+    font-size: 23px
+    font-weight: 700
+    letter-spacing: normal
+    text-shadow: 1px 1px 6px $gallery
+    text-align: left
+    a
+        z-index: 10002
+        font-family: $title_font, $fallback
+        color: $color_cape_cod_approx
+        font-size: 23px
+        font-weight: 700
+        letter-spacing: normal
+        text-shadow: 1px 1px 6px $gallery
+        &:hover
+            color: $color_cape_cod_approx
+            font-size: 23px
+            text-shadow: 1px 1px 6px $gallery
+            opacity: 0.8
+
+.elite_emb
+    margin-top: 10px
+    margin-left: 20px
+    width: 43px
+    height: 38px
+
+.rightpanel-pagetitle
+    position: absolute
+    left: 75px
+    top: 15px
+
+.rightpanel-content
+    height: auto
+    width: auto
+
+.edsm_comment
+    display: none
+    position: absolute
+    left: 200px
+    font-family: $main_font, $fallback
+    vertical-align: middle
+    color: $color_ceramic_approx
+    text-shadow: none
+    text-align: center
+    font-size: 13px
+    background-color: $color_woodsmoke_approx
+    border: 1px solid $color_mine_shaft_approx
+    padding: 10px
+    opacity: 0.97
+
+.status_ranks
+    display: inline-block
+    margin-left: 10px
+    margin-bottom: 4px
+    white-space: nowrap
+    vertical-align: middle
+    z-index: 100000
+    opacity: 0.97
+
+.status_balance
+    display: inline-block
+    position: absolute
+    top: 92px
+    right: 98px
+    white-space: nowrap
+    font-family: $main_font, $fallback
+    vertical-align: middle
+    z-index: 100000
+    color: $color_ceramic_approx
+    font-size: 13px
+    text-align: right
+    opacity: 0.97
+
+.status_img
+    display: inline-block
+    max-width: 35px
+    max-height: 23px
+    width: auto
+    height: 23px
+
+.status_ship
+    display: inline-block
+    white-space: nowrap
+    font-family: $main_font, $fallback
+    vertical-align: middle
+    color: $color_celeste_approx
+    font-size: 14px
+    text-shadow: none
+    font-weight: 400
+    margin-right: 14px
+    margin-bottom: 3px
+    opacity: 0.9
+    &:hover
+        text-shadow: 1px 1px 6px $gallery
+        &:first-child img
+            opacity: 0.7
+
+        &:nth-child(2) img
+            opacity: 0.7
+
+        &:nth-child(3) img
+            opacity: 0.7
+
+#cmdr_status_mi
+    position: absolute
+    font-family: $main_font, $fallback
+    vertical-align: middle
+    color: $color_ceramic_approx
+    font-size: 13px
+    text-align: left
+    padding: 10px
+    background-color: $color_woodsmoke_approx
+    border: 1px solid $color_mine_shaft_approx
+    margin-left: -16px
+    margin-top: 3px
+    text-shadow: none
+
+#ship_status_mi
+    position: absolute
+    font-family: $main_font, $fallback
+    vertical-align: middle
+    color: $color_ceramic_approx
+    font-size: 13px
+    text-align: left
+    padding: 10px
+    background-color: $color_woodsmoke_approx
+    border: 1px solid $color_mine_shaft_approx
+    margin-left: 10px
+    margin-top: 5px
+    text-shadow: none
+    max-height: 600px
+    overflow: auto
+    a
+        color: $color_ceramic_approx
+        font-size: 13px
+        font-family: $main_font, $fallback
+        text-shadow: none
+        &:visited
+            color: $color_ceramic_approx
+            font-size: 13px
+            font-family: $main_font, $fallback
+            text-shadow: none
+
+#ship_status
+
+#cmdr_status
+
+#refresh_status
+    display: block
+    position: fixed
+    z-index: 100000
+    top: 20px
+    right: 720px
+
+.ship_name
+    font-weight: 700
+    line-height: 2.5
+    font-size: 14px
+
+.input
+    display: none
+    margin-top: 60px
+    font-family: $main_font, $fallback
+    color: $color_ceramic_approx
+    width: 100%
+    padding-top: 15px
+    text-align: center
+
+.input-inner
+    position: absolute
+    left: 30px
+    top: 100px
+    width: 500px
+    text-align: center
+
+.entries
+    position: absolute
+    margin-top: 60px
+    right: 0
+    left: 0
+    width: auto
+    height: 80%
+    text-align: left
+    z-index: 0
+
+.entries_inner
+    font-family: $main_font, $fallback
+    color: $color_ceramic_approx
+    font-size: 12px
+    width: auto
+    letter-spacing: normal
+    margin-left: 25px
+    margin-top: 20px
+    margin-right: 14px
+
+#container
+    display: block
+    position: relative
+    left: -30px
+    top: 0
+    height: 600px
+    width: 880px
+    z-index: 3
+
+.entriespre
+    font-family: $main_font, $fallback
+    color: $color_ceramic_approx
+    font-size: 12px
+    letter-spacing: normal
+    white-space: pre-wrap
+    margin-bottom: 15px
+    img
+        max-width: 100%
+        height: auto
+
+.poi
+    font-family: $main_font, $fallback
+    font-size: 12px
+    border-left: 3px solid $color_boston_blue_approx
+    padding-left: 7px
+    padding-bottom: 1px
+    letter-spacing: normal
+    vertical-align: middle
+
+#map_settings
+    display: block
+    position: relative
+    top: -30px
+    overflow: auto
+    color: $color_ceramic_approx
+    font-family: $main_font, $fallback
+    font-size: 12px
+    padding: 5px 5px 0
+    white-space: nowrap
+    z-index: 666
+    a
+        color: inherit
+        font-weight: 700
+        cursor: $cursor_url, auto
+        &:hover
+            color: inherit
+            font-weight: 700
+            cursor: $cursor_url, auto
+            text-shadow: 1px 1px 4px $color_silk_approx
+
+#map_legend
+    cursor: $cursor_url, auto
+    display: block
+    position: absolute
+    top: 23px
+    right: 100px
+    text-transform: uppercase
+    border-radius: 4px
+    font-family: $main_font, $fallback
+    color: $color_ceramic_approx
+    font-size: 13px
+    font-weight: 700
+    float: left
+    padding: 8px 12px
+    margin-left: -1px
+    line-height: 1.5
+    text-decoration: none
+    background-color: $color_limed_spruce_approx
+    border: 1px solid $color_mine_shaft_approx
+    z-index: 10000
+    &:hover
+        cursor: $cursor_url, auto
+        background-color: $color_outer_space_approx
+        border-color: $color_mine_shaft_approx
+        color: $color_ceramic_approx
+
+#map_legend2
+    display: none
+    position: absolute
+    top: 37px
+    white-space: nowrap
+    right: 150px
+    color: $color_ceramic_approx
+    background-color: $color_woodsmoke_approx
+    letter-spacing: normal
+    line-height: 1
+    border: 1px solid $color_mine_shaft_approx
+    font-family: $main_font, $fallback
+    font-size: 12px
+    padding: 5px
+    z-index: 666
+    td
+        padding: 5px
+
+.distance
+    opacity: 0.8
+    background: $color_mine_shaft_approx none
+    color: inherit
+    font-family: inherit
+    font-size: 12px
+    font-weight: 700
+    border: none
+    outline: 0
+    margin-top: 5px
+    -webkit-appearance: none
+    cursor: $cursor_url, auto
+    &:hover
+        text-shadow: 1px 1px 4px $color_silk_approx
+
+.textbox
+    border-radius: 4px
+    font-family: $main_font, $fallback
+    font-size: 12px
+    color: $color_ceramic_approx
+    resize: none
+    background-color: $color_river_bed_approx
+    border: 1px solid $color_steel_gray_approx
+    height: 23px
+    padding: 3px 3px 3px 5px
+    margin-top: 5px
+    outline: 0
+    cursor: $cursor_url, auto
+    &:hover
+        text-shadow: 1px 1px 4px $color_silk_approx
+        background-color: $color_blue_bayoux_approx
+
+    &:focus
+        border: 2px solid $color_blue_bayoux_approx
+        padding: 2px 2px 2px 4px
+
+.selectbox
+    border-radius: 4px
+    font-family: $main_font, $fallback
+    color: $color_ceramic_approx
+    font-size: 12px
+    resize: none
+    background-color: $color_river_bed_approx
+    border: 1px solid $color_steel_gray_approx
+    height: 31px
+    padding: 3px 3px 3px 5px
+    margin-top: 5px
+    outline: 0
+    cursor: $cursor_url, auto
+    &:focus
+        border: 2px solid $color_blue_bayoux_approx
+        padding: 2px 2px 2px 4px
+
+    &:hover
+        text-shadow: 1px 1px 4px $color_silk_approx
+        background-color: $color_blue_bayoux_approx
+
+.textarea
+    border-radius: 4px
+    font-family: $main_font, $fallback
+    color: $color_ceramic_approx
+    font-size: 12px
+    background-color: $color_river_bed_approx
+    border: 1px solid $color_steel_gray_approx
+    padding: 3px 3px 3px 5px
+    margin-top: 5px
+    outline: 0
+    cursor: $cursor_url, auto
+    -webkit-appearance: none !important
+    -moz-appearance: none !important
+    &:hover
+        text-shadow: 1px 1px 4px $color_silk_approx
+        color: $color_ceramic_approx
+        font-size: 12px
+        background-color: $color_blue_bayoux_approx
+
+input[type=checkbox]
+    display: none
+    cursor: $cursor_url, auto
+    + label
+        height: 16px
+        width: 16px
+        display: inline-block
+        background: $not_pinned no-repeat
+        cursor: $cursor_url, auto
+
+    &:checked + label
+        height: 16px
+        width: 16px
+        display: inline-block
+        background: $pinned no-repeat
+        cursor: $cursor_url, auto
+
+.addinfo
+    display: none
+    position: fixed
+    font-family: $main_font, $fallback
+    color: $color_ceramic_approx
+    font-size: 12px
+    letter-spacing: normal
+    font-weight: 400
+    line-height: 1.5
+    padding: 8px
+    background-image: linear-gradient($color_outer_space_approx, $color_outer_space_approx)
+    border: 1px solid $black
+    text-shadow: 1px 1px 1px $black
+    z-index: 100000
+    overflow: auto
+    white-space: nowrap
+    opacity: 1
+    text-align: left
+    input[type=checkbox]
+        display: inline-block
+        cursor: $cursor_url, auto
+
+select::-ms-expand
+    display: none
+
+#delete_bm
+    text-align: center
+    margin-left: auto
+    margin-right: auto
+
+button
+    border-radius: 4px
+    font-family: $main_font, $fallback
+    color: $color_ceramic_approx
+    font-size: 12px
+    text-align: center
+    background-color: $color_mine_shaft_approx
+    border: 1px solid $color_mirage_approx
+    resize: none
+    font-weight: 700
+    letter-spacing: normal
+    width: 200px
+    padding: 5px
+    margin-left: auto
+    margin-right: auto
+    outline: 0
+    cursor: $cursor_url, auto
+    text-transform: uppercase
+    &:hover
+        border-radius: 4px
+        font-family: $main_font, $fallback
+        color: $color_ceramic_approx
+        font-size: 12px
+        resize: none
+        background-color: $color_gravel_approx
+        border: 1px solid $color_steel_gray_approx
+        padding: 5px
+        outline: 0
+        cursor: $cursor_url, auto
+
+.button
+    border-radius: 4px
+    font-family: $main_font, $fallback
+    color: $color_ceramic_approx
+    font-size: 12px
+    text-align: center
+    background-color: $color_mine_shaft_approx
+    border: 1px solid $color_mirage_approx
+    resize: none
+    font-weight: 700
+    letter-spacing: normal
+    width: 200px
+    padding: 5px
+    margin-left: auto
+    margin-right: auto
+    outline: 0
+    cursor: $cursor_url, auto
+    text-transform: uppercase
+    &:hover
+        border-radius: 4px
+        font-family: $main_font, $fallback
+        color: $color_ceramic_approx
+        font-size: 12px
+        resize: none
+        background-color: $color_gravel_approx
+        border: 1px solid $color_steel_gray_approx
+        padding: 5px
+        outline: 0
+        cursor: $cursor_url, auto
+
+.delete_button
+    border-radius: 4px
+    font-family: $main_font, $fallback
+    color: $color_ceramic_approx
+    text-align: center
+    font-size: 12px
+    background-color: $color_copper_rust_approx
+    border: 1px solid $color_mirage_approx
+    resize: none
+    width: 25px
+    font-weight: 700
+    letter-spacing: normal
+    padding: 5px
+    position: absolute
+    right: 8px
+    bottom: 8px
+    outline: 0
+    cursor: $cursor_url, auto
+    text-transform: uppercase
+    &:hover
+        background-color: $color_roman_approx
+
+fieldset
+    display: inline-block
+    margin-left: 6px
+    padding: 0
+    border: 0
+
+.poi_minmax
+    min-width: 390px
+    max-width: 480px
+
+#report
+    display: none
+    position: absolute
+    left: 20px
+    top: 68px
+    line-height: 1.5
+    background-color: $white
+    border: 1px solid $color_alto_approx
+    border-radius: 4px
+    padding: 8px
+    text-transform: uppercase
+    font-family: $main_font, $fallback
+    color: $black
+    font-size: 13px
+    z-index: 10000
+    &:hover
+        background-color: $color_gallery_approx
+        border-color: $color_ceramic_approx
+
+.suggestions
+    display: none
+    position: absolute
+    background-color: $color_astronaut_blue_approx
+    border: 1px solid $color_martinique_approx
+    border-radius: 6px
+    padding: 5px 10px
+    text-align: left
+    z-index: 500000
+    a
+        line-height: 2
+        font-family: $main_font, $fallback
+        color: $color_ceramic_approx
+        font-size: 11px
+
+.systeminfo_system
+    width: 280px
+    height: auto
+    background-color: $color_woodsmoke_approx
+    border: 1px solid $color_mine_shaft_approx
+    opacity: 0.8
+    text-align: center
+    padding-top: 14px
+    padding-bottom: 14px
+
+.systeminfo_stations
+    overflow-y: auto
+    overflow-x: hidden
+
+.systeminfo_st
+    vertical-align: top
+    position: absolute
+    right: 280px
+    left: 25px
+
+.systeminfo_sy
+    vertical-align: top
+    position: absolute
+    right: 14px
+    left: auto
+
+.systeminfo_station
+    width: 98%
+    margin-bottom: 14px
+
+.light
+    font-family: $main_font, $fallback
+    color: $color_ceramic_approx
+    font-size: 13px
+    background-color: $color_limed_spruce_approx
+    padding: 6px
+    vertical-align: middle
+    opacity: 0.9
+
+.transparent
+    font-family: $main_font, $fallback
+    color: $color_ceramic_approx
+    font-size: 13px
+    padding: 6px
+    vertical-align: middle
+    background-color: transparent
+    line-height: 1.5
+
+.dark
+    font-family: $main_font, $fallback
+    color: $color_ceramic_approx
+    font-size: 13px
+    padding: 6px
+    vertical-align: middle
+    background-color: $color_outer_space_approx
+    line-height: 1.5
+    opacity: 0.9
+
+.heading
+    font-family: $main_font, $fallback
+    color: $color_ceramic_approx
+    vertical-align: middle
+    text-shadow: 1px 1px 4px $color_mine_shaft_approx
+    background-color: $color_aztec_approx
+    font-size: 13px
+    padding: 7px
+    text-transform: uppercase
+    border: 1px solid $color_hunter_green_approx
+    border-left: none
+    border-right: none
+
+.systeminfo_station_info
+    padding: 5px
+    width: 100%
+
+.settings_editor
+    border-radius: 4px
+    border: 1px solid $color_steel_gray_approx
+    padding: 5px
+    width: 98%
+    height: auto
+    background-color: $color_cinder_approx
+    clear: both
+    resize: none
+    line-height: 18px
+    overflow: auto
+    font-family: $main_font, $fallback
+    color: $color_ceramic_approx
+    font-size: 12px
+
+.balance_pic
+    margin-right: 3px
+    margin-bottom: 2px
+    height: 14px
+    width: 14px
+
+.callout
+    z-index: 1000000 !important
+    position: absolute
+    border: 0
+
+.settings_panel
+    display: none
+    position: absolute
+    right: 0
+    top: 61px
+    width: auto
+    height: auto
+    font-family: $main_font, $fallback
+    color: $color_ceramic_approx
+    text-align: left
+    font-size: 12px
+    text-shadow: none
+    text-decoration: none
+    padding: 10px
+    white-space: nowrap
+    z-index: 666
+    background-color: $color_woodsmoke_approx
+    border-left: 1px solid $color_mine_shaft_approx
+    border-bottom: 1px solid $color_mine_shaft_approx
+    a
+        font-family: $main_font, $fallback
+        color: $color_ceramic_approx
+        text-align: left
+        font-size: 12px
+        text-shadow: none
+        text-decoration: none
+        &:hover
+            font-family: $main_font, $fallback
+            color: $color_ceramic_approx
+            font-size: 12px
+            text-shadow: 1px 1px 4px $color_mine_shaft_approx
+
+.pagination
+    display: inline-block
+    padding-left: 0
+    margin: 20px 0
+    border-radius: 4px
+    z-index: 10000
+    cursor: $cursor_url, auto
+    > li
+        display: inline
+        z-index: 10000
+        cursor: $cursor_url, auto
+        > a
+            position: relative
+            text-transform: uppercase
+            font-family: $main_font, $fallback
+            color: $color_ceramic_approx
+            cursor: $cursor_url, auto
+            font-size: 13px
+            float: left
+            padding: 8px 12px
+            margin-left: -1px
+            line-height: 1.5
+            text-decoration: none
+            background-color: $color_limed_spruce_approx
+            border: 1px solid $color_mine_shaft_approx
+            z-index: 10000
+            &:hover
+                background-color: $color_outer_space_approx
+                cursor: $cursor_url, auto
+                border-color: $color_mine_shaft_approx
+
+            &:focus
+                background-color: $color_outer_space_approx
+                cursor: $cursor_url, auto
+                border-color: $color_mine_shaft_approx
+
+        > span
+            position: relative
+            text-transform: uppercase
+            font-family: $main_font, $fallback
+            color: $color_ceramic_approx
+            cursor: $cursor_url, auto
+            font-size: 13px
+            float: left
+            padding: 8px 12px
+            margin-left: -1px
+            line-height: 1.5
+            text-decoration: none
+            background-color: $color_limed_spruce_approx
+            border: 1px solid $color_mine_shaft_approx
+            z-index: 10000
+            &:hover
+                background-color: $color_outer_space_approx
+                cursor: $cursor_url, auto
+                border-color: $color_mine_shaft_approx
+
+            &:focus
+                background-color: $color_outer_space_approx
+                cursor: $cursor_url, auto
+                border-color: $color_mine_shaft_approx
+
+        &:first-child
+            > a
+                margin-left: 0
+                border-bottom-left-radius: 4px
+                border-top-left-radius: 4px
+                cursor: $cursor_url, auto
+                z-index: 10000
+
+            > span
+                margin-left: 0
+                border-bottom-left-radius: 4px
+                border-top-left-radius: 4px
+                cursor: $cursor_url, auto
+                z-index: 10000
+
+        &:last-child
+            > a
+                border-top-right-radius: 4px
+                border-bottom-right-radius: 4px
+                cursor: $cursor_url, auto
+                z-index: 10000
+
+            > span
+                border-top-right-radius: 4px
+                border-bottom-right-radius: 4px
+                cursor: $cursor_url, auto
+                z-index: 10000
+
+    > .actives
+        > a
+            color: $color_ceramic_approx
+            background-color: $color_deep_cerulean_approx
+            cursor: $cursor_url, auto
+            border-color: $color_mine_shaft_approx
+            &:focus
+                color: $color_ceramic_approx
+                background-color: $color_deep_cerulean_approx
+                cursor: $cursor_url, auto
+                border-color: $color_mine_shaft_approx
+
+            &:hover
+                color: $white
+                cursor: $cursor_url, auto
+                background-color: $color_deep_cerulean_approx
+                border-color: $color_mine_shaft_approx
+
+        > span
+            color: $color_ceramic_approx
+            background-color: $color_deep_cerulean_approx
+            cursor: $cursor_url, auto
+            border-color: $color_mine_shaft_approx
+            &:hover
+                color: $color_ceramic_approx
+                background-color: $color_deep_cerulean_approx
+                cursor: $cursor_url, auto
+                border-color: $color_mine_shaft_approx
+
+            &:focus
+                color: $color_ceramic_approx
+                background-color: $color_deep_cerulean_approx
+                cursor: $cursor_url, auto
+                border-color: $color_mine_shaft_approx
+
+.se-pre-con
+    position: fixed
+    right: 15px
+    bottom: 0
+    z-index: 9999
+    path
+        fill: $color_azure_radiance_approx
+        stroke: $black
+        stroke-width: 0
+        opacity: 0
+
+.info_td
+    font-weight: 400
+    padding: 4px 15px 4px 4px
+    line-height: 1.5
+
+.notice
+    position: relative
+    left: 10px
+    top: 10px
+    width: 500px
+    font-weight: 400
+
+.notice_title
+    background-color: $color_limed_spruce_approx
+    padding: 7px
+    font-weight: 700
+    vertical-align: middle
+    border: 1px solid $color_chicago_approx
+
+.notice_text
+    background-color: $color_blue_bayoux_approx
+    padding: 4px 4px 4px 6px
+    border: 1px solid $color_chicago_approx
+    border-top: none
+    line-height: 2
+
+.notify_success
+    z-index: 10000003
+    padding: 10px
+    color: $color_ceramic_approx
+    font-weight: 700
+    position: fixed
+    right: 0
+    top: 61px
+    max-width: 600px
+    border-bottom: 1px solid $color_mine_shaft_approx
+    border-left: 1px solid $color_mine_shaft_approx
+    border-bottom-left-radius: 3px
+    background-color: $color_lima_approx
+
+.notify_deleted
+    z-index: 10000003
+    padding: 10px
+    color: $color_ceramic_approx
+    font-weight: 700
+    position: fixed
+    right: 0
+    top: 61px
+    max-width: 600px
+    border-bottom: 1px solid $color_mine_shaft_approx
+    border-left: 1px solid $color_mine_shaft_approx
+    border-bottom-left-radius: 3px
+    background-color: $color_flush_orange_approx
+
+#disclaimer
+    position: absolute
+    top: 20px
+    left: 35%
+
+.searchtitle
+    font-weight: 700
+    margin-bottom: 8px
+    color: $color_ceramic_approx
+    line-height: 2
+
+.wpsearch
+    position: absolute
+    padding: 10px
+    max-width: 700px
+    line-height: 2
+    display: none
+    width: auto
+    font-family: $main_font, $fallback
+    color: $color_ceramic_approx
+    font-size: 12px
+    text-shadow: none
+    text-decoration: none
+    background-color: $color_woodsmoke_approx
+    border: 1px solid $color_bunker_approx
+    border-top: none
+
+.wp
+    border-bottom: 1px dotted $color_celeste_approx
+    &:hover
+        color: $color_celeste_approx
+
+
+.map_info
+    padding: 5px
+    line-height: 1.5
+    font-family: $main_font, $fallback
+    color: $color_ceramic_approx
+    font-size: 12px
+    background-color: $color_woodsmoke_approx
+    border: 1px solid $color_bunker_approx
+    margin-bottom: 10px
+
+.map_info_title
+    font-family: $main_font, $fallback
+    color: $color_ceramic_approx
+    font-size: 13px
+    float: right
+    margin-right: 5px
+    font-weight: 700
+
+.enum_yes
+    color: $color_conifer_approx
+
+.enum_no
+    color: $color_roman_approx
+
+.right
+    float: right
+
+.left
+    float: left
+
+.ns_nearest
+    margin-left: 0
+    padding-left: 0
+
+.settings_info
+    padding: 3px
+    font-family: $main_font, $fallback
+    color: $color_ceramic_approx
+    font-size: 12px
+    font-style: italic
+    max-width: 520px
+
+.old_data
+    color: $color_contessa_approx
+
+.audio
+    padding: 5px 5px 5px 0
+    margin-bottom: 10px
+
+.powerpic
+    vertical-align: top
+    width: 250px
+    height: 419px
+    margin-bottom: 6px
+    border: 1px solid $black
+
+@import "system_map"
+
+.datapoint_td
+    padding: 10px
+    vertical-align: middle
+
+#loader
+    width: 100%
+    height: 100%
+    padding: 75px 0
+    text-align: center
+    position: fixed
+    top: 0
+    right: 0
+    z-index: 1000
+    background-color: $color_rangoon_green_90_approx
+    svg
+        margin: 150px auto
+        width: 200px
+        height: 200px
+
+    path
+        fill: $color_west_side_approx
+        stroke: $black
+        stroke-width: 0
+        opacity: 0
+
+@keyframes hideshow
+    0%
+        opacity: 0
+
+    10%
+        opacity: 1
+
+    100%
+        opacity: 0
+
+@keyframes inner
+    0%
+        opacity: 0
+
+    10%
+        opacity: 1
+
+    100%
+        opacity: 0
+
+.l1
+    animation: hideshow 750ms linear infinite
+
+.l2
+    animation: inner 750ms linear infinite
+
+.d19
+    animation-delay: 750ms
+
+.d18
+    animation-delay: 710.52631579ms
+
+.d17
+    animation-delay: 671.05263158ms
+
+.d16
+    animation-delay: 631.57894737ms
+
+.d15
+    animation-delay: 592.10526316ms
+
+.d14
+    animation-delay: 552.63157895ms
+
+.d13
+    animation-delay: 513.15789474ms
+
+.d12
+    animation-delay: 473.68421053ms
+
+.d11
+    animation-delay: 434.21052632ms
+
+.d10
+    animation-delay: 394.73684211ms
+
+.d9
+    animation-delay: 355.26315789ms
+
+.d8
+    animation-delay: 315.78947368ms
+
+.d7
+    animation-delay: 276.31578947ms
+
+.d6
+    animation-delay: 236.84210526ms
+
+.d5
+    animation-delay: 197.36842105ms
+
+.d4
+    animation-delay: 157.89473684ms
+
+.d3
+    animation-delay: 118.42105263ms
+
+.d2
+    animation-delay: 78.94736842ms
+
+.d1
+    animation-delay: 39.47368421ms
+
+::-webkit-scrollbar
+    width: 7px
+
+::-webkit-scrollbar-track
+    background: $color_vulcan_approx -webkit-gradient(linear, left top, left bottom, from($color_vulcan_approx), to($color_mine_shaft_approx)) stretch
+
+::-webkit-scrollbar-thumb
+    background-color: $color_william_approx
+    border-right: 1px solid $color_chambray_approx
+    border-left: 1px solid $color_chambray_approx
+    width: 7px
+
+::-webkit-scrollbar-button
+    display: none
+
+::-webkit-scrollbar-corner
+    background-color: $black
+
+#wrapper
+    margin-left: auto
+    margin-right: auto
+    margin-top: 0
+    border-collapse: collapse
+
+#datetime:hover div
+    color: $color_ceramic_approx
+
+.status:hover
+    text-shadow: 1px 1px 6px $gallery
+    &:first-child img
+        opacity: 0.7
+
+    &:nth-child(2) img
+        opacity: 0.7
+
+    &:nth-child(3) img
+        opacity: 0.7
+
+
+#pin_click:hover
+    text-shadow: 1px 1px 4px $color_silk_approx
+
+.no-js #loader
+    display: none
+
+.js #loader
+    display: block
+    position: absolute
+    left: 100px
+    top: 0
+
+#recordingslist li
+    list-style-type: none
+    float: right
+
+
+input.button-zoom-factors
+    border: 1px solid $color_tapa_approx
+    font-size: 9pt
+    font-weight: 700
+    color: $color_tapa_approx
+    background-color: $color_alto_approx
+    text-align: center
+
+span.span-filters
+    font-size: 8pt
+    font-weight: 400
+
+.close:hover > img
+    opacity: 0.8
+
+@import "gallery"
+@import "data_point"
+@import "3dmap"
+@import "markitup"
