@@ -1521,7 +1521,7 @@ function edsm_comment(comment, send)
                 success: function(result)
                 {
                     $.ajax({
-                        url: "/action/addEDSMComment.php?system_name=" + result,
+                        url: "/get/getEDSMComment.php?system_name=" + result,
                         cache: false,
                         dataType: 'text',
                         success: function(res)
