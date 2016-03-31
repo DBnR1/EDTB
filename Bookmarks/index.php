@@ -3,7 +3,6 @@
  * Points of Interest and Bookmarks
  *
  * Front-end file for Points of interest and Bookmarks.
- * The back-end file is /get/getData_poi_bm.php
  *
  * @package EDTB\Main
  * @author Mauri Kujala <contact@edtb.xyz>

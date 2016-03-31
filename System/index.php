@@ -2,8 +2,7 @@
 /**
  * System information
  *
- * Front-end file for System information.
- * The back-end file is /get/getData_systemInfo.php
+ * Front-end file for System information
  *
  * @package EDTB\Main
  * @author Mauri Kujala <contact@edtb.xyz>

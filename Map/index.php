@@ -2,8 +2,7 @@
 /**
  * Neighborhood map
  *
- * Front-end file for Neighborhood map.
- * The back-end files are /get/getMapPoints.js.php and /get/getMapData.php
+ * Front-end file for Neighborhood map
  *
  * @package EDTB\Main
  * @author Mauri Kujala <contact@edtb.xyz>

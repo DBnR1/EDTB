@@ -3,7 +3,6 @@
  * Galaxy map
  *
  * Front-end file for Galaxy map
- * The back-end file is /get/getMapPoints.json.php
  *
  * @package EDTB\Backend
  * @author Mauri Kujala <contact@edtb.xyz>

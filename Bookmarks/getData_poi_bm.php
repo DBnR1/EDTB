@@ -1,7 +1,6 @@
 <?php
 /**
  * Ajax back-end file to fetch points of interest and bookmarks
- * Functions are declared in /source/poi_bm.php
  *
  * No description
  *

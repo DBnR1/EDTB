@@ -3,7 +3,6 @@
  * Front page
  *
  * Front-end file for the front page
- * Back-end files are /get/getData.php, /Log/getData_logs.php
  *
  * @package EDTB\Main
  * @author Mauri Kujala <contact@edtb.xyz>
@@ -48,12 +47,14 @@ $header->page_title = "ED ToolBox";
 $header->display_header();
 
 /**
- * if the user is coming from importing log entries
+ * if the user is coming from importing log entries, 
+ * display a notice and delete possible duplicates
  */
 if (isset($_GET["import_done"])) {
     ?>
     <div class="entries">
         <div class="entries_inner">
+            <!-- update GalMap -->
             <script type="text/javascript">
                 update_map();
             </script>
