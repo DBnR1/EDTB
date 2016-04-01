@@ -49,11 +49,10 @@
   .markItUpEditor
     height: 200px
 
-
 .markItUpContainer
   border-radius: 4px
-  border: 1px solid $color_steel_gray_approx
-  background-color: $color_river_bed_approx
+  border: 1px solid $color_form_input_border
+  background-color: $color_form_input
   padding: 5px
 
 .markItUpEditor
@@ -61,19 +60,19 @@
   border: none
   width: 98%
   height: 400px
-  background-color: $color_cinder_approx
+  background-color: $color_dark_bg
   clear: both
   line-height: 18px
   overflow: auto
   resize: none
   font-family: $main_font, $fallback
-  color: $color_ceramic_approx
+  color: $color_text
   font-size: 12px
 
 .markItUpPreviewFrame
   overflow: auto
-  background-color: $color_cinder_approx
-  border: 1px solid $color_astral_approx
+  background-color: $color_dark_bg
+  border: 1px solid $color_markitup_border
   width: 99.9%
   height: 200px
   margin: 5px 0
@@ -107,15 +106,15 @@
     width: 1px
     height: 16px
     overflow: hidden
-    background-color: $color_celeste_approx
+    background-color: $color_ccc
 
   ul
     display: none
     position: absolute
     top: 18px
     left: 0
-    background: $color_wild_sand_approx
-    border: 1px solid $color_astral_approx
+    background: $color_eee
+    border: 1px solid $color_markitup_border
     height: inherit
     .markItUpSeparator
       width: auto
@@ -124,10 +123,10 @@
 
     li
       float: none
-      border-bottom: 1px solid $color_astral_approx
+      border-bottom: 1px solid $color_markitup_border
 
     .markItUpDropMenu
-      background: $color_wild_sand_approx $markItUp_submenu no-repeat 100% 50%
+      background: $color_eee $markItUp_submenu no-repeat 100% 50%
 
     ul
       position: absolute
@@ -144,7 +143,7 @@
       background-position: 2px 50%
       &:hover
         color: $white
-        background-color: $color_astral_approx
+        background-color: $color_markitup_border
 
   a
     display: block

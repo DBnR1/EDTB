@@ -25,7 +25,7 @@
   height: auto
 
 .panzoom
-  background-image: repeating-linear-gradient(0deg, transparent, transparent 20px, $color_mine_shaft_approx 20px, $color_mine_shaft_approx 21px), repeating-linear-gradient(90deg, transparent, transparent 20px, $color_mine_shaft_approx 20px, $color_mine_shaft_approx 21px)
+  background-image: repeating-linear-gradient(0deg, transparent, transparent 20px, $color_333 20px, $color_333 21px), repeating-linear-gradient(90deg, transparent, transparent 20px, $color_333 20px, $color_333 21px)
   background-size: 21px 21px
   width: 100%
   height: 100%
@@ -33,7 +33,7 @@
 
 .top
   text-align: left
-  background-image: linear-gradient($color_mine_shaft_approx, $color_woodsmoke_approx)
+  background-image: linear-gradient($color_sys_map_gradient_top, $color_sys_map_gradient_bottom)
   position: absolute
   top: 1px
   right: 0
@@ -46,7 +46,7 @@
 
 #value
   padding: 5px
-  color: $color_ceramic_approx
+  color: $color_text
   font-size: 13px
 
 .stars_planets
@@ -55,8 +55,8 @@
   top: 46px
   right: 0
   padding: 5px
-  color: $color_ceramic_approx
-  background: $color_mine_shaft_approx
+  color: $color_text
+  background: $color_333
   z-index: 1000002
   vertical-align: top
   width: auto
@@ -65,22 +65,19 @@
 .categories
   display: inline-block
   padding: 5px 10px
-  border-left: 1px solid $color_mine_shaft_approx
+  border-left: 1px solid $color_333
   text-transform: uppercase
   text-align: center
   white-space: nowrap
   &:hover
-    //If you use compass, instead of the line below you could use + text-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
     text-shadow: 1px 1px 4px $black
-    background: $color_mine_shaft_approx linear-gradient($color_woodsmoke_approx, $color_mine_shaft_approx)
+    background: $color_333 linear-gradient($color_sys_map_gradient_bottom, $color_sys_map_gradient_top)
     cursor: $cursor_url, auto
 
   &:active
-    //If you use compass, instead of the line below you could use + text-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
     text-shadow: 1px 1px 4px $black
-    background: $color_mine_shaft_approx linear-gradient($color_woodsmoke_approx, $color_mine_shaft_approx)
+    background: $color_333 linear-gradient($color_sys_map_gradient_bottom, $color_sys_map_gradient_top)
     cursor: $cursor_url, auto
-
 
 .add
   padding: 5px
@@ -138,14 +135,13 @@
   margin-left: 4px
 
 .delete_body
-  //If you use compass, instead of the line below you could use + border-radius($radius, $vertical-radius)
   border-radius: 4px
   font-family: $main_font, $fallback
-  color: $color_ceramic_approx
+  color: $color_text
   text-align: center
   font-size: 12px
-  background-color: $color_copper_rust_approx
-  border: 1px solid $color_mirage_approx
+  background-color: $color_delete_button
+  border: 1px solid $color_form_input_border
   resize: none
   font-weight: 700
   width: 200px
@@ -158,14 +154,13 @@
   cursor: $cursor_url, auto
   text-transform: uppercase
   &:hover
-    border: 1px solid $color_celeste_approx
-
+    border: 1px solid $color_ccc
 
 .sm_system
   position: absolute
   left: 40%
   top: 47px
-  background-image: linear-gradient($color_mine_shaft_approx, $color_woodsmoke_approx)
+  background-image: linear-gradient($color_sys_map_gradient_top, $color_sys_map_gradient_bottom)
   border: 1px solid $black
   border-top: 0
   padding: 6px

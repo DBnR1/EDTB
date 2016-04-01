@@ -6,10 +6,6 @@ table
     margin-left: auto
     margin-right: auto
 
-  &.table-main-title
-
-  &.table-gallisting-grid
-
   &.table-galitem
     width: 100%
 
@@ -27,11 +23,10 @@ table
     margin: auto
     padding: 0
 
-
 td
   &.td-thumbnails-thumb
     padding: 2px 7px
-    color: $color_fuscous_gray_approx
+    color: $color_dark_text
     font-size: 8pt
     background-color: transparent
     white-space: nowrap
@@ -40,7 +35,7 @@ td
 
   &.td-thumbnails-thumb-selected
     padding: 5px
-    color: $color_mine_shaft_approx
+    color: $color_333
     font-size: 8pt
     font-weight: 700
     background-color: transparent
@@ -55,12 +50,10 @@ td
     background-color: transparent
 
   &.td-main-title-spgm-link
-    color: $color_celeste_approx
+    color: $color_ccc
     font-size: 8pt
     text-align: center
     background-color: transparent
-
-  &.td-gallisting-cell
 
   &.td-galitem-icon
     padding-right: 10px
@@ -70,7 +63,7 @@ td
     width: 100%
     text-align: left
     font-weight: 700
-    color: $color_mountain_mist_approx
+    color: $color_text
 
   &.td-galitem-caption
     font-size: 8pt
@@ -103,14 +96,6 @@ td
     padding: 7px
     background-color: transparent
 
-  &.td-thumbnails-navi
-    color: $color_tundora_approx
-    border-top: 1px solid $color_tundora_approx
-    font-size: 10pt
-    font-weight: 700
-    text-align: center
-    padding-top: 10px
-
   &.td-shadows-right
     width: 0
     margin: 0
@@ -129,3 +114,35 @@ td
   &.td-shadows-main
     margin: 0
     padding: 0
+
+img
+  vertical-align: middle
+  &.img-picture
+    border: 1px solid $color_333
+
+  &.img-folder
+    border: 0
+
+  &.img-galicon
+    border: 1px solid $color_blue_accent
+
+  &.img-thumbnail
+    border: 1px solid $color_333
+
+  &.img-thumbnail-selected
+    border: 1px solid $color_blue_accent
+
+  &.img-picture-prev
+    border: 0
+
+  &.img-picture-next
+    border: 0
+
+  &.img-thmbnavi-prev
+    border: 0
+
+  &.img-thmbnavi-next
+    border: 0
+
+  &.img-new
+    border: 0
