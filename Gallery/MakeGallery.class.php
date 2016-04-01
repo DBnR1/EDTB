@@ -20,21 +20,23 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
 /**
- * Class MakeGallery
+ * Make screenshot galleries
+ *
+ * @author Mauri Kujala <contact@edtb.xyz>
  */
 class MakeGallery
 {
     /**
-     * See if generating a gallery is a go
+     * Check if generating a gallery is a go
      *
      * @return bool
      * @author Mauri Kujala <contact@edtb.xyz>
@@ -46,133 +48,78 @@ class MakeGallery
         $dir = $settings["old_screendir"];
         $newdir = $settings["new_screendir"];
 
-        if (isset($dir) && !empty($dir) && $dir != "C:\\Users" && $dir != "C:\\Users\\" && isset($newdir) && !empty($newdir)) {
-            /**
-             * check if current screenshot dir exists and is writable
-             */
-            if (!is_dir($dir) && !is_writable($dir)) {
-                write_log("Error: " . $dir . " is not writable or doesn't exist", __FILE__, __LINE__);
-
-                return false;
-            }
-
-            /**
-             * check if new screenshot dir exists and is writable
-             */
-            if (!is_dir($newdir) && !is_writable($newdir)) {
-                write_log("Error: " . $newdir . " is not writable or doesn't exist", __FILE__, __LINE__);
-
-                return false;
-            }
-
-            /**
-             * check if current screenshot dir can be scanned
-             */
-            if (!scandir($dir)) {
-                $error = error_get_last();
-                write_log("Error: " . $error["message"], __FILE__, __LINE__);
-
-                return false;
-            }
-
-            /**
-             * if we've made it this far, we're good to go
-             */
-            return true;
-        }
-        else {
+        /**
+         * check if current screenshot dir exists and is writable
+         */
+        if (MakeGallery::valid_dir($dir)) {
             return false;
         }
+
+        /**
+         * check if new screenshot dir exists and is writable
+         */
+        if (MakeGallery::valid_dir($newdir)) {
+            return false;
+        }
+
+        /**
+         * check if current screenshot dir can be scanned
+         */
+        if (!scandir($dir)) {
+            $error = error_get_last();
+            write_log("Error: " . $error["message"], __FILE__, __LINE__);
+
+            return false;
+        }
+
+        /**
+         * if we've made it this far, we're good to go
+         */
+        return true;
     }
 
     /**
-     * Create a directory
+     * Check if dir is valid
      *
-     * @param $dir_name
+     * @param $dir
      * @return bool
      * @author Mauri Kujala <contact@edtb.xyz>
      */
-    private function create_dir($dir_name)
+    static function valid_dir($dir)
     {
-        try {
-            if (!is_dir($dir_name)) {
-                if (!mkdir($dir_name, 0775, true)) {
-                    $error = error_get_last();
-                    throw new Exception($error);
-                }
-            }
-        } catch (Exception $e) {
-            write_log("Error: " . $e->getMessage(), __FILE__, __LINE__);
-        }
-    }
-
-    /**
-     * Move screenshot files around
-     *
-     * @param $from
-     * @param $to
-     * @author Mauri Kujala <contact@edtb.xyz>
-     */
-    private function move_file($from, $to)
-    {
-        if (file_exists($from)) {
-            if (!rename($from, $to)) {
-                $error = error_get_last();
-                write_log("Error: " . $error["message"], __FILE__, __LINE__);
-            }
-        }
-    }
-
-    /**
-     * Remove screenshot
-     *
-     * @param $file
-     * @author Mauri Kujala <contact@edtb.xyz>
-     */
-    private function remove_file($file)
-    {
-        if (file_exists($file)) {
-            if (!unlink($file)) {
-                $error = error_get_last();
-                write_log("Error: " . $error["message"], __FILE__, __LINE__);
-            }
-        }
-    }
-
-    /**
-     * Make thumbnail directory
-     *
-     * @param $new_screendir
-     * @author Mauri Kujala <contact@edtb.xyz>
-     */
-    private function make_thumbs($new_screendir)
-    {
-        global $settings;
         /**
-         * create thumbnail directory
+         * check if value is set
          */
-        $thumb_dir = $new_screendir . "/thumbs";
-        $this->create_dir($thumb_dir);
+        if (!isset($dir) || empty($dir)) {
+            return false;
+        }
 
         /**
-         * run ImageMagick mogrify
+         * check if dir is the default value
          */
-        $command = "\"" . $settings["install_path"] . "/bin/ImageMagick/mogrify\" -resize " . $settings["thumbnail_size"] . " -background #333333 -gravity center -extent " . $settings["thumbnail_size"] . " -format jpg -quality 95 -path \"" . $thumb_dir . "\" \"" . $new_screendir . "/\"*.jpg";
-        exec($command, $out3);
-
-        if (!empty($out3)) {
-            $error = json_encode($out3);
-            write_log("Error: " . $error, __FILE__, __LINE__);
+        if ($dir == "C:\\Users" || $dir == "C:\\Users\\") {
+            return false;
         }
+
+        /**
+         * check if dir exists and is writable
+         */
+        if (!is_dir($dir) || !is_writable($dir)) {
+            write_log("Error: " . $dir . " is not writable or doesn't exist", __FILE__, __LINE__);
+
+            return false;
+        }
+
+        return true;
     }
 
     /**
      * Convert screenshots to jpg and move to screenhot folder
      *
-     * @param string $gallery_name name of the gallery to create
+     * @param string $gallery_name name of the gallery to create (ie. the system name)
      * @author Mauri Kujala <contact@edtb.xyz>
      */
-    function make_gallery($gallery_name)
+    public function make_gallery($gallery_name)
     {
         global $settings, $system_time, $mysqli;
 
@@ -196,11 +143,16 @@ class MakeGallery
         $result->close();
 
         /**
-         * scan screenshot directory
+         * scan screenshot directory for bmp files
          */
         $screenshots = glob($settings["old_screendir"] . "/*.bmp");
 
+        /**
+         * strip invalid characters from the gallery name
+         */
         $gallery_name = strip_invalid_dos_chars($gallery_name);
+
+        /** @var string $newscreendir */
         $newscreendir = $settings["new_screendir"] . "/" . $gallery_name;
 
         $added = 0;
@@ -268,6 +220,7 @@ class MakeGallery
                  * add no more than 15 at a time
                  */
                 $added++;
+
                 if ($added > 15) {
                     break;
                 }
@@ -292,6 +245,87 @@ class MakeGallery
          */
         if ($added > 0) {
             $this->make_thumbs($newscreendir);
+        }
+    }
+
+    /**
+     * Create a directory
+     *
+     * @param string $dir_name
+     * @return bool
+     * @author Mauri Kujala <contact@edtb.xyz>
+     */
+    private function create_dir($dir_name)
+    {
+        try {
+            if (!is_dir($dir_name)) {
+                if (!mkdir($dir_name, 0775, true)) {
+                    $error = error_get_last();
+                    throw new Exception($error);
+                }
+            }
+        } catch (Exception $e) {
+            write_log("Error: " . $e->getMessage(), __FILE__, __LINE__);
+        }
+    }
+
+    /**
+     * Remove screenshot
+     *
+     * @param string $file path to file
+     * @author Mauri Kujala <contact@edtb.xyz>
+     */
+    private function remove_file($file)
+    {
+        if (file_exists($file)) {
+            if (!unlink($file)) {
+                $error = error_get_last();
+                write_log("Error: " . $error["message"], __FILE__, __LINE__);
+            }
+        }
+    }
+
+    /**
+     * Move screenshot files around
+     *
+     * @param string $from source file path
+     * @param string $to output file path
+     * @author Mauri Kujala <contact@edtb.xyz>
+     */
+    private function move_file($from, $to)
+    {
+        if (file_exists($from)) {
+            if (!rename($from, $to)) {
+                $error = error_get_last();
+                write_log("Error: " . $error["message"], __FILE__, __LINE__);
+            }
+        }
+    }
+
+    /**
+     * Make thumbnail directory and thumbnails
+     *
+     * @param string $new_screendir
+     * @author Mauri Kujala <contact@edtb.xyz>
+     */
+    private function make_thumbs($new_screendir)
+    {
+        global $settings;
+        /**
+         * create thumbnail directory
+         */
+        $thumb_dir = $new_screendir . "/thumbs";
+        $this->create_dir($thumb_dir);
+
+        /**
+         * run ImageMagick mogrify
+         */
+        $command = "\"" . $settings["install_path"] . "/bin/ImageMagick/mogrify\" -resize " . $settings["thumbnail_size"] . " -background #333333 -gravity center -extent " . $settings["thumbnail_size"] . " -format jpg -quality 95 -path \"" . $thumb_dir . "\" \"" . $new_screendir . "/\"*.jpg";
+        exec($command, $out3);
+
+        if (!empty($out3)) {
+            $error = json_encode($out3);
+            write_log("Error: " . $error, __FILE__, __LINE__);
         }
     }
 }

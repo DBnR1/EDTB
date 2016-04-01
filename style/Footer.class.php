@@ -20,12 +20,12 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
 /** @require installer script */
@@ -42,7 +42,9 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/curSys.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.class.php");
 
 /**
- * Class Footer
+ * Footer
+ * 
+ * @author Mauri Kujala <contact@edtb.xyz>
  */
 class Footer extends Theme
 {
@@ -57,15 +59,12 @@ class Footer extends Theme
                 <?php
                 /** @include log */
                 include_once($_SERVER["DOCUMENT_ROOT"] . "/Log/add_log.php");
-                //
 
-                // calculate coordinates
+                /** @include trilateration */
                 include_once($_SERVER["DOCUMENT_ROOT"] . "/Trilateration/coord.php");
-                //
 
-                // add/edit bookmarks
+                /** @include poi/bm */
                 include_once($_SERVER["DOCUMENT_ROOT"] . "/Bookmarks/add_bookmark.php");
-                //
                 ?>
                 <!-- initialize textareas -->
                 <script>

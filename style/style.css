@@ -18,12 +18,12 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.    See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA    02110-1301, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 html, body {
   cursor: url(/style/img/cursor.png), auto !important;
@@ -171,8 +171,8 @@ h3 {
   margin-top: 20px; }
 
 hr {
-  background-color: #4a6682;
-  color: #4a6682;
+  background-color: #536a75;
+  color: #536a75;
   border: 0;
   margin-top: 10px;
   height: 1px;
@@ -203,12 +203,6 @@ a {
     vertical-align: middle;
     white-space: nowrap; }
     a.title:hover {
-      font-family: Eurocaps, sans-serif;
-      color: #404040;
-      font-size: 22px;
-      line-height: 1;
-      letter-spacing: normal;
-      vertical-align: middle;
       opacity: 0.7; }
   a.bookmarked {
     font-family: Eurocaps, sans-serif;
@@ -218,12 +212,6 @@ a {
     letter-spacing: normal;
     vertical-align: middle; }
     a.bookmarked:hover {
-      font-family: Eurocaps, sans-serif;
-      color: #1b5c36;
-      font-size: 22px;
-      line-height: 1;
-      letter-spacing: normal;
-      vertical-align: middle;
       opacity: 0.7; }
   a.poid {
     font-family: Eurocaps, sans-serif;
@@ -233,12 +221,6 @@ a {
     letter-spacing: normal;
     vertical-align: middle; }
     a.poid:hover {
-      font-family: Eurocaps, sans-serif;
-      color: #d6a80f;
-      font-size: 22px;
-      line-height: 1;
-      letter-spacing: normal;
-      vertical-align: middle;
       opacity: 0.7; }
   a.a-spgm-link {
     color: #b7cce0;
@@ -372,7 +354,7 @@ a {
   width: 135px;
   text-align: right;
   line-height: 2;
-  background-image: linear-gradient(#2e3436, #2e3436);
+  background-image: linear-gradient(#2a3c45, #2d3b42);
   border: 1px solid #000;
   border-right: none;
   border-top: none;
@@ -417,7 +399,7 @@ a {
   margin-left: 5px;
   margin-top: 8px;
   font-weight: 800;
-  color: #6694cd;
+  color: #4794b5;
   text-shadow: 1px 1px 1px #333; }
 
 .text {
@@ -452,7 +434,7 @@ a {
   line-height: 2;
   padding: 8px;
   max-width: 400px;
-  background-image: linear-gradient(#2e3436, #2e3436);
+  background-image: linear-gradient(#2a3c45, #2d3b42);
   border: 1px solid #000;
   color: #fffffa;
   text-shadow: 1px 1px 1px #000;
@@ -470,7 +452,7 @@ a {
   line-height: 2;
   padding: 8px;
   max-width: 500px;
-  background-image: linear-gradient(#2e3436, #2e3436);
+  background-image: linear-gradient(#2a3c45, #2d3b42);
   border: 1px solid #000;
   text-shadow: 1px 1px 1px #000;
   z-index: 1169600; }
@@ -483,7 +465,7 @@ a {
   text-align: center;
   padding: 8px;
   margin-top: 6px;
-  background-image: linear-gradient(#2e3436, #2e3436);
+  background-image: linear-gradient(#2a3c45, #2d3b42);
   border: 1px solid #000;
   color: #fffffa;
   text-shadow: 1px 1px 1px #000;
@@ -496,7 +478,7 @@ a {
   left: 600px;
   line-height: 1.5;
   padding: 8px;
-  background-image: linear-gradient(#2e3436, #2e3436);
+  background-image: linear-gradient(#2a3c45, #2d3b42);
   border: 1px solid #000;
   color: #fffffa;
   text-shadow: 1px 1px 1px #000;
@@ -515,7 +497,7 @@ a {
   font-weight: 400;
   line-height: 1.5;
   padding: 8px;
-  background-image: linear-gradient(#2e3436, #2e3436);
+  background-image: linear-gradient(#2a3c45, #2d3b42);
   border: 1px solid #000;
   text-shadow: 1px 1px 1px #000;
   z-index: 100000000;
@@ -551,9 +533,9 @@ a {
   margin-top: 8px;
   margin-left: 7px; }
   .link:hover {
-    background-color: #4a6682; }
+    background-color: #536a75; }
   .link:focus {
-    background-color: #4a6682; }
+    background-color: #536a75; }
   .link:active {
     background-color: #000; }
 
@@ -569,15 +551,15 @@ a {
   padding: 7px 7px 7px 4px;
   margin-top: 8px;
   margin-left: 7px;
-  border-left: 3px solid #56707d; }
+  border-left: 3px solid #536a75; }
   .active:hover {
-    background-color: #4a6682;
+    background-color: #536a75;
     width: 323px;
-    border-left: 3px solid #6084b1; }
+    border-left: 3px solid #4794b5; }
   .active:focus {
-    background-color: #4a6682;
+    background-color: #536a75;
     width: 323px;
-    border-left: 3px solid #6084b1; }
+    border-left: 3px solid #4794b5; }
   .active:active {
     background-color: #000; }
 
@@ -658,9 +640,6 @@ a {
     letter-spacing: normal;
     text-shadow: 1px 1px 6px #efefef; }
     .titletext a:hover {
-      color: #404040;
-      font-size: 23px;
-      text-shadow: 1px 1px 6px #efefef;
       opacity: 0.8; }
 
 .elite_emb {
@@ -956,9 +935,9 @@ a {
   cursor: url(/style/img/cursor.png), auto; }
   .textbox:hover {
     text-shadow: 1px 1px 4px #bcafab;
-    background-color: #4a6682; }
+    background-color: #536a75; }
   .textbox:focus {
-    border: 2px solid #4a6682;
+    border: 2px solid #536a75;
     padding: 2px 2px 2px 4px; }
 
 .selectbox {
@@ -975,11 +954,11 @@ a {
   outline: 0;
   cursor: url(/style/img/cursor.png), auto; }
   .selectbox:focus {
-    border: 2px solid #4a6682;
+    border: 2px solid #536a75;
     padding: 2px 2px 2px 4px; }
   .selectbox:hover {
     text-shadow: 1px 1px 4px #bcafab;
-    background-color: #4a6682; }
+    background-color: #536a75; }
 
 .textarea {
   border-radius: 4px;
@@ -998,7 +977,7 @@ a {
     text-shadow: 1px 1px 4px #bcafab;
     color: #fffffa;
     font-size: 12px;
-    background-color: #4a6682; }
+    background-color: #536a75; }
 
 input[type=checkbox] {
   display: none;
@@ -1026,7 +1005,7 @@ input[type=checkbox] {
   font-weight: 400;
   line-height: 1.5;
   padding: 8px;
-  background-image: linear-gradient(#2e3436, #2e3436);
+  background-image: linear-gradient(#2a3c45, #2d3b42);
   border: 1px solid #000;
   text-shadow: 1px 1px 1px #000;
   z-index: 100000;
@@ -1389,11 +1368,6 @@ fieldset {
     background-color: #1483a8;
     cursor: url(/style/img/cursor.png), auto;
     border-color: #333; }
-    .pagination > .actives > a:focus {
-      color: #fffffa;
-      background-color: #1483a8;
-      cursor: url(/style/img/cursor.png), auto;
-      border-color: #333; }
     .pagination > .actives > a:hover {
       color: #fff;
       cursor: url(/style/img/cursor.png), auto;
@@ -1446,7 +1420,7 @@ fieldset {
   border: 1px solid #5a5f61; }
 
 .notice_text {
-  background-color: #4a6682;
+  background-color: #536a75;
   padding: 4px 4px 4px 6px;
   border: 1px solid #5a5f61;
   border-top: none;

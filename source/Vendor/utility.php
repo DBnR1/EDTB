@@ -8,7 +8,7 @@
  * @author nmcquay
  */
 
-class utility
+class Utility
 {
     /**
      * @param array $ary the array we want to sort
