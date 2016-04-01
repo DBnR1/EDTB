@@ -51,14 +51,14 @@ class MakeGallery
         /**
          * check if current screenshot dir exists and is writable
          */
-        if (MakeGallery::valid_dir($dir)) {
+        if (!MakeGallery::valid_dir($dir)) {
             return false;
         }
 
         /**
          * check if new screenshot dir exists and is writable
          */
-        if (MakeGallery::valid_dir($newdir)) {
+        if (!MakeGallery::valid_dir($newdir)) {
             return false;
         }
 
