@@ -133,7 +133,7 @@ if (!empty($curSys["name"])) {
 
         $logs->time_difference = $system_time;
 
-        $logdata = $logs->make_log_entries($log_res, "system");
+        $logdata .= $logs->make_log_entries($log_res, "system");
     }
 
     $log_res->close();

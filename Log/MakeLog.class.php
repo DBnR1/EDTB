@@ -32,7 +32,7 @@
 
 /**
  * Display log entries
- * 
+ *
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 class MakeLog
@@ -47,8 +47,14 @@ class MakeLog
     {
         global $server, $user, $pwd, $db;
 
+        /**
+         * Connect to MySQL database
+         */
         $this->mysqli = new mysqli($server, $user, $pwd, $db);
 
+        /**
+         * check connection
+         */
         if ($this->mysqli->connect_errno) {
             echo "Failed to connect to MySQL: " . $this->mysqli->connect_error;
         }
@@ -94,7 +100,7 @@ class MakeLog
                      */
                     $l_crosslinks = System::crosslinks($system_name, true, false, false);
 
-                    $logdata = '<header><h2><img class="icon" src="/style/img/system_log.png" alt="log" />';
+                    $logdata .= '<header><h2><img class="icon" src="/style/img/system_log.png" alt="log" />';
                     $logdata .= 'System log for <a href="/System?system_name=' . urlencode($system_name) . '">';
                     $logdata .= $system_name;
                     $logdata .= '</a>' . $l_crosslinks . $add . $sortable . '</h2></header>';
@@ -107,7 +113,7 @@ class MakeLog
                     $sortable .= '<img class="icon" src="/style/img/sort.png" alt="Sort" style="margin-right:0" />';
                     $sortable .= '</a></span>';
 
-                    $logdata = '<header><h2><img class="icon" src="/style/img/log.png" alt="log" />Commander\'s Log' . $sortable . '</h2></header>';
+                    $logdata .= '<header><h2><img class="icon" src="/style/img/log.png" alt="log" />Commander\'s Log' . $sortable . '</h2></header>';
                     $logdata .= '<hr>';
                 }
 
