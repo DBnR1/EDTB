@@ -186,13 +186,13 @@ class MySQLtabledit
                     <tr>
                         <td colspan="2">
                             <input type="hidden" name="mte_a" value="save">
-                            <input class="button" type="submit" value="Save" style="width:80px;margin:20px 0 25px 0">
+                            <input class="button button_save" type="submit" value="Save" style="width:80px;margin:20px 0 25px 0">
                         </td>
                     </tr>';
 
         $this->content .= '
                 <div style="width:' . $this->width_editor . '">
-                    <form method="post" action="/DataPoint/index.php?table=' . $_GET["table"] . '" onsubmit="return submitform()">
+                    <form method="post" action="/DataPoint/?table=' . $_GET["table"] . '">
                         <table style="margin-bottom:20px;border-collapse:collapse;border-spacing:0">
                             <tr>
                                 <td>
@@ -234,7 +234,6 @@ class MySQLtabledit
      */
     private function get_fields($rij)
     {
-
         // edit or new?
         $edit = $_GET["mte_a"] == "edit" ? 1 : 0;
 
@@ -555,11 +554,11 @@ class MySQLtabledit
 
                             // sorting
                             if ($_GET["sort"] == $key && $_GET["ad"] == "a") {
-                                $sort_image = "<img src='/style/img/sort_a.png' style='width:9px;height:8px;border:none' alt=''>";
+                                $sort_image = "<img src='/style/img/sort_a.png' style='width:9px;height:8px;border:none' alt='Asc' id='sort_a'>";
                                 $ad = "d";
                             }
                             if ($_GET["sort"] == $key && $_GET["ad"] == "d") {
-                                $sort_image = "<img src='/style/img/sort_d.png' style='width:9px;height:8px;border:none' alt=''>";
+                                $sort_image = "<img src='/style/img/sort_d.png' style='width:9px;height:8px;border:none' alt='Desc' id='sort_d'>";
                                 $ad = "a";
                             }
 
@@ -596,7 +595,7 @@ class MySQLtabledit
                             if (substr($this->table, 0, 4) == "edtb") {
                                 $buttons = "<td style='width:1%;white-space:nowrap;padding:10px;vertical-align:middle'></td>";
                             } else {
-                                $buttons = "<td style='width:1%;white-space:nowrap;padding:10px;vertical-align:middle'><a href='javascript:void(0)' onclick='del_confirm($value)' title='Delete {$this->show_text[$key]} $value'><img src='/style/img/del.png' style='width:16px;height:16px;border:none' alt=''></a>&nbsp;<a href='?$query_string&mte_a=edit&id=$value' title='Edit {$this->show_text[$key]} $value'><img src='/style/img/edit.png' style='width:16px;height:16px;border:none' alt='Edit'></a></td>";
+                                $buttons = "<td style='width:1%;white-space:nowrap;padding:10px;vertical-align:middle'><a href='javascript:void(0)' onclick='del_confirm($value)' class='delete_record' title='Delete {$this->show_text[$key]} $value' id='delete_" . $value . "'><img src='/style/img/del.png' style='width:16px;height:16px;border:none' alt='Delete' class='data_point_delete'></a>&nbsp;<a href='?$query_string&mte_a=edit&id=$value' class='edit_record' title='Edit {$this->show_text[$key]} $value' id='edit_" . $value . "'><img src='/style/img/edit.png' style='width:16px;height:16px;border:none' alt='Edit' class='data_point_edit'></a></td>";
                             }
 
                             if ($key == "id" && $this->table == "edtb_systems") {
@@ -716,7 +715,7 @@ class MySQLtabledit
             <table style='margin-left:0;padding-left:0;border-collapse:collapse;border-spacing:0;width:100%'>
                 <tr>
                     <td style='white-space:nowrap;padding-bottom:20px'>
-                        <form method=get action='$this->url_script'>
+                        <form method=get action='$this->url_script' id='search_form'>
                             <input type='hidden' name='table' value='" . $_GET["table"] . "'>
                             <select class='selectbox' name='f'>$options</select>
                             <input class='textbox' type='text' name='s' value='$in_search_value' style='width:220px'>
@@ -726,7 +725,7 @@ class MySQLtabledit
         $seach_form .= "</form>";
 
         if ($_GET["s"] && $_GET["f"]) {
-            $seach_form .= "<button class='button' onclick='window.location=\"$this->url_script\"' style='margin: 0 0 10px 10px'>{$this->text['Clear_search']}</button>";
+            $seach_form .= "<button class='button button_clear' onclick='window.location=\"$this->url_script\"' style='margin: 0 0 10px 10px'>{$this->text['Clear_search']}</button>";
         }
 
         $seach_form .= '
@@ -734,7 +733,7 @@ class MySQLtabledit
 
                     <td style="text-align:right">';
         if (substr($this->table, 0, 4) != "edtb") {
-            $seach_form .= "<button class='button' onclick='window.location=\"$this->url_script?$query_string&mte_a=new\"' style='margin: 0 0 10px 10px'>{$this->text['Add_Record']}</button>";
+            $seach_form .= "<button class='button button_add' onclick='window.location=\"$this->url_script?$query_string&mte_a=new\"' style='margin: 0 0 10px 10px'>{$this->text['Add_Record']}</button>";
         } else {
             $seach_form .= "&nbsp;";
         }
@@ -890,13 +889,14 @@ class MySQLtabledit
                 $show_primary_key = $this->primary_key;
             }
 
-            $_SESSION["content_saved"] = "
-                <div class='notify_success'>
-                    Record $show_primary_key $saved_id {$this->text['saved']}
+            $_SESSION["content_saved"] = '
+                <div class="notify_success">
+                    Record ' . $show_primary_key . ' <span id="saved_id">' . $saved_id . '</span> ' . $this->text["saved"] . '
                 </div>
-                ";
+                ';
+
             if ($in_mte_new_rec) {
-                echo "<script>window.location='?start=0&f=&sort=" . $this->primary_key . "&ad=d";
+                echo "<script>window.location='?start=0&f=&sort=" . $this->primary_key . "&table=" . $this->table . "&ad=d'";
                 echo "</script>";
             } else {
                 echo "<script>window.location='" . $_SESSION['hist_page'] . "'</script>";

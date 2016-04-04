@@ -46,9 +46,15 @@ class PoiBm
     public function __construct()
     {
         global $server, $user, $pwd, $db;
-
+        
+        /**
+         * Connect to MySQL database
+         */
         $this->mysqli = new mysqli($server, $user, $pwd, $db);
-
+        
+        /**
+         * check connection
+         */
         if ($this->mysqli->connect_errno) {
             echo "Failed to connect to MySQL: " . $this->mysqli->connect_error;
         }

@@ -43,7 +43,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.class.php");
 
 /**
  * Footer
- * 
+ *
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 class Footer extends Theme
@@ -137,7 +137,7 @@ class Footer extends Theme
                 </div>
                 <!-- search systems and stations-->
                 <div class="input" id="search_system" style="text-align:center">
-                    <div class="input-inner">
+                    <div class="input-inner" id="search_system_inner">
                         <div class="suggestions" id="suggestions_8" style="margin-left:8px;margin-top:79px"></div>
                         <div class="suggestions" id="suggestions_9" style="margin-left:223px;margin-top:79px"></div>
                         <table>

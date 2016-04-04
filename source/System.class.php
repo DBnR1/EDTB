@@ -32,7 +32,7 @@
 
 /**
  * Functions relating to systems
- * 
+ *
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 class System
@@ -204,28 +204,28 @@ class System
         $return = "";
         // check if system has screenshots
         if ($show_screens === true && System::has_screenshots($system)) {
-            $return .= '<a href="/Gallery?spgmGal=' . urlencode(strip_invalid_dos_chars($system)) . '" title="View image gallery">';
+            $return .= '<a href="/Gallery?spgmGal=' . urlencode(strip_invalid_dos_chars($system)) . '" title="View image gallery" class="gallery_link">';
             $return .= '<img src="/style/img/image.png" class="icon" alt="Gallery" style="margin-left:5px;margin-right:0;vertical-align:top" />';
             $return .= '</a>';
         }
 
         // check if system is logged
         if ($show_logs === true && System::is_logged($system)) {
-            $return .= '<a href="/Log?system=' . urlencode($system) . '" style="color:inherit" title="System has log entries">';
+            $return .= '<a href="/Log?system=' . urlencode($system) . '" style="color:inherit" title="System has log entries" class="log_link">';
             $return .= '<img src="/style/img/log.png" class="icon" style="margin-left:5px;margin-right:0" />';
             $return .= '</a>';
         }
 
         // check if system is mapped
         if ($show_map === true && System::is_mapped($system)) {
-            $return .= '<a href="/SystemMap/?system=' . urlencode($system) . '" style="color:inherit" title="System map">';
+            $return .= '<a href="/SystemMap/?system=' . urlencode($system) . '" style="color:inherit" title="System map" class="system_map_link">';
             $return .= '<img src="/style/img/grid.png" class="icon" style="margin-left:5px;margin-right:0" />';
             $return .= '</a>';
         }
 
         // show link if system exists
         if ($show_system === true && System::exists($system)) {
-            $return .= '<a href="/System?system_name=' . urlencode($system) . '" style="color:inherit" title="System info">';
+            $return .= '<a href="/System?system_name=' . urlencode($system) . '" style="color:inherit" title="System info" class="system_info_link">';
             $return .= '<img src="/style/img/info.png" class="icon" alt="Info" style="margin-left:5px;margin-right:0" />';
             $return .= '</a>';
         }
