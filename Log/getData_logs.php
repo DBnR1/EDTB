@@ -30,8 +30,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
-/** @require MakeLog class */
-require_once("MakeLog.php");
+use EDTB\Log\MakeLog;
 
 /**
  * System logs
@@ -117,8 +116,8 @@ if (!empty($curSys["name"])) {
                     IFNULL(edtb_systems.z, user_systems_own.z) BETWEEN " . $usez . "-" . $settings["log_range"] . "
                     AND " . $usez . "+" . $settings["log_range"] . "
                     OR
-                    user_log.system_name = '" . $curSys["esc_name"] . "'
-                    ORDER BY -user_log.pinned ASC, user_log.weight, user_log.system_name = '" . $curSys["esc_name"] . "' DESC,
+                    user_log.system_name = '$esc_cursys_name'
+                    ORDER BY -user_log.pinned ASC, user_log.weight, user_log.system_name = '$esc_cursys_name' DESC,
                     distance ASC,
                     user_log.stardate " . $ssort . "
                     LIMIT 10";

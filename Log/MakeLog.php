@@ -30,6 +30,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
+namespace EDTB\Log;
+
+use EDTB\source\System;
+
 /**
  * Display log entries
  *
@@ -50,7 +54,7 @@ class MakeLog
         /**
          * Connect to MySQL database
          */
-        $this->mysqli = new mysqli($server, $user, $pwd, $db);
+        $this->mysqli = new \mysqli($server, $user, $pwd, $db);
 
         /**
          * check connection
@@ -63,7 +67,7 @@ class MakeLog
     /**
      * Make log entries
      *
-     * @param mysqli_result $log_res
+     * @param \mysqli_result $log_res
      * @param string $type
      * @return string $logdata
      * @author Mauri Kujala <contact@edtb.xyz>
