@@ -31,7 +31,7 @@
  */
 
 /** @require Theme class */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.class.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.php");
 
 /**
  * initiate page header
@@ -114,7 +114,7 @@ if (isset($_GET["sendcode"])) {
             </div>
             <?php
         } elseif (isset($_GET["sendcode"]) && isset($_POST["code"])) {
-            echo notice('The companion api is now connected.<br />Click the refresh icon to initialize. Then return to using ED ToolBox normally.<br /><a id="api_refresh" href="javascript:void(0)" onclick="refresh_api()" title="Refresh API data"><img src="/style/img/refresh_24.png" class="icon24" alt="Refresh" /></a>', "API connected");
+            echo notice('The companion api is now connected.<br />Click the refresh icon to initialize. Then return to using ED ToolBox normally. Note that it may take a while for the API to initialize.<br /><a id="api_refresh" href="javascript:void(0)" onclick="refresh_api()" title="Refresh API data"><img src="/style/img/refresh_24.png" class="icon24" alt="Refresh" /></a>', "API connected");
         } else {
             /**
              * check if cookies are good (when are they not?)
@@ -122,7 +122,7 @@ if (isset($_GET["sendcode"])) {
             exec("\"" . $settings["curl_exe"] . "\" -b \"" . $settings["cookie_file"] . "\" -c \"" . $settings["cookie_file"] . "\" -H \"User-Agent: " . $settings["agent"] . "\" \"https://companion.orerve.net/profile\" -k", $out);
 
             if (!empty($out)) {
-                echo notice('The companion api is already connected.<br />Click the refresh icon to refresh.<br /><a id="api_refresh" href="javascript:void(0)" onclick="refresh_api()" title="Refresh API data"><img src="/style/img/refresh_24.png" class="icon24" alt="Refresh" /></a>', "API already connected");
+                echo notice('The companion api is already connected.<br />Click the refresh icon to refresh. Note that it may take a while for the API to initialize.<br /><a id="api_refresh" href="javascript:void(0)" onclick="refresh_api()" title="Refresh API data"><img src="/style/img/refresh_24.png" class="icon24" alt="Refresh" /></a>', "API already connected");
             } else {
                 ?>
                 <div class="input" style="display:block">

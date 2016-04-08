@@ -35,6 +35,8 @@
 /** @require functions  */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 
+use \EDTB\source\System;
+
 ###### Toggles #############
 define('MODE_TRACE', false); // toggles debug mode
 define('MODE_WARNING', true); // toggles warning mode
@@ -1187,8 +1189,8 @@ function spgm_DisplayGalleryNavibar($strGalleryId, $strFilterFlags, $mixPictureI
         echo ' &raquo; ';
 
         /**
-        * provide crosslinks to screenshot gallery, log page, etc
-        */
+         * provide crosslinks to screenshot gallery, log page, etc
+         */
         $g_crosslinks = System::crosslinks($arrExplodedPathToGallery[$i], false, true);
 
         if ($i < ($_max - 1)) {

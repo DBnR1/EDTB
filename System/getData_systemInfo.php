@@ -30,6 +30,8 @@
 * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
 */
 
+use \EDTB\source\System;
+
 /**
  * if system id or name is set, show info about that system
  */

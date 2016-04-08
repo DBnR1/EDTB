@@ -31,7 +31,7 @@
  */
 
 /** @require MakeLog class */
-require_once("MakeLog.class.php");
+require_once("MakeLog.php");
 
 /**
  * System logs

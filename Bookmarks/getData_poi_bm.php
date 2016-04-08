@@ -36,8 +36,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/curSys.php");
 /** @require MySQL */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
-/** @require PoiBm class */
-require_once("PoiBm.class.php");
+
+use \EDTB\Bookmarks\PoiBm;
 
 /**
  * get usable coordinates

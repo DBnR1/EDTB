@@ -38,8 +38,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 /** @require curSys */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/curSys.php");
-/** @require Theme */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.class.php");
+
+use \EDTB\style\Theme;
 
 /**
  * Header

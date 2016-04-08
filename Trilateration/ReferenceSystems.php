@@ -30,6 +30,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
+namespace EDTB\Trilateration;
+
+use Utility;
+
 /**
  * Generate reference systems for trilateration
  *
@@ -52,7 +56,7 @@ class ReferenceSystems
         /**
          * Connect to MySQL database
          */
-        $this->mysqli = new mysqli($server, $user, $pwd, $db);
+        $this->mysqli = new \mysqli($server, $user, $pwd, $db);
 
         /**
          * check connection
@@ -152,7 +156,7 @@ class ReferenceSystems
                 }
             }
         }
-        catch (Exception $e) {
+        catch (\Exception $e) {
             echo 'Caught exception: ',  $e->getMessage(), "\n";
             /**
              *  If start point is not set, use standard set of references
@@ -173,7 +177,7 @@ class ReferenceSystems
      * coordinates and return a "fuzziness" factor
      *
      * @return array $value range in ly to use for reference systems
-     * @throws Exception
+     * @throws \Exception
      * @author Mauri Kujala <contact@edtb.xyz>
      */
     private function fuzziness()
@@ -229,14 +233,14 @@ class ReferenceSystems
 
                     return $value;
                 } else {
-                    throw new Exception('Cannot calculate fuzziness factor: no last known system');
+                    throw new \Exception('Cannot calculate fuzziness factor: no last known system');
                 }
             } else {
-                throw new Exception('Cannot calculate fuzziness factor: no visited systems');
+                throw new \Exception('Cannot calculate fuzziness factor: no visited systems');
             }
         }
         else {
-            throw new Exception('Cannot calculate fuzziness factor: standard = true');
+            throw new \Exception('Cannot calculate fuzziness factor: standard = true');
         }
     }
 }

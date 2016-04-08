@@ -28,14 +28,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
+namespace EDTB\style;
+
 /** @require header class */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Header.class.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Header.php");
 /** @require footer class */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Footer.class.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Footer.php");
 
 /**
  * Class Theme
- * 
+ *
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 class Theme

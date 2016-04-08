@@ -30,13 +30,48 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
-/** @var string ini_dir ini file directory */
+/**
+ * Register project-specific autoloader for classes, adapted from the PSR-4 example file
+ *
+ * @param string $class The fully-qualified class name.
+ * @return void
+ */
+spl_autoload_register(function ($class) {
+
+    /** @var string $prefix project-specific namespace prefix */
+    $prefix = 'EDTB\\';
+
+    /** @var string $base_dir base directory for the namespace prefix */
+    $base_dir = $_SERVER["DOCUMENT_ROOT"] . "/";
+
+    // does the class use the namespace prefix?
+    $len = strlen($prefix);
+    if (strncmp($prefix, $class, $len) !== 0) {
+        // no, move to the next registered autoloader
+        return;
+    }
+
+    // get the relative class name
+    $relative_class = substr($class, $len);
+
+    // replace the namespace prefix with the base directory, replace namespace
+    // separators with directory separators in the relative class name, append
+    // with .php
+    $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
+
+    // if the file exists, require it
+    if (file_exists($file)) {
+        require $file;
+    }
+});
+
+/** @var string $ini_dir ini file directory */
 $ini_dir = str_replace("\\EDTB\\source", "", __DIR__);
 $ini_dir = str_replace("\\", "/", $ini_dir);
 /** @var string ini_file ini file */
 $ini_file = $ini_dir . "/data/edtoolbox_v1.ini";
 
-/** @var array settings global user settings variable */
+/** @var array $settings global user settings variable */
 $settings = [];
 $settings = parse_ini_file($ini_file);
 

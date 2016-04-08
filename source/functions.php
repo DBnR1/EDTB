@@ -43,7 +43,7 @@ require_once(__DIR__ . "/FDMaps.php");
 /** @require utility */
 require_once(__DIR__ . "/Vendor/utility.php");
 /** @require System class */
-require_once(__DIR__ . "/System.class.php");
+require_once(__DIR__ . "/System.php");
 
 /**
  * Last known system with valid coordinates

@@ -34,9 +34,9 @@
 */
 
 /** @require NearestSystems class */
-require_once("NearestSystems.class.php");
+require_once("NearestSystems.php");
 /** @require Theme class */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.class.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.php");
 
 /**
  * initiate page header

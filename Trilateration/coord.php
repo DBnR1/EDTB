@@ -37,7 +37,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 /** @require MySQL */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 /** @require trilateration class */
-require_once("Trilateration.class.php");
+require_once("Trilateration.php");
 
 if (isset($_GET["do"])) {
     $data = json_decode($_REQUEST["input"]);

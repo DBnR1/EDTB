@@ -33,7 +33,7 @@
 //http://ed-board.net/3Dgalnet/
 
 /** @require Theme class */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.class.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.php");
 
 /**
  * initiate page header

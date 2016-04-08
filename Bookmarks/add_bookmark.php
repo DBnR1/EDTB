@@ -34,7 +34,7 @@ if (isset($_GET["do"])) {
     /** @require functions */
     require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
     /** @require PoiBm class */
-    require_once("PoiBm.class.php");
+    require_once("PoiBm.php");
 
     $data = json_decode($_REQUEST["input"]);
 

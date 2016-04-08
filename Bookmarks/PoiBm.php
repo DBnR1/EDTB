@@ -28,9 +28,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
+namespace EDTB\Bookmarks;
+
+use EDTB\backend\System;
+
 /**
  * Show bookmarks and points of interest
- * 
+ *
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 class PoiBm
@@ -46,12 +50,12 @@ class PoiBm
     public function __construct()
     {
         global $server, $user, $pwd, $db;
-        
+
         /**
          * Connect to MySQL database
          */
-        $this->mysqli = new mysqli($server, $user, $pwd, $db);
-        
+        $this->mysqli = new \mysqli($server, $user, $pwd, $db);
+
         /**
          * check connection
          */
@@ -137,7 +141,7 @@ class PoiBm
         if (!empty($item_added_on)) {
             $item_added_ago = get_timeago($item_added_on, false);
 
-            $item_added_on = new DateTime(date("Y-m-d\TH:i:s\Z", ($item_added_on + $this->time_difference * 60 * 60)));
+            $item_added_on = new \DateTime(date("Y-m-d\TH:i:s\Z", ($item_added_on + $this->time_difference * 60 * 60)));
             $item_added_on = date_modify($item_added_on, "+1286 years");
             $item_added_on = $item_added_on->format("j M Y, H:i");
         }

@@ -38,7 +38,7 @@ if (isset($_GET["do"])) {
     /** @require MySQL */
     //require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
     /** @require MakeLog class */
-    require_once("MakeLog.class.php");
+    require_once("MakeLog.php");
 
     $data = json_decode($_REQUEST["input"]);
 

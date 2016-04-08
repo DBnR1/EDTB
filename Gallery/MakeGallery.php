@@ -28,6 +28,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
+namespace EDTB\Gallery;
+
 /**
  * Make screenshot galleries
  *
@@ -261,10 +263,10 @@ class MakeGallery
             if (!is_dir($dir_name)) {
                 if (!mkdir($dir_name, 0775, true)) {
                     $error = error_get_last();
-                    throw new Exception($error);
+                    throw new \Exception($error);
                 }
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             write_log("Error: " . $e->getMessage(), __FILE__, __LINE__);
         }
     }

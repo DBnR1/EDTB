@@ -37,7 +37,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 /** @require curSys */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/curSys.php");
 /** @require ReferenceSystems class */
-require_once("ReferenceSystems.class.php");
+require_once("ReferenceSystems.php");
 
 /**
  * check if system already has distances

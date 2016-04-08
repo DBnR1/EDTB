@@ -40,7 +40,7 @@ $logsystem_id = !isset($_GET["system_id"]) ? "-1" : 0 + $_GET["system_id"];
 /*if (!$logsystem_id) exit("No system id set"); */
 
 /** @require Theme class */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.class.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.php");
 
 /**
  * initiate page header
@@ -56,7 +56,7 @@ $header->page_title = "ED ToolBox";
 $header->display_header();
 
 /** @require MakeLog class */
-require_once("MakeLog.class.php");
+require_once("MakeLog.php");
 ?>
 <div class="entries">
     <div class="entries_inner">

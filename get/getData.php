@@ -38,8 +38,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 /** @require curSys */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/curSys.php");
-/** @require MakeGallery class */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Gallery/MakeGallery.class.php");
+
+use \EDTB\Gallery\MakeGallery;
 
 $action = isset($_GET["action"]) ? $_GET["action"] : "";
 $request = isset($_GET["request"]) ? $_GET["request"] : 0;
