@@ -66,12 +66,29 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"])) {
             $pos2 = strrpos($line, "ProvingGround");
 
             if ($pos !== false && $pos2 === false) {
-                preg_match_all("/\((.*?)\) B/", $line, $matches);
+                /**
+                 * Regular expression filter to find the system name
+                 */
+                preg_match_all("/\System:\"(.*?)\"/", $line, $matches);
                 $cssystemname = $matches[1][0];
                 $curSys["name"] = $cssystemname;
 
+                /**
+                 * Regular expression filter to find the visited time
+                 */
                 preg_match_all("/\{(.*?)\} System:/", $line, $matches2);
                 $visited_time = $matches2[1][0];
+
+                /**
+                 * Regular expression filter to find the system's coordinates
+                 */
+                preg_match_all("/\StarPos:\((.*?)\)/", $line, $matches3);
+                $curSys["coordinates"] = $matches3[1][0];
+                $coord_parts = explode(",", $curSys["coordinates"]);
+
+                $curSys["x"] = $coord_parts[0];
+                $curSys["y"] = $coord_parts[1];
+                $curSys["z"] = $coord_parts[2];
 
                 $curSys["name"] = isset($curSys["name"]) ? $curSys["name"] : "";
                 $curSys["esc_name"] = $mysqli->real_escape_string($curSys["name"]);
@@ -79,10 +96,6 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"])) {
                 /**
                  * define defaults
                  */
-                $curSys["coordinates"] = "";
-                $curSys["x"] = "";
-                $curSys["y"] = "";
-                $curSys["z"] = "";
                 $curSys["id"] = -1;
                 $curSys["population"] = "";
                 $curSys["allegiance"] = "";
@@ -133,6 +146,9 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"])) {
                     $curSys["y"] = $obj->y;
                     $curSys["z"] = $obj->z;
 
+                /**
+                 * If not found, try user_systems_own
+                 */
                 } else {
                     $query = "  SELECT x, y, z
                                 FROM user_systems_own
@@ -150,15 +166,26 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"])) {
                         $curSys["y"] = $obj->y == "" ? "" : $obj->y;
                         $curSys["z"] = $obj->z == "" ? "" : $obj->z;
                         $curSys["coordinates"] = $curSys["x"] . "," . $curSys["y"] . "," . $curSys["z"];
-                    } else {
-                        $curSys["coordinates"] = "";
-                        $curSys["x"] = "";
-                        $curSys["y"] = "";
-                        $curSys["z"] = "";
                     }
                 }
 
                 $result->close();
+
+                /**
+                 * If the system isn't in our database, add it to user_systems_own
+                 */
+                if ($exists === 0 && $oexists === 0) {
+                    $stmt = "   INSERT INTO user_systems_own
+                                (name, x, y, z)
+                                VALUES
+                                ('" . $curSys["esc_name"] . "',
+                                '" . $curSys["x"] . "',
+                                '" . $curSys["y"] . "',
+                                '" . $curSys["z"] . "')";
+
+                    $mysqli->query($stmt) or write_log($mysqli->error, __FILE__, __LINE__);
+                }
+
 
                 /**
                  * fetch previous system
@@ -192,7 +219,7 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"])) {
                          */
                         if ($settings["edsm_api_key"] != "" && $settings["edsm_export"] == "true" && $settings["edsm_cmdr_name"] != "") {
                             $visited_on_utc = date("Y-m-d H:i:s");
-                            $export = file_get_contents("http://www.edsm.net/api-logs-v1/set-log?commanderName=" . urlencode($settings["edsm_cmdr_name"]) . "&apiKey=" . $settings["edsm_api_key"] . "&systemName=" . urlencode($curSys["name"]) . "&dateVisited=" . urlencode($visited_on_utc) . "");
+                            $export = file_get_contents("http://www.edsm.net/api-logs-v1/set-log?commanderName=" . urlencode($settings["edsm_cmdr_name"]) . "&apiKey=" . $settings["edsm_api_key"] . "&systemName=" . urlencode($curSys["name"]) . "&dateVisited=" . urlencode($visited_on_utc) . "&fromSoftwareVersion=" . $settings["edtb_version"] . "&fromSoftware=ED+ToolBox");
 
                             $exports = json_decode($export);
 

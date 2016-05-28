@@ -145,8 +145,16 @@ if (is_dir($settings["log_dir"])) {
                 foreach ($lines as $line_num => $line) {
                     $pos = strrpos($line, "System:");
                     if ($pos !== false) {
-                        preg_match_all("/\((.*?)\) B/", $line, $matches);
+                        /**
+                         * Regular expression filter to find the system name
+                         */
+                        preg_match_all("/\System:\"(.*?)\"/", $line, $matches);
                         $cssystemname = $matches[1][0];
+
+                        if (empty($cssystemname)) {
+                            preg_match_all("/\((.*?)\) B/", $line, $matches2);
+                            $cssystemname = $matches2[1][0];
+                        }
 
                         if ($current_sys != $cssystemname) {
                             preg_match_all("/\{(.*?)\} System:/", $line, $matches2);
