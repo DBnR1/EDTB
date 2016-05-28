@@ -29,6 +29,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
+use EDTB\source\System;
+use EDTB\Trilateration\Trilateration;
 
 /** @require config */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");

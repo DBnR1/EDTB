@@ -30,6 +30,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
+use EDTB\Bookmarks\PoiBm;
+
 if (isset($_GET["do"])) {
     /** @require config */
     require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");

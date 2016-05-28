@@ -35,6 +35,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
 /** @require MySQL */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 
+use \EDTB\source\System;
+
 $system = isset($_GET["system"]) ? $_GET["system"] : "";
 
 if (empty($system)) {

@@ -30,7 +30,8 @@
 
 namespace EDTB\Bookmarks;
 
-use EDTB\backend\System;
+use EDTB\source\System;
+use mysqli_result;
 
 /**
  * Show bookmarks and points of interest
