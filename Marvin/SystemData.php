@@ -39,6 +39,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 /** @require curSys */
 require_once($_SERVER["DOCUMENT_ROOT"] . "/source/curSys.php");
 
+use \EDTB\source\System;
+
 /**
  * System Info
  */
@@ -258,7 +260,7 @@ if (isset($_GET["sys"])) {
             if ($num_visits == 2) {
                 $va_text .= " We have visited this system once before. That was " . $first_vis . ".";
             } else {
-                $va_text .= " We have visited this system " . $num_vis . " times before. Our first visit was " . $first_vis . ".";
+                $va_text .= " We have visited this system " . $num_visits . " times before. Our first visit was " . $first_vis . ".";
             }
         }
     }
