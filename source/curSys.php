@@ -219,7 +219,7 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"])) {
                          */
                         if ($settings["edsm_api_key"] != "" && $settings["edsm_export"] == "true" && $settings["edsm_cmdr_name"] != "") {
                             $visited_on_utc = date("Y-m-d H:i:s");
-                            $export = file_get_contents("http://www.edsm.net/api-logs-v1/set-log?commanderName=" . urlencode($settings["edsm_cmdr_name"]) . "&apiKey=" . $settings["edsm_api_key"] . "&systemName=" . urlencode($curSys["name"]) . "&dateVisited=" . urlencode($visited_on_utc) . "&fromSoftwareVersion=" . $settings["edtb_version"] . "&fromSoftware=ED+ToolBox");
+                            $export = file_get_contents("http://www.edsm.net/api-logs-v1/set-log?commanderName=" . urlencode($settings["edsm_cmdr_name"]) . "&apiKey=" . $settings["edsm_api_key"] . "&systemName=" . urlencode($curSys["name"]) . "&dateVisited=" . urlencode($visited_on_utc) . "&fromSoftwareVersion=" . $settings["edtb_version"] . "&fromSoftware=ED+ToolBox&x=" . urlencode($curSys["x"]) . "&y=" . urlencode($curSys["y"]) . "&z=" . urlencode($curSys["z"]));
 
                             $exports = json_decode($export);
 
