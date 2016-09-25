@@ -233,6 +233,17 @@ if (isset($settings["dist_systems"])) {
 
         $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
 
+        $found = $result->num_rows;
+
+        if ($found === 0) {
+            $query = "  SELECT id, x, y, z
+                        FROM user_systems_own
+                        WHERE name = '$esc_dist_sys'
+                        LIMIT 1";
+
+            $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+        }
+
         $user_dist_obj = $result->fetch_object();
         $dist_sys_id = $user_dist_obj->id;
 
