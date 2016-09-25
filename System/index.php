@@ -4,10 +4,10 @@
  *
  * Front-end file for System information
  *
- * @package EDTB\Main
- * @author Mauri Kujala <contact@edtb.xyz>
+ * @package   EDTB\Main
+ * @author    Mauri Kujala <contact@edtb.xyz>
  * @copyright Copyright (C) 2016, Mauri Kujala
- * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
+ * @license   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
  */
 
 /*
@@ -46,20 +46,20 @@ $header->page_title = "System Information";
  */
 $header->display_header();
 ?>
-    <div class="entries">
-        <div class="entries_inner" id="system_page">
-            <h2 id="si_name"></h2>
-            <hr>
-            <div class="systeminfo_st">
-                <!-- STATIONS -->
-                <div class="systeminfo_stations" id="si_stations"></div>
-            </div>
-            <div class="systeminfo_sy">
-                <!-- SYSTEM INFO -->
-                <div class="systeminfo_system" id="si_detailed"></div>
-            </div>
+<div class="entries">
+    <div class="entries_inner" id="system_page">
+        <h2 id="si_name"></h2>
+        <hr>
+        <div class="systeminfo_st">
+            <!-- STATIONS -->
+            <div class="systeminfo_stations" id="si_stations"></div>
+        </div>
+        <div class="systeminfo_sy">
+            <!-- SYSTEM INFO -->
+            <div class="systeminfo_system" id="si_detailed"></div>
         </div>
     </div>
+</div>
 <?php
 /**
  * initiate page footer
