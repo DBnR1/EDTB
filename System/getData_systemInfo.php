@@ -236,7 +236,7 @@ if (isset($settings["dist_systems"])) {
         $found = $result->num_rows;
 
         if ($found === 0) {
-            $query = "  SELECT id, x, y, z
+            $query = "  SELECT x, y, z
                         FROM user_systems_own
                         WHERE name = '$esc_dist_sys'
                         LIMIT 1";
