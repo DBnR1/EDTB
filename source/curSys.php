@@ -218,18 +218,41 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"])) {
                          * export to EDSM
                          */
                         if ($settings["edsm_api_key"] != "" && $settings["edsm_export"] == "true" && $settings["edsm_cmdr_name"] != "") {
-                            $visited_on_utc = date("Y-m-d H:i:s");
-                            $export = file_get_contents("http://www.edsm.net/api-logs-v1/set-log?commanderName=" . urlencode($settings["edsm_cmdr_name"]) . "&apiKey=" . $settings["edsm_api_key"] . "&systemName=" . urlencode($curSys["name"]) . "&dateVisited=" . urlencode($visited_on_utc) . "&fromSoftwareVersion=" . $settings["edtb_version"] . "&fromSoftware=ED+ToolBox&x=" . urlencode($curSys["x"]) . "&y=" . urlencode($curSys["y"]) . "&z=" . urlencode($curSys["z"]));
+                            // figure out the visited time in UTC
+                            $dateUTC = new DateTime('now', new DateTimeZone('UTC'));
+                            $visited_time_split = explode(':', $visited_time);
+                            $dateLocal = new DateTime();
+                            $dateUTC->setTime($dateUTC->format('G'), $visited_time_split[1], $visited_time_split[2]);
+                            $visitedTimeUTC = $dateUTC->format('Y-m-d H:i:s');
 
-                            $exports = json_decode($export);
+                            $exportData = [
+                                'commanderName' => $settings["edsm_cmdr_name"],
+                                'apiKey' => $settings["edsm_api_key"],
+                                'systemName' => $curSys["name"],
+                                'dateVisited' => $visitedTimeUTC,
+                                'fromSoftwareVersion' => $settings["edtb_version"],
+                                'fromSoftware' => 'ED ToolBox',
+                                'x' => $curSys["x"],
+                                'y' => $curSys["y"],
+                                'z' => $curSys["z"],
+                            ];
+                            $exportURL = 'https://www.edsm.net/api-logs-v1/set-log?';
+                            $exportURL .= http_build_query($exportData);
 
-                            if ($exports->{"msgnum"} != "100") {
-                                write_log($export, __FILE__, __LINE__);
+                            $export = file_get_contents($exportURL);
+
+                            if (!$export) {
+                                write_log('EDSM export failed', __FILE__, __LINE__);
+                            } else {
+                                $exports = json_decode($export);
+
+                                if ($exports->{"msgnum"} != "100") {
+                                    write_log($export, __FILE__, __LINE__);
+                                }
                             }
                         }
 
                         $newSystem = true;
-                        //write_log($prev_system . " new: " . $cssystemname);
                     }
                     $result->close();
 
