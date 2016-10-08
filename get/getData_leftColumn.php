@@ -267,51 +267,51 @@ if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
 /**
  * if system coords are user calculated, show calc button
  */
-$query = "  SELECT id, edsm_message
-            FROM user_systems_own
-            WHERE name = '$esc_cursys_name'
-            LIMIT 1";
-
-$system_user_calculated = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
-
-$is_user_calculated = $system_user_calculated->num_rows;
-
-if ($is_user_calculated > 0 && !empty($curSys["name"])) {
-    $c_obj = $system_user_calculated->fetch_object();
-    $edsm_ms = $c_obj->edsm_message;
-    $system_user_calculated->close();
-
-    $parts = explode(":::", $edsm_ms);
-
-    $msg_num = $parts[0];
-
-    /**
-     * ask for more distances
-     */
-    if ($msg_num != "102" && $msg_num != "104") {
-        if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
-            $station_data .= '<span style="float:right;margin-right:2px;margin-top:6px">';
-        } else {
-            $station_data .= '<span style="float:right;margin-top:3px;text-align:center;white-space:nowrap">';
-        }
-        $station_data .= '<a href="javascript:void(0)" onclick="set_reference_systems(false, true);tofront(\'calculate\');get_cs(\'target_system\')" title="Supply more distances">';
-        $station_data .= '<img class="icon24" src="/style/img/calculator2.png" alt="Calculate" />';
-        $station_data .= '</a><a href="javascript:void(0)" onclick="set_reference_systems(false);tofront(\'calculate\');get_cs(\'target_system\')" title="Review distances">';
-        $station_data .= '<img class="icon24" src="/style/img/calculator.png" alt="Calculate" />';
-        $station_data .= '</a></span>';
-    } else {
-        /**
-         *  show review distances
-         */
-        if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
-            $station_data .= '<span style="float:right;margin-right:8px;margin-top:6px">';
-        } else {
-            $station_data .= '<span style="float:right;margin-top:3px;margin-right:13px;text-align:center">';
-        }
-        $station_data .= '<a href="javascript:void(0)" onclick="set_reference_systems(false);tofront(\'calculate\');get_cs(\'target_system\')" title="Review distances">';
-        $station_data .= '<img class="icon24" src="/style/img/calculator.png" alt="Calculate" />';
-        $station_data .= '</a></span>';
-    }
-}
+//$query = "  SELECT id, edsm_message
+//            FROM user_systems_own
+//            WHERE name = '$esc_cursys_name'
+//            LIMIT 1";
+//
+//$system_user_calculated = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+//
+//$is_user_calculated = $system_user_calculated->num_rows;
+//
+//if ($is_user_calculated > 0 && !empty($curSys["name"])) {
+//    $c_obj = $system_user_calculated->fetch_object();
+//    $edsm_ms = $c_obj->edsm_message;
+//    $system_user_calculated->close();
+//
+//    $parts = explode(":::", $edsm_ms);
+//
+//    $msg_num = $parts[0];
+//
+//    /**
+//     * ask for more distances
+//     */
+//    if ($msg_num != "102" && $msg_num != "104") {
+//        if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
+//            $station_data .= '<span style="float:right;margin-right:2px;margin-top:6px">';
+//        } else {
+//            $station_data .= '<span style="float:right;margin-top:3px;text-align:center;white-space:nowrap">';
+//        }
+//        $station_data .= '<a href="javascript:void(0)" onclick="set_reference_systems(false, true);tofront(\'calculate\');get_cs(\'target_system\')" title="Supply more distances">';
+//        $station_data .= '<img class="icon24" src="/style/img/calculator2.png" alt="Calculate" />';
+//        $station_data .= '</a><a href="javascript:void(0)" onclick="set_reference_systems(false);tofront(\'calculate\');get_cs(\'target_system\')" title="Review distances">';
+//        $station_data .= '<img class="icon24" src="/style/img/calculator.png" alt="Calculate" />';
+//        $station_data .= '</a></span>';
+//    } else {
+//        /**
+//         *  show review distances
+//         */
+//        if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
+//            $station_data .= '<span style="float:right;margin-right:8px;margin-top:6px">';
+//        } else {
+//            $station_data .= '<span style="float:right;margin-top:3px;margin-right:13px;text-align:center">';
+//        }
+//        $station_data .= '<a href="javascript:void(0)" onclick="set_reference_systems(false);tofront(\'calculate\');get_cs(\'target_system\')" title="Review distances">';
+//        $station_data .= '<img class="icon24" src="/style/img/calculator.png" alt="Calculate" />';
+//        $station_data .= '</a></span>';
+//    }
+//}
 
 $data["station_data"] = $station_data;
