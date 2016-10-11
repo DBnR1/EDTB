@@ -86,7 +86,15 @@ if ((isset($settings["nowplaying_file"]) && !empty($settings["nowplaying_file"])
     if (isset($settings["nowplaying_file"]) && !empty($settings["nowplaying_file"])) {
 		if (file_exists($settings["nowplaying_file"]))
 		{
+			/** If Filename is playback.json will read JSON data for Google Play Music Desktop Player **/
+			if (basename($settings["nowplaying_file"]) == "playback.json")
+			{
+				$json_data = json_decode(file_get_contents($settings["nowplaying_file"]), true);
+				$nowplaying .= $json_data["song"]["title"] . " By: " . $json_data["song"]["artist"];
+			} else {
+			/** Otherwise just output the contents of the file **/
 			$nowplaying .= file_get_contents($settings["nowplaying_file"]);
+			}
 		} else {
 			$nowplaying .= "File doesn't exist";
 		}
