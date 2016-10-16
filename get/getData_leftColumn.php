@@ -77,7 +77,7 @@ if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
     if (isset($curSys["name"]) && !empty($curSys["name"])) {
         $data["system_title"] .= htmlspecialchars($curSys["name"]);
         $data["system_title"] .= "</a>";
-        $data["system_title"] .= '</span>';
+        $data["system_title"] .= '</span><span style="margin-left: 10px;"><button class="btn" data-clipboard-target="#system_title"><img src="https://clipboardjs.com/assets/images/clippy.svg" alt="Copy" width="13" align="right"></button></span>';
     } else {
         $data["system_title"] .= "Location unavailable";
         $data["system_title"] .= "</a>";
