@@ -39,6 +39,7 @@ require_once(__DIR__ . "/functions.php");
 $curSys = [];
 
 if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"])) {
+    $debuglog = "> Start of curSys processing ";
     /**
      * select the newest file
      */
@@ -109,6 +110,7 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"])) {
                 $curSys["needs_permit"] = "";
                 $curSys["updated_at"] = "";
                 $curSys["simbad_ref"] = "";
+                $curSys["users_own"] = false;
 
                 $sys_name = $mysqli->real_escape_string($curSys["name"]);
 
@@ -124,6 +126,9 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"])) {
                 $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
                 $exists = $result->num_rows;
 
+                $debuglog = $debuglog . "> x='" . $curSys["x"] . "' ";
+                $debuglog = $debuglog . "> y='" . $curSys["y"] . "' ";
+                $debuglog = $debuglog . "> z='" . $curSys["z"] . "' ";
                 if ($exists > 0) {
                     $obj = $result->fetch_object();
 
@@ -142,14 +147,11 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"])) {
                     $curSys["updated_at"] = $obj->updated_at;
                     $curSys["simbad_ref"] = $obj->simbad_ref;
 
-                    $curSys["x"] = $obj->x;
-                    $curSys["y"] = $obj->y;
-                    $curSys["z"] = $obj->z;
-
                 /**
                  * If not found, try user_systems_own
                  */
                 } else {
+                    $debuglog = $debuglog . "> Checking user systems... ";
                     $query = "  SELECT x, y, z
                                 FROM user_systems_own
                                 WHERE name = '$sys_name'
@@ -160,12 +162,24 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"])) {
                     $oexists = $result->num_rows;
 
                     if ($oexists > 0) {
+                      $debuglog = $debuglog . "> Existing system... ";
+                    }
+
+                    /**
+                     * If it's found, but we have no-cordinates for some reason
+                     * get any known coordinates, but mark users_own true
+                     * to prevent EDSM submission
+                     */
+                    if ($oexists > 0 &&
+                       (empty($curSys["x"]) || empty($curSys["y"]) || empty($curSys["z"]))) {
+                        $debuglog = $debuglog . "> but no coords... ";
                         $obj = $result->fetch_object();
 
                         $curSys["x"] = $obj->x == "" ? "" : $obj->x;
                         $curSys["y"] = $obj->y == "" ? "" : $obj->y;
                         $curSys["z"] = $obj->z == "" ? "" : $obj->z;
                         $curSys["coordinates"] = $curSys["x"] . "," . $curSys["y"] . "," . $curSys["z"];
+                        $curSys["users_own"] = true;
                     }
                 }
 
@@ -182,6 +196,7 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"])) {
                                 '" . $curSys["x"] . "',
                                 '" . $curSys["y"] . "',
                                 '" . $curSys["z"] . "')";
+                    $debuglog = $debuglog . "> Inserting new system to DB. ";
 
                     $mysqli->query($stmt) or write_log($mysqli->error, __FILE__, __LINE__);
                 }
@@ -206,6 +221,8 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"])) {
 
                     $visited_on = date("Y-m-d") . " " . $visited_time;
 
+                    $debuglog = $debuglog . '> New system jump, checking history. ';
+
                     if ($obj->system_name != $curSys["name"] && !empty($curSys["name"])) {
                         $query = "  INSERT INTO user_visited_systems (system_name, visit)
                                     VALUES
@@ -215,9 +232,32 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"])) {
                         $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
 
                         /**
+                         * update coordinates for systems on jump
+                         * in case of out dated coordinates or other changes in ED
+                         * except where we have retrieved from our own DB
+                         */
+                        if ($curSys["users_own"] === false) {
+                            $stmt = "   UPDATE user_systems_own
+                                        SET
+                                        x = '" . $curSys["x"] . "',
+                                        y = '" . $curSys["y"] . "',
+                                        z = '" . $curSys["z"] . "'
+                                        WHERE name = '" . $curSys["esc_name"] . "'";
+                            $debuglog = $debuglog . "> Updating existing system in DB. ";
+
+                            $mysqli->query($stmt) or write_log($mysqli->error, __FILE__, __LINE__);
+                        }
+
+                        /**
                          * export to EDSM
                          */
-                        if ($settings["edsm_api_key"] != "" && $settings["edsm_export"] == "true" && $settings["edsm_cmdr_name"] != "") {
+                        if ($curSys["users_own"] === true) {
+                          $debuglog = $debuglog . "> users_own true. not submitting to EDSM ";
+                        }
+                        if ($settings["edsm_api_key"] != "" &&
+                            $settings["edsm_export"] == "true" &&
+                            $settings["edsm_cmdr_name"] != "" &&
+                            $curSys["users_own"] === false) {
                             // figure out the visited time in UTC
                             $dateUTC = new DateTime('now', new DateTimeZone('UTC'));
                             $visited_time_split = explode(':', $visited_time);
@@ -238,7 +278,7 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"])) {
                             ];
                             $exportURL = 'https://www.edsm.net/api-logs-v1/set-log?';
                             $exportURL .= http_build_query($exportData);
-
+                            $debuglog = $debuglog . "> EDSM Request: " . $exportURL . " ";
                             $export = file_get_contents($exportURL);
 
                             if (!$export) {
@@ -262,11 +302,15 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"])) {
                     $newSystem = true;
                 } else {
                     $newSystem = false;
+                    $debuglog = $debuglog . "> Not new system jump, not submitting to EDSM. ";
                 }
 
                 break;
             }
         }
+    }
+    if ($settings["debug"]) {
+      write_log($debuglog, __FILE__, __LINE__);
     }
 } else {
     write_log("Error: " . $settings["log_dir"] . " doesn't exist or is not readable", __FILE__, __LINE__);
