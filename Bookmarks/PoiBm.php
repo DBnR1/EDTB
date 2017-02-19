@@ -8,25 +8,25 @@
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
  */
 
- /*
- * ED ToolBox, a companion web app for the video game Elite Dangerous
- * (C) 1984 - 2016 Frontier Developments Plc.
- * ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
- */
+/*
+* ED ToolBox, a companion web app for the video game Elite Dangerous
+* (C) 1984 - 2016 Frontier Developments Plc.
+* ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+*/
 
 namespace EDTB\Bookmarks;
 
@@ -40,7 +40,8 @@ use mysqli_result;
  */
 class PoiBm
 {
-    /** @var float $usex, $usey, $usez x, y and z coords to use for calculations */
+
+    /** @var float $usex , $usey, $usez x, y and z coords to use for calculations */
     public $usex, $usey, $usez;
     /** @var int $time_difference local time difference from UTC */
     public $time_difference = 0;
@@ -70,6 +71,7 @@ class PoiBm
      *
      * @param mysqli_result $res
      * @param string $type
+     *
      * @return string
      * @author Mauri Kujala <contact@edtb.xyz>
      */
@@ -92,9 +94,28 @@ class PoiBm
 
             $i = 0;
             $to_last = [];
+            $categs = [];
+
+            echo '<tr><td valign="top" style="position: relative;min-width: 400px;max-width: 480px;"><div style="top:0;left:0;width:100%;">';
+
             while ($obj = $res->fetch_object()) {
-                echo $this->make_item($obj, $type, $i);
+                if (!in_array($obj->catname, $categs)) {
+                    array_push($categs, $obj->catname);
+                    if ($obj->catname != '') {
+                        echo '<div style="font-family: Sintony, sans-serif;color: #fffffa;font-size: 13px;padding: 6px;vertical-align: middle;background-color: #2e3436;
+					        line-height: 1.5;opacity: 0.9;cursor:pointer;" 
+							onmouseover="$(this).css(\'opacity\',\'1\')" onmouseout="$(this).css(\'opacity\',\'0.9\')" 
+							id="btn-' . str_replace(' ', '', $obj->catname) . '" class="categ-btns" >' . $obj->catname . '</div>';
+                    } else {
+                        echo '<div style="font-family: Sintony, sans-serif;color: #fffffa;font-size: 13px;padding: 6px;vertical-align: middle;background-color: #2e3436;
+					        line-height: 1.5;opacity: 0.9;cursor:pointer;" 
+							onmouseover="$(this).css(\'opacity\',\'1\')" onmouseout="$(this).css(\'opacity\',\'0.9\')" 
+							id="btn-" class="categ-btns" >Uncategorized</div>';
+                    }
+                }
             }
+
+            echo '</div></td><td style="vertical-align: text-top;" id="categ-panels">' . $this->generate_columns_panels($categs, $res, $type, $i) . '</td></tr>';
         } else {
             if ($type == "Poi") {
                 ?>
@@ -108,7 +129,9 @@ class PoiBm
                 ?>
                 <tr>
                     <td class="dark poi_minmax">
+
                         <strong>No bookmarks.<br/>Click the allegiance icon on the top left corner to add one.</strong>
+
                     </td>
                 </tr>
                 <?php
@@ -119,11 +142,63 @@ class PoiBm
     }
 
     /**
+     * @param mysqli_result $res
+     * @param $type
+     * @param $catName
+     * @param $i
+     *
+     * @return string
+     */
+    public function generate_columns_panels_data($res, $type, $catName, $i)
+    {
+        mysqli_data_seek($res, 0);
+        $items_to_add = '<table class="panel-table">';
+        while ($obj = $res->fetch_object()) {
+            if ($obj->catname == $catName) {
+                $items_to_add .= $this->make_item($obj, $type, $i);
+            }
+
+        }
+
+        return $items_to_add;
+    }
+
+    /**
+     * @param $categs
+     * @param $res
+     * @param $type
+     * @param $i
+     *
+     * @return string
+     */
+    private function generate_columns_panels($categs, $res, $type, $i)
+    {
+        $panelss = '';
+        $polishedCategs = "";
+        if ($categs == '') {
+            $polishedCategs = 'Uncategorized';
+        }
+
+        for ($b = 0; $b < count($categs); $b++) {
+            if ($categs != '') {
+                $polishedCategs = str_replace(' ', '', $categs[$b]);
+            }
+
+            $panelss .= '<div id="panel-' . $polishedCategs . '" style="display:none; height: auto;" 
+							            class="categ-panels"><table>' . $this->generate_columns_panels_data($res, $type, $categs[$b], $i) . '</table></div>';
+
+        }
+
+        return $panelss;
+    }
+
+    /**
      * Make items
      *
      * @param object $obj
      * @param string $type
      * @param int $i
+     *
      * @return string
      * @author Mauri Kujala <contact@edtb.xyz>
      */
@@ -137,8 +212,9 @@ class PoiBm
         $item_cat_name = $obj->catname;
         $item_added_on = $obj->added_on;
 
-        $item_added_ago = "";
+        $to_be_returned = '';
 
+        $item_added_ago = "";
         if (!empty($item_added_on)) {
             $item_added_ago = get_timeago($item_added_on, false);
 
@@ -169,38 +245,40 @@ class PoiBm
          */
         $item_crosslinks = System::crosslinks($item_system_name);
 
-        echo '<tr>';
-        echo '<td class="' . $tdclass . ' poi_minmax">';
-        echo '<div class="poi"' . $style_override . '>';
-        echo '<a href="javascript:void(0)" onclick="update_values(\'/Bookmarks/get' . $type . 'EditData.php?' . $type . '_id=' . $item_id . '\', \'' . $item_id . '\');tofront(\'add' . $type . '\')" style="color:inherit" title="Click to edit entry">';
+        $to_be_returned .= '<tr>';
+        $to_be_returned .= '<td class="' . $tdclass . ' poi_minmax">';
+        $to_be_returned .= '<div class="poi"' . $style_override . '>';
+        $to_be_returned .= '<a href="javascript:void(0)" onclick="update_values(\'/Bookmarks/get' . $type . 'EditData.php?' . $type . '_id=' . $item_id . '\', \'' . $item_id . '\');tofront(\'add' . $type . '\')" style="color:inherit" title="Click to edit entry">';
 
-        echo $distance . ' &ndash;';
+        $to_be_returned .= $distance . ' &ndash;';
 
         if (!empty($item_system_id)) {
-            echo '</a>&nbsp;<a title="System information" href="/System?system_id=' . $item_system_id . '" style="color:inherit">';
+            $to_be_returned .= '</a>&nbsp;<a title="System information" href="/System?system_id=' . $item_system_id . '" style="color:inherit">';
         } elseif ($item_system_name != "") {
-            echo '</a>&nbsp;<a title="System information" href="/System?system_name=' . urlencode($item_system_name) . '" style="color:inherit">';
+            $to_be_returned .= '</a>&nbsp;<a title="System information" href="/System?system_name=' . urlencode($item_system_name) . '" style="color:inherit">';
         } else {
-            echo '</a>&nbsp;<a href="#" style="color:inherit">';
+            $to_be_returned .= '</a>&nbsp;<a href="#" style="color:inherit">';
         }
 
         if (empty($item_name)) {
-            echo $item_system_name;
+            $to_be_returned .= $item_system_name;
         } else {
-            echo $item_name;
+            $to_be_returned .= $item_name;
         }
 
-        echo '</a>' . $item_crosslinks . '<span class="right" style="margin-left:5px">' . $item_cat_name . '</span><br />';
+        $to_be_returned .= '</a>' . $item_crosslinks . '<span class="right" style="margin-left:5px">' . $item_cat_name . '</span><br />';
 
         if (!empty($item_added_on)) {
-            echo 'Added: ' . $item_added_on . ' (' . $item_added_ago . ')<br /><br />';
+            $to_be_returned .= 'Added: ' . $item_added_on . ' (' . $item_added_ago . ')<br /><br />';
         }
 
-        echo nl2br($item_text);
-        echo '</div>';
-        echo '</td>';
-        echo '</tr>';
+        $to_be_returned .= nl2br($item_text);
+        $to_be_returned .= '</div>';
+        $to_be_returned .= '</td>';
+        $to_be_returned .= '</tr>';
         $i++;
+
+        return $to_be_returned;
     }
 
     /**
@@ -230,7 +308,7 @@ class PoiBm
 
         $esc_name = $this->mysqli->real_escape_string($p_name);
         $esc_sysname = $this->mysqli->real_escape_string($p_system);
-        $esc_entry= $this->mysqli->real_escape_string($p_entry);
+        $esc_entry = $this->mysqli->real_escape_string($p_entry);
 
         if ($p_id != "") {
             $stmt = "   UPDATE user_poi SET
