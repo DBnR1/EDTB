@@ -11,25 +11,25 @@
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
  */
 
- /*
- * ED ToolBox, a companion web app for the video game Elite Dangerous
- * (C) 1984 - 2016 Frontier Developments Plc.
- * ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
- */
+/*
+* ED ToolBox, a companion web app for the video game Elite Dangerous
+* (C) 1984 - 2016 Frontier Developments Plc.
+* ED ToolBox or its creator are not affiliated with Frontier Developments Plc.
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+*/
 
 /** @require configs */
 require_once(__DIR__ . "/config.inc.php");
@@ -39,7 +39,6 @@ require_once(__DIR__ . "/functions.php");
 $curSys = [];
 
 if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"])) {
-    $debuglog = "> Start of curSys processing ";
     /**
      * select the newest file
      */
@@ -126,9 +125,6 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"])) {
                 $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
                 $exists = $result->num_rows;
 
-                $debuglog = $debuglog . "> x='" . $curSys["x"] . "' ";
-                $debuglog = $debuglog . "> y='" . $curSys["y"] . "' ";
-                $debuglog = $debuglog . "> z='" . $curSys["z"] . "' ";
                 if ($exists > 0) {
                     $obj = $result->fetch_object();
 
@@ -147,11 +143,10 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"])) {
                     $curSys["updated_at"] = $obj->updated_at;
                     $curSys["simbad_ref"] = $obj->simbad_ref;
 
-                /**
-                 * If not found, try user_systems_own
-                 */
+                    /**
+                     * If not found, try user_systems_own
+                     */
                 } else {
-                    $debuglog = $debuglog . "> Checking user systems... ";
                     $query = "  SELECT x, y, z
                                 FROM user_systems_own
                                 WHERE name = '$sys_name'
@@ -161,18 +156,14 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"])) {
 
                     $oexists = $result->num_rows;
 
-                    if ($oexists > 0) {
-                      $debuglog = $debuglog . "> Existing system... ";
-                    }
-
                     /**
                      * If it's found, but we have no-cordinates for some reason
                      * get any known coordinates, but mark users_own true
                      * to prevent EDSM submission
                      */
                     if ($oexists > 0 &&
-                       (empty($curSys["x"]) || empty($curSys["y"]) || empty($curSys["z"]))) {
-                        $debuglog = $debuglog . "> but no coords... ";
+                        (empty($curSys["x"]) || empty($curSys["y"]) || empty($curSys["z"]))
+                    ) {
                         $obj = $result->fetch_object();
 
                         $curSys["x"] = $obj->x == "" ? "" : $obj->x;
@@ -196,11 +187,9 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"])) {
                                 '" . $curSys["x"] . "',
                                 '" . $curSys["y"] . "',
                                 '" . $curSys["z"] . "')";
-                    $debuglog = $debuglog . "> Inserting new system to DB. ";
 
                     $mysqli->query($stmt) or write_log($mysqli->error, __FILE__, __LINE__);
                 }
-
 
                 /**
                  * fetch previous system
@@ -220,8 +209,6 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"])) {
                     $obj = $result->fetch_object();
 
                     $visited_on = date("Y-m-d") . " " . $visited_time;
-
-                    $debuglog = $debuglog . '> New system jump, checking history. ';
 
                     if ($obj->system_name != $curSys["name"] && !empty($curSys["name"])) {
                         $query = "  INSERT INTO user_visited_systems (system_name, visit)
@@ -243,7 +230,6 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"])) {
                                         y = '" . $curSys["y"] . "',
                                         z = '" . $curSys["z"] . "'
                                         WHERE name = '" . $curSys["esc_name"] . "'";
-                            $debuglog = $debuglog . "> Updating existing system in DB. ";
 
                             $mysqli->query($stmt) or write_log($mysqli->error, __FILE__, __LINE__);
                         }
@@ -251,13 +237,11 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"])) {
                         /**
                          * export to EDSM
                          */
-                        if ($curSys["users_own"] === true) {
-                          $debuglog = $debuglog . "> users_own true. not submitting to EDSM ";
-                        }
                         if ($settings["edsm_api_key"] != "" &&
                             $settings["edsm_export"] == "true" &&
                             $settings["edsm_cmdr_name"] != "" &&
-                            $curSys["users_own"] === false) {
+                            $curSys["users_own"] === false
+                        ) {
                             // figure out the visited time in UTC
                             $dateUTC = new DateTime('now', new DateTimeZone('UTC'));
                             $visited_time_split = explode(':', $visited_time);
@@ -278,7 +262,6 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"])) {
                             ];
                             $exportURL = 'https://www.edsm.net/api-logs-v1/set-log?';
                             $exportURL .= http_build_query($exportData);
-                            $debuglog = $debuglog . "> EDSM Request: " . $exportURL . " ";
                             $export = file_get_contents($exportURL);
 
                             if (!$export) {
@@ -302,15 +285,11 @@ if (is_dir($settings["log_dir"]) && is_readable($settings["log_dir"])) {
                     $newSystem = true;
                 } else {
                     $newSystem = false;
-                    $debuglog = $debuglog . "> Not new system jump, not submitting to EDSM. ";
                 }
 
                 break;
             }
         }
-    }
-    if ($settings["debug"]) {
-      write_log($debuglog, __FILE__, __LINE__);
     }
 } else {
     write_log("Error: " . $settings["log_dir"] . " doesn't exist or is not readable", __FILE__, __LINE__);
