@@ -44,19 +44,33 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
 $ga_last_update = edtb_common("last_galnet_update", "unixtime") + 30 * 60; // 30 minutes
 
 if ($ga_last_update < time()) {
-    $xml = simplexml_load_file(GALNET_FEED);
+    $rss = new DOMDocument();
+    $rss->load(GALNET_FEED);
+    $feed = [];
+
+    /** @var DOMDocument $node */
+    foreach ($rss->getElementsByTagName('item') as $node) {
+        $item = [
+            'title' => $node->getElementsByTagName('title')->item(0)->nodeValue,
+            'link' => $node->getElementsByTagName('link')->item(0)->nodeValue,
+            'pubDate' => $node->getElementsByTagName('pubDate')->item(0)->nodeValue,
+            'content' => $node->getElementsByTagName('encoded')->item(0)->nodeValue
+
+        ];
+        array_push($feed, $item);
+    }
 
     $in = 1;
-    foreach ($xml->{"channel"}->{"item"} as $dataga) {
-        $gatitle = $dataga->{"title"};
+    foreach ($feed as $dataga) {
+        $gatitle = $dataga['title'];
         $ga_title = explode(" - ", $gatitle);
         $ga_title = $ga_title[0];
 
-        $text = $dataga->{"description"};
-        $text = str_replace('<p><sub><i>-- Delivered by <a href="http://feed43.com/">Feed43</a> service</i></sub></p>', "", $text);
+        $text = $dataga['content'];
         $text = str_replace('<br />', PHP_EOL, $text);
         $text = str_replace(' – ', ', ', $text);
         $text = trim(strip_tags($text));
+        $text = html_entity_decode($text);
 
         // exclude stuff
         $continue = true;

@@ -59,16 +59,30 @@ if ($html == null) {
     ?>
     <div class="entries">
         <div class="entries_inner">
-            <h2><img class="icon24" src="/style/img/galnet.png" alt="GalNet" style="margin-right:6px" />Latest Galnet News</h2>
+            <h2><img class="icon24" src="/style/img/galnet.png" alt="GalNet" style="margin-right:6px"/>Latest Galnet News</h2>
             <hr>
             <?php
-            $xml = simplexml_load_file(GALNET_FEED) or die("Error: Cannot create object");
+            $rss = new DOMDocument();
+            $rss->load(GALNET_FEED);
+            $feed = [];
+
+            /** @var DOMDocument $node */
+            foreach ($rss->getElementsByTagName('item') as $node) {
+                $item = [
+                    'title' => $node->getElementsByTagName('title')->item(0)->nodeValue,
+                    'link' => $node->getElementsByTagName('link')->item(0)->nodeValue,
+                    'pubDate' => $node->getElementsByTagName('pubDate')->item(0)->nodeValue,
+                    'content' => $node->getElementsByTagName('encoded')->item(0)->nodeValue
+
+                ];
+                array_push($feed, $item);
+            }
 
             $i = 0;
-            foreach ($xml->{"channel"}->{"item"} as $data) {
-                $title = $data->{"title"};
-                $link = $data->{"link"};
-                $text = $data->{"description"};
+            foreach ($feed as $data) {
+                $title = $data['title'];
+                $link = $data['link'];
+                $text = $data['content'];
 
                 // exclude stuff
                 $continue = true;
@@ -87,19 +101,19 @@ if ($html == null) {
                 if ($continue !== false) {
                     ?>
                     <h3>
-                        <a href="javascript:void(0)" onclick="$('#<?php echo $i?>').fadeToggle()">
-                            <img class="icon" src="/style/img/plus.png" alt="expand" style="padding-bottom:3px" /><?php echo $title?>
+                        <a href="javascript:void(0)" onclick="$('#<?= $i ?>').fadeToggle()">
+                            <img class="icon" src="/style/img/plus.png" alt="expand" style="padding-bottom:3px"/><?= $title ?>
                         </a>
                     </h3>
-                    <p id="<?php echo $i?>" style="display:none;padding-left:22px;max-width:800px">
-                        <?php echo str_replace('<p><sub><i>-- Delivered by <a href="http://feed43.com/">Feed43</a> service</i></sub></p>', "", $text)?>
-                        <br /><br /><br />
+                    <div id="<?= $i ?>" style="display:none;padding-left:22px;max-width:800px">
+                        <?= $text ?>
+                        <br><br>
                         <span style="margin-bottom:15px">
-                            <a href="<?php echo $link?>" target="_blank">
-                                Read on elitedangerous.com
-                            </a><img class="ext_icon" src="/style/img/external_link.png" style="margin-bottom:3px" alt="ext" />
+                            <a href="<?= $link ?>" target="_blank">
+                                Read on news.galnet.fr
+                            </a><img class="ext_icon" src="/style/img/external_link.png" style="margin-bottom:3px" alt="ext"/>
                         </span>
-                    </p>
+                    </div>
                     <?php
                     $i++;
                 }

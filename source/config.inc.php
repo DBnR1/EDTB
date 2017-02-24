@@ -105,7 +105,7 @@ $dropdown = $settings["dropdown"];
 array_push($dropdown, $settings["maxdistance"]);
 
 /** @constant string galnet_feed feed url for galnet news page */
-define("GALNET_FEED", "http://feed43.com/8865261068171800.xml");
+define("GALNET_FEED", "http://news.galnet.fr/en/feed");
 
 /** @var string new_screendir */
 $settings["new_screendir"] = empty($settings["new_screendir"]) ? $settings["install_path"] . "/EDTB/screenshots" : $settings["new_screendir"];
