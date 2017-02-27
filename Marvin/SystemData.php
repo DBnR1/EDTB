@@ -324,6 +324,7 @@ if (isset($_GET["cs"])) {
     $cs_obj = $result->fetch_object();
 
     $cs_system = tts_override($cs_obj->system_name);
+    $cs_system_full_name = $cs_obj->system_name;
     $cs_allegiance = $cs_obj->allegiance;
 
     $ss_coordx = $cs_obj->coordx;
@@ -346,13 +347,15 @@ if (isset($_GET["cs"])) {
 
     $result->close();
 
-    $cs_facilities = array( "a shipyard" => $cs_shipyard,
+    $cs_facilities = [
+        "a shipyard" => $cs_shipyard,
         "outfitting" => $cs_outfitting,
         "a commodities market" => $cs_commodities_market,
         "a black market" => $cs_black_market,
         "refuel" => $cs_refuel,
         "repair" => $cs_repair,
-        "restock" => $cs_rearm);
+        "restock" => $cs_rearm
+    ];
 
     $count = 0;
     foreach ($cs_facilities as $cs_name => $cs_included) {
@@ -387,7 +390,7 @@ if (isset($_GET["cs"])) {
         }
     }
 
-    if ($cs_distance == 0) {
+    if ($cs_system_full_name == $curSys['name']) {
         echo 'The nearest spaceport is in this system. ';
     } else {
         echo 'The nearest spaceport is in the ' . $cs_system . ' system, ' . $ambiguity . number_format($cs_distance, 1) . ' light years away.';
