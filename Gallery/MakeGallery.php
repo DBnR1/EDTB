@@ -162,8 +162,7 @@ class MakeGallery
             $file_name = str_replace($settings["old_screendir"] . "/", "", $file);
             $old_file_bmp = $file;
             $old_file_og = $settings["old_screendir"] . "/originals/" . $file_name;
-            $filetime_o = filemtime($old_file_bmp);
-            $filetime = $filetime_o + ($system_time * 60 * 60);
+            $filetime = filemtime($old_file_bmp);
 
             /**
              * if screenshot was taken after entering the system
@@ -174,7 +173,7 @@ class MakeGallery
                  */
                 $this->create_dir($newscreendir);
 
-                $edited = date("Y-m-d_H-i-s", $filetime_o);
+                $edited = date("Y-m-d_H-i-s", $filetime);
                 $new_filename = $edited . "-" . $gallery_name . ".jpg";
                 $new_file_jpg = $settings["old_screendir"] . "/" . $new_filename;
                 $new_screenshot = $newscreendir . "/" . $new_filename;
