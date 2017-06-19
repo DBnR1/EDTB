@@ -62,7 +62,7 @@ class PoiBm
          * check connection
          */
         if ($this->mysqli->connect_errno) {
-            echo "Failed to connect to MySQL: " . $this->mysqli->connect_error;
+            echo 'Failed to connect to MySQL: ' . $this->mysqli->connect_error;
         }
     }
 
@@ -84,7 +84,7 @@ class PoiBm
         echo '<table>';
 
         if ($num > 0) {
-            if (!valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"])) {
+            if (!valid_coordinates($curSys['x'], $curSys['y'], $curSys['z'])) {
                 echo '<tr>';
                 echo '<td class="dark poi_minmax">';
                 echo '<p><strong>No coordinates for current location, last known location used.</strong></p>';
@@ -99,9 +99,9 @@ class PoiBm
             echo '<tr><td valign="top" style="position: relative;min-width: 400px;max-width: 480px;"><div style="top:0;left:0;width:100%;">';
 
             while ($obj = $res->fetch_object()) {
-                if (!in_array($obj->catname, $categs)) {
-                    array_push($categs, $obj->catname);
-                    if ($obj->catname != '') {
+                if (!in_array($obj->catname, $categs, true)) {
+                    $categs[] = $obj->catname;
+                    if (isset($obj->catname) && $obj->catname !== '') {
                         echo '<div style="font-family: Sintony, sans-serif;color: #fffffa;font-size: 13px;padding: 6px;vertical-align: middle;background-color: #2e3436;
 					        line-height: 1.5;opacity: 0.9;cursor:pointer;" 
 							onmouseover="$(this).css(\'opacity\',\'1\')" onmouseout="$(this).css(\'opacity\',\'0.9\')" 
@@ -110,14 +110,14 @@ class PoiBm
                         echo '<div style="font-family: Sintony, sans-serif;color: #fffffa;font-size: 13px;padding: 6px;vertical-align: middle;background-color: #2e3436;
 					        line-height: 1.5;opacity: 0.9;cursor:pointer;" 
 							onmouseover="$(this).css(\'opacity\',\'1\')" onmouseout="$(this).css(\'opacity\',\'0.9\')" 
-							id="btn-" class="categ-btns" >Uncategorized</div>';
+							id="btn-' . $type . '" class="categ-btns" >Uncategorized</div>';
                     }
                 }
             }
 
             echo '</div></td><td style="vertical-align: text-top;" id="categ-panels">' . $this->generate_columns_panels($categs, $res, $type, $i) . '</td></tr>';
         } else {
-            if ($type == "Poi") {
+            if ($type === 'Poi') {
                 ?>
                 <tr>
                     <td class="dark poi_minmax">
@@ -129,9 +129,7 @@ class PoiBm
                 ?>
                 <tr>
                     <td class="dark poi_minmax">
-
                         <strong>No bookmarks.<br/>Click the allegiance icon on the top left corner to add one.</strong>
-
                     </td>
                 </tr>
                 <?php
@@ -142,28 +140,6 @@ class PoiBm
     }
 
     /**
-     * @param mysqli_result $res
-     * @param $type
-     * @param $catName
-     * @param $i
-     *
-     * @return string
-     */
-    public function generate_columns_panels_data($res, $type, $catName, $i)
-    {
-        mysqli_data_seek($res, 0);
-        $items_to_add = '<table class="panel-table">';
-        while ($obj = $res->fetch_object()) {
-            if ($obj->catname == $catName) {
-                $items_to_add .= $this->make_item($obj, $type, $i);
-            }
-
-        }
-
-        return $items_to_add;
-    }
-
-    /**
      * @param $categs
      * @param $res
      * @param $type
@@ -171,25 +147,43 @@ class PoiBm
      *
      * @return string
      */
-    private function generate_columns_panels($categs, $res, $type, $i)
+    private function generate_columns_panels($categs, $res, $type, $i): string
     {
         $panelss = '';
-        $polishedCategs = "";
-        if ($categs == '') {
-            $polishedCategs = 'Uncategorized';
-        }
 
-        for ($b = 0; $b < count($categs); $b++) {
-            if ($categs != '') {
+        for ($b = 0, $bMax = count($categs); $b < $bMax; $b++) {
+            if (is_array($categs)) {
                 $polishedCategs = str_replace(' ', '', $categs[$b]);
             }
 
+            $polishedCategs = (isset($polishedCategs) && $polishedCategs !== '') ? $polishedCategs : $type;
+
             $panelss .= '<div id="panel-' . $polishedCategs . '" style="display:none; height: auto;" 
 							            class="categ-panels"><table>' . $this->generate_columns_panels_data($res, $type, $categs[$b], $i) . '</table></div>';
-
         }
 
         return $panelss;
+    }
+
+    /**
+     * @param mysqli_result $res
+     * @param $type
+     * @param $catName
+     * @param $i
+     *
+     * @return string
+     */
+    public function generate_columns_panels_data($res, $type, $catName, $i): string
+    {
+        mysqli_data_seek($res, 0);
+        $items_to_add = '<table class="panel-table">';
+        while ($obj = $res->fetch_object()) {
+            if ($obj->catname === $catName) {
+                $items_to_add .= $this->make_item($obj, $type, $i);
+            }
+        }
+
+        return $items_to_add;
     }
 
     /**
@@ -202,7 +196,7 @@ class PoiBm
      * @return string
      * @author Mauri Kujala <contact@edtb.xyz>
      */
-    private function make_item($obj, $type, &$i)
+    private function make_item($obj, $type, &$i): string
     {
         $item_id = $obj->id;
         $item_text = $obj->text;
@@ -214,31 +208,31 @@ class PoiBm
 
         $to_be_returned = '';
 
-        $item_added_ago = "";
+        $item_added_ago = '';
         if (!empty($item_added_on)) {
             $item_added_ago = get_timeago($item_added_on, false);
 
-            $item_added_on = new \DateTime(date("Y-m-d\TH:i:s\Z", ($item_added_on + $this->time_difference * 60 * 60)));
-            $item_added_on = date_modify($item_added_on, "+1286 years");
-            $item_added_on = $item_added_on->format("j M Y, H:i");
+            $item_added_on = new \DateTime(date("Y-m-d\TH:i:s\Z", $item_added_on + $this->time_difference * 60 * 60));
+            $item_added_on = date_modify($item_added_on, '+1286 years');
+            $item_added_on = $item_added_on->format('j M Y, H:i');
         }
 
         $item_coordx = $obj->item_coordx;
         $item_coordy = $obj->item_coordy;
         $item_coordz = $obj->item_coordz;
 
-        $distance = "n/a";
+        $distance = 'n/a';
         if (valid_coordinates($item_coordx, $item_coordy, $item_coordz)) {
-            $distance = number_format(sqrt(pow(($item_coordx - ($this->usex)), 2) + pow(($item_coordy - ($this->usey)), 2) + pow(($item_coordz - ($this->usez)), 2)), 1) . " ly";
+            $distance = number_format(sqrt((($item_coordx - $this->usex) ** 2) + (($item_coordy - $this->usey) ** 2) + (($item_coordz - $this->usez) ** 2)), 1) . ' ly';
         }
 
         /**
          * if visited, change border color
          */
         $visited = System::num_visits($item_system_name);
-        $style_override = $visited ? ' style="border-left: 3px solid #3da822"' : "";
+        $style_override = $visited ? ' style="border-left: 3px solid #3da822"' : '';
 
-        $tdclass = $i % 2 ? "dark" : "light";
+        $tdclass = $i % 2 ? 'dark' : 'light';
 
         /**
          * provide crosslinks to screenshot gallery, log page, etc
@@ -254,7 +248,7 @@ class PoiBm
 
         if (!empty($item_system_id)) {
             $to_be_returned .= '</a>&nbsp;<a title="System information" href="/System?system_id=' . $item_system_id . '" style="color:inherit">';
-        } elseif ($item_system_name != "") {
+        } elseif ($item_system_name !== '') {
             $to_be_returned .= '</a>&nbsp;<a title="System information" href="/System?system_name=' . urlencode($item_system_name) . '" style="color:inherit">';
         } else {
             $to_be_returned .= '</a>&nbsp;<a href="#" style="color:inherit">';
@@ -288,38 +282,38 @@ class PoiBm
      */
     public function add_poi($data)
     {
-        $p_system = $data->{"poi_system_name"};
-        $p_name = $data->{"poi_name"};
-        $p_x = $data->{"poi_coordx"};
-        $p_y = $data->{"poi_coordy"};
-        $p_z = $data->{"poi_coordz"};
+        $p_system = $data->{'poi_system_name'};
+        $p_name = $data->{'poi_name'};
+        $p_x = $data->{'poi_coordx'};
+        $p_y = $data->{'poi_coordy'};
+        $p_z = $data->{'poi_coordz'};
 
         if (valid_coordinates($p_x, $p_y, $p_z)) {
             $addc = ", x = '$p_x', y = '$p_y', z = '$p_z'";
             $addb = ", '$p_x', '$p_y', '$p_z'";
         } else {
-            $addc = ", x = null, y = null, z = null";
-            $addb = ", null, null, null";
+            $addc = ', x = null, y = null, z = null';
+            $addb = ', null, null, null';
         }
 
-        $p_entry = $data->{"poi_text"};
-        $p_id = $data->{"poi_edit_id"};
-        $category_id = $data->{"category_id"};
+        $p_entry = $data->{'poi_text'};
+        $p_id = $data->{'poi_edit_id'};
+        $category_id = $data->{'category_id'};
 
         $esc_name = $this->mysqli->real_escape_string($p_name);
         $esc_sysname = $this->mysqli->real_escape_string($p_system);
         $esc_entry = $this->mysqli->real_escape_string($p_entry);
 
-        if ($p_id != "") {
+        if ($p_id !== '') {
             $stmt = "   UPDATE user_poi SET
                         poi_name = '$esc_name',
                         system_name = '$esc_sysname',
                         text = '$esc_entry',
                         category_id = '$category_id'" . $addc . "
                         WHERE id = '$p_id'";
-        } elseif (isset($_GET["deleteid"])) {
+        } elseif (isset($_GET['deleteid'])) {
             $stmt = "   DELETE FROM user_poi
-                        WHERE id = '" . $_GET["deleteid"] . "'
+                        WHERE id = '" . $_GET['deleteid'] . "'
                         LIMIT 1";
         } else {
             $stmt = "   INSERT INTO user_poi (poi_name, system_name, text, category_id, x, y, z, added_on)
@@ -327,8 +321,8 @@ class PoiBm
                         ('$esc_name',
                         '$esc_sysname',
                         '$esc_entry',
-                        '$category_id'" . $addb . ",
-                        UNIX_TIMESTAMP())";
+                        '$category_id'" . $addb . ',
+                        UNIX_TIMESTAMP())';
         }
 
         $this->mysqli->query($stmt) or write_log($this->mysqli->error, __FILE__, __LINE__);
@@ -341,24 +335,24 @@ class PoiBm
      */
     public function add_bm($data)
     {
-        $bm_system_id = $data->{"bm_system_id"};
-        $bm_system_name = $data->{"bm_system_name"};
-        $bm_catid = $data->{"bm_catid"};
-        $bm_entry = $data->{"bm_text"};
-        $bm_id = $data->{"bm_edit_id"};
+        $bm_system_id = $data->{'bm_system_id'};
+        $bm_system_name = $data->{'bm_system_name'};
+        $bm_catid = $data->{'bm_catid'};
+        $bm_entry = $data->{'bm_text'};
+        $bm_id = $data->{'bm_edit_id'};
 
         $esc_entry = $this->mysqli->real_escape_string($bm_entry);
         $esc_sysname = $this->mysqli->real_escape_string($bm_system_name);
 
-        if ($bm_id != "") {
+        if ($bm_id !== '') {
             $query = "  UPDATE user_bookmarks SET
                         comment = '$esc_entry',
                         system_name = '$esc_sysname',
                         category_id = '$bm_catid'
                         WHERE id = '$bm_id' LIMIT 1";
-        } elseif (isset($_GET["deleteid"])) {
+        } elseif (isset($_GET['deleteid'])) {
             $query = "  DELETE FROM user_bookmarks
-                        WHERE id = '" . $_GET["deleteid"] . "'
+                        WHERE id = '" . $_GET['deleteid'] . "'
                         LIMIT 1";
         } else {
             $query = "  INSERT INTO user_bookmarks (system_id, system_name, comment, category_id, added_on)

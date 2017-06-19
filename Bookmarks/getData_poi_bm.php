@@ -31,11 +31,11 @@
 */
 
 /** @require functions */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/functions.php';
 /** @require curSys */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/curSys.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/curSys.php';
 /** @require MySQL */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/MySQL.php';
 
 use \EDTB\Bookmarks\PoiBm;
 
@@ -43,15 +43,15 @@ use \EDTB\Bookmarks\PoiBm;
  * get usable coordinates
  */
 $usable = usable_coords();
-$usex = $usable["x"];
-$usey = $usable["y"];
-$usez = $usable["z"];
+$usex = $usable['x'];
+$usey = $usable['y'];
+$usez = $usable['z'];
 ?>
 <script>
     $('#addp').click(function () {
         tofront('addPoi');
         update_values('/Bookmarks/getPoiEditData.php?Poi_id=0');
-        $("#system_33").focus();
+        $('#system_33').focus();
     });
 
     $(document).ready(function () {
@@ -66,8 +66,8 @@ $usez = $usable["z"];
         });
 
         function showHidePanels(trigger) {
-            $(".categ-panels").each(function (index) {
-
+            console.log(trigger);
+            $('.categ-panels').each(function (index) {
                 $(this).css('display', 'none');
             });
 
@@ -75,7 +75,9 @@ $usez = $usable["z"];
         }
 
         function showHide(trigger) {
-            if ($('#' + trigger).attr('id') === 'showPOI') {
+            var $trigger = $('#' + trigger);
+
+            if ($trigger.attr('id') === 'showPOI') {
                 var $poiPart = $('#poiPart');
 
                 if ($poiPart.css('display') === 'none') {
@@ -84,7 +86,7 @@ $usez = $usable["z"];
                     $poiPart.css('display', 'none');
                 }
             }
-            else if ($('#' + trigger).attr('id') === 'showBM') {
+            else if ($trigger.attr('id') === 'showBM') {
                 var $bmPart = $('#bmPart');
 
                 if ($bmPart.css('display') === 'none') {
@@ -112,7 +114,7 @@ $usez = $usable["z"];
             /**
              * fetch poi in correct order
              */
-            $query = "  SELECT SQL_CACHE user_poi.id, user_poi.poi_name AS item_name,
+            $query = '  SELECT SQL_CACHE user_poi.id, user_poi.poi_name AS item_name,
                         user_poi.system_name, user_poi.text, user_poi.added_on,
                         IFNULL(user_poi.x, user_systems_own.x) AS item_coordx,
                         IFNULL(user_poi.y, user_systems_own.y) AS item_coordy,
@@ -123,7 +125,7 @@ $usez = $usable["z"];
                         LEFT JOIN edtb_systems ON user_poi.system_name = edtb_systems.name
                         LEFT JOIN user_poi_categories ON user_poi_categories.id = user_poi.category_id
                         LEFT JOIN user_systems_own ON user_poi.system_name = user_systems_own.name
-                        ORDER BY catname ASC";
+                        ORDER BY catname ASC';
 
             $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
 
@@ -134,7 +136,7 @@ $usez = $usable["z"];
             $poi->usez = $usez;
             $poi->time_difference = $system_time;
 
-            echo $poi->make_table($result, "Poi");
+            echo $poi->make_table($result, 'Poi');
 
             $result->close();
             ?>
@@ -155,7 +157,7 @@ $usez = $usable["z"];
             /**
              * fetch bookmarks
              */
-            $query = "  SELECT SQL_CACHE user_bookmarks.id, user_bookmarks.system_id, user_bookmarks.system_name,
+            $query = '  SELECT SQL_CACHE user_bookmarks.id, user_bookmarks.system_id, user_bookmarks.system_name,
                         user_bookmarks.comment AS text, user_bookmarks.added_on,
                         IFNULL(edtb_systems.x, user_systems_own.x) AS item_coordx,
                         IFNULL(edtb_systems.y, user_systems_own.y) AS item_coordy,
@@ -165,7 +167,7 @@ $usez = $usable["z"];
                         LEFT JOIN edtb_systems ON user_bookmarks.system_name = edtb_systems.name
                         LEFT JOIN user_bm_categories ON user_bookmarks.category_id = user_bm_categories.id
                         LEFT JOIN user_systems_own ON user_bookmarks.system_name = user_systems_own.name
-                        ORDER BY catname ASC";
+                        ORDER BY catname ASC';
 
             $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
 
@@ -177,7 +179,7 @@ $usez = $usable["z"];
             $bm->usez = $usez;
             $bm->time_difference = $system_time;
 
-            echo $bm->make_table($result, "Bm");
+            echo $bm->make_table($result, 'Bm');
 
             $result->close();
             ?>
