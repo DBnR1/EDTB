@@ -31,7 +31,7 @@
  */
 
 /** @require Theme class */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/style/Theme.php';
 
 /**
  * initiate page header
@@ -39,7 +39,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.php");
 $header = new Header();
 
 /** @var string page_title */
-$header->page_title = "Page not found!";
+$header->page_title = 'Page not found!';
 
 /**
  * display the header

@@ -31,7 +31,7 @@
  */
 
 /** @require Theme class */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/style/Theme.php';
 
 /**
  * initiate page header
@@ -39,7 +39,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.php");
 $header = new Header();
 
 /** @var string page_title */
-$header->page_title = "Companion API login";
+$header->page_title = 'Companion API login';
 
 /**
  * display the header
@@ -49,39 +49,39 @@ $header->display_header();
 /**
  * send login details
  */
-if (isset($_GET["login"]) && isset($_POST["email"]) && isset($_POST["password"])) {
-    $email = $_POST["email"];
-    $password = $_POST["password"];
+if (isset($_GET['login']) && isset($_POST['email']) && isset($_POST['password'])) {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
 
     if (!empty($email) && !empty($password)) {
-        exec("\"" . $settings["curl_exe"] . "\" -c \"" . $settings["cookie_file"] . "\" -H \"User-Agent: " . $settings["agent"] . "\" -d email=" . $email . " -d password=\"" . urlencode($password) . "\" \"https://companion.orerve.net/user/login\" -k", $out);
+        exec('"' . $settings['curl_exe'] . '" -c "' . $settings['cookie_file'] . '" -H "User-Agent: ' . $settings['agent'] . '" -d email=' . $email . ' -d password="' . urlencode($password) . '" "https://companion.orerve.net/user/login" -k', $out);
     }
 
     if (!empty($out)) {
-        write_log("Error: API login failed, possibly mistyped password or email.", __FILE__, __LINE__);
+        write_log('Error: API login failed, possibly mistyped password or email.', __FILE__, __LINE__);
     }
 }
 
 /**
  * send verification code
  */
-if (isset($_GET["sendcode"])) {
-    $code = $_POST["code"];
+if (isset($_GET['sendcode'])) {
+    $code = $_POST['code'];
 
     if (!empty($code)) {
-        exec("\"" . $settings["curl_exe"] . "\" -b \"" . $settings["cookie_file"] . "\" -c \"" . $settings["cookie_file"] . "\" -H \"User-Agent: " . $settings["agent"] . "\" -d code=" . $code . " \"https://companion.orerve.net/user/confirm\" -k", $out);
+        exec('"' . $settings['curl_exe'] . '" -b "' . $settings['cookie_file'] . '" -c "' . $settings['cookie_file'] . '" -H "User-Agent: ' . $settings['agent'] . '" -d code=' . $code . ' "https://companion.orerve.net/user/confirm" -k', $out);
     }
 
     if (!empty($out)) {
         $error = json_encode($out);
-        write_log("Error: " . $error, __FILE__, __LINE__);
+        write_log('Error: ' . $error, __FILE__, __LINE__);
     }
 }
 ?>
 <div class="entries">
     <div class="entries_inner">
         <?php
-        if (isset($_GET["login"]) && !isset($_GET["sendcode"])) {
+        if (isset($_GET['login']) && !isset($_GET['sendcode'])) {
             ?>
             <div class="input" style="display:block">
                 <form method="post" action="/Admin/API_login.php?sendcode">
@@ -113,16 +113,16 @@ if (isset($_GET["sendcode"])) {
                 </form>
             </div>
             <?php
-        } elseif (isset($_GET["sendcode"]) && isset($_POST["code"])) {
-            echo notice('The companion api is now connected.<br />Click the refresh icon to initialize. Then return to using ED ToolBox normally. Note that it may take a while for the API to initialize.<br /><a id="api_refresh" href="javascript:void(0)" onclick="refresh_api()" title="Refresh API data"><img src="/style/img/refresh_24.png" class="icon24" alt="Refresh" /></a>', "API connected");
+        } elseif (isset($_GET['sendcode']) && isset($_POST['code'])) {
+            echo notice('The companion api is now connected.<br />Click the refresh icon to initialize. Then return to using ED ToolBox normally. Note that it may take a while for the API to initialize.<br /><a id="api_refresh" href="javascript:void(0)" onclick="refresh_api()" title="Refresh API data"><img src="/style/img/refresh_24.png" class="icon24" alt="Refresh" /></a>', 'API connected');
         } else {
             /**
              * check if cookies are good (when are they not?)
              */
-            exec("\"" . $settings["curl_exe"] . "\" -b \"" . $settings["cookie_file"] . "\" -c \"" . $settings["cookie_file"] . "\" -H \"User-Agent: " . $settings["agent"] . "\" \"https://companion.orerve.net/profile\" -k", $out);
+            exec('"' . $settings['curl_exe'] . '" -b "' . $settings['cookie_file'] . '" -c "' . $settings['cookie_file'] . '" -H "User-Agent: ' . $settings['agent'] . '" "https://companion.orerve.net/profile" -k', $out);
 
             if (!empty($out)) {
-                echo notice('The companion api is already connected.<br />Click the refresh icon to refresh. Note that it may take a while for the API to initialize.<br /><a id="api_refresh" href="javascript:void(0)" onclick="refresh_api()" title="Refresh API data"><img src="/style/img/refresh_24.png" class="icon24" alt="Refresh" /></a>', "API already connected");
+                echo notice('The companion api is already connected.<br />Click the refresh icon to refresh. Note that it may take a while for the API to initialize.<br /><a id="api_refresh" href="javascript:void(0)" onclick="refresh_api()" title="Refresh API data"><img src="/style/img/refresh_24.png" class="icon24" alt="Refresh" /></a>', 'API already connected');
             } else {
                 ?>
                 <div class="input" style="display:block">

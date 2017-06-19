@@ -32,20 +32,20 @@
 use EDTB\Trilateration\ReferenceSystems;
 
 /** @require functions */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/functions.php';
 /** @require MySQL */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/MySQL.php';
 /** @require curSys */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/curSys.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/curSys.php';
 /** @require ReferenceSystems class */
-require_once("ReferenceSystems.php");
+require_once __DIR__ . '/ReferenceSystems.php';
 
 /**
  * check if system already has distances
  */
 $query = "  SELECT id, reference_distances, edsm_message
             FROM user_systems_own
-            WHERE name = '" . $curSys["esc_name"] . "'
+            WHERE name = '" . $curSys['esc_name'] . "'
             LIMIT 1";
 
 $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
@@ -56,37 +56,37 @@ $ref = [];
 if ($system_exists > 0) {
     $sys_obj = $result->fetch_object();
     $edsm_msg = $sys_obj->edsm_message;
-    $parts = explode(":::", $edsm_msg);
+    $parts = explode(':::', $edsm_msg);
 
     $msg_num = $parts[0];
 
     /**
      * if the system has been succesfully trilaterated, we don't need any more references
      */
-    if ($msg_num == "104" || $msg_num == "102") {
+    if ($msg_num == '104' || $msg_num == '102') {
         $do = false;
     } else {
         $do = true;
-        $values = explode("---", $sys_obj->reference_distances);
+        $values = explode('---', $sys_obj->reference_distances);
 
-        if (!isset($_GET["force"])) {
+        if (!isset($_GET['force'])) {
             $i = 1;
             foreach ($values as $value) {
-                $values2 = explode(":::", $value);
+                $values2 = explode(':::', $value);
 
-                $ref[$i]["name"] = $values2[0];
-                $ref[$i]["distance"] = $values2[1];
+                $ref[$i]['name'] = $values2[0];
+                $ref[$i]['distance'] = $values2[1];
                 $i++;
             }
             unset($value);
 
             $systems = new ReferenceSystems();
-            $systems->standard = isset($_GET["standard"]) ? true : false;
+            $systems->standard = isset($_GET['standard']) ? true : false;
             $referencesystems = $systems->reference_systems();
         } else {
             for ($ii = 1; $ii <= 4; $ii++) {
-                $ref[$ii]["name"] = "";
-                $ref[$ii]["distance"] = "";
+                $ref[$ii]['name'] = '';
+                $ref[$ii]['distance'] = '';
             }
 
             /**
@@ -94,11 +94,10 @@ if ($system_exists > 0) {
              */
             $used = [];
             foreach ($values as $value) {
-                $values2 = explode(":::", $value);
+                $values2 = explode(':::', $value);
 
                 $used[] = $values2[0];
             }
-            unset($value);
 
             $systems = new ReferenceSystems();
             $systems->standard = false;
@@ -108,12 +107,12 @@ if ($system_exists > 0) {
     }
 } else {
     for ($ii = 1; $ii <= 4; $ii++) {
-        $ref[$ii]["name"] = "";
-        $ref[$ii]["distance"] = "";
+        $ref[$ii]['name'] = '';
+        $ref[$ii]['distance'] = '';
     }
 
     $systems = new ReferenceSystems();
-    $systems->standard = isset($_GET["standard"]) ? true : false;
+    $systems->standard = isset($_GET['standard']) ? true : false;
     $referencesystems = $systems->reference_systems();
 }
 
@@ -157,8 +156,8 @@ $result->close();
             <tr>
                 <td class="dark" colspan="2" style="font-size:14px">
                     <strong>Target System:</strong>
-                    <?php echo $curSys["name"]?>
-                    <input class="textbox" type="hidden" name="target_system" value="<?php echo $curSys["name"]?>" id="target_system" />
+                    <?php echo $curSys['name']?>
+                    <input class="textbox" type="hidden" name="target_system" value="<?php echo $curSys['name']?>" id="target_system" />
                 </td>
             </tr>
             <?php
@@ -176,24 +175,31 @@ $result->close();
                 <?php
                 $i = 1;
                 foreach ($referencesystems as $ref_name => $ref_coordinates) {
-                    $ref_rname = $ref[$i]["name"] != "" ? $ref[$i]["name"] : $ref_name;
+                    $ref_rname = $ref[$i]['name'] !== '' ? $ref[$i]['name'] : $ref_name;
                     ?>
                     <tr>
                         <td class="dark" style="text-align:right">
-                            <input class="textbox" type="hidden" id="<?php echo $i?>" name="reference_<?php echo $i?>" value="<?php echo $ref_rname?>" />
-                            <input class="textbox" type="hidden" name="reference_<?php echo $i?>_coordinates" value="<?php echo $ref_coordinates?>" />
+                            <input class="textbox" type="hidden" id="<?php echo $i ?>" name="reference_<?php echo $i ?>"
+                                   value="<?php echo $ref_rname ?>"/>
+                            <input class="textbox" type="hidden" name="reference_<?php echo $i ?>_coordinates"
+                                   value="<?php echo $ref_coordinates ?>"/>
                             <span class="left">
-                                <a class="send" href="javascript:void(0)" title="Send to ED client" data-send="<?php echo $ref_rname?>" data-id="<?php echo $i?>">
-                                    <img class="icon24" src="/style/img/magic.png" alt="Send" />
+                                <a class="send" href="javascript:void(0)" title="Send to ED client"
+                                   data-send="<?php echo $ref_rname ?>" data-id="<?php echo $i ?>">
+                                    <img class="icon24" src="/style/img/magic.png" alt="Send"/>
                                 </a>
                                 <a href="javascript:void(0)" title="Copy to clipboard">
-                                    <img class="btn" src="/style/img/clipboard.png" alt="Copy" data-clipboard-text="<?php echo $ref_rname?>" />
+                                    <img class="btn" src="/style/img/clipboard.png" alt="Copy"
+                                         data-clipboard-text="<?php echo $ref_rname ?>"/>
                                 </a>
                             </span>
-                            <strong><?php echo $ref_rname?></strong>
+                            <strong><?php echo $ref_rname ?></strong>
                         </td>
                         <td class="dark">
-                            <input class="textbox" type="number" step="any" min="0" id="ref_<?php echo $i?>_dist" name="reference_<?php echo $i?>_distance" value="<?php echo $ref[$i]["distance"]?>" placeholder="1234.56" style="width:100px" autocomplete="off" requider="required" /><br />
+                            <input class="textbox" type="number" step="any" min="0" id="ref_<?php echo $i ?>_dist"
+                                   name="reference_<?php echo $i ?>_distance" value="<?php echo $ref[$i]['distance'] ?>"
+                                   placeholder="1234.56" style="width:100px" autocomplete="off"
+                                   requider="required"/><br/>
                         </td>
                     </tr>
                     <?php

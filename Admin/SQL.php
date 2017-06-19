@@ -31,10 +31,10 @@
  */
 
 /** @var string $notify */
-$notify = "";
+$notify = '';
 
 /** @require Theme class */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/style/Theme.php';
 
 /**
  * initiate page header
@@ -42,7 +42,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.php");
 $header = new Header();
 
 /** @var string page_title */
-$header->page_title = "SQL";
+$header->page_title = 'SQL';
 
 /**
  * display the header
@@ -53,32 +53,32 @@ $header->display_header();
 /**
  * execute SQL queries
  */
-if (isset($_POST["code"])) {
-    $code = $_POST["code"];
+if (isset($_POST['code'])) {
+    $code = $_POST['code'];
 
     /**
      * blacklist certain commands for security purposes
      */
     $blacklist = array(
-                    "DROP",
-                    "DELETE",
-                    "ROUTINE",
-                    "EXECUTE",
-                    "DATABASE",
-                    "SERVER",
-                    "EMPTY",
-                    "TRUNCATE",
-                    "TRIGGER"
+        'DROP',
+        'DELETE',
+        'ROUTINE',
+        'EXECUTE',
+        'DATABASE',
+        'SERVER',
+        'EMPTY',
+        'TRUNCATE',
+        'TRIGGER'
                 );
 
     $continue = true;
 
     $pattern = '/"(.*?)"/';
-    $haystack = preg_replace($pattern, "", $code);
+    $haystack = preg_replace($pattern, '', $code);
     $pattern = "/'(.*?)'/";
-    $haystack = preg_replace($pattern, "", $haystack);
-    $pattern = "/`(.*?)`/";
-    $haystack = preg_replace($pattern, "", $haystack);
+    $haystack = preg_replace($pattern, '', $haystack);
+    $pattern = '/`(.*?)`/';
+    $haystack = preg_replace($pattern, '', $haystack);
 
     foreach ($blacklist as $find) {
         if (strripos($haystack, $find)) {
@@ -92,7 +92,7 @@ if (isset($_POST["code"])) {
      * if the query is safe to execute, get on with it
      */
     if ($continue !== false) {
-        $queries = explode(">>BREAK<<", $code);
+        $queries = explode('>>BREAK<<', $code);
 
         foreach ($queries as $query) {
             if (!$mysqli->query($query)) {
@@ -134,7 +134,7 @@ if (isset($_POST["code"])) {
         <form method="post" action="SQL.php">
             <textarea title="SQL" id="codes" name="code">
 <?php
-if (isset($_POST["code"])) {
+if (isset($_POST['code'])) {
     echo $code;
 } else {
     echo '/*

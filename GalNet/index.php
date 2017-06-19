@@ -31,10 +31,10 @@
 */
 
 /** @require phpfastcache */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/Vendor/phpfastcache/phpfastcache.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/Vendor/phpfastcache/phpfastcache.php';
 
 /** @require Theme class */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/style/Theme.php';
 
 /**
  * initiate page header
@@ -42,7 +42,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.php");
 $header = new Header();
 
 /** @var string page_title */
-$header->page_title = "Galnet News";
+$header->page_title = 'Galnet News';
 
 /**
  * display the header
@@ -52,9 +52,9 @@ $header->display_header();
 /**
  * get cached content
  */
-$html = __c("files")->get("galnet");
+$html = __c('files')->get('galnet');
 
-if ($html == null) {
+if ($html === null) {
     ob_start();
     ?>
     <div class="entries">
@@ -75,7 +75,7 @@ if ($html == null) {
                     'content' => $node->getElementsByTagName('encoded')->item(0)->nodeValue
 
                 ];
-                array_push($feed, $item);
+                $feed[] = $item;
             }
 
             $i = 0;
@@ -87,7 +87,7 @@ if ($html == null) {
                 // exclude stuff
                 $continue = true;
 
-                foreach ($settings["galnet_excludes"] as $exclude) {
+                foreach ($settings['galnet_excludes'] as $exclude) {
                     $find = $exclude;
                     $pos = strpos($title, $find);
 
@@ -96,7 +96,6 @@ if ($html == null) {
                         break 1;
                     }
                 }
-                unset($exclude);
 
                 if ($continue !== false) {
                     ?>
@@ -118,14 +117,13 @@ if ($html == null) {
                     $i++;
                 }
             }
-            unset($data);
             ?>
         </div>
     </div>
     <?php
     $html = ob_get_contents();
     // Save to Cache for 30 minutes
-    __c("files")->set("galnet", $html, 1800);
+    __c('files')->set('galnet', $html, 1800);
 
     /**
      * initiate page footer

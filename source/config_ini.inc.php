@@ -42,7 +42,7 @@ spl_autoload_register(function ($class) {
     $prefix = 'EDTB\\';
 
     /** @var string $base_dir base directory for the namespace prefix */
-    $base_dir = $_SERVER["DOCUMENT_ROOT"] . "/";
+    $base_dir = $_SERVER['DOCUMENT_ROOT'] . '/';
 
     // does the class use the namespace prefix?
     $len = strlen($prefix);
@@ -66,16 +66,15 @@ spl_autoload_register(function ($class) {
 });
 
 /** @var string $ini_dir ini file directory */
-$ini_dir = str_replace("\\EDTB\\source", "", __DIR__);
-$ini_dir = str_replace("\\", "/", $ini_dir);
+$ini_dir = str_replace("\\EDTB\\source", '', __DIR__);
+$ini_dir = str_replace("\\", '/', $ini_dir);
 /** @var string ini_file ini file */
-$ini_file = $ini_dir . "/data/edtoolbox_v1.ini";
+$ini_file = $ini_dir . '/data/edtoolbox_v1.ini';
 
 /** @var array $settings global user settings variable */
-$settings = [];
 $settings = parse_ini_file($ini_file);
 
 /**
  * set the new screendir if it's empty
  */
-$settings["new_screendir"] = empty($settings["new_screendir"]) ? $ini_dir . "/EDTB/screenshots" : $settings["new_screendir"];
+$settings['new_screendir'] = empty($settings['new_screendir']) ? $ini_dir . '/EDTB/screenshots' : $settings['new_screendir'];

@@ -43,12 +43,12 @@ class MakeGallery
      * @return bool
      * @author Mauri Kujala <contact@edtb.xyz>
      */
-    static function go()
+    public static function go(): bool
     {
         global $settings;
 
-        $dir = $settings["old_screendir"];
-        $newdir = $settings["new_screendir"];
+        $dir = $settings['old_screendir'];
+        $newdir = $settings['new_screendir'];
 
         /**
          * check if current screenshot dir exists and is writable
@@ -69,7 +69,7 @@ class MakeGallery
          */
         if (!scandir($dir)) {
             $error = error_get_last();
-            write_log("Error: " . $error["message"], __FILE__, __LINE__);
+            write_log('Error: ' . $error['message'], __FILE__, __LINE__);
 
             return false;
         }
@@ -87,7 +87,7 @@ class MakeGallery
      * @return bool
      * @author Mauri Kujala <contact@edtb.xyz>
      */
-    static function valid_dir($dir)
+    public static function valid_dir($dir): bool
     {
         /**
          * check if value is set
@@ -99,7 +99,7 @@ class MakeGallery
         /**
          * check if dir is the default value
          */
-        if ($dir == "C:\\Users" || $dir == "C:\\Users\\") {
+        if ($dir === "C:\\Users" || $dir === "C:\\Users\\") {
             return false;
         }
 
@@ -107,7 +107,7 @@ class MakeGallery
          * check if dir exists and is writable
          */
         if (!is_dir($dir) || !is_writable($dir)) {
-            write_log("Error: " . $dir . " is not writable or doesn't exist", __FILE__, __LINE__);
+            write_log('Error: ' . $dir . " is not writable or doesn't exist", __FILE__, __LINE__);
 
             return false;
         }
@@ -147,7 +147,7 @@ class MakeGallery
         /**
          * scan screenshot directory for bmp files
          */
-        $screenshots = glob($settings["old_screendir"] . "/*.bmp");
+        $screenshots = glob($settings['old_screendir'] . '/*.bmp');
 
         /**
          * strip invalid characters from the gallery name
@@ -155,14 +155,15 @@ class MakeGallery
         $gallery_name = strip_invalid_dos_chars($gallery_name);
 
         /** @var string $newscreendir */
-        $newscreendir = $settings["new_screendir"] . "/" . $gallery_name;
+        $newscreendir = $settings['new_screendir'] . '/' . $gallery_name;
 
         $added = 0;
         foreach ($screenshots as $file) {
-            $file_name = str_replace($settings["old_screendir"] . "/", "", $file);
+            $file_name = str_replace($settings['old_screendir'] . '/', '', $file);
             $old_file_bmp = $file;
-            $old_file_og = $settings["old_screendir"] . "/originals/" . $file_name;
-            $filetime = filemtime($old_file_bmp);
+            $old_file_og = $settings['old_screendir'] . '/originals/' . $file_name;
+            $filetime_o = filemtime($old_file_bmp);
+            $filetime = $filetime_o + ($system_time * 60 * 60);
 
             /**
              * if screenshot was taken after entering the system
@@ -173,10 +174,10 @@ class MakeGallery
                  */
                 $this->create_dir($newscreendir);
 
-                $edited = date("Y-m-d_H-i-s", $filetime);
-                $new_filename = $edited . "-" . $gallery_name . ".jpg";
-                $new_file_jpg = $settings["old_screendir"] . "/" . $new_filename;
-                $new_screenshot = $newscreendir . "/" . $new_filename;
+                $edited = date('Y-m-d_H-i-s', $filetime_o);
+                $new_filename = $edited . '-' . $gallery_name . '.jpg';
+                $new_file_jpg = $settings['old_screendir'] . '/' . $new_filename;
+                $new_screenshot = $newscreendir . '/' . $new_filename;
 
                 /**
                  * convert from bmp to jpg
@@ -185,28 +186,28 @@ class MakeGallery
                     /**
                      * execute ImageMagick convert
                      */
-                    $command = "\"" . $settings["install_path"] . "/bin/ImageMagick/convert\" \"" . $old_file_bmp . "\" \"" . $new_file_jpg . "\"";
+                    $command = '"' . $settings['install_path'] . '/bin/ImageMagick/convert" "' . $old_file_bmp . '" "' . $new_file_jpg . '"';
                     exec($command, $out);
 
                     if (!empty($out)) {
                         $error = json_encode($out);
-                        write_log("Error: " . $error, __FILE__, __LINE__);
+                        write_log('Error: ' . $error, __FILE__, __LINE__);
                     }
                 }
 
                 /**
                  * delete original...
                  */
-                if ($settings["keep_og"] == "false") {
+                if ($settings['keep_og'] === 'false') {
                     $this->remove_file($old_file_bmp);
                     /**
                      * ... or move to "originals" directory
                      */
                 } else {
-                    $this->create_dir($settings["old_screendir"] . "/originals");
+                    $this->create_dir($settings['old_screendir'] . '/originals');
 
                     if (file_exists($old_file_og)) {
-                        $old_file_og = $settings["old_screendir"] . "/originals/" . $filetime . "_" . $file_name;
+                        $old_file_og = $settings['old_screendir'] . '/originals/' . $filetime . '_' . $file_name;
                     }
 
                     $this->move_file($old_file_bmp, $old_file_og);
@@ -230,10 +231,10 @@ class MakeGallery
                  * if screenshot was taken before entering the system, move it to "originals" directory
                  * so it doesn't interfere with the script in the future
                  */
-                $this->create_dir($settings["old_screendir"] . "/originals");
+                $this->create_dir($settings['old_screendir'] . '/originals');
 
                 if (file_exists($old_file_og)) {
-                    $old_file_og = $settings["old_screendir"] . "/originals/" . $filetime . "_" . $file_name;
+                    $old_file_og = $settings['old_screendir'] . '/originals/' . $filetime . '_' . $file_name;
                 }
 
                 $this->move_file($old_file_bmp, $old_file_og);
@@ -266,7 +267,7 @@ class MakeGallery
                 }
             }
         } catch (\Exception $e) {
-            write_log("Error: " . $e->getMessage(), __FILE__, __LINE__);
+            write_log('Error: ' . $e->getMessage(), __FILE__, __LINE__);
         }
     }
 
@@ -281,7 +282,7 @@ class MakeGallery
         if (file_exists($file)) {
             if (!unlink($file)) {
                 $error = error_get_last();
-                write_log("Error: " . $error["message"], __FILE__, __LINE__);
+                write_log('Error: ' . $error['message'], __FILE__, __LINE__);
             }
         }
     }
@@ -298,7 +299,7 @@ class MakeGallery
         if (file_exists($from)) {
             if (!rename($from, $to)) {
                 $error = error_get_last();
-                write_log("Error: " . $error["message"], __FILE__, __LINE__);
+                write_log('Error: ' . $error['message'], __FILE__, __LINE__);
             }
         }
     }
@@ -315,18 +316,18 @@ class MakeGallery
         /**
          * create thumbnail directory
          */
-        $thumb_dir = $new_screendir . "/thumbs";
+        $thumb_dir = $new_screendir . '/thumbs';
         $this->create_dir($thumb_dir);
 
         /**
          * run ImageMagick mogrify
          */
-        $command = "\"" . $settings["install_path"] . "/bin/ImageMagick/mogrify\" -resize " . $settings["thumbnail_size"] . " -background #333333 -gravity center -extent " . $settings["thumbnail_size"] . " -format jpg -quality 95 -path \"" . $thumb_dir . "\" \"" . $new_screendir . "/\"*.jpg";
+        $command = '"' . $settings['install_path'] . '/bin/ImageMagick/mogrify" -resize ' . $settings['thumbnail_size'] . ' -background #333333 -gravity center -extent ' . $settings['thumbnail_size'] . ' -format jpg -quality 95 -path "' . $thumb_dir . '" "' . $new_screendir . '/"*.jpg';
         exec($command, $out3);
 
         if (!empty($out3)) {
             $error = json_encode($out3);
-            write_log("Error: " . $error, __FILE__, __LINE__);
+            write_log('Error: ' . $error, __FILE__, __LINE__);
         }
     }
 }

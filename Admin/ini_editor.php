@@ -31,10 +31,10 @@
  */
 
 /** @var string $notify */
-$notify = "";
+$notify = '';
 
 /** @require Theme class */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/style/Theme.php';
 
 /**
  * initiate page header
@@ -42,15 +42,15 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.php");
 $header = new Header();
 
 /** @var string page_title */
-$header->page_title = "Variable Editor";
+$header->page_title = 'Variable Editor';
 
 /**
  * display the header
  */
 $header->display_header();
 
-if (isset($_POST["code"])) {
-    $code = $_POST["code"];
+if (isset($_POST['code'])) {
+    $code = $_POST['code'];
     if (file_put_contents($ini_file, $code)) {
         $notify = '<div class="notify_success">Settings succesfully edited.</div>';
     } else {

@@ -31,23 +31,23 @@
  */
 
 /** @require functions */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/functions.php';
 /** @require configs */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/config.inc.php';
 
-$info = "";
+$info = '';
 
 /**
  * commander data
  */
-if (isset($_GET["cmdr"])) {
-    $search = $_GET["cmdr"];
+if (isset($_GET['cmdr'])) {
+    $search = $_GET['cmdr'];
 
-    if (isset($api["commander"])) {
-        if ($search == "balance") {
-            $info = number_format($api["commander"]->{"credits"});
-        } elseif ($search == "rank" && isset($_GET["of"])) {
-            $info = get_rank($_GET["of"], $api["commander"]->{"rank"}->{$_GET["of"]}, false);
+    if (isset($api['commander'])) {
+        if ($search === 'balance') {
+            $info = number_format($api['commander']->{'credits'});
+        } elseif ($search === 'rank' && isset($_GET['of'])) {
+            $info = get_rank($_GET['of'], $api['commander']->{'rank'}->{$_GET['of']}, false);
         }
     }
 }
@@ -55,31 +55,31 @@ if (isset($_GET["cmdr"])) {
 /**
  * ship data
  */
-if (isset($_GET["ship"])) {
-    $search = $_GET["ship"];
+if (isset($_GET['ship'])) {
+    $search = $_GET['ship'];
 
-    if (isset($api["ship"])) {
+    if (isset($api['ship'])) {
         switch ($search) {
-            case "name":
-                $info = ship_name($api["ship"]->{"name"});
+            case 'name':
+                $info = ship_name($api['ship']->{'name'});
                 break;
-            case "health":
-                $info = number_format($api["ship"]->{"health"}->{"hull"} / 10000, 1);
+            case 'health':
+                $info = number_format($api['ship']->{'health'}->{'hull'} / 10000, 1);
                 break;
-            case "fuel":
-                $info = number_format($api["ship"]->{"fuel"}->{"main"}->{"level"} / $api["ship"]->{"fuel"}->{"main"}->{"capacity"} * 100, 1);
+            case 'fuel':
+                $info = number_format($api['ship']->{'fuel'}->{'main'}->{'level'} / $api['ship']->{'fuel'}->{'main'}->{'capacity'} * 100, 1);
                 break;
-            case "cargo_capacity":
-                $info = $api["ship"]->{"cargo"}->{"capacity"};
+            case 'cargo_capacity':
+                $info = $api['ship']->{'cargo'}->{'capacity'};
                 break;
-            case "cargo_used":
-                $info = $api["ship"]->{"cargo"}->{"qty"};
+            case 'cargo_used':
+                $info = $api['ship']->{'cargo'}->{'qty'};
                 break;
-            case "value":
-                $info = number_format($api["ship"]->{"value"}->{"total"});
+            case 'value':
+                $info = number_format($api['ship']->{'value'}->{'total'});
                 break;
             default:
-               echo $search . " not recognized.";
+               echo $search . ' not recognized.';
         }
     }
 }

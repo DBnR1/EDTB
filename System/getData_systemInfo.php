@@ -35,13 +35,13 @@ use \EDTB\source\System;
 /**
  * if system id or name is set, show info about that system
  */
-if ($_GET["system_id"] != "undefined" || $_GET["system_name"] != "undefined") {
+if ($_GET['system_id'] !== 'undefined' || $_GET['system_name'] !== 'undefined') {
     /** @var int $system_id */
-    $system_id = $_GET["system_id"] != "undefined" ? 0 + $_GET["system_id"] : "-1";
+    $system_id = $_GET['system_id'] !== 'undefined' ? 0 + $_GET['system_id'] : '-1';
 
-    $esc_sys_name = $mysqli->real_escape_string(urldecode($_GET["system_name"]));
+    $esc_sys_name = $mysqli->real_escape_string(urldecode($_GET['system_name']));
 
-    if ($system_id == "-1") {
+    if ($system_id == '-1') {
         $query = "  SELECT id
                     FROM edtb_systems
                     WHERE name = '$esc_sys_name'
@@ -79,12 +79,12 @@ if ($_GET["system_id"] != "undefined" || $_GET["system_name"] != "undefined") {
     $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
     $system_obj = $result->fetch_object();
 
-    $si_system_name = !empty($system_obj->name) ? $system_obj->name : $_GET["system_name"];
+    $si_system_name = !empty($system_obj->name) ? $system_obj->name : $_GET['system_name'];
 
     $si_system_display_name = $si_system_name;
-    $curSys["simbad_ref"] = $system_obj->simbad_ref;
+    $curSys['simbad_ref'] = $system_obj->simbad_ref;
 
-    if (!empty($curSys["simbad_ref"])) {
+    if (!empty($curSys['simbad_ref'])) {
         $si_system_display_name = '<a href="http://simbad.u-strasbg.fr/simbad/sim-id?Ident=' . urlencode($si_system_name) . '" target="_blank" title="View on Simbad">';
         $si_system_display_name .= $si_system_name;
         $si_system_display_name .= '</a>';
@@ -92,36 +92,36 @@ if ($_GET["system_id"] != "undefined" || $_GET["system_name"] != "undefined") {
     }
 
     $si_system_id = $system_obj->id;
-    $si_system_population = $system_obj->population == "" ? "None" : $system_obj->population;
-    $si_system_allegiance = $system_obj->allegiance == "" ? "None" : $system_obj->allegiance;
-    $si_system_economy = $system_obj->economy == "" ? "None" : $system_obj->economy;
-    $si_system_government = $system_obj->government == "" ? "None" : $system_obj->government;
-    $si_system_ruling_faction = $system_obj->ruling_faction == "" ? "None" : $system_obj->ruling_faction;
-    $si_system_state = $system_obj->state == "" ? "None" : $system_obj->state;
-    $si_system_power = $system_obj->power == "" ? "None" : $system_obj->power;
-    $si_system_security = $system_obj->security == "" ? "None" : $system_obj->security;
-    $si_system_power_state = $system_obj->power_state == "" ? "None" : $system_obj->power_state;
+    $si_system_population = $system_obj->population === '' ? 'None' : $system_obj->population;
+    $si_system_allegiance = $system_obj->allegiance === '' ? 'None' : $system_obj->allegiance;
+    $si_system_economy = $system_obj->economy === '' ? 'None' : $system_obj->economy;
+    $si_system_government = $system_obj->government === '' ? 'None' : $system_obj->government;
+    $si_system_ruling_faction = $system_obj->ruling_faction === '' ? 'None' : $system_obj->ruling_faction;
+    $si_system_state = $system_obj->state === '' ? 'None' : $system_obj->state;
+    $si_system_power = $system_obj->power === '' ? 'None' : $system_obj->power;
+    $si_system_security = $system_obj->security === '' ? 'None' : $system_obj->security;
+    $si_system_power_state = $system_obj->power_state === '' ? 'None' : $system_obj->power_state;
 
     // get distance to current system
-    if (valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"])) {
-        $adds = "";
-        $dist1 = sqrt(pow(($curSys["x"]-($system_obj->si_system_coordx)), 2)+pow(($curSys["y"]-($system_obj->si_system_coordy)), 2)+pow(($curSys["z"]-($system_obj->si_system_coordz)), 2));
+    if (valid_coordinates($curSys['x'], $curSys['y'], $curSys['z'])) {
+        $adds = '';
+        $dist1 = sqrt((($curSys['x'] - $system_obj->si_system_coordx) ** 2) + (($curSys['y'] - $system_obj->si_system_coordy) ** 2) + (($curSys['z'] - $system_obj->si_system_coordz) ** 2));
     } else {
         // get last known coordinates
         $last_coords = last_known_system();
 
-        $last_coordx = $last_coords["x"];
-        $last_coordy = $last_coords["y"];
-        $last_coordz = $last_coords["z"];
+        $last_coordx = $last_coords['x'];
+        $last_coordy = $last_coords['y'];
+        $last_coordz = $last_coords['z'];
 
-        $dist1 = sqrt(pow(($last_coordx-($system_obj->si_system_coordx)), 2)+pow(($last_coordy-($system_obj->si_system_coordy)), 2)+pow(($last_coordz-($system_obj->si_system_coordz)), 2));
-        $adds = " *";
+        $dist1 = sqrt((($last_coordx - $system_obj->si_system_coordx) ** 2) + (($last_coordy - $system_obj->si_system_coordy) ** 2) + (($last_coordz - $system_obj->si_system_coordz) ** 2));
+        $adds = ' *';
     }
-    $si_dist_add = "<a href='/System'>" . $curSys["name"] . "</a>: " . number_format($dist1, 1) . " ly" . $adds . " - ";
+    $si_dist_add = "<a href='/System'>" . $curSys['name'] . '</a>: ' . number_format($dist1, 1) . ' ly' . $adds . ' - ';
 
-    $curSys["x"] = $system_obj->si_system_coordx;
-    $curSys["y"] = $system_obj->si_system_coordy;
-    $curSys["z"] = $system_obj->si_system_coordz;
+    $curSys['x'] = $system_obj->si_system_coordx;
+    $curSys['y'] = $system_obj->si_system_coordy;
+    $curSys['z'] = $system_obj->si_system_coordz;
 
     $result->close();
 }
@@ -129,26 +129,26 @@ if ($_GET["system_id"] != "undefined" || $_GET["system_name"] != "undefined") {
  * if system_id not set, show info about current system
  */
 else {
-    $si_system_name = $curSys["name"];
+    $si_system_name = $curSys['name'];
     $si_system_display_name = $si_system_name;
 
-    if ($curSys["simbad_ref"] != "") {
+    if ($curSys['simbad_ref'] !== '') {
         $si_system_display_name = '<a href="http://simbad.u-strasbg.fr/simbad/sim-id?Ident=' . urlencode($si_system_name) . '" target="_blank" title="View on Simbad">';
         $si_system_display_name .= $si_system_name;
         $si_system_display_name .= '</a>';
         $si_system_display_name .= '<img src="/style/img/external_link.png" class="ext_link" alt="ext" style="margin-left:5px" />';
     }
 
-    $si_system_id = $curSys["id"];
-    $si_system_population = $curSys["population"] == "" ? "None" : $curSys["population"];
-    $si_system_allegiance = $curSys["allegiance"] == "" ? "None" : $curSys["allegiance"];
-    $si_system_economy = $curSys["economy"] == "" ? "None" : $curSys["economy"];
-    $si_system_government = $curSys["government"] == "" ? "None" : $curSys["government"];
-    $si_system_ruling_faction = $curSys["ruling_faction"] == "" ? "None" : $curSys["ruling_faction"];
-    $si_system_state = $curSys["state"] == "" ? "None" : $curSys["state"];
-    $si_system_power = $curSys["power"] == "" ? "None" : $curSys["power"];
-    $si_system_security = $curSys["security"] == "" ? "None" : $curSys["security"];
-    $si_system_power_state = $curSys["power_state"] == "" ? "None" : $curSys["power_state"];
+    $si_system_id = $curSys['id'];
+    $si_system_population = $curSys['population'] === '' ? 'None' : $curSys['population'];
+    $si_system_allegiance = $curSys['allegiance'] === '' ? 'None' : $curSys['allegiance'];
+    $si_system_economy = $curSys['economy'] === '' ? 'None' : $curSys['economy'];
+    $si_system_government = $curSys['government'] === '' ? 'None' : $curSys['government'];
+    $si_system_ruling_faction = $curSys['ruling_faction'] === '' ? 'None' : $curSys['ruling_faction'];
+    $si_system_state = $curSys['state'] === '' ? 'None' : $curSys['state'];
+    $si_system_power = $curSys['power'] === '' ? 'None' : $curSys['power'];
+    $si_system_security = $curSys['security'] === '' ? 'None' : $curSys['security'];
+    $si_system_power_state = $curSys['power_state'] === '' ? 'None' : $curSys['power_state'];
 }
 
 $esc_si_sys_name = $mysqli->real_escape_string($si_system_name);
@@ -161,20 +161,20 @@ $esc_si_sys_name = $mysqli->real_escape_string($si_system_name);
  * get coordinates for distance calculations
  * and rares nearby
  */
-if (valid_coordinates($curSys["x"], $curSys["z"], $curSys["y"])) {
-    $add3 = "";
-    $ud_coordx = $curSys["x"];
-    $ud_coordy = $curSys["y"];
-    $ud_coordz = $curSys["z"];
+if (valid_coordinates($curSys['x'], $curSys['z'], $curSys['y'])) {
+    $add3 = '';
+    $ud_coordx = $curSys['x'];
+    $ud_coordy = $curSys['y'];
+    $ud_coordz = $curSys['z'];
 
     /**
      * get rares closeby, if set to -1 = disabled
      */
-    if (isset($settings["rare_range"]) && $settings["rare_range"] == "-1") {
+    if (isset($settings['rare_range']) && $settings['rare_range'] == '-1') {
         $rares_closeby = 0;
     } else {
-        $query = "  SELECT SQL_CACHE
-                    sqrt(pow((edtb_systems.x-(" . $curSys["x"] . ")),2)+pow((edtb_systems.y-(" . $curSys["y"] . ")),2)+pow((edtb_systems.z-(" . $curSys["z"] . ")),2)) AS distance,
+        $query = '  SELECT SQL_CACHE
+                    sqrt(pow((edtb_systems.x-(' . $curSys['x'] . ')),2)+pow((edtb_systems.y-(' . $curSys['y'] . ')),2)+pow((edtb_systems.z-(' . $curSys['z'] . ')),2)) AS distance,
                     edtb_rares.item, edtb_rares.system_name, edtb_rares.station, edtb_rares.price,
                     edtb_rares.sc_est_mins, edtb_rares.ls_to_star,
                     edtb_rares.needs_permit, edtb_rares.max_landing_pad_size,
@@ -182,12 +182,12 @@ if (valid_coordinates($curSys["x"], $curSys["z"], $curSys["y"])) {
                     FROM edtb_rares
                     LEFT JOIN edtb_systems ON edtb_rares.system_name = edtb_systems.name
                     WHERE
-                    edtb_systems.x BETWEEN " . $curSys["x"] . "-" . $settings["rare_range"] . "
-                    AND " . $curSys["x"] . "+" . $settings["rare_range"] . " &&
-                    edtb_systems.y BETWEEN " . $curSys["y"] . "-" . $settings["rare_range"] . "
-                    AND " . $curSys["y"] . "+" . $settings["rare_range"] . " &&
-                    edtb_systems.z BETWEEN " . $curSys["z"] . "-" . $settings["rare_range"] . "
-                    AND " . $curSys["z"] . "+" . $settings["rare_range"] . "
+                    edtb_systems.x BETWEEN ' . $curSys['x'] . '-' . $settings['rare_range'] . '
+                    AND ' . $curSys['x'] . '+' . $settings['rare_range'] . ' &&
+                    edtb_systems.y BETWEEN ' . $curSys['y'] . '-' . $settings['rare_range'] . '
+                    AND ' . $curSys['y'] . '+' . $settings['rare_range'] . ' &&
+                    edtb_systems.z BETWEEN ' . $curSys['z'] . '-' . $settings['rare_range'] . '
+                    AND ' . $curSys['z'] . '+' . $settings['rare_range'] . "
                     ORDER BY
                     edtb_rares.system_name = '$esc_si_sys_name' DESC,
                     distance ASC
@@ -201,15 +201,15 @@ if (valid_coordinates($curSys["x"], $curSys["z"], $curSys["y"])) {
     // get last known coordinates
     $last_coords = last_known_system();
 
-    $last_coordx = $last_coords["x"];
-    $last_coordy = $last_coords["y"];
-    $last_coordz = $last_coords["z"];
+    $last_coordx = $last_coords['x'];
+    $last_coordy = $last_coords['y'];
+    $last_coordz = $last_coords['z'];
 
     $ud_coordx = $last_coordx;
     $ud_coordy = $last_coordy;
     $ud_coordz = $last_coordz;
 
-    $add3 = " *";
+    $add3 = ' *';
 
     $rares_closeby = 0;
 }
@@ -219,11 +219,11 @@ if (valid_coordinates($curSys["x"], $curSys["z"], $curSys["y"])) {
  */
 $user_dists = '<span class="right" style="font-size:11px">' . $si_dist_add;
 
-if (isset($settings["dist_systems"])) {
-    $num_dists = count($settings["dist_systems"]);
+if (isset($settings['dist_systems'])) {
+    $num_dists = count($settings['dist_systems']);
 
     $i = 1;
-    foreach ($settings["dist_systems"] as $dist_sys => $dist_sys_display_name) {
+    foreach ($settings['dist_systems'] as $dist_sys => $dist_sys_display_name) {
         $esc_dist_sys = $mysqli->real_escape_string($dist_sys);
 
         $query = "  SELECT id, x, y, z
@@ -253,17 +253,17 @@ if (isset($settings["dist_systems"])) {
 
         $result->close();
 
-        $user_dist = sqrt(pow(($ud_coordx-($dist_sys_coordx)), 2)+pow(($ud_coordy-($dist_sys_coordy)), 2)+pow(($ud_coordz-($dist_sys_coordz)), 2));
+        $user_dist = sqrt((($ud_coordx - $dist_sys_coordx) ** 2) + (($ud_coordy - $dist_sys_coordy) ** 2) + (($ud_coordz - $dist_sys_coordz) ** 2));
         $user_dists .= '<a href="/System?system_id=' . $dist_sys_id . '">' . $dist_sys_display_name . '</a>: ' . number_format($user_dist, 1) . ' ly' . $add3;
 
         if ($i != $num_dists) {
-            $user_dists .= " - ";
+            $user_dists .= ' - ';
         }
 
         $i++;
     }
 }
-$user_dists .= "</span>";
+$user_dists .= '</span>';
 
 $c_rares_data = '<div class="raresinfo" id="rares">';
 
@@ -274,39 +274,39 @@ if ($rares_closeby > 0) {
     $actual_num_res = 0;
 
     while ($rare_obj = $rare_result->fetch_object()) {
-        if ($rare_obj->distance <= $settings["rare_range"]) {
-            $c_rares_data .= "[";
+        if ($rare_obj->distance <= $settings['rare_range']) {
+            $c_rares_data .= '[';
             $c_rares_data .= number_format($rare_obj->distance, 1);
-            $c_rares_data .= "&nbsp;ly]&nbsp";
+            $c_rares_data .= '&nbsp;ly]&nbsp';
             $c_rares_data .= $rare_obj->item;
-            $c_rares_data .= "&nbsp;(";
+            $c_rares_data .= '&nbsp;(';
             $c_rares_data .= number_format($rare_obj->price);
-            $c_rares_data .= "&nbsp;CR)";
+            $c_rares_data .= '&nbsp;CR)';
             $c_rares_data .= "<br /><span style='font-weight:400'>";
             $c_rares_data .= "<a href='/System?system_name=" . urlencode($rare_obj->system_name) . "'>";
             $c_rares_data .= $rare_obj->system_name;
-            $c_rares_data .= "</a>&nbsp;(";
+            $c_rares_data .= '</a>&nbsp;(';
             $c_rares_data .= $rare_obj->station;
-            $c_rares_data .= ")&nbsp;-&nbsp";
+            $c_rares_data .= ')&nbsp;-&nbsp';
             $c_rares_data .= number_format($rare_obj->ls_to_star, 0);
-            $c_rares_data .= "&nbsp;ls&nbsp";
-            $c_rares_data .= "(";
+            $c_rares_data .= '&nbsp;ls&nbsp';
+            $c_rares_data .= '(';
             $c_rares_data .= $rare_obj->sc_est_mins;
-            $c_rares_data .= "&nbsp;min)&nbsp";
-            $c_rares_data .= $rare_obj->needs_permit = "1" ? "" : "&nbsp;-&nbsp;Permit needed";
-            $c_rares_data .= "-&nbsp";
+            $c_rares_data .= '&nbsp;min)&nbsp';
+            $c_rares_data .= $rare_obj->needs_permit = '1' ? '' : '&nbsp;-&nbsp;Permit needed';
+            $c_rares_data .= '-&nbsp';
             $c_rares_data .= $rare_obj->max_landing_pad_size;
-            $c_rares_data .= "</span><br /><br />";
+            $c_rares_data .= '</span><br /><br />';
             $actual_num_res++;
         }
     }
 
     $rare_result->close();
 } else {
-    $c_rares_data .= "No rares nearby";
+    $c_rares_data .= 'No rares nearby';
 }
 
-$c_rares_data .= "</div>";
+$c_rares_data .= '</div>';
 
 /**
  * provide crosslinks to screenshot gallery, log page, etc
@@ -321,16 +321,16 @@ if (!System::is_mapped($si_system_name)) {
 
 $num_visits = System::num_visits($si_system_name);
 
-if ($actual_num_res > 0 && valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"])) {
+if ($actual_num_res > 0 && valid_coordinates($curSys['x'], $curSys['y'], $curSys['z'])) {
     $rare_text = '&nbsp;&nbsp;<span onclick="$(\'#rares\').fadeToggle(\'fast\')">';
-    $rare_text .= '<a href="javascript:void(0)" title="Click for more info">[ Rares within ' . $settings["rare_range"] . ' ly: ' . $actual_num_res . ' ]</a>';
+    $rare_text .= '<a href="javascript:void(0)" title="Click for more info">[ Rares within ' . $settings['rare_range'] . ' ly: ' . $actual_num_res . ' ]</a>';
     $rare_text .= $c_rares_data . '</span>';
 }
 
-$data["si_name"] .= $si_system_display_name . $si_crosslinks;
-$data["si_name"] .= '&nbsp;&nbsp;<span style="font-size:11px;text-transform:uppercase;vertical-align:middle">';
-$data["si_name"] .= '[ State: ' . $si_system_state . ' - Security: ' . $si_system_security . ' - Visits: ' . $num_visits . ' ]';
-$data["si_name"] .= $rare_text . $user_dists . '</span>';
+$data['si_name'] .= $si_system_display_name . $si_crosslinks;
+$data['si_name'] .= '&nbsp;&nbsp;<span style="font-size:11px;text-transform:uppercase;vertical-align:middle">';
+$data['si_name'] .= '[ State: ' . $si_system_state . ' - Security: ' . $si_system_security . ' - Visits: ' . $num_visits . ' ]';
+$data['si_name'] .= $rare_text . $user_dists . '</span>';
 
 /**
  * station info for System.php
@@ -345,24 +345,24 @@ $station_result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, 
 $station_exists = $station_result->num_rows;
 
 if ($station_exists == 0) {
-    $data["si_stations"] = "No station data available";
+    $data['si_stations'] = 'No station data available';
 } else {
     while ($station_obj = $station_result->fetch_object()) {
         $s_name = $station_obj->name;
-        $s_explode = explode(" ", $s_name);
+        $s_explode = explode(' ', $s_name);
 
         $count = count($s_explode);
 
-        $first = "";
-        $last = "";
+        $first = '';
+        $last = '';
         if ($count > 1) {
             $lastn = $count - 1;
             $last = $s_explode[$lastn];
 
-            $first = str_replace($last, "", $s_name);
+            $first = str_replace($last, '', $s_name);
         } else {
             $first = $s_name;
-            $last = "";
+            $last = '';
         }
 
         $firsts = explode("'s", $first);
@@ -377,27 +377,27 @@ if ($station_exists == 0) {
         $ls_from_star = $station_obj->ls_from_star;
         $max_landing_pad_size = $station_obj->max_landing_pad_size;
 
-        $s_faction = $station_obj->faction == "" ? "" : "<strong>Faction:</strong> " . $station_obj->faction;
-        $s_distance_from_star = $ls_from_star == 0 ? "" : "" . number_format($ls_from_star, 0) . " ls - ";
+        $s_faction = $station_obj->faction === '' ? '' : '<strong>Faction:</strong> ' . $station_obj->faction;
+        $s_distance_from_star = $ls_from_star == 0 ? '' : '' . number_format($ls_from_star, 0) . ' ls - ';
         $s_information = '<span style="float:right;margin-right:8px">&boxur;&nbsp;' . $s_distance_from_star . 'Landing pad: ' . $max_landing_pad_size . '</span><br />';
-        $s_government = $station_obj->government == "" ? "Government unknown" : $station_obj->government;
-        $s_allegiance = $station_obj->allegiance == "" ? "Allegiance unknown" : $station_obj->allegiance;
+        $s_government = $station_obj->government === '' ? 'Government unknown' : $station_obj->government;
+        $s_allegiance = $station_obj->allegiance === '' ? 'Allegiance unknown' : $station_obj->allegiance;
 
-        $s_state = $station_obj->state == "" ? "" : "<strong>State:</strong> " . $station_obj->state . "<br />";
-        $type = $station_obj->type == "" ? "Type unknown" : $station_obj->type;
-        $economies = $station_obj->economies == "" ? "Economies unknown" : $station_obj->economies;
-        $economies = $economies == "" ? "Economies unknown" : $economies;
+        $s_state = $station_obj->state === '' ? '' : '<strong>State:</strong> ' . $station_obj->state . '<br />';
+        $type = $station_obj->type === '' ? 'Type unknown' : $station_obj->type;
+        $economies = $station_obj->economies === '' ? 'Economies unknown' : $station_obj->economies;
+        $economies = $economies === '' ? 'Economies unknown' : $economies;
 
-        $import_commodities = $station_obj->import_commodities == "" ? "" : "<br /><strong>Import commodities:</strong> " . $station_obj->import_commodities . "<br />";
-        $export_commodities = $station_obj->export_commodities == "" ? "" : "<strong>Export commodities:</strong> " . $station_obj->export_commodities . "<br />";
-        $prohibited_commodities = $station_obj->prohibited_commodities == "" ? "" : "<strong>Prohibited commodities:</strong> " . $station_obj->prohibited_commodities . "<br />";
+        $import_commodities = $station_obj->import_commodities === '' ? '' : '<br /><strong>Import commodities:</strong> ' . $station_obj->import_commodities . '<br />';
+        $export_commodities = $station_obj->export_commodities === '' ? '' : '<strong>Export commodities:</strong> ' . $station_obj->export_commodities . '<br />';
+        $prohibited_commodities = $station_obj->prohibited_commodities === '' ? '' : '<strong>Prohibited commodities:</strong> ' . $station_obj->prohibited_commodities . '<br />';
 
-        $outfitting_updated_ago = !empty($station_obj->outfitting_updated_at) ? 'Outfitting last updated: ' . get_timeago($station_obj->outfitting_updated_at, true, true) : "";
-        $shipyard_updated_ago = !empty($station_obj->shipyard_updated_at) ? ' (updated ' . get_timeago($station_obj->shipyard_updated_at, true, true) . ')' : "";
+        $outfitting_updated_ago = !empty($station_obj->outfitting_updated_at) ? 'Outfitting last updated: ' . get_timeago($station_obj->outfitting_updated_at, true, true) : '';
+        $shipyard_updated_ago = !empty($station_obj->shipyard_updated_at) ? ' (updated ' . get_timeago($station_obj->shipyard_updated_at, true, true) . ')' : '';
 
-        $selling_ships = $station_obj->selling_ships == "" ? "" : "<br /><br /><strong>Selling ships:</strong> " . str_replace("'", "", $station_obj->selling_ships) . $shipyard_updated_ago;
+        $selling_ships = $station_obj->selling_ships === '' ? '' : '<br /><br /><strong>Selling ships:</strong> ' . str_replace("'", '', $station_obj->selling_ships) . $shipyard_updated_ago;
 
-        $selling_modules = "";
+        $selling_modules = '';
 
         /**
          * Information about the modules sold at the station
@@ -405,12 +405,12 @@ if ($station_exists == 0) {
         if (!empty($station_obj->selling_modules)) {
             $modules = $station_obj->selling_modules;
 
-            $modules_s = explode("-", $modules);
+            $modules_s = explode('-', $modules);
 
-            $modules_t = "";
-            $last_class = "";
-            $last_module_name = "";
-            $last_category_name = "";
+            $modules_t = '';
+            $last_class = '';
+            $last_module_name = '';
+            $last_category_name = '';
 
             $mod_cat = [];
             $i = 0;
@@ -434,10 +434,10 @@ if ($station_exists == 0) {
                     $mods_price = $modules_obj->price;
 
                     $mod_cat[$mods_category_name][$i] = [];
-                    $mod_cat[$mods_category_name][$i]["group_name"] = $mods_name;
-                    $mod_cat[$mods_category_name][$i]["class"] = $mods_class;
-                    $mod_cat[$mods_category_name][$i]["price"] = $mods_price;
-                    $mod_cat[$mods_category_name][$i]["rating"] = $mods_rating;
+                    $mod_cat[$mods_category_name][$i]['group_name'] = $mods_name;
+                    $mod_cat[$mods_category_name][$i]['class'] = $mods_class;
+                    $mod_cat[$mods_category_name][$i]['price'] = $mods_price;
+                    $mod_cat[$mods_category_name][$i]['rating'] = $mods_rating;
                     $i++;
                 }
 
@@ -465,10 +465,10 @@ if ($station_exists == 0) {
                 asort($value);
 
                 foreach ($value as $module) {
-                    $m_name = $module["group_name"];
-                    $m_class = $module["class"];
-                    $m_rating = $module["rating"];
-                    $m_price = $module["price"];
+                    $m_name = $module['group_name'];
+                    $m_class = $module['class'];
+                    $m_rating = $module['rating'];
+                    $m_price = $module['price'];
 
                     if ($m_name != $last_module_name) {
                         $modules_t .= '<tr>';
@@ -476,7 +476,7 @@ if ($station_exists == 0) {
                         $modules_t .= '<strong>' . $m_name . '</strong>';
                         $modules_t .= '</td>';
                         $modules_t .= '</tr>';
-                        $last_class = "";
+                        $last_class = '';
                     }
 
                     $modules_t .= '<tr>';
@@ -493,10 +493,10 @@ if ($station_exists == 0) {
                     $last_class = $m_class;
                     $modules_t .= '</tr>';
                 }
-                $modules_t .= "</td></table>";
+                $modules_t .= '</td></table>';
             }
             unset($value);
-            $modules_t .= "</tr></table>";
+            $modules_t .= '</tr></table>';
 
             $selling_modules = '<br /><br /><div onclick="$(\'#modules_' . $station_id . '\').fadeToggle(\'fast\')">';
             $selling_modules .= '<a href="javascript:void(0)"><img src="/style/img/plus.png" alt="plus" class="icon" />Selling modules</a>';
@@ -515,18 +515,18 @@ if ($station_exists == 0) {
 
         $icon = get_station_icon($type, $is_planetary);
 
-        $facilities = array("shipyard" => $shipyard,
-                            "outfitting" => $outfitting,
-                            "market" => $commodities_market,
-                            "black_market" => $black_market,
-                            "refuel" => $refuel,
-                            "repair" => $repair,
-                            "restock" => $rearm);
+        $facilities = array('shipyard' => $shipyard,
+                            'outfitting' => $outfitting,
+                            'market' => $commodities_market,
+                            'black_market' => $black_market,
+                            'refuel' => $refuel,
+                            'repair' => $repair,
+                            'restock' => $rearm);
 
         $i = 0;
-        $services = "";
+        $services = '';
         foreach ($facilities as $name => $included) {
-            $dname = str_replace("_", " ", $name);
+            $dname = str_replace('_', ' ', $name);
             if ($included == 1) {
                 $services .= '<img src="/style/img/facilities/' . $name . '.png" class="icon24" alt="' . $name . '" style="margin-right:10px" onmouseover="$(\'#' . $name . '_' . $station_id . '\').fadeToggle(\'fast\')" onmouseout="$(\'#' . $name . '_' . $station_id . '\').toggle()" />';
                 $services .= '<div class="facilityinfo" style="display:none" id="' . $name . '_' . $station_id . '">Station has ' . $dname . '</div>';
@@ -537,46 +537,46 @@ if ($station_exists == 0) {
         }
 
         $info = $s_faction . $s_information . $import_commodities . $export_commodities . $prohibited_commodities;
-        $info = str_replace("['", "", $info);
-        $info = str_replace("']", "", $info);
-        $info = str_replace("', '", ", ", $info);
+        $info = str_replace("['", '', $info);
+        $info = str_replace("']", '', $info);
+        $info = str_replace("', '", ', ', $info);
 
-        $economies = str_replace("['", "", $economies);
-        $economies = str_replace("']", "", $economies);
-        $economies = str_replace("', '", ", ", $economies);
+        $economies = str_replace("['", '', $economies);
+        $economies = str_replace("']", '', $economies);
+        $economies = str_replace("', '", ', ', $economies);
 
         // get allegiance icon
         $allegiance_icon = get_allegiance_icon($s_allegiance);
 
-        $data["si_stations"] .= '<div class="systeminfo_station" style="background-image:url(/style/img/' . $allegiance_icon . ');background-repeat:no-repeat;background-position:right 0 bottom -2px">';
+        $data['si_stations'] .= '<div class="systeminfo_station" style="background-image:url(/style/img/' . $allegiance_icon . ');background-repeat:no-repeat;background-position:right 0 bottom -2px">';
         //$data["si_stations"] .= '<div class="heading" onclick="$(\'#info_'.$station_id.'\').toggle();$(\'#prices_'.$station_id.'\').toggle()">';
-        $data["si_stations"] .= '<div class="heading">';
-        $data["si_stations"] .= $icon . $s_name;
+        $data['si_stations'] .= '<div class="heading">';
+        $data['si_stations'] .= $icon . $s_name;
 
-        $data["si_stations"] .= '<span style="font-weight:400;font-size:10px">';
-        $data["si_stations"] .= '&nbsp;[ ' . $type . ' - ' . $s_allegiance . ' - ' . $s_government . ' - ' . $economies . ' ]';
-        $data["si_stations"] .= '</span>';
+        $data['si_stations'] .= '<span style="font-weight:400;font-size:10px">';
+        $data['si_stations'] .= '&nbsp;[ ' . $type . ' - ' . $s_allegiance . ' - ' . $s_government . ' - ' . $economies . ' ]';
+        $data['si_stations'] .= '</span>';
 
-        $data["si_stations"] .= '<span class="right">';
-        $data["si_stations"] .= '<a href="http://eddb.io/station/' . $station_id . '" title="View station on eddb.io" target="_blank">';
-        $data["si_stations"] .= '<img src="/style/img/eddb.png" alt="EDDB" style="width:10px;height:12px" />';
-        $data["si_stations"] .= '</a>';
-        $data["si_stations"] .= '</span>';
+        $data['si_stations'] .= '<span class="right">';
+        $data['si_stations'] .= '<a href="http://eddb.io/station/' . $station_id . '" title="View station on eddb.io" target="_blank">';
+        $data['si_stations'] .= '<img src="/style/img/eddb.png" alt="EDDB" style="width:10px;height:12px" />';
+        $data['si_stations'] .= '</a>';
+        $data['si_stations'] .= '</span>';
 
-        $data["si_stations"] .= '</div>';
+        $data['si_stations'] .= '</div>';
 
-        $data["si_stations"] .= '<div class="wpsearch" id="wpsearch_' . $station_id . '" style="display:none"></div>';
+        $data['si_stations'] .= '<div class="wpsearch" id="wpsearch_' . $station_id . '" style="display:none"></div>';
 
-        $data["si_stations"] .= '<div id="info_'. $station_id .'" class="systeminfo_station_info">';
-        $data["si_stations"] .= $info;
-        if ($info != "") {
-            $data["si_stations"] .= "<br />";
+        $data['si_stations'] .= '<div id="info_'. $station_id .'" class="systeminfo_station_info">';
+        $data['si_stations'] .= $info;
+        if ($info !== '') {
+            $data['si_stations'] .= '<br />';
         }
 
-        $data["si_stations"] .= $services;
-        $data["si_stations"] .= $selling_ships;
-        $data["si_stations"] .= $selling_modules;
-        $data["si_stations"] .= '</div>';
+        $data['si_stations'] .= $services;
+        $data['si_stations'] .= $selling_ships;
+        $data['si_stations'] .= $selling_modules;
+        $data['si_stations'] .= '</div>';
 
         // prices information
         /**$query = "SELECT    listings.supply, listings.buy_price, listings.sell_price, listings.demand,
@@ -625,7 +625,7 @@ if ($station_exists == 0) {
             }
         $data["si_stations"] .= '</table></div>'; */
 
-        $data["si_stations"] .= '</div>';
+        $data['si_stations'] .= '</div>';
     }
 }
 
@@ -634,10 +634,10 @@ $station_result->close();
 /**
  * detailed system info
  */
-if ($exists == 0 && $_GET["system_id"] == "undefined" && $_GET["system_name"] == "undefined") {
-    $data["si_detailed"] = "No data available for this system";
+if ($exists == 0 && $_GET['system_id'] === 'undefined' && $_GET['system_name'] === 'undefined') {
+    $data['si_detailed'] = 'No data available for this system';
 } else {
-    if ($si_system_power != "None" && $si_system_power_state != "None") {
+    if ($si_system_power !== 'None' && $si_system_power_state !== 'None') {
         $esc_system_power = $mysqli->real_escape_string($si_system_power);
 
         $query = "  SELECT system_name
@@ -656,14 +656,14 @@ if ($exists == 0 && $_GET["system_id"] == "undefined" && $_GET["system_name"] ==
     } elseif (empty($si_system_power) && empty($si_system_power_state)) {
         $si_system_data = $si_system_power_state;
     } else {
-        $si_system_data = "";
+        $si_system_data = '';
     }
 
     $disp_population = is_numeric($si_system_population) ? number_format($si_system_population) : $si_system_population;
 
-    $data["si_detailed"] .= '<img src="/style/img/powers/' . str_replace(" ", "_", $si_system_power) . '.jpg" class="powerpic" alt="' . $si_system_power . '" /><br />';
-    $data["si_detailed"] .= '<span style="font-size:13px;font-weight:700">' . $si_system_data . '</span><br /><br />';
-    $data["si_detailed"] .= '<span>
+    $data['si_detailed'] .= '<img src="/style/img/powers/' . str_replace(' ', '_', $si_system_power) . '.jpg" class="powerpic" alt="' . $si_system_power . '" /><br />';
+    $data['si_detailed'] .= '<span style="font-size:13px;font-weight:700">' . $si_system_data . '</span><br /><br />';
+    $data['si_detailed'] .= '<span>
                                 <strong>Allegiance:</strong> ' . $si_system_allegiance . '<br />
                                 <strong>Government:</strong> ' . $si_system_government . '<br />
                                 <strong>Population:</strong> ' . $disp_population . '<br />

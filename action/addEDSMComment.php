@@ -31,27 +31,27 @@
  */
 
 /** @require config */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/config.inc.php';
 /** @require functions */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/functions.php';
 
-if (isset($_GET["comment"]) && isset($_GET["system_name"])) {
-    $comment = $_GET["comment"];
-    $system = $_GET["system_name"];
+if (isset($_GET['comment']) && isset($_GET['system_name'])) {
+    $comment = $_GET['comment'];
+    $system = $_GET['system_name'];
 } else {
-    write_log("Error: EDSM comment or system not set", __FILE__, __LINE__);
+    write_log('Error: EDSM comment or system not set', __FILE__, __LINE__);
     exit;
 }
 
 /**
  * submit to EDSM
  */
-if (!empty($settings["edsm_api_key"]) && !empty($settings["edsm_cmdr_name"])) {
-    if (!$cmnt_string = file_get_contents("http://www.edsm.net/api-logs-v1/set-comment?commanderName=" . urlencode($settings["edsm_cmdr_name"]) . "&apiKey=" . $settings["edsm_api_key"] . "&systemName=" . urlencode($system) . "&comment=" . urlencode($comment))) {
+if (!empty($settings['edsm_api_key']) && !empty($settings['edsm_cmdr_name'])) {
+    if (!$cmnt_string = file_get_contents('http://www.edsm.net/api-logs-v1/set-comment?commanderName=' . urlencode($settings['edsm_cmdr_name']) . '&apiKey=' . $settings['edsm_api_key'] . '&systemName=' . urlencode($system) . '&comment=' . urlencode($comment))) {
         $error = error_get_last();
-        write_log("Error: " . $error["message"], __FILE__, __LINE__);
+        write_log('Error: ' . $error['message'], __FILE__, __LINE__);
     }
 } else {
-    write_log("Error: EDSM API key or commander name not set", __FILE__, __LINE__);
+    write_log('Error: EDSM API key or commander name not set', __FILE__, __LINE__);
     exit;
 }

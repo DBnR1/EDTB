@@ -31,17 +31,17 @@
  */
 
 /** @require functions */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/functions.php';
 /** @require config */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/config.inc.php';
 /** @require MySQL */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/MySQL.php';
 
 /**
  * if data is older than 30 minutes, update
  */
 
-$ga_last_update = edtb_common("last_galnet_update", "unixtime") + 30 * 60; // 30 minutes
+$ga_last_update = edtb_common('last_galnet_update', 'unixtime') + 30 * 60; // 30 minutes
 
 if ($ga_last_update < time()) {
     $rss = new DOMDocument();
@@ -57,13 +57,13 @@ if ($ga_last_update < time()) {
             'content' => $node->getElementsByTagName('encoded')->item(0)->nodeValue
 
         ];
-        array_push($feed, $item);
+        $feed[] = $item;
     }
 
     $in = 1;
     foreach ($feed as $dataga) {
         $gatitle = $dataga['title'];
-        $ga_title = explode(" - ", $gatitle);
+        $ga_title = explode(' - ', $gatitle);
         $ga_title = $ga_title[0];
 
         $text = $dataga['content'];
@@ -74,7 +74,7 @@ if ($ga_last_update < time()) {
 
         // exclude stuff
         $continue = true;
-        foreach ($settings["galnet_excludes"] as $exclude) {
+        foreach ($settings['galnet_excludes'] as $exclude) {
             $find = $exclude;
             $pos = strpos($ga_title, $find);
 
@@ -90,32 +90,32 @@ if ($ga_last_update < time()) {
              */
             $to_write = $ga_title . "\n\r" . $text;
 
-            if ($in <= $settings["galnet_articles"]) {
+            if ($in <= $settings['galnet_articles']) {
                 /**
                  * write x of the latest articles to .txt files
                  */
-                $newfile = $_SERVER["DOCUMENT_ROOT"] . "/Marvin/galnet" . $in . ".txt";
+                $newfile = $_SERVER['DOCUMENT_ROOT'] . '/Marvin/galnet' . $in . '.txt';
 
-                $old_file = "";
+                $old_file = '';
                 if (file_exists($newfile)) {
                     $old_file = file_get_contents($newfile);
                 }
 
                 if (!file_put_contents($newfile, $to_write)) {
                     $error = error_get_last();
-                    write_log("Error: " . $error["message"], __FILE__, __LINE__);
+                    write_log('Error: ' . $error['message'], __FILE__, __LINE__);
                 }
 
                 /**
                  * compare to the latest to see if new articles have been posted since last check
                  */
-                $new_file = "-1";
+                $new_file = '-1';
                 if (file_exists($newfile)) {
                     $new_file = file_get_contents($newfile);
                 }
 
                 if ($new_file != $old_file) {
-                    edtb_common("last_galnet_new", "unixtime", true, time());
+                    edtb_common('last_galnet_new', 'unixtime', true, time());
                 }
             }
             $in++;
@@ -125,22 +125,22 @@ if ($ga_last_update < time()) {
     /**
      * update last_update time
      */
-    edtb_common("last_galnet_update", "unixtime", true, time());
+    edtb_common('last_galnet_update', 'unixtime', true, time());
 }
 
 /**
  * fetch last check time and last new article time
  */
-$last_galnet_check = edtb_common("last_galnet_check", "unixtime");
-$last_galnet_new = edtb_common("last_galnet_new", "unixtime");
+$last_galnet_check = edtb_common('last_galnet_check', 'unixtime');
+$last_galnet_new = edtb_common('last_galnet_new', 'unixtime');
 
 if ($last_galnet_new < $last_galnet_check) {
-    echo "No new GalNet articles have been published since you last asked " . get_timeago($last_galnet_check, false) . ".";
+    echo 'No new GalNet articles have been published since you last asked ' . get_timeago($last_galnet_check, false) . '.';
 } else {
-    echo "New GalNet articles have been published since you last asked. Would you like me to read them to you?";
+    echo 'New GalNet articles have been published since you last asked. Would you like me to read them to you?';
 }
 
 /**
  *  update last check time
  */
-edtb_common("last_galnet_check", "unixtime", true, time());
+edtb_common('last_galnet_check', 'unixtime', true, time());

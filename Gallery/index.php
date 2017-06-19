@@ -31,7 +31,7 @@
 */
 
 /** @require Theme class */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/style/Theme.php';
 
 /**
  * initiate page header
@@ -39,7 +39,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.php");
 $header = new Header();
 
 /** @var string page_title */
-$header->page_title = "Screenshot Gallery";
+$header->page_title = 'Screenshot Gallery';
 
 /**
  * display the header
@@ -49,21 +49,21 @@ $header->display_header();
 <div class="entries">
     <div class="entries_inner">
         <?php
-        if (isset($_GET["removed"])) {
-            if ($_GET["removed"] != "1") {
+        if (isset($_GET['removed'])) {
+            if ($_GET['removed'] != '1') {
                 echo '<div class="notify_success">Screenshot succesfully deleted</div>';
             } else {
                 echo '<div class="notify_deleted">Screenshot deletion failed.</div>';
             }
         }
 
-        if (is_dir($settings["old_screendir"]) && $settings["old_screendir"] != "C:\\Users" && $settings["old_screendir"] != "C:\\Users\\") {
+        if (is_dir($settings['old_screendir']) && $settings['old_screendir'] !== "C:\\Users" && $settings['old_screendir'] !== "C:\\Users\\") {
             ?>
             <table id="wrapper">
                 <tr>
                     <td id="center">
                         <?php
-                        require_once($_SERVER["DOCUMENT_ROOT"] . "/Gallery/Vendor/spgm/spgm.php");
+                        require_once $_SERVER['DOCUMENT_ROOT'] . '/Gallery/Vendor/spgm/spgm.php';
                         ?>
                     </td>
                 </tr>

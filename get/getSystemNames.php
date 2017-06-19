@@ -31,27 +31,27 @@
  */
 
 /** @require functions */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/functions.php';
 /** @require MySQL */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/MySQL.php';
 
-$action = isset($_GET["action"]) ? $_GET["action"] : "";
+$action = $_GET['action'] ?? '';
 
-if (isset($_GET["q"]) && !empty($_GET["q"]) && isset($_GET["divid"])) {
-    $search = addslashes($_GET["q"]);
-    $divid = $_GET["divid"];
+if (isset($_GET['q']) && !empty($_GET['q']) && isset($_GET['divid'])) {
+    $search = addslashes($_GET['q']);
+    $divid = $_GET['divid'];
 
-    $addtl = "";
-    if (isset($_GET["allegiance"]) && $_GET["allegiance"] != "undefined") {
-        $addtl .= "&allegiance=" . $_GET['allegiance'];
+    $addtl = '';
+    if (isset($_GET['allegiance']) && $_GET['allegiance'] !== 'undefined') {
+        $addtl .= '&allegiance=' . $_GET['allegiance'];
     }
 
-    if (isset($_GET["system_allegiance"]) && $_GET["system_allegiance"] != "undefined") {
-        $addtl .= "&system_allegiance=" . $_GET['system_allegiance'];
+    if (isset($_GET['system_allegiance']) && $_GET['system_allegiance'] !== 'undefined') {
+        $addtl .= '&system_allegiance=' . $_GET['system_allegiance'];
     }
 
-    if (isset($_GET["power"]) && $_GET["power"] != "undefined") {
-        $addtl .= "&power=" . $_GET['power'];
+    if (isset($_GET['power']) && $_GET['power'] !== 'undefined') {
+        $addtl .= '&power=' . $_GET['power'];
     }
 
     $esc_search = $mysqli->real_escape_string($search);
@@ -82,9 +82,9 @@ if (isset($_GET["q"]) && !empty($_GET["q"]) && isset($_GET["divid"])) {
         echo '<a href="#">Nothing found</a>';
     } else {
         while ($suggest = $result->fetch_object()) {
-            $suggest_coords = $suggest->x . "," . $suggest->y . "," . $suggest->z;
+            $suggest_coords = $suggest->x . ',' . $suggest->y . ',' . $suggest->z;
             // find systems
-            if ($_GET["link"] == "yes") {
+            if ($_GET['link'] === 'yes') {
                 if (isset($suggest->id)) {
                     ?>
                     <a href="/System?system_id=<?php echo $suggest->id?>">
@@ -100,7 +100,7 @@ if (isset($_GET["q"]) && !empty($_GET["q"]) && isset($_GET["divid"])) {
                 }
             }
             // nearest systems
-            elseif ($_GET["idlink"] == "yes") {
+            elseif ($_GET['idlink'] === 'yes') {
                 ?>
                 <a href="/NearestSystems?system=<?php echo $suggest->id?><?php echo $addtl?>">
                     <?php echo $suggest->name?>
@@ -108,7 +108,7 @@ if (isset($_GET["q"]) && !empty($_GET["q"]) && isset($_GET["divid"])) {
                 <?php
             }
             // bookmarks
-            elseif ($_GET["sysid"] == "yes") {
+            elseif ($_GET['sysid'] === 'yes') {
                 ?>
                 <a href="javascript:void(0);" onclick='setbm("<?php echo addslashes($suggest->name)?>", <?php echo $suggest->id?>)'>
                     <?php echo $suggest->name?>
@@ -116,7 +116,7 @@ if (isset($_GET["q"]) && !empty($_GET["q"]) && isset($_GET["divid"])) {
                 <?php
             }
             // data point
-            elseif ($_GET["dp"] == "yes") {
+            elseif ($_GET['dp'] === 'yes') {
                 ?>
                 <a href="javascript:void(0);" onclick='setdp("<?php echo addslashes($suggest->name)?>", "<?php echo $suggest_coords?>", <?php echo $suggest->id?>)'>
                     <?php echo $suggest->name?>

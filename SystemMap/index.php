@@ -31,7 +31,7 @@
  */
 
 /** @require Theme class */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/style/Theme.php';
 
 /**
  * initiate page header
@@ -39,7 +39,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.php");
 $header = new Header();
 
 /** @var string page_title */
-$header->page_title = "System Map";
+$header->page_title = 'System Map';
 
 /**
  * display the header
@@ -49,9 +49,9 @@ $header->display_header();
 /**
  * determine what system to display
  */
-$system = $curSys["name"];
-if (isset($_GET["system"])) {
-    $system = $_GET["system"];
+$system = $curSys['name'];
+if (isset($_GET['system'])) {
+    $system = $_GET['system'];
 }
 
 /**
@@ -93,41 +93,41 @@ $link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http
             <div id="smsys" style="display:none"><?php echo $system?></div>
             <span class="text" style="margin-right:20px">Add bodies :</span>
             <?php
-            $types = array("star", "planet", "other");
+            $types = array('star', 'planet', 'other');
 
             foreach ($types as $type) {
-                $border = $type == "other" ? ' style="border-right:1px solid #333"' : "";
+                $border = $type === 'other' ? ' style="border-right:1px solid #333"' : '';
                 ?>
                 <div class="categories" id="<?php echo $type?>_click"<?php echo $border?>>
                     <?php echo $type?>
                 </div>
                 <div class="stars_planets" id="<?php echo $type?>" style="display:none">
                 <?php
-                $json_file = "bodies.json";
+                $json_file = 'bodies.json';
                 $json_string = file_get_contents($json_file);
 
                 $json_arr = json_decode($json_string, true);
 
                 $i = 0;
-                $last_img = "";
+                $last_img = '';
 
                 Utility::orderBy($json_arr, 'order_num ASC, name ASC');
 
-                $last_name = "";
+                $last_name = '';
                 foreach ($json_arr as $arr) {
-                    $type2 = $arr["type"];
+                    $type2 = $arr['type'];
                     if ($type2 == $type) {
-                        $img = str_replace(" ", "_", $arr["name"]);
-                        $img = str_replace(",", "", $img);
+                        $img = str_replace(' ', '_', $arr['name']);
+                        $img = str_replace(',', '', $img);
                         $img = strtolower($img);
 
-                        $imgfiles = glob($_SERVER["DOCUMENT_ROOT"] . "/SystemMap/bodies/" . $img . "_*");
+                        $imgfiles = glob($_SERVER['DOCUMENT_ROOT'] . '/SystemMap/bodies/' . $img . '_*');
 
-                        $name = $arr["name"];
-                        $id = $arr["id"];
-                        $width = $arr["width"];
-                        $min_value = $arr["min_value"];
-                        $max_value = $arr["max_value"];
+                        $name = $arr['name'];
+                        $id = $arr['id'];
+                        $width = $arr['width'];
+                        $min_value = $arr['min_value'];
+                        $max_value = $arr['max_value'];
 
                         if ($name != $last_name) {
                             echo '<div class="cat_name">' . $name;
@@ -135,8 +135,8 @@ $link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http
 
                         $ii = 0;
                         foreach ($imgfiles as $imgfile) {
-                            $src = str_replace($_SERVER["DOCUMENT_ROOT"], "", $imgfile);
-                            $imgid = substr($imgfile, -5, 1);
+                            $src = str_replace($_SERVER['DOCUMENT_ROOT'], '', $imgfile);
+                            $imgid = $imgfile[strlen($imgfile) - 5];
 
                             $bid = $type . '_' . $id . '_' . $i . '_' . $ii;
 

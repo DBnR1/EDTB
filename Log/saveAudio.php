@@ -31,39 +31,39 @@
  */
 
 /** @require config */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/config.inc.php';
 /** @require functions */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/functions.php';
 /** @require MySQL */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/MySQL.php';
 
-$data = substr($_POST["data"], strpos($_POST["data"], ",") + 1);
+$data = substr($_POST['data'], strpos($_POST['data'], ',') + 1);
 $decodedData = base64_decode($data);
 
-$audiodir = $_SERVER["DOCUMENT_ROOT"] . "/audio_logs";
+$audiodir = $_SERVER['DOCUMENT_ROOT'] . '/audio_logs';
 
 if (!is_dir($audiodir)) {
     if (!mkdir($audiodir, 0775, true)) {
         $error = error_get_last();
-        write_log("Error: " . $error["message"], __FILE__, __LINE__);
+        write_log('Error: ' . $error['message'], __FILE__, __LINE__);
     }
 }
 
-$filename = $audiodir . "/" . $_POST["fname"];
+$filename = $audiodir . '/' . $_POST['fname'];
 
 if (!$fp = fopen($filename, 'wb')) {
     $error = error_get_last();
-    write_log("Error: " . $error["message"], __FILE__, __LINE__);
+    write_log('Error: ' . $error['message'], __FILE__, __LINE__);
     exit;
-} else {
-    fwrite($fp, $decodedData);
-    fclose($fp);
-    ?>
-    <script>
-        var audiofiles = $("#audiofiles");
-        audiofiles.html("ddd");
-        audiofiles.append(<?php echo $_POST["fname"]?>);
-        audiofiles.append("ddd");
-    </script>
-    <?php
 }
+
+fwrite($fp, $decodedData);
+fclose($fp);
+?>
+    <script>
+    var audiofiles = $("#audiofiles");
+    audiofiles.html("ddd");
+    audiofiles.append(<?php echo $_POST['fname']?>);
+    audiofiles.append("ddd");
+</script>
+<?php

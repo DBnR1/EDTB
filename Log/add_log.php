@@ -32,17 +32,17 @@
 
 use EDTB\Log\MakeLog;
 
-if (isset($_GET["do"])) {
+if (isset($_GET['do'])) {
     /** @require config */
-    require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/source/config.inc.php';
     /** @require functions */
-    require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/source/functions.php';
     /** @require MySQL */
     //require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
     /** @require MakeLog class */
-    require_once("MakeLog.php");
+    require_once __DIR__ . '/MakeLog.php';
 
-    $data = json_decode($_REQUEST["input"]);
+    $data = json_decode($_REQUEST['input']);
 
     $addLog = new MakeLog();
     $addLog->add_log($data);
@@ -85,7 +85,7 @@ if (isset($_GET["do"])) {
                                 <select title="Weight" class="selectbox" id="weight" name="weight" style="display:none">
                                     <?php
                                     for ($i = -30; $i < 31; $i++) {
-                                        $selected = $i == 0 ? ' selected="selected"' : "";
+                                        $selected = $i == 0 ? ' selected="selected"' : '';
                                         echo '<option value="' . $i . '"' . $selected . '>Weight ' . $i . '</option>';
                                     }
                                     ?>

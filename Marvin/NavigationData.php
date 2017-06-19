@@ -32,17 +32,17 @@
  */
 
 /** @require functions */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/functions.php';
 /** @require config */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/config.inc.php';
 /** @require MySQL */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/MySQL.php';
 
 /**
  * Query the database
  */
-if (isset($_GET["name"])) {
-    $search = $mysqli->real_escape_string($_GET["name"]);
+if (isset($_GET['name'])) {
+    $search = $mysqli->real_escape_string($_GET['name']);
 
     $query = "  SELECT system_name
                 FROM user_bookmarks LEFT JOIN user_bm_categories ON user_bookmarks.category_id = user_bm_categories.id

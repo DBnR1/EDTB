@@ -31,19 +31,19 @@
  */
 
 /** @require config */
-require_once(__DIR__ . "/config.inc.php");
+require_once __DIR__ . '/config.inc.php';
 /** @require MySQL */
-require_once(__DIR__ . "/MySQL.php");
+require_once __DIR__ . '/MySQL.php';
 /** @require other functions */
-require_once(__DIR__ . "/functions_safe.php");
+require_once __DIR__ . '/functions_safe.php';
 /** @require curSys */
 //require_once("curSys.php"); // can't require curSys here, it interferes with the data update
 /** @require mappings */
-require_once(__DIR__ . "/FDMaps.php");
+require_once __DIR__ . '/FDMaps.php';
 /** @require utility */
-require_once(__DIR__ . "/Vendor/utility.php");
+require_once __DIR__ . '/Vendor/utility.php';
 /** @require System class */
-require_once(__DIR__ . "/System.php");
+require_once __DIR__ . '/System.php';
 
 /**
  * Last known system with valid coordinates
@@ -52,7 +52,7 @@ require_once(__DIR__ . "/System.php");
  * @return array $last_system x, y, z, name
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function last_known_system($onlyedsm = false)
+function last_known_system($onlyedsm = false): array
 {
     global $mysqli;
 
@@ -85,21 +85,21 @@ function last_known_system($onlyedsm = false)
 
     if ($results > 0) {
         $coord_obj = $result->fetch_object();
-        $last_system["name"] = $coord_obj->system_name;
-        $last_system["x"] = $coord_obj->x;
-        $last_system["y"] = $coord_obj->y;
-        $last_system["z"] = $coord_obj->z;
+        $last_system['name'] = $coord_obj->system_name;
+        $last_system['x'] = $coord_obj->x;
+        $last_system['y'] = $coord_obj->y;
+        $last_system['z'] = $coord_obj->z;
 
-        if ($last_system["x"] == "") {
-            $last_system["x"] = $coord_obj->own_x;
-            $last_system["y"] = $coord_obj->own_y;
-            $last_system["z"] = $coord_obj->own_z;
+        if ($last_system['x'] === '') {
+            $last_system['x'] = $coord_obj->own_x;
+            $last_system['y'] = $coord_obj->own_y;
+            $last_system['z'] = $coord_obj->own_z;
         }
     } else {
-        $last_system["name"] = "";
-        $last_system["x"] = "";
-        $last_system["y"] = "";
-        $last_system["z"] = "";
+        $last_system['name'] = '';
+        $last_system['x'] = '';
+        $last_system['y'] = '';
+        $last_system['z'] = '';
     }
 
     $result->close();
@@ -118,7 +118,7 @@ function data_is_old($time)
 {
     global $settings;
 
-    $old = $settings["data_notify_age"] * 24 * 60 * 60;
+    $old = $settings['data_notify_age'] * 24 * 60 * 60;
     $since = time()-$old;
 
     if (empty($time)) {
@@ -127,9 +127,9 @@ function data_is_old($time)
 
     if ($time < $since) {
         return true;
-    } else {
-        return false;
     }
+
+    return false;
 }
 
 /**
@@ -141,19 +141,19 @@ function data_is_old($time)
  */
 function random_insult($who_to_insult)
 {
-    $who = explode(" ", $who_to_insult);
+    $who = explode(' ', $who_to_insult);
     $first_name = $who[0];
     $last_name = $who[1];
 
-    $whoa = array(  $first_name . " so called " . $last_name,
-                    $first_name . " " . $last_name);
+    $whoa = array(  $first_name . ' so called ' . $last_name,
+                    $first_name . ' ' . $last_name);
 
     /**
      * Insults from museangel.net, katoninetales.com, mandatory.com with some of my own thrown in for good measure
      */
-    $pool1 = array("moronic", "putrid", "disgusting", "cockered", "droning", "fobbing", "frothy", "smelly", "infectious", "puny", "roguish", "assinine", "tottering", "shitty", "villainous", "pompous", "elitist", "dirty");
-    $pool2 = array("shit-kicking", "Federal", "butt-munching", "clap-ridden", "fart-eating", "clay-brained", "sheep-fucking");
-    $pool3 = array("hemorrhoid", "assface", "whore", "kretin", "cumbucket", "fuckface", "asshole", "turd", "taint", "knob", "tit", "shart", "douche");
+    $pool1 = array('moronic', 'putrid', 'disgusting', 'cockered', 'droning', 'fobbing', 'frothy', 'smelly', 'infectious', 'puny', 'roguish', 'assinine', 'tottering', 'shitty', 'villainous', 'pompous', 'elitist', 'dirty');
+    $pool2 = array('shit-kicking', 'Federal', 'butt-munching', 'clap-ridden', 'fart-eating', 'clay-brained', 'sheep-fucking');
+    $pool3 = array('hemorrhoid', 'assface', 'whore', 'kretin', 'cumbucket', 'fuckface', 'asshole', 'turd', 'taint', 'knob', 'tit', 'shart', 'douche');
 
     // randomize
     shuffle($pool1);
@@ -161,7 +161,7 @@ function random_insult($who_to_insult)
     shuffle($pool3);
     shuffle($whoa);
 
-    $insult = "the " . $pool1[0] . " " . $pool2[0] . " " . $pool3[0] . " " . $whoa[0];
+    $insult = 'the ' . $pool1[0] . ' ' . $pool2[0] . ' ' . $pool3[0] . ' ' . $whoa[0];
 
     return $insult;
 }
@@ -175,22 +175,22 @@ function random_insult($who_to_insult)
  * @return string $station_icon html img tag for the starport icon
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function get_station_icon($type, $planetary = "0", $style = "")
+function get_station_icon($type, $planetary = '0', $style = '')
 {
     switch ($type) {
-        case "Coriolis Starport":
+        case 'Coriolis Starport':
             $station_icon = '<img src="/style/img/spaceports/coriolis.png" class="icon" alt="' . $type . '" style="' . $style . '" />';
             break;
-        case "Orbis Starport":
+        case 'Orbis Starport':
             $station_icon = '<img src="/style/img/spaceports/orbis.png" class="icon" alt="' . $type . '" style="' . $style . '" />';
             break;
-        case "Ocellus Starport":
+        case 'Ocellus Starport':
             $station_icon = '<img src="/style/img/spaceports/ocellus.png" class="icon" alt="' . $type . '" style="' . $style . '" />';
             break;
-        case ($planetary == "0"):
+        case ($planetary == '0'):
             $station_icon = '<img src="/style/img/spaceports/spaceport.png" class="icon" alt="Starport" style="' . $style . '" />';
             break;
-        case ($planetary == "1"):
+        case ($planetary == '1'):
             $station_icon = '<img src="/style/img/spaceports/planetary.png" class="icon" alt="Planetary" style="' . $style . '" />';
             break;
         default:
@@ -210,17 +210,17 @@ function get_station_icon($type, $planetary = "0", $style = "")
 function get_allegiance_icon($allegiance)
 {
     switch ($allegiance) {
-        case "Empire":
-            $allegiance_icon = "empire.png";
+        case 'Empire':
+            $allegiance_icon = 'empire.png';
             break;
-        case "Alliance":
-            $allegiance_icon = "alliance.png";
+        case 'Alliance':
+            $allegiance_icon = 'alliance.png';
             break;
-        case "Federation":
-            $allegiance_icon = "federation.png";
+        case 'Federation':
+            $allegiance_icon = 'federation.png';
             break;
         default:
-            $allegiance_icon = "system.png";
+            $allegiance_icon = 'system.png';
     }
 
     return $allegiance_icon;
@@ -238,28 +238,28 @@ function usable_coords()
 
     $usable = [];
 
-    if (valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"])) {
-        $usable["x"] = $curSys["x"];
-        $usable["y"] = $curSys["y"];
-        $usable["z"] = $curSys["z"];
+    if (valid_coordinates($curSys['x'], $curSys['y'], $curSys['z'])) {
+        $usable['x'] = $curSys['x'];
+        $usable['y'] = $curSys['y'];
+        $usable['z'] = $curSys['z'];
 
-        $usable["current"] = true;
+        $usable['current'] = true;
     } else {
         $last_coords = last_known_system();
 
-        $usable["x"] = $last_coords["x"];
-        $usable["y"] = $last_coords["y"];
-        $usable["z"] = $last_coords["z"];
+        $usable['x'] = $last_coords['x'];
+        $usable['y'] = $last_coords['y'];
+        $usable['z'] = $last_coords['z'];
 
-        $usable["current"] = false;
+        $usable['current'] = false;
     }
 
-    if (!valid_coordinates($usable["x"], $usable["y"], $usable["z"])) {
-        $usable["x"] = "0";
-        $usable["y"] = "0";
-        $usable["z"] = "0";
+    if (!valid_coordinates($usable['x'], $usable['y'], $usable['z'])) {
+        $usable['x'] = '0';
+        $usable['y'] = '0';
+        $usable['z'] = '0';
 
-        $usable["current"] = false;
+        $usable['current'] = false;
     }
     return $usable;
 }
@@ -277,9 +277,9 @@ function valid_coordinates($x, $y, $z)
 {
     if (is_numeric($x) && is_numeric($y) && is_numeric($z)) {
         return true;
-    } else {
-        return false;
     }
+
+    return false;
 }
 
 /**
@@ -293,7 +293,7 @@ function tts_override($text)
 {
     global $settings;
 
-    foreach ($settings["tts_override"] as $find => $replace) {
+    foreach ($settings['tts_override'] as $find => $replace) {
         $text = str_ireplace($find, $replace, $text);
     }
 
@@ -314,10 +314,10 @@ function get_rank($type, $rank, $icon = true)
     global $ranks;
 
     if ($icon !== false) {
-        return "/style/img/ranks/" . $type . "/rank-" . $rank . ".png";
-    } else {
-        return $ranks[$type][$rank];
+        return '/style/img/ranks/' . $type . '/rank-' . $rank . '.png';
     }
+
+    return $ranks[$type][$rank];
 }
 
 /**
@@ -383,13 +383,13 @@ function get_distance($system)
 
     // figure out what coords to calculate from
     $usable_coords = usable_coords();
-    $usex = $usable_coords["x"];
-    $usey = $usable_coords["y"];
-    $usez = $usable_coords["z"];
-    $exact = $usable_coords["current"] === true ? "" : " *";
+    $usex = $usable_coords['x'];
+    $usey = $usable_coords['y'];
+    $usez = $usable_coords['z'];
+    $exact = $usable_coords['current'] === true ? '' : ' *';
 
     if (valid_coordinates($target_x, $target_y, $target_z)) {
-        $dist = number_format(sqrt(pow(($target_x-($usex)), 2)+pow(($target_y-($usey)), 2)+pow(($target_z-($usez)), 2)), 2);
+        $dist = number_format(sqrt((($target_x - $usex) ** 2) + (($target_y - $usey) ** 2) + (($target_z - $usez) ** 2)), 2);
         $distance = $dist . ' ly' . $exact;
     } else {
         $distance = '';
@@ -408,12 +408,12 @@ function get_distance($system)
  * @return string|null $value if $update = false
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function edtb_common($name, $field, $update = false, $value = "")
+function edtb_common($name, $field, $update = false, $value = '')
 {
     global $mysqli;
 
     if ($update !== true) {
-        $query = "  SELECT " . $field . "
+        $query = '  SELECT ' . $field . "
                     FROM edtb_common
                     WHERE name = '$name'
                     LIMIT 1";
@@ -427,17 +427,17 @@ function edtb_common($name, $field, $update = false, $value = "")
         $result->close();
 
         return $value;
-    } else {
-        $esc_val = $mysqli->real_escape_string($value);
-        $stmt = "   UPDATE edtb_common
-                    SET " . $field . " = '$esc_val'
-                    WHERE name = '$name'
-                    LIMIT 1";
-
-        $mysqli->query($stmt) or write_log($mysqli->error, __FILE__, __LINE__);
-
-        return null;
     }
+
+    $esc_val = $mysqli->real_escape_string($value);
+    $stmt = '   UPDATE edtb_common
+                SET ' . $field . " = '$esc_val'
+                WHERE name = '$name'
+                LIMIT 1";
+
+    $mysqli->query($stmt) or write_log($mysqli->error, __FILE__, __LINE__);
+
+    return null;
 }
 
 /**
@@ -450,6 +450,6 @@ function edtb_common($name, $field, $update = false, $value = "")
 function strip_invalid_dos_chars($source_string)
 {
     $invalid_chars = array('*','\\','/',':','?','"','<','>','|'); // Invalid chars according to Windows 10
-    $ret_value = str_replace($invalid_chars, "_", $source_string);
-    return $ret_value;
+
+    return str_replace($invalid_chars, '_', $source_string);
 }

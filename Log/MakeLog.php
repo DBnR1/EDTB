@@ -60,7 +60,7 @@ class MakeLog
          * check connection
          */
         if ($this->mysqli->connect_errno) {
-            echo "Failed to connect to MySQL: " . $this->mysqli->connect_error;
+            echo 'Failed to connect to MySQL: ' . $this->mysqli->connect_error;
         }
     }
 
@@ -72,26 +72,26 @@ class MakeLog
      * @return string $logdata
      * @author Mauri Kujala <contact@edtb.xyz>
      */
-    public function make_log_entries($log_res, $type)
+    public function make_log_entries($log_res, $type): string
     {
-        $this_system = "";
-        $this_id = "";
+        $this_system = '';
+        $this_id = '';
         $i = 0;
         while ($obj = $log_res->fetch_object()) {
             if ($this_id != $obj->id) {
-                $system_name = $obj->system_name == "" ? $obj->log_system_name : $obj->system_name;
+                $system_name = $obj->system_name === '' ? $obj->log_system_name : $obj->system_name;
                 $log_station_name = $obj->station_name;
                 $log_text = $obj->log_entry;
                 $date = date_create($obj->stardate);
-                $log_added = date_modify($date, "+1286 years");
-                $distance = $obj->distance != "" ? number_format($obj->distance, 1) : "";
+                $log_added = date_modify($date, '+1286 years');
+                $distance = $obj->distance !== '' ? number_format($obj->distance, 1) : '';
 
-                if ($this_system != $system_name && $type != "general") {
-                    $add = $distance != 0 ? " (distance " . $distance . " ly)" : "";
+                if ($this_system != $system_name && $type !== 'general') {
+                    $add = $distance != 0 ? ' (distance ' . $distance . ' ly)' : '';
 
-                    $sortable = "";
-                    if ($i == 0 && $type != "log") {
-                        $sssort = $this->get_sort("slog");
+                    $sortable = '';
+                    if ($i == 0 && $type !== 'log') {
+                        $sssort = $this->get_sort('slog');
 
                         $sortable = '<span class="right">';
                         $sortable .= '<a href="/?slog_sort=' . $sssort . '" title="Sort by date asc/desc">';
@@ -109,8 +109,8 @@ class MakeLog
                     $logdata .= $system_name;
                     $logdata .= '</a>' . $l_crosslinks . $add . $sortable . '</h2></header>';
                     $logdata .= '<hr>';
-                } elseif ($type == "general" && $i == 0) {
-                    $gssort = $this->get_sort("glog");
+                } elseif ($type === 'general' && $i == 0) {
+                    $gssort = $this->get_sort('glog');
 
                     $sortable = '<span class="right">';
                     $sortable .= '<a href="/?glog_sort=' . $gssort . '" title="Sort by date asc/desc">';
@@ -126,11 +126,11 @@ class MakeLog
                  */
                 $title_icons = $this->title_icons($obj);
 
-                $log_title = !empty($obj->title) ? '&nbsp;&ndash;&nbsp;' . $obj->title : "";
+                $log_title = !empty($obj->title) ? '&nbsp;&ndash;&nbsp;' . $obj->title : '';
 
                 $logdata .= '<h3>' . $title_icons;
                 $logdata .= '<a href="javascript:void(0)" onclick="toggle_log_edit(\'' . $obj->id . '\')" style="color:inherit" title="Edit entry">';
-                $logdata .= date_format($log_added, "j M Y, H:i");
+                $logdata .= date_format($log_added, 'j M Y, H:i');
 
                 if (!empty($log_station_name)) {
                     $logdata .= '&nbsp;[Station: ' . htmlspecialchars($log_station_name) . ']';
@@ -163,19 +163,19 @@ class MakeLog
      * @return string
      * @internal param string $sort
      */
-    private function get_sort($to_sort)
+    private function get_sort($to_sort): string
     {
-        $gsort = $_GET[$to_sort . "_sort"];
+        $gsort = $_GET[$to_sort . '_sort'];
 
-        if (isset($gsort) && $gsort != "undefined") {
-            if ($gsort == "asc") {
-                $sort = "desc";
+        if (isset($gsort) && $gsort !== 'undefined') {
+            if ($gsort === 'asc') {
+                $sort = 'desc';
             }
-            if ($gsort == "desc") {
-                $sort = "asc";
+            if ($gsort === 'desc') {
+                $sort = 'asc';
             }
         } else {
-            $sort = "asc";
+            $sort = 'asc';
         }
 
         return $sort;
@@ -187,16 +187,16 @@ class MakeLog
      * @param object $obj
      * @return string
      */
-    private function title_icons($obj)
+    private function title_icons($obj): string
     {
         // check if log is pinned
-        $pinned = $obj->pinned == "1" ? '<img class="icon" src="/style/img/pinned.png" alt="Pinned" />' : "";
+        $pinned = $obj->pinned == '1' ? '<img class="icon" src="/style/img/pinned.png" alt="Pinned" />' : '';
 
         // check if log is personal
-        $personal .= $obj->type == "personal" ? '<img class="icon" src="/style/img/user.png" alt="Personal" />' : "";
+        $personal .= $obj->type === 'personal' ? '<img class="icon" src="/style/img/user.png" alt="Personal" />' : '';
 
         // check if log has audio
-        $audio .= $obj->audio != "" ? '<a href="javascript:void(0)" onclick="$(\'#' . $obj->id . '\').fadeToggle(\'fast\')" title="Listen to audio logs"><img class="icon" src="/style/img/audio.png" alt="Audio" /></a>' : "";
+        $audio .= $obj->audio !== '' ? '<a href="javascript:void(0)" onclick="$(\'#' . $obj->id . '\').fadeToggle(\'fast\')" title="Listen to audio logs"><img class="icon" src="/style/img/audio.png" alt="Audio" /></a>' : '';
 
         return $pinned . $personal . $audio;
     }
@@ -207,22 +207,22 @@ class MakeLog
      * @param object $obj
      * @return string
      */
-    private function get_audio($obj)
+    private function get_audio($obj): string
     {
         $logdata .= '<div class="audio" id="' . $obj->id . '" style="display:none">';
 
-        $audio_files = explode(", ", $obj->audio);
+        $audio_files = explode(', ', $obj->audio);
 
         foreach ($audio_files as $audio_file) {
-            $file = $_SERVER["DOCUMENT_ROOT"] . "/audio_logs/" . $audio_file;
-            $file_src = "/audio_logs/" . $audio_file;
+            $file = $_SERVER['DOCUMENT_ROOT'] . '/audio_logs/' . $audio_file;
+            $file_src = '/audio_logs/' . $audio_file;
 
             if (file_exists($file)) {
                 $timestamp = filemtime($file) + ($this->time_difference * 60 * 60);
-                $record_date = date("Y-m-d H:i:s", $timestamp);
+                $record_date = date('Y-m-d H:i:s', $timestamp);
                 $date = date_create($record_date);
-                $record = date_modify($date, "+1286 years");
-                $record_added = date_format($record, "j M Y, H:i");
+                $record = date_modify($date, '+1286 years');
+                $record_added = date_format($record, 'j M Y, H:i');
                 $added_ago = get_timeago($timestamp);
 
                 $logdata .= '<div style="margin-bottom:4px;margin-top:6px;margin-left:3px">';
@@ -249,15 +249,15 @@ class MakeLog
      */
     public function add_log($data)
     {
-        $l_system_name = $data->{"system_name"};
-        $l_station_name = $data->{"station_name"};
-        $l_entry = $data->{"log_entry"};
-        $l_id = $data->{"edit_id"};
-        $l_type = $data->{"log_type"};
-        $l_pinned = $data->{"pinned"} == "1" ? "1" : "0";
-        $l_weight = $data->{"weight"};
-        $l_title = $data->{"title"};
-        $l_audiofiles = $data->{"audiofiles"};
+        $l_system_name = $data->{'system_name'};
+        $l_station_name = $data->{'station_name'};
+        $l_entry = $data->{'log_entry'};
+        $l_id = $data->{'edit_id'};
+        $l_type = $data->{'log_type'};
+        $l_pinned = $data->{'pinned'} == '1' ? '1' : '0';
+        $l_weight = $data->{'weight'};
+        $l_title = $data->{'title'};
+        $l_audiofiles = $data->{'audiofiles'};
 
         $esc_system_name = $this->mysqli->real_escape_string($l_system_name);
         $esc_station_name = $this->mysqli->real_escape_string($l_station_name);
@@ -268,18 +268,18 @@ class MakeLog
         /**
          * get system id
          */
-        $l_system = $this->get_id("system", $esc_system_name);
+        $l_system = $this->get_id('system', $esc_system_name);
 
         /**
          * get station id
          */
-        $l_station = $this->get_id("station", "", $esc_station_name, $l_system);
+        $l_station = $this->get_id('station', '', $esc_station_name, $l_system);
 
-        if ($l_system_name == "") {
-            $l_system = "0";
+        if ($l_system_name === '') {
+            $l_system = '0';
         }
 
-        if ($l_id != "") {
+        if ($l_id !== '') {
             $query = "  UPDATE user_log SET
                         system_id = '$l_system',
                         system_name = '$esc_system_name',
@@ -295,7 +295,7 @@ class MakeLog
 
             $this->mysqli->query($query) or write_log($this->mysqli->error, __FILE__, __LINE__);
 
-        } elseif (isset($_GET["deleteid"])) {
+        } elseif (isset($_GET['deleteid'])) {
             $this->delete_log();
         } else {
             $query = "  INSERT INTO user_log (system_id, system_name, station_id, log_entry, title, weight, pinned, type, audio)
@@ -323,9 +323,9 @@ class MakeLog
      * @param string $l_system
      * @return mixed
      */
-    public function get_id($what, $esc_system_name = "", $esc_station_name = "", $l_system = "")
+    public function get_id($what, $esc_system_name = '', $esc_station_name = '', $l_system = '')
     {
-        if ($what == "system") {
+        if ($what === 'system') {
             $query = "  SELECT id AS system_id
                         FROM edtb_systems
                         WHERE name = '$esc_system_name'
@@ -337,7 +337,7 @@ class MakeLog
             $retval = $arr->system_id;
 
             $result->close();
-        } elseif ($what == "station") {
+        } elseif ($what === 'station') {
             $query = "  SELECT id AS station_id
                         FROM edtb_stations
                         WHERE name = '$esc_station_name'
@@ -362,7 +362,7 @@ class MakeLog
     {
         $query = "  SELECT audio
                     FROM user_log
-                    WHERE id = '" . $_GET["deleteid"] . "'
+                    WHERE id = '" . $_GET['deleteid'] . "'
                     LIMIT 1";
 
         $result = $this->mysqli->query($query) or write_log($this->mysqli->error, __FILE__, __LINE__);
@@ -372,22 +372,22 @@ class MakeLog
 
         $result->close();
 
-        $audio_files = explode(", ", $audio);
+        $audio_files = explode(', ', $audio);
 
         foreach ($audio_files as $audio_file) {
-            $file = $_SERVER["DOCUMENT_ROOT"] . "/audio_logs/" . $audio_file;
+            $file = $_SERVER['DOCUMENT_ROOT'] . '/audio_logs/' . $audio_file;
 
             if (file_exists($file) && is_file($file)) {
                 if (!unlink($file)) {
                     $error = error_get_last();
-                    write_log("Error: " . $error["message"], __FILE__, __LINE__);
+                    write_log('Error: ' . $error['message'], __FILE__, __LINE__);
                 }
             }
         }
         unset($audio_file);
 
         $query = "  DELETE FROM user_log
-                    WHERE id = '" . $_GET["deleteid"] . "'
+                    WHERE id = '" . $_GET['deleteid'] . "'
                     LIMIT 1";
 
         $this->mysqli->query($query) or write_log($this->mysqli->error, __FILE__, __LINE__);

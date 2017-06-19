@@ -29,15 +29,15 @@
  */
 
 /** @require installer script */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Install/install_script.php");
+require_once$_SERVER['DOCUMENT_ROOT'] . '/Install/install_script.php';
 /** @require config */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
+require_once$_SERVER['DOCUMENT_ROOT'] . '/source/config.inc.php';
 /** @require MySQL */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
+require_once$_SERVER['DOCUMENT_ROOT'] . '/source/MySQL.php';
 /** @require functions */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+require_once$_SERVER['DOCUMENT_ROOT'] . '/source/functions.php';
 /** @require curSys */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/curSys.php");
+require_once$_SERVER['DOCUMENT_ROOT'] . '/source/curSys.php';
 
 use \EDTB\style\Theme;
 
@@ -49,7 +49,7 @@ use \EDTB\style\Theme;
 class Header extends Theme
 {
     /** @var string $page_title */
-    public $page_title = "";
+    public $page_title = '';
 
     /**
      * Display the header
@@ -64,12 +64,12 @@ class Header extends Theme
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
             <!-- icon, styles and custom fonts -->
             <link type="image/png" href="/style/img/icon.png" rel="icon" />
-            <link type="text/css" href="/style/style.css?ver=<?php echo $settings["edtb_version"]?>" rel="stylesheet" />
+            <link type="text/css" href="/style/style.css?ver=<?php echo $settings['edtb_version']?>" rel="stylesheet" />
 
             <?php
-            if (Theme::sidebar_style() == "narrow") {
+            if (Theme::sidebar_style() === 'narrow') {
                 ?>
-                <link type="text/css" href="/style/style_narrow.css?ver=<?php echo $settings["edtb_version"]?>" rel="stylesheet" />
+                <link type="text/css" href="/style/style_narrow.css?ver=<?php echo $settings['edtb_version']?>" rel="stylesheet" />
                 <?php
             }
             ?>
@@ -93,10 +93,10 @@ class Header extends Theme
 
             <!-- global variable for clock -->
             <script>
-                var gmt = "<?php echo $settings["game_time"]?>";
+                var gmt = "<?php echo $settings['game_time']?>";
             </script>
 
-            <title>CMDR <?php echo $settings["cmdr_name"]?>'s ToolBox</title>
+            <title>CMDR <?php echo $settings['cmdr_name']?>'s ToolBox</title>
         </head>
         <body onload="startTime()">
         <div class="se-pre-con" id="loading">
@@ -134,7 +134,7 @@ class Header extends Theme
                 <!-- date and clock will be rendered here -->
                 <div id="datetime">
                     <?php
-                    if (Theme::sidebar_style() != "narrow") {
+                    if (Theme::sidebar_style() !== 'narrow') {
                         ?>
                         <div class="leftpanel-date" id="date"></div>
                         <div class="leftpanel-clock" id="hrs"></div>
@@ -152,7 +152,7 @@ class Header extends Theme
                     /**
                      * External links
                      */
-                    foreach ($settings["ext_links"] as $name => $link_href) {
+                    foreach ($settings['ext_links'] as $name => $link_href) {
                         echo '<a href="' .  $link_href . '" target="_blank" onclick="$(\'#ext_links\').fadeToggle(\'fast\')">';
                         echo '<div class="leftpanel-ext_links_link">' . $name . '</div>';
                         echo '</a>';
@@ -183,7 +183,7 @@ class Header extends Theme
             /**
              *  minimize or maximize left panel
              */
-            if (Theme::sidebar_style() == "narrow") {
+            if (Theme::sidebar_style() === 'narrow') {
                 $minm .= '<a href="javascript:void(0)" onclick="minmax(\'normal\')" title="Maximize left panel">';
                 $minm .= '<img class="minmax" src="/style/img/minmax.png" alt="Max" />';
                 $minm .= '</a>';
@@ -195,14 +195,14 @@ class Header extends Theme
             ?>
             <div class="leftpanel-sessionlog">
                 <?php
-                if (Theme::sidebar_style() != "narrow") {
+                if (Theme::sidebar_style() !== 'narrow') {
                     /**
                      * session log
                      */
                     // get old session log
-                    if (!$sessionlog = file_get_contents($settings["install_path"] . "/data/sessionlog.txt")) {
+                    if (!$sessionlog = file_get_contents($settings['install_path'] . '/data/sessionlog.txt')) {
                         $error = error_get_last();
-                        write_log("Error: " . $error["message"], __FILE__, __LINE__);
+                        write_log('Error: ' . $error['message'], __FILE__, __LINE__);
                     }
                     ?>
                     <div class="seslog" id="seslog">
@@ -242,44 +242,44 @@ class Header extends Theme
         /**
          * Links for the navigation panel
          */
-        $maplink = $settings["default_map"] == "galaxy_map" ? "/GalMap" : "/Map";
+        $maplink = $settings['default_map'] === 'galaxy_map' ? '/GalMap' : '/Map';
 
-        $links = array( "ED ToolBox--log.png--true" => "/",
-                        "System Information--info.png--true" => "/System",
-                        "Galaxy Map&nbsp;&nbsp;&&nbsp;&nbsp;Neighborhood Map--grid.png--true" => $maplink,
-                        "Points of Interest&nbsp;&nbsp;&&nbsp;&nbsp;Bookmarks--poi.png--true" => "/Bookmarks",
-                        "Nearest Systems&nbsp;&nbsp;&&nbsp;&nbsp;Stations--find.png--false" => "/NearestSystems",
-                        "Data Point--dataview.png--false" => "/DataPoint",
-                        "Galnet News--news.png--false" => "/GalNet",
-                        "Screenshot Gallery--gallery.png--false" => "/Gallery",
-                        "System Log--log.png--true" => "/");
+        $links = array( 'ED ToolBox--log.png--true' => '/',
+                        'System Information--info.png--true' => '/System',
+                        'Galaxy Map&nbsp;&nbsp;&&nbsp;&nbsp;Neighborhood Map--grid.png--true' => $maplink,
+                        'Points of Interest&nbsp;&nbsp;&&nbsp;&nbsp;Bookmarks--poi.png--true' => '/Bookmarks',
+                        'Nearest Systems&nbsp;&nbsp;&&nbsp;&nbsp;Stations--find.png--false' => '/NearestSystems',
+                        'Data Point--dataview.png--false' => '/DataPoint',
+                        'Galnet News--news.png--false' => '/GalNet',
+                        'Screenshot Gallery--gallery.png--false' => '/Gallery',
+                        'System Log--log.png--true' => '/');
 
         $i = 0;
         $count = count($links);
         foreach ($links as $name => $link_href) {
-            $names = explode("--", $name);
+            $names = explode('--', $name);
             $name = $names[0];
             $pic = $names[1];
             $reload = $names[2];
 
-            $class = $this->page_title == $name ? "active" : "link";
+            $class = $this->page_title == $name ? 'active' : 'link';
 
             //
-            if ($this->page_title == "System Log" && $name == "ED ToolBox") {
-                $class = "active";
+            if ($this->page_title === 'System Log' && $name === 'ED ToolBox') {
+                $class = 'active';
             }
 
-            $aclass = "";
-            $onclick = "";
-            if ($reload != "true") {
+            $aclass = '';
+            $onclick = '';
+            if ($reload !== 'true') {
                 $aclass = ' data-push="true"';
                 $onclick = ' onclick="setActive(\'' . $i . '\', \'' . $count . '\')"';
             }
 
-            if ($name != "System Log") {
-                if (Theme::sidebar_style() == "narrow") {
+            if ($name !== 'System Log') {
+                if (Theme::sidebar_style() === 'narrow') {
                     // offset the log icon to make it appear centered
-                    $styling = $pic == "log.png" ? ' style="margin-left:6px"' : "";
+                    $styling = $pic === 'log.png' ? ' style="margin-left:6px"' : '';
 
                     echo '<a' . $aclass . $onclick . ' href="' .  $link_href . '">';
                     echo '<div id="link_' . $i . '" class="' . $class . '">';
@@ -315,17 +315,17 @@ class Header extends Theme
             <div class="rightpanel-pagetitle">
                 <span class="titletext">
                     <a href="javascript:void(0)" onclick="tofront('search_system');$('#system_22').focus()" title="Search for a system" id="pagetitle">
-                        CMDR <?php echo $settings["cmdr_name"]?>
+                        CMDR <?php echo $settings['cmdr_name']?>
                     </a>
                 </span>
                 <?php
                 /**
                  * User ranks from FD API
                  */
-                if (isset($api["commander"]) && $settings["show_cmdr_status"] == "true") {
-                    $status_ranks_cache = "";
-                    if (file_exists($_SERVER["DOCUMENT_ROOT"] . "/cache/cmdr_ranks_status.html")) {
-                        $status_ranks_cache = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/cache/cmdr_ranks_status.html");
+                if (isset($api['commander']) && $settings['show_cmdr_status'] === 'true') {
+                    $status_ranks_cache = '';
+                    if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/cache/cmdr_ranks_status.html')) {
+                        $status_ranks_cache = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/cache/cmdr_ranks_status.html');
                     }
 
                     echo '<div class="status_ranks" id="cmdr_click"><div id="cmdr_status">' . $status_ranks_cache . '</div></div>';
@@ -334,7 +334,7 @@ class Header extends Theme
                 /**
                  * EDSM comment link
                  */
-                if (!empty($settings["edsm_api_key"]) && !empty($settings["edsm_cmdr_name"])) {
+                if (!empty($settings['edsm_api_key']) && !empty($settings['edsm_cmdr_name'])) {
                     ?>
                     <div style="display:inline-block;margin-left:5px">
                         <a id="edsm_cmnt_pic" href="javascript:void(0)" title="Add private comment to EDSM">
@@ -347,7 +347,7 @@ class Header extends Theme
             </div>
             <!-- EDSM comment -->
             <?php
-            if (!empty($settings["edsm_api_key"]) && !empty($settings["edsm_cmdr_name"])) {
+            if (!empty($settings['edsm_api_key']) && !empty($settings['edsm_cmdr_name'])) {
                 ?>
                 <div class="edsm_comment" id="edsm_comment">
                     <form method="get" action="/" data-push="true">
@@ -356,12 +356,12 @@ class Header extends Theme
                         <div class="button" onclick="edsm_comment($('#comment2').val(), true)" style="margin-top:6px;margin-bottom:6px">Send comment</div>
                     </form>
                     <?php
-                    if (!empty($settings["edsm_standard_comments"])) {
+                    if (!empty($settings['edsm_standard_comments'])) {
                         echo '<br />&nbsp;OR choose from standard set<form method="get" action="/">';
                         echo '<select class="selectbox" id="comment1" name="comment" onchange="edsm_comment($(\'#comment1\').val(), true)">';
                         echo '<option value="">Choose comment</option>';
 
-                        foreach ($settings["edsm_standard_comments"] as $name => $comment) {
+                        foreach ($settings['edsm_standard_comments'] as $name => $comment) {
                             echo '<option value="' . $comment . '">';
                             echo $name;
                             echo '</option>';
@@ -380,10 +380,10 @@ class Header extends Theme
                 /**
                  * show ship status
                  */
-                if (isset($api["ship"]) && $settings["show_ship_status"] == "true") {
-                    $ship_cache = "";
-                    if (file_exists($_SERVER["DOCUMENT_ROOT"] . "/cache/ship_status.html")) {
-                        $ship_cache = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/cache/ship_status.html");
+                if (isset($api['ship']) && $settings['show_ship_status'] === 'true') {
+                    $ship_cache = '';
+                    if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/cache/ship_status.html')) {
+                        $ship_cache = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/cache/ship_status.html');
                     }
 
                     echo '<div class="status_ship" id="ship_status">' . $ship_cache . '</div>';
@@ -397,7 +397,7 @@ class Header extends Theme
                     /**
                      * show refresh button
                      */
-                    if (isset($api["commander"]) || isset($api["ship"])) {
+                    if (isset($api['commander']) || isset($api['ship'])) {
                         ?>
                         <a id="api_refresh" href="javascript:void(0)" onclick="refresh_api()" title="Refresh API data">
                             <img class="icon24" src="/style/img/refresh_24.png" alt="Refresh" style="margin-right:10px" />
@@ -443,27 +443,27 @@ class Header extends Theme
     {
         $setting_links = array
                          (
-                            array(  "href" => "/Admin",
-                                    "icon" => "settings.png",
-                                    "text" => "Customize ED ToolBox"),
-                            array(  "href" => "/Admin/ini_editor.php",
-                                    "icon" => "vareditor.png",
-                                    "text" => "Edit ini file"),
-                            array(  "href" => "/Admin/db_manager.php",
-                                    "icon" => "dataview.png",
-                                    "text" => "Database Management"),
-                            array(  "href" => "/Admin/SQL.php",
-                                    "icon" => "sql.png",
-                                    "text" => "Run MySQL queries"),
-                            array(  "href" => "/Admin/Import.php",
-                                    "icon" => "import.png",
-                                    "text" => "Import Flight Logs"),
-                            array(  "href" => "/Admin/API_login.php",
-                                    "icon" => "api.png",
-                                    "text" => "Connect Companion API"),
-                            array( "href" => "/Admin/Log.php",
-                                   "icon" => "log2.png",
-                                   "text" => "View Error Log")
+                            array(  'href' => '/Admin',
+                                    'icon' => 'settings.png',
+                                    'text' => 'Customize ED ToolBox'),
+                            array(  'href' => '/Admin/ini_editor.php',
+                                    'icon' => 'vareditor.png',
+                                    'text' => 'Edit ini file'),
+                            array(  'href' => '/Admin/db_manager.php',
+                                    'icon' => 'dataview.png',
+                                    'text' => 'Database Management'),
+                            array(  'href' => '/Admin/SQL.php',
+                                    'icon' => 'sql.png',
+                                    'text' => 'Run MySQL queries'),
+                            array(  'href' => '/Admin/Import.php',
+                                    'icon' => 'import.png',
+                                    'text' => 'Import Flight Logs'),
+                            array(  'href' => '/Admin/API_login.php',
+                                    'icon' => 'api.png',
+                                    'text' => 'Connect Companion API'),
+                            array( 'href' => '/Admin/Log.php',
+                                   'icon' => 'log2.png',
+                                   'text' => 'View Error Log')
                          );
 
         echo '<div class="settings_panel" id="settings" style="width:227px">';
@@ -471,9 +471,9 @@ class Header extends Theme
         foreach ($setting_links as $title)
         {
             ?>
-            <a href="<?php echo $title["href"]?>" title="<?php echo $title["text"]?>">
+            <a href="<?php echo $title['href']?>" title="<?php echo $title['text']?>">
                 <div class="link" style="width:90%;text-align:left">
-                    <img class="icon" src="/style/img/<?php echo $title["icon"]?>" alt="<?php echo $title["icon"]?>" /><?php echo $title["text"]?>
+                    <img class="icon" src="/style/img/<?php echo $title['icon']?>" alt="<?php echo $title['icon']?>" /><?php echo $title['text']?>
                 </div>
             </a>
             <?php
@@ -493,7 +493,7 @@ class Header extends Theme
         <div class="settings_panel" id="about">
             <table>
                 <tr>
-                    <td colspan="3" class="light">ED ToolBox v.<?php echo $settings["edtb_version"]?></td>
+                    <td colspan="3" class="light">ED ToolBox v.<?php echo $settings['edtb_version']?></td>
                 </tr>
                 <tr>
                     <td class="info_td" colspan="3" style="padding-bottom:5px;padding-top:5px">

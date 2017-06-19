@@ -31,17 +31,17 @@
  */
 
 /** @require functions */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/functions.php';
 
-$actions = isset($_POST["data"]) ? $_POST["data"] : false;
-$send = isset($_GET["send"]) ? $_GET["send"] : false;
+$actions = $_POST['data'] ?? false;
+$send = $_GET['send'] ?? false;
 
-$shell = new COM("WScript.Shell");
-$shell->AppActivate("Elite - Dangerous (CLIENT)");
+$shell = new COM('WScript.Shell');
+$shell->AppActivate('Elite - Dangerous (CLIENT)');
 
 if ($actions !== false) {
     foreach ($actions as $action) {
-        if (substr($action, 0, 10) != "sleep_for_") {
+        if (substr($action, 0, 10) !== 'sleep_for_') {
             if (is_array($action)) {
                 $repeat = $action[0];
                 $keypress = $action[1];
@@ -50,11 +50,11 @@ if ($actions !== false) {
                     $shell->SendKeys($keypress);
                 }
             } else {
-                $shell->SendKeys("{" . $action . "}");
+                $shell->SendKeys('{' . $action . '}');
                 echo $action;
             }
         } else {
-            $sleep = str_replace("sleep_for_", "", $action);
+            $sleep = str_replace('sleep_for_', '', $action);
             usleep($sleep);
         }
     }

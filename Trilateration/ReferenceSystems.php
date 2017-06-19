@@ -62,7 +62,7 @@ class ReferenceSystems
          * check connection
          */
         if ($this->mysqli->connect_errno) {
-            echo "Failed to connect to MySQL: " . $this->mysqli->connect_error;
+            echo 'Failed to connect to MySQL: ' . $this->mysqli->connect_error;
         }
     }
 
@@ -72,7 +72,7 @@ class ReferenceSystems
      * @return array $references name => coordinates
      * @author Mauri Kujala <contact@edtb.xyz>
      */
-    public function reference_systems()
+    public function reference_systems(): array
     {
         try {
             /**
@@ -80,12 +80,12 @@ class ReferenceSystems
              */
             $start_point = $this->fuzziness();
 
-            $start_name = $start_point["system_name"];
-            $start_x = $start_point["x"];
-            $start_y = $start_point["y"];
-            $start_z = $start_point["z"];
+            $start_name = $start_point['system_name'];
+            $start_x = $start_point['x'];
+            $start_y = $start_point['y'];
+            $start_z = $start_point['z'];
 
-            $fuzziness = $start_point["fuzziness"];
+            $fuzziness = $start_point['fuzziness'];
 
             /** @var string $esc_start_name Mysqli escaped system name */
             $esc_start_name = $this->mysqli->real_escape_string($start_name);
@@ -93,14 +93,14 @@ class ReferenceSystems
             /**
              * first, query the systems table to see if we can find enough reference systems inside the "fuzziness" bubble
              */
-            $query = "  SELECT name, x, y, z
+            $query = '  SELECT name, x, y, z
                         FROM edtb_systems
-                        WHERE x BETWEEN (" . $start_x . " - " . $fuzziness . ") AND (" . $start_x . " + " . $fuzziness . ")
-                        AND y BETWEEN (" . $start_y . " - " . $fuzziness . ") AND (" . $start_y . " + " . $fuzziness . ")
-                        AND z BETWEEN (" . $start_z . " - " . $fuzziness . ") AND (" . $start_z . " + " . $fuzziness . ")
-                        AND sqrt(pow((x-(" . $start_x . ")), 2)+pow((y-(" . $start_y . ")), 2)+pow((z-(" . $start_z . ")), 2)) < " . $fuzziness . "
+                        WHERE x BETWEEN (' . $start_x . ' - ' . $fuzziness . ') AND (' . $start_x . ' + ' . $fuzziness . ')
+                        AND y BETWEEN (' . $start_y . ' - ' . $fuzziness . ') AND (' . $start_y . ' + ' . $fuzziness . ')
+                        AND z BETWEEN (' . $start_z . ' - ' . $fuzziness . ') AND (' . $start_z . ' + ' . $fuzziness . ')
+                        AND sqrt(pow((x-(' . $start_x . ')), 2)+pow((y-(' . $start_y . ')), 2)+pow((z-(' . $start_z . ')), 2)) < ' . $fuzziness . "
                         AND name != '$esc_start_name'
-                        ORDER BY sqrt(pow((x-(" . $start_x . ")), 2)+pow((y-(" . $start_y . ")), 2)+pow((z-(" . $start_z . ")), 2)) DESC";
+                        ORDER BY sqrt(pow((x-(" . $start_x . ')), 2)+pow((y-(' . $start_y . ')), 2)+pow((z-(' . $start_z . ')), 2)) DESC';
 
             $result = $this->mysqli->query($query) or write_log($this->mysqli->error, __FILE__, __LINE__);
             $num = $result->num_rows;
@@ -111,14 +111,14 @@ class ReferenceSystems
             if ($num <= 4) {
                 $result->close();
 
-                $query = "  SELECT name, x, y, z
+                $query = '  SELECT name, x, y, z
                             FROM edtb_systems
-                            WHERE x NOT BETWEEN (" . $start_x . " - " . $fuzziness . ") AND (" . $start_x . " + " . $fuzziness . ")
-                            AND y NOT BETWEEN (" . $start_y . " - " . $fuzziness . ") AND (" . $start_y . " + " . $fuzziness . ")
-                            AND z NOT BETWEEN (" . $start_z . " - " . $fuzziness . ") AND (" . $start_z . " + " . $fuzziness . ")
-                            AND sqrt(pow((x-(" . $start_x . ")), 2)+pow((y-(" . $start_y . ")), 2)+pow((z-(" . $start_z . ")), 2)) > " . $fuzziness . "
+                            WHERE x NOT BETWEEN (' . $start_x . ' - ' . $fuzziness . ') AND (' . $start_x . ' + ' . $fuzziness . ')
+                            AND y NOT BETWEEN (' . $start_y . ' - ' . $fuzziness . ') AND (' . $start_y . ' + ' . $fuzziness . ')
+                            AND z NOT BETWEEN (' . $start_z . ' - ' . $fuzziness . ') AND (' . $start_z . ' + ' . $fuzziness . ')
+                            AND sqrt(pow((x-(' . $start_x . ')), 2)+pow((y-(' . $start_y . ')), 2)+pow((z-(' . $start_z . ')), 2)) > ' . $fuzziness . "
                             AND name != '$esc_start_name'
-                            ORDER BY sqrt(pow((x-(" . $start_x . ")), 2)+pow((y-(" . $start_y . ")), 2)+pow((z-(" . $start_z . ")), 2)) ASC LIMIT 500";
+                            ORDER BY sqrt(pow((x-(" . $start_x . ')), 2)+pow((y-(' . $start_y . ')), 2)+pow((z-(' . $start_z . ')), 2)) ASC LIMIT 500';
 
                 $result = $this->mysqli->query($query) or write_log($this->mysqli->error, __FILE__, __LINE__);
             }
@@ -129,10 +129,10 @@ class ReferenceSystems
             $i = 0;
             $pool = [];
             while ($obj = $result->fetch_object()) {
-                $pool[$i]["name"] = $obj->name;
-                $pool[$i]["x"] = $obj->x;
-                $pool[$i]["y"] = $obj->y;
-                $pool[$i]["z"] = $obj->z;
+                $pool[$i]['name'] = $obj->name;
+                $pool[$i]['x'] = $obj->x;
+                $pool[$i]['y'] = $obj->y;
+                $pool[$i]['z'] = $obj->z;
 
                 $i++;
             }
@@ -142,15 +142,15 @@ class ReferenceSystems
             /**
              * iterate over the different orders to get reference systems in all directions
              */
-            $orders = array("z DESC", "z ASC", "x DESC", "x ASC");
+            $orders = array('z DESC', 'z ASC', 'x DESC', 'x ASC');
 
             $references = [];
             foreach ($orders as $order) {
                 Utility::orderBy($pool, $order);
 
                 for ($is = 0; $is <= 4; $is++) {
-                    if (!array_key_exists($pool[$is]["name"], $references) && !in_array($pool[$is]["name"], $this->used)) {
-                        $references[$pool[$is]["name"]] = $pool[$is]["x"] . "," . $pool[$is]["y"] . "," . $pool[$is]["z"];
+                    if (!array_key_exists($pool[$is]['name'], $references) && !in_array($pool[$is]['name'], $this->used)) {
+                        $references[$pool[$is]['name']] = $pool[$is]['x'] . ',' . $pool[$is]['y'] . ',' . $pool[$is]['z'];
                         break;
                     }
                 }
@@ -161,10 +161,10 @@ class ReferenceSystems
             /**
              *  If start point is not set, use standard set of references
              */
-            $references = array("Sadr" => "-1794.69,53.6875,365.844",
-                                "HD 1" => "-888.375,99.3125,-489.75",
-                                "Cant" => "126.406,-249.031,87.7812",
-                                "Nox"  => "38.8438,-17.7812,-63.875");
+            $references = array('Sadr' => '-1794.69,53.6875,365.844',
+                                'HD 1' => '-888.375,99.3125,-489.75',
+                                'Cant' => '126.406,-249.031,87.7812',
+                                'Nox' => '38.8438,-17.7812,-63.875');
         }
 
         return $references;
@@ -186,10 +186,10 @@ class ReferenceSystems
          * if user wants the standard references, we don't need any of this
          */
         if ($this->standard !== true) {
-            $query = "  SELECT system_name
+            $query = '  SELECT system_name
                         FROM user_visited_systems
                         ORDER BY visit DESC
-                        LIMIT 30";
+                        LIMIT 30';
 
             $result = $this->mysqli->query($query) or write_log($this->mysqli->error, __FILE__, __LINE__);
 
@@ -201,7 +201,7 @@ class ReferenceSystems
                  */
                 $last_known = last_known_system(true);
                 /** @var string $last_known user's last known system */
-                $last_known_name = $last_known["name"];
+                $last_known_name = $last_known['name'];
 
                 if (!empty($last_known_name)) {
                     $num = 0;
@@ -215,26 +215,26 @@ class ReferenceSystems
 
                         if ($visited_system_name == $last_known_name) {
                             break;
-                        } else {
-                            $num++;
                         }
+
+                        $num++;
                     }
 
                     $num = $num == 0 ? 1 : $num;
                     $fuzziness = $num * 40 + 20; // assuming a max range of 40 ly per jump (+ 20 ly just to be on the safe side)
 
-                    $value["fuzziness"] = $fuzziness;
-                    $value["system_name"] = $last_known_name;
-                    $value["x"] = $last_known["x"];
-                    $value["y"] = $last_known["y"];
-                    $value["z"] = $last_known["z"];
+                    $value['fuzziness'] = $fuzziness;
+                    $value['system_name'] = $last_known_name;
+                    $value['x'] = $last_known['x'];
+                    $value['y'] = $last_known['y'];
+                    $value['z'] = $last_known['z'];
 
                     $result->close();
 
                     return $value;
-                } else {
-                    throw new \Exception('Cannot calculate fuzziness factor: no last known system');
                 }
+
+                throw new \Exception('Cannot calculate fuzziness factor: no last known system');
             } else {
                 throw new \Exception('Cannot calculate fuzziness factor: no visited systems');
             }

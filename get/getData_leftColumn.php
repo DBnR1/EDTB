@@ -33,24 +33,24 @@
 /**
  * System title for the left column
  */
-$data["system_title"] .= "";
+$data['system_title'] .= '';
 
-$pic = get_allegiance_icon($curSys["allegiance"]);
+$pic = get_allegiance_icon($curSys['allegiance']);
 
-$data["system_title"] .= '<div class="leftpanel-add-data">';
-$data["system_title"] .= '<a href="javascript:void(0)" id="toggle" onclick="setbm(\'' . addslashes($curSys["name"]) . '\', \'' . $curSys["id"] . '\');tofront(\'addBm\');$(\'#bm_text\').focus()" title="Bookmark system">';
-$data["system_title"] .= '<img src="/style/img/' . $pic . '" class="allegiance_icon" alt="' . $curSys["allegiance"] . '" />';
-$data["system_title"] .= '</a>';
-$data["system_title"] .= '</div>';
+$data['system_title'] .= '<div class="leftpanel-add-data">';
+$data['system_title'] .= '<a href="javascript:void(0)" id="toggle" onclick="setbm(\'' . addslashes($curSys['name']) . '\', \'' . $curSys['id'] . '\');tofront(\'addBm\');$(\'#bm_text\').focus()" title="Bookmark system">';
+$data['system_title'] .= '<img src="/style/img/' . $pic . '" class="allegiance_icon" alt="' . $curSys['allegiance'] . '" />';
+$data['system_title'] .= '</a>';
+$data['system_title'] .= '</div>';
 
-if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
-    $data["system_title"] .= '<div class="leftpanel-title-text"><span id="ltitle">';
+if (!isset($_COOKIE['style']) || $_COOKIE['style'] !== 'narrow') {
+    $data['system_title'] .= '<div class="leftpanel-title-text"><span id="ltitle">';
 
     $bookmarked = 0;
-    if ($curSys["id"] != "-1") {
+    if ($curSys['id'] != '-1') {
         $b_query = "SELECT id
                     FROM user_bookmarks
-                    WHERE system_id = '" . $curSys["id"] . "'
+                    WHERE system_id = '" . $curSys['id'] . "'
                     AND system_id != ''
                     LIMIT 1";
     } else {
@@ -69,40 +69,40 @@ if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
 
     $poid = $mysqli->query($p_query)->num_rows;
 
-    $class = $bookmarked > 0 ? "bookmarked" : "title";
-    $class = $poid > 0 ? "poid" : $class;
+    $class = $bookmarked > 0 ? 'bookmarked' : 'title';
+    $class = $poid > 0 ? 'poid' : $class;
 
-    $data["system_title"] .= '<a class="' . $class . '" href="javascript:void(0)" id="system_title" onclick="tofront(\'distance\');get_cs(\'system_2\', \'coords_2\');$(\'#system_6\').focus()" onmouseover="slide()" onmouseout="slideout()" title="Calculate distances">';
+    $data['system_title'] .= '<a class="' . $class . '" href="javascript:void(0)" id="system_title" onclick="tofront(\'distance\');get_cs(\'system_2\', \'coords_2\');$(\'#system_6\').focus()" onmouseover="slide()" onmouseout="slideout()" title="Calculate distances">';
 
-    if (isset($curSys["name"]) && !empty($curSys["name"])) {
-        $data["system_title"] .= htmlspecialchars($curSys["name"]);
-        $data["system_title"] .= "</a>";
-        $data["system_title"] .= '</span><span style="margin-left: 10px;"><button class="btn" data-clipboard-target="#system_title"><img src="/style/img/clipboard.png" alt="Copy" width="13" align="right"></button></span>';
+    if (isset($curSys['name']) && !empty($curSys['name'])) {
+        $data['system_title'] .= htmlspecialchars($curSys['name']);
+        $data['system_title'] .= '</a>';
+        $data['system_title'] .= '</span><span style="margin-left: 10px;"><button class="btn" data-clipboard-target="#system_title"><img src="/style/img/clipboard.png" alt="Copy" width="13" align="right"></button></span>';
     } else {
-        $data["system_title"] .= "Location unavailable";
-        $data["system_title"] .= "</a>";
+        $data['system_title'] .= 'Location unavailable';
+        $data['system_title'] .= '</a>';
 
-        $data["system_title"] .= '<img class="icon20" src="/style/img/help.png" alt="Help" style="margin-left:6px" onclick="$(\'#location_help\').fadeToggle(\'fast\')" />';
-        $data["system_title"] .= '</span>';
-        $data["system_title"] .= '<div class="info" id="location_help" style="position:fixed;left:60px;top:40px">';
-        $data["system_title"] .= 'If you\'re having trouble getting ED ToolBox to<br />show your current location, check the<br />';
-        $data["system_title"] .= '<a href="http://edtb.xyz/?q=common-issues#location_unavailable" target="_blank">Common issues</a> page at EDTB.xyz for help.';
-        $data["system_title"] .= '</div>';
+        $data['system_title'] .= '<img class="icon20" src="/style/img/help.png" alt="Help" style="margin-left:6px" onclick="$(\'#location_help\').fadeToggle(\'fast\')" />';
+        $data['system_title'] .= '</span>';
+        $data['system_title'] .= '<div class="info" id="location_help" style="position:fixed;left:60px;top:40px">';
+        $data['system_title'] .= 'If you\'re having trouble getting ED ToolBox to<br />show your current location, check the<br />';
+        $data['system_title'] .= '<a href="http://edtb.xyz/?q=common-issues#location_unavailable" target="_blank">Common issues</a> page at EDTB.xyz for help.';
+        $data['system_title'] .= '</div>';
     }
 
-    $data["system_title"] .= '</div>';
+    $data['system_title'] .= '</div>';
 } else {
-    $data["system_title"] .= '<div style="display:none" id="system_title">' . $curSys["name"] . '</div>';
+    $data['system_title'] .= '<div style="display:none" id="system_title">' . $curSys['name'] . '</div>';
 }
 
 /**
  * User balance from FD API
  */
-if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
-    $status_balance_cache = "";
-    if (isset($api["commander"]) && $settings["show_cmdr_status"] == "true") {
-        if (file_exists($_SERVER["DOCUMENT_ROOT"] . "/cache/cmdr_balance_status.html")) {
-            $status_balance_cache = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/cache/cmdr_balance_status.html");
+if (!isset($_COOKIE['style']) || $_COOKIE['style'] !== 'narrow') {
+    $status_balance_cache = '';
+    if (isset($api['commander']) && $settings['show_cmdr_status'] === 'true') {
+        if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/cache/cmdr_balance_status.html')) {
+            $status_balance_cache = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/cache/cmdr_balance_status.html');
         }
     }
 }
@@ -110,36 +110,35 @@ if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
 /**
  * System information for the left column
  */
-$data["system_info"] = "";
+$data['system_info'] = '';
 
-if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
-    if (!empty($curSys["allegiance"])) {
-        $population_s = $curSys["population"] == "0" ? "" : " - Population: " . number_format($curSys["population"]);
-        $population_s = $curSys["population"] == "None" ? "" : $curSys["population"];
-        $population_s = $curSys["government"] == "" ? "" : " - " . $curSys["government"];
+if (!isset($_COOKIE['style']) || $_COOKIE['style'] !== 'narrow') {
+    if (!empty($curSys['allegiance'])) {
+        $population_s = $curSys['population'] == '0' ? '' : ' - Population: ' . number_format($curSys['population']);
+        $government_s = $curSys['government'] === '' ? '' : ' - ' . $curSys['government'];
 
-        $data["system_info"] .= '<div class="subtitle" id="t2">' . $curSys["allegiance"] . $government_s . $population_s . '</div>';
+        $data['system_info'] .= '<div class="subtitle" id="t2">' . $curSys['allegiance'] . $government_s . $population_s . '</div>';
 
-        $data["system_info"] .= '<div class="text" id="t3">';
-        if (!empty($curSys["economy"])) {
-            $data["system_info"] .= '&boxur; Economy: ' . $curSys["economy"] . '<span style="margin-left:10px">';
+        $data['system_info'] .= '<div class="text" id="t3">';
+        if (!empty($curSys['economy'])) {
+            $data['system_info'] .= '&boxur; Economy: ' . $curSys['economy'] . '<span style="margin-left:10px">';
         }
-        $data["system_info"] .= '<span id="balance_st">' . $status_balance_cache . '</span>';
-        $data["system_info"] .= '</span></div>';
+        $data['system_info'] .= '<span id="balance_st">' . $status_balance_cache . '</span>';
+        $data['system_info'] .= '</span></div>';
     } else {
-        $data["system_info"] .= '<div class="subtitle" id="t2">Welcome</div>';
-        $data["system_info"] .= '<div class="text" id="t3">';
-        $data["system_info"] .= '&boxur; CMDR ' . $settings["cmdr_name"] . '<span style="margin-left:10px">';
-        $data["system_info"] .= '<span id="balance_st">' . $status_balance_cache . '</span>';
-        $data["system_info"] .= '</span></div>';
+        $data['system_info'] .= '<div class="subtitle" id="t2">Welcome</div>';
+        $data['system_info'] .= '<div class="text" id="t3">';
+        $data['system_info'] .= '&boxur; CMDR ' . $settings['cmdr_name'] . '<span style="margin-left:10px">';
+        $data['system_info'] .= '<span id="balance_st">' . $status_balance_cache . '</span>';
+        $data['system_info'] .= '</span></div>';
     }
 }
 
 /**
  * link to calculate coordinates
  */
-if (empty($curSys["coordinates"]) && !empty($curSys["name"])) {
-    if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
+if (empty($curSys['coordinates']) && !empty($curSys['name'])) {
+    if (!isset($_COOKIE['style']) || $_COOKIE['style'] !== 'narrow') {
         $calc_coord .= '<span style="margin-bottom:6px;height:40px">';
         $calc_coord .= '<a href="javascript:void(0)" onclick="set_reference_systems(false);tofront(\'calculate\');get_cs(\'target_system\')" title="No coordinates found, click here to calculate">';
         $calc_coord .= '<img src="/style/img/calculator.png" class="icon24" alt="Calculate" />';
@@ -155,14 +154,14 @@ if (empty($curSys["coordinates"]) && !empty($curSys["name"])) {
 /**
  * Stations for the left column
  */
-if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
+if (!isset($_COOKIE['style']) || $_COOKIE['style'] !== 'narrow') {
     $query = "  SELECT SQL_CACHE
                 id, name, ls_from_star, max_landing_pad_size, faction, government, allegiance,
                 state, type, import_commodities, export_commodities,
                 prohibited_commodities, economies, selling_ships, shipyard,
                 outfitting, commodities_market, black_market, refuel, repair, rearm, is_planetary
                 FROM edtb_stations
-                WHERE system_id = '" . $curSys["id"] . "'
+                WHERE system_id = '" . $curSys['id'] . "'
                 ORDER BY -ls_from_star DESC, name
                 LIMIT 5";
 
@@ -180,23 +179,23 @@ if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
             }
 
             $ls_from_star = $station_obj->ls_from_star;
-            $max_landing_pad_size = $station_obj->max_landing_pad_size == "" ? "" : "<strong>Landing pad:</strong> " . $station_obj->max_landing_pad_size . "<br />";
+            $max_landing_pad_size = $station_obj->max_landing_pad_size === '' ? '' : '<strong>Landing pad:</strong> ' . $station_obj->max_landing_pad_size . '<br />';
             $station_id = $station_obj->id;
 
-            $faction = $station_obj->faction == "" ? "" : "<strong>Faction:</strong> " . $station_obj->faction . "<br />";
-            $government = $station_obj->government == "" ? "" : "<strong>Government:</strong> " . $station_obj->government . "<br />";
-            $allegiance = $station_obj->allegiance == "" ? "" : "<strong>Allegiance:</strong> " . $station_obj->allegiance . "<br />";
+            $faction = $station_obj->faction === '' ? '' : '<strong>Faction:</strong> ' . $station_obj->faction . '<br />';
+            $government = $station_obj->government === '' ? '' : '<strong>Government:</strong> ' . $station_obj->government . '<br />';
+            $allegiance = $station_obj->allegiance === '' ? '' : '<strong>Allegiance:</strong> ' . $station_obj->allegiance . '<br />';
 
-            $state = $station_obj->state == "" ? "" : "<strong>State:</strong> " . $station_obj->state . "<br />";
+            $state = $station_obj->state === '' ? '' : '<strong>State:</strong> ' . $station_obj->state . '<br />';
             $s_type = $station_obj->type;
-            $type = $station_obj->type == "" ? "" : "<strong>Type:</strong> " . $station_obj->type . "<br />";
-            $economies = $station_obj->economies == "" ? "" : "<strong>Economies:</strong> " . $station_obj->economies . "<br />";
+            $type = $station_obj->type === '' ? '' : '<strong>Type:</strong> ' . $station_obj->type . '<br />';
+            $economies = $station_obj->economies === '' ? '' : '<strong>Economies:</strong> ' . $station_obj->economies . '<br />';
 
-            $import_commodities = $station_obj->import_commodities == "" ? "" : "<br /><strong>Import commodities:</strong> " . $station_obj->import_commodities . "<br />";
-            $export_commodities = $station_obj->export_commodities == "" ? "" : "<strong>Export commodities:</strong> " . $station_obj->export_commodities . "<br />";
-            $prohibited_commodities = $station_obj->prohibited_commodities == "" ? "" : "<strong>Prohibited commodities:</strong> " . $station_obj->prohibited_commodities . "<br />";
+            $import_commodities = $station_obj->import_commodities === '' ? '' : '<br /><strong>Import commodities:</strong> ' . $station_obj->import_commodities . '<br />';
+            $export_commodities = $station_obj->export_commodities === '' ? '' : '<strong>Export commodities:</strong> ' . $station_obj->export_commodities . '<br />';
+            $prohibited_commodities = $station_obj->prohibited_commodities === '' ? '' : '<strong>Prohibited commodities:</strong> ' . $station_obj->prohibited_commodities . '<br />';
 
-            $selling_ships = $station_obj->selling_ships == "" ? "" : "<br /><strong>Selling ships:</strong> " . str_replace("'", "", $station_obj->selling_ships) . "<br />";
+            $selling_ships = $station_obj->selling_ships === '' ? '' : '<br /><strong>Selling ships:</strong> ' . str_replace("'", '', $station_obj->selling_ships) . '<br />';
 
             $shipyard = $station_obj->shipyard;
             $outfitting = $station_obj->outfitting;
@@ -207,24 +206,24 @@ if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
             $rearm = $station_obj->rearm;
             $is_planetary = $station_obj->is_planetary;
 
-            $icon = get_station_icon($s_type, $is_planetary, "margin:3px;margin-left:0px;margin-right:6px");
+            $icon = get_station_icon($s_type, $is_planetary, 'margin:3px;margin-left:0px;margin-right:6px');
 
-            $includes = array(  "shipyard" => $shipyard,
-                                "outfitting" => $outfitting,
-                                "commodities market" => $commodities_market,
-                                "black market" => $black_market,
-                                "refuel" => $refuel,
-                                "repair" => $repair,
-                                "restock" => $rearm);
+            $includes = array(  'shipyard' => $shipyard,
+                                'outfitting' => $outfitting,
+                                'commodities market' => $commodities_market,
+                                'black market' => $black_market,
+                                'refuel' => $refuel,
+                                'repair' => $repair,
+                                'restock' => $rearm);
 
             $i = 0;
-            $services = "";
+            $services = '';
             foreach ($includes as $name => $included) {
                 if ($included == 1) {
                     if ($i != 0) {
-                        $services .= ", ";
+                        $services .= ', ';
                     } else {
-                        $services .= "<strong>Facilities:</strong> ";
+                        $services .= '<strong>Facilities:</strong> ';
                     }
 
                     $services .= $name;
@@ -232,13 +231,13 @@ if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
                     $i++;
                 }
             }
-            $services .= "<br />";
+            $services .= '<br />';
 
             $info = $type . $max_landing_pad_size . $faction . $government . $allegiance . $state . $economies . $services . $import_commodities . $export_commodities . $prohibited_commodities . $selling_ships;
 
-            $info = str_replace("['", "", $info);
-            $info = str_replace("']", "", $info);
-            $info = str_replace("', '", ", ", $info);
+            $info = str_replace("['", '', $info);
+            $info = str_replace("']", '', $info);
+            $info = str_replace("', '", ', ', $info);
 
             //$info = $info == "" ? "Edit station information" : $info;
 
@@ -314,4 +313,4 @@ if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
 //    }
 //}
 
-$data["station_data"] = $station_data;
+$data['station_data'] = $station_data;

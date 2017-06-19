@@ -31,17 +31,17 @@
  */
 
 /** @require functions */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/functions.php';
 /** @require MySQL */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/MySQL.php';
 
-if (isset($_GET["group_id"]) && !empty($_GET["group_id"])) {
-    $group_id = $_GET["group_id"];
+if (isset($_GET['group_id']) && !empty($_GET['group_id'])) {
+    $group_id = $_GET['group_id'];
 
     /**
      * set class
      */
-    $data["classv"] .= '<option value="0">Class</option>';
+    $data['classv'] .= '<option value="0">Class</option>';
 
     $query = "  SELECT DISTINCT class
                 FROM edtb_modules
@@ -55,7 +55,7 @@ if (isset($_GET["group_id"]) && !empty($_GET["group_id"])) {
 
     if ($found > 0) {
         while ($obj = $result->fetch_object()) {
-            $data["classv"] .= '<option value="' . $obj->class . '">Class ' . $obj->class . '</option>';
+            $data['classv'] .= '<option value="' . $obj->class . '">Class ' . $obj->class . '</option>';
         }
     }
 
@@ -64,14 +64,14 @@ if (isset($_GET["group_id"]) && !empty($_GET["group_id"])) {
     /**
      * set rating
      */
-    $class_name = $_GET["class_name"] == "" ? "" : $_GET["class_name"];
+    $class_name = $_GET['class_name'];
 
-    $also_class = "";
-    if ($class_name != "") {
+    $also_class = '';
+    if ($class_name !== '') {
         $also_class = " AND class='$class_name'";
     }
 
-    $data["rating"] .= '<option value="0">Rating</option>';
+    $data['rating'] .= '<option value="0">Rating</option>';
 
     $query = "  SELECT DISTINCT rating
                 FROM edtb_modules
@@ -85,7 +85,7 @@ if (isset($_GET["group_id"]) && !empty($_GET["group_id"])) {
 
     if ($found_rating > 0) {
         while ($obj = $result->fetch_object()) {
-            $data["rating"] .= '<option value="' . $obj->rating . '">Rating ' . $obj->rating . '</option>';
+            $data['rating'] .= '<option value="' . $obj->rating . '">Rating ' . $obj->rating . '</option>';
         }
     }
 

@@ -31,31 +31,31 @@
  */
 
 /** @require functions */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/functions.php';
 /** @require MySQL */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/MySQL.php';
 
-$action = isset($_GET["action"]) ? $_GET["action"] : "";
+$action = $_GET['action'] ?? '';
 
-if (isset($_GET["q"]) && !empty($_GET["q"]) && isset($_GET["divid"])) {
-    $search = $_GET["q"];
-    $divid = $_GET["divid"];
+if (isset($_GET['q']) && !empty($_GET['q']) && isset($_GET['divid'])) {
+    $search = $_GET['q'];
+    $divid = $_GET['divid'];
 
-    $addtl = "";
-    if (isset($_GET["allegiance"]) && $_GET["allegiance"] != "undefined") {
-        $addtl .= "&allegiance=" . $_GET["allegiance"];
+    $addtl = '';
+    if (isset($_GET['allegiance']) && $_GET['allegiance'] !== 'undefined') {
+        $addtl .= '&allegiance=' . $_GET['allegiance'];
     }
 
-    if (isset($_GET["system_allegiance"]) && $_GET["system_allegiance"] != "undefined") {
-        $addtl .= "&system_allegiance=" . $_GET["system_allegiance"];
+    if (isset($_GET['system_allegiance']) && $_GET['system_allegiance'] !== 'undefined') {
+        $addtl .= '&system_allegiance=' . $_GET['system_allegiance'];
     }
 
-    if (isset($_GET["power"]) && $_GET["power"] != "undefined") {
-        $addtl .= "&power=" . $_GET["power"];
+    if (isset($_GET['power']) && $_GET['power'] !== 'undefined') {
+        $addtl .= '&power=' . $_GET['power'];
     }
 
     $esc_search = $mysqli->real_escape_string($search);
-    $esc_sysid = $mysqli->real_escape_string($_GET["sysid"]);
+    $esc_sysid = $mysqli->real_escape_string($_GET['sysid']);
 
     $query = "  SELECT DISTINCT(edtb_systems.name) AS system_name,
                 edtb_systems.id AS system_id,
@@ -70,7 +70,7 @@ if (isset($_GET["q"]) && !empty($_GET["q"]) && isset($_GET["divid"])) {
                 edtb_stations.name
                 LIMIT 30";
 
-    if (isset($_GET["sysid"]) && $_GET["sysid"] != "no") {
+    if (isset($_GET['sysid']) && $_GET['sysid'] !== 'no') {
         $query = "  SELECT edtb_systems.name AS system_name,
                     edtb_systems.id AS system_id,
                     edtb_systems.x,
@@ -98,28 +98,28 @@ if (isset($_GET["q"]) && !empty($_GET["q"]) && isset($_GET["divid"])) {
     }
 
     while ($suggest = $result->fetch_object()) {
-        if ($_GET["link"] == "yes") {
+        if ($_GET['link'] === 'yes') {
             ?>
             <a href="/System?system_id=<?php echo $suggest->system_id?>">
                 <?php echo $suggest->station_name?>&nbsp;&nbsp;(<?php echo $suggest->system_name?>)
             </a><br />
             <?php
-        } elseif ($_GET["idlink"] == "yes") {
+        } elseif ($_GET['idlink'] === 'yes') {
             ?>
             <a href="/NearestSystems?system=<?php echo $suggest->system_id?><?php echo $addtl?>">
                 <?php echo $suggest->station_name?>&nbsp;&nbsp;(<?php echo $suggest->system_name?>)
             </a><br />
             <?php
-        } elseif ($_GET["sysid"] != "no") {
+        } elseif ($_GET['sysid'] !== 'no') {
             ?>
             <a href="javascript:void(0);" onclick="setl('<?php echo $suggest->station_name?>', '<?php echo $suggest->station_id?>')">
                 <?php echo $suggest->station_name?>
             </a><br />
             <?php
         } else {
-            $suggest_coords = $suggest->x . "," . $suggest->y . "," . $suggest->z;
+            $suggest_coords = $suggest->x . ',' . $suggest->y . ',' . $suggest->z;
             ?>
-            <a href="javascript:void(0);" onclick="setResult('<?php echo str_replace("'", "", $suggest->system_name)?>', '<?php echo $suggest_coords?>', '<?php echo $divid ?>')">
+            <a href="javascript:void(0);" onclick="setResult('<?php echo str_replace("'", '', $suggest->system_name)?>', '<?php echo $suggest_coords?>', '<?php echo $divid ?>')">
                 <?php echo $suggest->system_name?>
             </a><br />
             <?php

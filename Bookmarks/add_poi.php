@@ -32,15 +32,15 @@
 
 use EDTB\Bookmarks\PoiBm;
 
-if (isset($_GET["do"])) {
+if (isset($_GET['do'])) {
     /** @require config */
-    require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/source/config.inc.php';
     /** @require functions */
-    require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/source/functions.php';
     /** @require PoiBm class */
-    require_once("PoiBm.php");
+    require_once __DIR__ . '/PoiBm.php';
 
-    $data = json_decode($_REQUEST["input"]);
+    $data = json_decode($_REQUEST['input']);
 
     $AddPoi = new PoiBm();
     $AddPoi->add_poi($data);
@@ -81,7 +81,7 @@ if (isset($_GET["do"])) {
                         <select title="Category" class="selectbox" name="category_id" id="category_id" style="width:auto">
                             <option value="0">Category (optional)</option>
                             <?php
-                            $query = "SELECT id, name FROM user_poi_categories";
+                            $query = 'SELECT id, name FROM user_poi_categories';
                             $result = $mysqli->query($query);
 
                             while ($obj = $result->fetch_object()) {

@@ -36,7 +36,7 @@
 session_start();
 
 /** @require Theme class */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/style/Theme.php';
 
 /**
  * initiate page header
@@ -44,7 +44,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.php");
 $header = new Header();
 
 /** @var string page_title */
-$header->page_title = "Data Point";
+$header->page_title = 'Data Point';
 
 /**
  * display the header
@@ -52,12 +52,12 @@ $header->page_title = "Data Point";
 $header->display_header();
 
 /** @require functions file */
-require_once("functions.php");
+require_once __DIR__ . '/functions.php';
 /** @require MySQL table edit class */
-require_once("Vendor/MySQL_table_edit/mte.php");
+require_once __DIR__ . '/Vendor/MySQL_table_edit/mte.php';
 
 /** @var string $data_table */
-$data_table = $_GET["table"] != "" ? $_GET["table"] : $settings["data_view_default_table"];
+$data_table = $_GET['table'] ?? $settings['data_view_default_table'];
 
 /**
  * initate MySQLtabledit class
@@ -87,13 +87,13 @@ while ($column_obj = $result->fetch_object()) {
 $result->close();
 
 /** @var array links_to_db */
-$tabledit->links_to_db = $settings["data_view_table"];
+$tabledit->links_to_db = $settings['data_view_table'];
 
 /** @var array skip */
-$tabledit->skip = $settings["data_view_ignore"][$data_table];
+$tabledit->skip = $settings['data_view_ignore'][$data_table];
 
 /** @var string primary_key the primary key of the table (must be AUTO_INCREMENT) */
-$tabledit->primary_key = "id";
+$tabledit->primary_key = 'id';
 
 /** @var array fields_in_list_view the fields you want to see in "list view" */
 $tabledit->fields_in_list_view = $output;
@@ -105,22 +105,21 @@ $tabledit->num_rows_list_view = 10;
 //$tabledit->fields_required = array('name');
 
 /** @var string url_base */
-$tabledit->url_base = "Vendor/MySQL_table_edit/";
+$tabledit->url_base = 'Vendor/MySQL_table_edit/';
 
 /** @var string url_script */
-$tabledit->url_script = "/DataPoint";
+$tabledit->url_script = '/DataPoint';
 
 /** @var array show_text */
 $tabledit->show_text = $showt;
 ?>
     <div class="entries">
         <div class="entries_inner">
-            <?php
-            $tabledit->do_it();
-            ?>
+            <?php $tabledit->do_it(); ?>
         </div>
     </div>
 <?php
+
 /**
  * initiate page footer
  */

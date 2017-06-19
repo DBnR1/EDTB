@@ -33,7 +33,7 @@
 //http://ed-board.net/3Dgalnet/
 
 /** @require Theme class */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/style/Theme.php';
 
 /**
  * initiate page header
@@ -41,7 +41,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.php");
 $header = new Header();
 
 /** @var string page_title */
-$header->page_title = "Galaxy Map&nbsp;&nbsp;&&nbsp;&nbsp;Neighborhood Map";
+$header->page_title = 'Galaxy Map&nbsp;&nbsp;&&nbsp;&nbsp;Neighborhood Map';
 
 /**
  * display the header
@@ -51,33 +51,33 @@ $header->display_header();
 /**
  * determine coordinates for the map distance calculations
  */
-if (valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"])) {
-    $ucoordx = $curSys["x"];
-    $ucoordy = $curSys["y"];
-    $ucoordz = -$curSys["z"];
+if (valid_coordinates($curSys['x'], $curSys['y'], $curSys['z'])) {
+    $ucoordx = $curSys['x'];
+    $ucoordy = $curSys['y'];
+    $ucoordz = -$curSys['z'];
 } else {
     // get last known coordinates
     $last_coords = last_known_system();
 
-    $ucoordx = $last_coords["x"];
-    $ucoordy = $last_coords["y"];
-    $ucoordz = -$last_coords["z"];
+    $ucoordx = $last_coords['x'];
+    $ucoordy = $last_coords['y'];
+    $ucoordz = -$last_coords['z'];
 
-    $is_unknown = " *";
+    $is_unknown = ' *';
 }
 
 if (!valid_coordinates($ucoordx, $ucoordy, $ucoordz)) {
-    $ucoordx = "0";
-    $ucoordy = "0";
-    $ucoordz = "0";
+    $ucoordx = '0';
+    $ucoordy = '0';
+    $ucoordz = '0';
 
-    $is_unknown = " *";
+    $is_unknown = ' *';
 }
 ?>
     <!-- Three.js -->
     <script src="/source/Vendor/three.min.js"></script>
     <!-- ED3D-Galaxy-Map -->
-    <link href="Vendor/ED3D-Galaxy-Map/css/styles.css?ver=<?php echo $settings["edtb_version"]?>" rel="stylesheet" type="text/css" />
+    <link href="Vendor/ED3D-Galaxy-Map/css/styles.css?ver=<?php echo $settings['edtb_version']?>" rel="stylesheet" type="text/css" />
     <script src="Vendor/ED3D-Galaxy-Map/js/ed3dmap.js"></script>
 
     <div style="display:none" id="curx"><?php echo $ucoordx?></div>

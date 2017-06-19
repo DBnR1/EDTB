@@ -31,16 +31,16 @@
  */
 
 /** @require configs */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/config.inc.php';
 /** @require functions */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/functions.php';
 /** @require MySQL */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/MySQL.php';
 
-if (isset($_GET["ignore_version"])) {
-    $ignore = $_GET["ignore_version"];
+if (isset($_GET['ignore_version'])) {
+    $ignore = $_GET['ignore_version'];
 
-    edtb_common("last_update_check", "value", true, $ignore);
+    edtb_common('last_update_check', 'value', true, $ignore);
 
     exit;
 }

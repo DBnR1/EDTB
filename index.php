@@ -31,7 +31,7 @@
  */
 
 /** @require Theme class */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/style/Theme.php';
 
 /**
  * initiate page header
@@ -39,7 +39,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.php");
 $header = new Header();
 
 /** @var string page_title */
-$header->page_title = "ED ToolBox";
+$header->page_title = 'ED ToolBox';
 
 /**
  * display the header
@@ -50,7 +50,7 @@ $header->display_header();
  * if the user is coming from importing log entries, 
  * display a notice and delete possible duplicates
  */
-if (isset($_GET["import_done"])) {
+if (isset($_GET['import_done'])) {
     ?>
     <div class="entries">
         <div class="entries_inner">
@@ -62,18 +62,18 @@ if (isset($_GET["import_done"])) {
             /**
              * remove duplicates
              */
-            $query = "  SELECT id, system_name
+            $query = '  SELECT id, system_name
                         FROM user_visited_systems
-                        ORDER BY visit ASC";
+                        ORDER BY visit ASC';
 
             $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
 
-            $this_s = "";
+            $this_s = '';
             while ($obj = $result->fetch_object()) {
                 $sys_name = $obj->system_name;
                 $sys_id = $obj->id;
 
-                if ($sys_name == $this_s && $sys_id != "1") {
+                if ($sys_name === $this_s && $sys_id != '1') {
                     $stmt = "   DELETE FROM user_visited_systems
                                 WHERE id = '$sys_id '
                                 LIMIT 1";
@@ -86,7 +86,7 @@ if (isset($_GET["import_done"])) {
 
             $result->close();
 
-            echo notice("Succesfully added " . number_format($_GET["num"]) . " visited systems to the database.<br /><br />You may now continue using ED ToolBox.", "Logs imported");
+            echo notice('Succesfully added ' . number_format($_GET['num']) . ' visited systems to the database.<br /><br />You may now continue using ED ToolBox.', 'Logs imported');
             ?>
         </div>
     </div>

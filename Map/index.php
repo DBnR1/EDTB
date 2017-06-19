@@ -31,7 +31,7 @@
 */
 
 /** @require Theme class */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/style/Theme.php';
 
 /**
  * initiate page header
@@ -39,15 +39,15 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.php");
 $header = new Header();
 
 /** @var string page_title */
-$header->page_title = "Galaxy Map&nbsp;&nbsp;&&nbsp;&nbsp;Neighborhood Map";
+$header->page_title = 'Galaxy Map&nbsp;&nbsp;&&nbsp;&nbsp;Neighborhood Map';
 
 /**
  * display the header
  */
 $header->display_header();
 
-if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"])) {
-    $settings["maxdistance"] = $_GET["maxdistance"];
+if (isset($_GET['maxdistance']) && is_numeric($_GET['maxdistance'])) {
+    $settings['maxdistance'] = $_GET['maxdistance'];
 }
 ?>
 <script src="Vendor/Highcharts/js/highcharts.js"></script>
@@ -136,14 +136,14 @@ if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"])) {
         </div>
         <div id="map_settings">
             <?php
-            if (isset($_GET["mode"]) && $_GET["mode"] == "2d") {
-                $linkto = "/Map";
-                $linkname = "Switch to 3D mode";
-                $mode = "2d";
+            if (isset($_GET['mode']) && $_GET['mode'] === '2d') {
+                $linkto = '/Map';
+                $linkname = 'Switch to 3D mode';
+                $mode = '2d';
             } else {
-                $linkto = "/Map/?mode=2d";
-                $linkname = "Switch to 2D mode";
-                $mode = "3d";
+                $linkto = '/Map/?mode=2d';
+                $linkname = 'Switch to 2D mode';
+                $mode = '3d';
             }
             ?>
             <a href="<?php echo $linkto?>" style="margin-left:4px"><?php echo $linkname?></a><br />
@@ -155,7 +155,7 @@ if (isset($_GET["maxdistance"]) && is_numeric($_GET["maxdistance"])) {
                     sort($dropdowns);
 
                     foreach ($dropdowns as $value) {
-                        $selected = $settings["maxdistance"] == $value ? ' selected="selected"' : "";
+                        $selected = $settings['maxdistance'] == $value ? ' selected="selected"' : '';
 
                         echo '<option value="' . $value . '"' . $selected . '>Range ' . $value . ' ly</option>';
                     }

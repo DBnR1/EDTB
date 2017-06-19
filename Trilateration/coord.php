@@ -33,33 +33,33 @@ use EDTB\source\System;
 use EDTB\Trilateration\Trilateration;
 
 /** @require config */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/config.inc.php';
 /** @require functions */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/functions.php';
 /** @require MySQL */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/MySQL.php';
 /** @require trilateration class */
-require_once("Trilateration.php");
+require_once __DIR__ . '/Trilateration.php';
 
-if (isset($_GET["do"])) {
-    $data = json_decode($_REQUEST["input"]);
+if (isset($_GET['do'])) {
+    $data = json_decode($_REQUEST['input']);
 
-    $target_system = $data->{"target_system"};
+    $target_system = $data->{'target_system'};
 
-    $reference_1_system = $data->{"reference_1"};
-    $reference_2_system = $data->{"reference_2"};
-    $reference_3_system = $data->{"reference_3"};
-    $reference_4_system = $data->{"reference_4"};
+    $reference_1_system = $data->{'reference_1'};
+    $reference_2_system = $data->{'reference_2'};
+    $reference_3_system = $data->{'reference_3'};
+    $reference_4_system = $data->{'reference_4'};
 
-    $reference_1_coordinates = $data->{"reference_1_coordinates"};
-    $reference_2_coordinates = $data->{"reference_2_coordinates"};
-    $reference_3_coordinates = $data->{"reference_3_coordinates"};
-    $reference_4_coordinates = $data->{"reference_4_coordinates"};
+    $reference_1_coordinates = $data->{'reference_1_coordinates'};
+    $reference_2_coordinates = $data->{'reference_2_coordinates'};
+    $reference_3_coordinates = $data->{'reference_3_coordinates'};
+    $reference_4_coordinates = $data->{'reference_4_coordinates'};
 
-    $reference_1_distance = $data->{"reference_1_distance"};
-    $reference_2_distance = $data->{"reference_2_distance"};
-    $reference_3_distance = $data->{"reference_3_distance"};
-    $reference_4_distance = $data->{"reference_4_distance"};
+    $reference_1_distance = $data->{'reference_1_distance'};
+    $reference_2_distance = $data->{'reference_2_distance'};
+    $reference_3_distance = $data->{'reference_3_distance'};
+    $reference_4_distance = $data->{'reference_4_distance'};
 
     if (is_numeric($reference_1_distance) && is_numeric($reference_2_distance) && is_numeric($reference_3_distance) && is_numeric($reference_4_distance)) {
         /**
@@ -68,8 +68,8 @@ if (isset($_GET["do"])) {
         $json_string = '{
         "data": {
             "fromSoftware": "ED ToolBox",
-            "fromSoftwareVersion": "' . $settings["edtb_version"] . '",
-            "commander": "' . $settings["edsm_cmdr_name"] . '",
+            "fromSoftwareVersion": "' . $settings['edtb_version'] . '",
+            "commander": "' . $settings['edsm_cmdr_name'] . '",
             "p0": {
                 "name": "' . $target_system . '"
             },
@@ -89,38 +89,38 @@ if (isset($_GET["do"])) {
         }
         }';
 
-        $opts = array(
-            "http" => array(
-                "method" => "POST",
-                "header" => "Content-type: json\r\n" . "Referer: http://www.edsm.net/api-v1/submit-distances\r\n",
-                "content" => $json_string
-                )
-            );
+        $opts = [
+            'http' => [
+                'method' => 'POST',
+                'header' => "Content-type: json\r\n" . "Referer: http://www.edsm.net/api-v1/submit-distances\r\n",
+                'content' => $json_string
+            ]
+        ];
 
         $context = stream_context_create($opts);
 
-        $result = file_get_contents("http://www.edsm.net/api-v1/submit-distances", false, $context);
+        $result = file_get_contents('http://www.edsm.net/api-v1/submit-distances', false, $context);
         $result_j = json_decode($result);
-        $edsm_msg = $result_j->{"basesystem"}->{"msg"};
+        $edsm_msg = $result_j->{'basesystem'}->{'msg'};
 
-        write_log("EDSM message: " . $edsm_msg, __FILE__, __LINE__);
+        write_log('EDSM message: ' . $edsm_msg, __FILE__, __LINE__);
 
-        $edsm_msg = $result_j->{"basesystem"}->{"msgnum"} . ":::" . $edsm_msg;
+        $edsm_msg = $result_j->{'basesystem'}->{'msgnum'} . ':::' . $edsm_msg;
 
         /**
          * calculate coordinates
          */
-        $reference_distances = $reference_1_system . ":::" . $reference_1_distance . "---" . $reference_2_system . ":::" . $reference_2_distance . "---" . $reference_3_system . ":::" . $reference_3_distance . "---" . $reference_4_system . ":::" . $reference_4_distance;
+        $reference_distances = $reference_1_system . ':::' . $reference_1_distance . '---' . $reference_2_system . ':::' . $reference_2_distance . '---' . $reference_3_system . ':::' . $reference_3_distance . '---' . $reference_4_system . ':::' . $reference_4_distance;
 
-        $reference_1 = explode(",", $reference_1_coordinates);
-        $reference_2 = explode(",", $reference_2_coordinates);
-        $reference_3 = explode(",", $reference_3_coordinates);
-        $reference_4 = explode(",", $reference_4_coordinates);
+        $reference_1 = explode(',', $reference_1_coordinates);
+        $reference_2 = explode(',', $reference_2_coordinates);
+        $reference_3 = explode(',', $reference_3_coordinates);
+        $reference_4 = explode(',', $reference_4_coordinates);
 
-        $system1 = array($reference_1[0], $reference_1[1], $reference_1[2], $reference_1_distance);
-        $system2 = array($reference_2[0], $reference_2[1], $reference_2[2], $reference_2_distance);
-        $system3 = array($reference_3[0], $reference_3[1], $reference_3[2], $reference_3_distance);
-        $system4 = array($reference_4[0], $reference_4[1], $reference_4[2], $reference_4_distance);
+        $system1 = [$reference_1[0], $reference_1[1], $reference_1[2], $reference_1_distance];
+        $system2 = [$reference_2[0], $reference_2[1], $reference_2[2], $reference_2_distance];
+        $system3 = [$reference_3[0], $reference_3[1], $reference_3[2], $reference_3_distance];
+        $system4 = [$reference_4[0], $reference_4[1], $reference_4[2], $reference_4_distance];
 
         $coords_calc = new Trilateration();
         $newcoords = $coords_calc->trilateration3d($system1, $system2, $system3, $system4);
@@ -158,7 +158,7 @@ if (isset($_GET["do"])) {
 
         $mysqli->query($stmt) or write_log($mysqli->error, __FILE__, __LINE__);
     } else {
-        write_log("Error: Distances not numeric or all distances not given.", __FILE__, __LINE__);
+        write_log('Error: Distances not numeric or all distances not given.', __FILE__, __LINE__);
     }
 
     exit;

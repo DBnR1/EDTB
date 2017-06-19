@@ -31,7 +31,7 @@
  */
 
 /** @require Theme class */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/style/Theme.php';
 
 /**
  * initiate page header
@@ -39,7 +39,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.php");
 $header = new Header();
 
 /** @var string page_title */
-$header->page_title = "Error Log";
+$header->page_title = 'Error Log';
 
 /**
  * display the header
@@ -56,7 +56,7 @@ $header->display_header();
         /**
          * read logfile
          */
-        $logfile = $_SERVER["DOCUMENT_ROOT"] . "/edtb_log.txt";
+        $logfile = $_SERVER['DOCUMENT_ROOT'] . '/edtb_log.txt';
         $lines = file($logfile);
         ?>
         <table>
@@ -86,19 +86,19 @@ $header->display_header();
                             /**
                              * split data and define variables
                              */
-                            $data = explode("]", $line);
-                            $time = str_replace("[", "", $data[0]);
+                            $data = explode(']', $line);
+                            $time = str_replace('[', '', $data[0]);
 
-                            $parts = explode(" on line ", $data[1]);
+                            $parts = explode(' on line ', $data[1]);
                             $error_line = $parts[1];
-                            $error_line = empty($error_line) ? "n/a" : $error_line;
+                            $error_line = empty($error_line) ? 'n/a' : $error_line;
 
-                            $file = str_replace("[", "", $parts[0]);
-                            $file = str_replace($settings["install_path"] . "\\EDTB\\", "", $file);
-                            $file = empty($file) ? "n/a" : $file;
+                            $file = str_replace('[', '', $parts[0]);
+                            $file = str_replace($settings['install_path'] . "\\EDTB\\", '', $file);
+                            $file = empty($file) ? 'n/a' : $file;
 
                             $error = array_slice($data, 2);
-                            $error = implode("", $error);
+                            $error = implode('', $error);
 
                             if (preg_match($reg_exUrl, $error, $url)) {
                                 $error = preg_replace($reg_exUrl, '<a href="' . $url[0] . '" target="_blank">' . $url[0] . '</a>', $error);
@@ -106,7 +106,7 @@ $header->display_header();
                                 $error = strip_tags($error);
                             }
 
-                            $tdclass = $line_num % 2 ? "dark" : "light";
+                            $tdclass = $line_num % 2 ? 'dark' : 'light';
                             ?>
                             <tr>
                                 <td class="<?php echo $tdclass?>" style="padding:10px;width:1%;text-align:center">
@@ -124,7 +124,7 @@ $header->display_header();
                                     <?php echo $error_line?>
                                 </td>
                                 <td class="<?php echo $tdclass?>">
-                                    <?php echo strip_tags($error, "<a>")?>
+                                    <?php echo strip_tags($error, '<a>')?>
                                 </td>
                             </tr>
                             <?php

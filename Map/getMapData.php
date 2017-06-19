@@ -31,13 +31,13 @@
  */
 
 /** @require functions */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/functions.php';
 /** @require MySQL */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/MySQL.php';
 
 use \EDTB\source\System;
 
-$system = isset($_GET["system"]) ? $_GET["system"] : "";
+$system = $_GET['system'] ?? '';
 
 if (empty($system)) {
     exit;
@@ -48,7 +48,7 @@ $esc_system = $mysqli->real_escape_string($system);
 /**
  * check if system has screenshots
  */
-$screenshots = System::has_screenshots($system) ? '<a href="/Gallery?spgmGal=' . urlencode(strip_invalid_dos_chars($system)) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" class="icon" style="margin-left:5px;vertical-align:top" /></a>' : "";
+$screenshots = System::has_screenshots($system) ? '<a href="/Gallery?spgmGal=' . urlencode(strip_invalid_dos_chars($system)) . '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" class="icon" style="margin-left:5px;vertical-align:top" /></a>' : '';
 
 /**
  * check if system is in the bookmarks
@@ -67,7 +67,7 @@ if ($count2 > 0) {
     $comment = $obj->comment;
     $added_on = $obj->added_on;
 
-    if ($comment != "") {
+    if ($comment !== '') {
         echo 'Bookmark comment: ' . $comment . ' - ';
     }
 
@@ -106,13 +106,13 @@ if ($count > 0) {
     } else {
         if (isset($visit)) {
             $visit = date_create($visit);
-            $visit_date = date_modify($visit, "+1286 years");
+            $visit_date = date_modify($visit, '+1286 years');
 
-            $visit = date_format($visit_date, "d.m.Y, H:i");
+            $visit = date_format($visit_date, 'd.m.Y, H:i');
         }
 
         if ($text != null) {
-            echo $text . "<br />";
+            echo $text . '<br />';
         }
 
         if (!empty($visit)) {

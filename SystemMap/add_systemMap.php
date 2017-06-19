@@ -31,38 +31,38 @@
  */
 
 /** @require config */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/config.inc.php';
 /** @require functions */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/functions.php';
 /** @require MySQL */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/MySQL.php';
 /** @require curSys */
 //require_once($_SERVER["DOCUMENT_ROOT"] . "/source/curSys.php");
 
-if (isset($_GET["string"]) && isset($_GET["system"])) {
-    $string = $_GET["string"];
-    $system = $_GET["system"];
+if (isset($_GET['string']) && isset($_GET['system'])) {
+    $string = $_GET['string'];
+    $system = $_GET['system'];
 
     $esc_system_name = $mysqli->real_escape_string($system);
     $esc_string = $mysqli->real_escape_string($string);
 } else {
-    write_log("Error: String or system not set", __FILE__, __LINE__);
+    write_log('Error: String or system not set', __FILE__, __LINE__);
     exit;
 }
 
 /**
  * insert / update
  */
-if ($string == "delete") {
+$stmt = "   INSERT INTO user_system_map (system_name, string)
+            VALUES
+            ('$esc_system_name',
+            '$esc_string')
+            ON DUPLICATE KEY UPDATE string = '$esc_string'";
+
+if ($string === 'delete') {
     $stmt = "DELETE FROM user_system_map
              WHERE system_name = '$esc_system_name'
              LIMIT 1";
-} else {
-    $stmt = "   INSERT INTO user_system_map (system_name, string)
-                VALUES
-                ('$esc_system_name',
-                '$esc_string')
-                ON DUPLICATE KEY UPDATE string = '$esc_string'";
 }
 
 $mysqli->query($stmt) or write_log($mysqli->error, __FILE__, __LINE__);

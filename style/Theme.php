@@ -31,9 +31,9 @@
 namespace EDTB\style;
 
 /** @require header class */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Header.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/style/Header.php';
 /** @require footer class */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Footer.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/style/Footer.php';
 
 /**
  * Class Theme
@@ -47,13 +47,13 @@ class Theme
      *
      * @return string
      */
-    static function sidebar_style()
+    public static function sidebar_style()
     {
-        if (isset($_COOKIE["style"]) && $_COOKIE["style"] == "narrow") {
-            return "narrow";
-        } else {
-            return "normal";
+        if (isset($_COOKIE['style']) && $_COOKIE['style'] === 'narrow') {
+            return 'narrow';
         }
+
+        return 'normal';
     }
 
 }

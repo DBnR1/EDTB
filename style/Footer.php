@@ -29,15 +29,15 @@
  */
 
 /** @require installer script */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Install/install_script.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Install/install_script.php';
 /** @require config */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/config.inc.php';
 /** @require MySQL */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/MySQL.php';
 /** @require functions */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/functions.php';
 /** @require curSys */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/curSys.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/curSys.php';
 
 use \EDTB\style\Theme;
 
@@ -58,13 +58,13 @@ class Footer extends Theme
             <div class="rightpanel-content">
                 <?php
                 /** @include log */
-                include_once($_SERVER["DOCUMENT_ROOT"] . "/Log/add_log.php");
+                include_once $_SERVER['DOCUMENT_ROOT'] . '/Log/add_log.php';
 
                 /** @include trilateration */
-                include_once($_SERVER["DOCUMENT_ROOT"] . "/Trilateration/coord.php");
+                include_once $_SERVER['DOCUMENT_ROOT'] . '/Trilateration/coord.php';
 
                 /** @include poi/bm */
-                include_once($_SERVER["DOCUMENT_ROOT"] . "/Bookmarks/add_bookmark.php");
+                include_once $_SERVER['DOCUMENT_ROOT'] . '/Bookmarks/add_bookmark.php';
                 ?>
                 <!-- initialize textareas -->
                 <script>

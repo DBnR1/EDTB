@@ -31,19 +31,19 @@
  */
 
 /** @require functions */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/functions.php';
 /** @require MySQL */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/MySQL.php';
 
-$bm_id = 0 + $_GET["Bm_id"];
+$bm_id = 0 + $_GET['Bm_id'];
 $data = [];
 
-if ($bm_id == "0") {
-    $data["bm_edit_id"] = "";
-    $data["bm_system_name"] = "";
-    $data["bm_system_id"] = "";
-    $data["bm_catid"] = "0";
-    $data["bm_text"] = "";
+if ($bm_id == '0') {
+    $data['bm_edit_id'] = '';
+    $data['bm_system_name'] = '';
+    $data['bm_system_id'] = '';
+    $data['bm_catid'] = '0';
+    $data['bm_text'] = '';
 } else {
     $query = "  SELECT
                 user_bookmarks.id, user_bookmarks.system_id, user_bookmarks.system_name AS bm_system_name,
@@ -58,11 +58,11 @@ if ($bm_id == "0") {
 
     $bm_obj = $result->fetch_object();
 
-    $data["bm_edit_id"] = $bm_obj->id;
-    $data["bm_system_name"] = $bm_obj->system_name == "" ? $bm_obj->bm_system_name : $bm_obj->system_name;
-    $data["bm_system_id"] = $bm_obj->system_id;
-    $data["bm_catid"] = $bm_obj->category_id;
-    $data["bm_text"] = $bm_obj->comment;
+    $data['bm_edit_id'] = $bm_obj->id;
+    $data['bm_system_name'] = $bm_obj->system_name === '' ? $bm_obj->bm_system_name : $bm_obj->system_name;
+    $data['bm_system_id'] = $bm_obj->system_id;
+    $data['bm_catid'] = $bm_obj->category_id;
+    $data['bm_text'] = $bm_obj->comment;
 
     $result->close();
 }

@@ -46,7 +46,7 @@ class System
      * @return bool
      * @author Mauri Kujala <contact@edtb.xyz>
      */
-    static function is_mapped($system_name)
+    public static function is_mapped($system_name)
     {
         global $mysqli;
 
@@ -68,9 +68,9 @@ class System
 
         if ($num > 0) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -80,7 +80,7 @@ class System
      * @return bool
      * @author Mauri Kujala <contact@edtb.xyz>
      */
-    static function has_screenshots($system_name)
+    public static function has_screenshots($system_name)
     {
         global $settings;
 
@@ -90,11 +90,11 @@ class System
             return false;
         }
 
-        if (is_dir($settings["new_screendir"] . "/" . $system_name)) {
+        if (is_dir($settings['new_screendir'] . '/' . $system_name)) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -105,7 +105,7 @@ class System
      * @return bool
      * @author Mauri Kujala <contact@edtb.xyz>
      */
-    static function is_logged($system, $is_id = false)
+    public static function is_logged($system, $is_id = false)
     {
         global $mysqli;
 
@@ -136,9 +136,9 @@ class System
 
         if ($logged > 0) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -149,7 +149,7 @@ class System
      * @return bool
      * @author Mauri Kujala <contact@edtb.xyz>
      */
-    static function exists($system_name, $only_own = false)
+    public static function exists($system_name, $only_own = false)
     {
         global $mysqli;
 
@@ -185,9 +185,9 @@ class System
 
         if ($count > 0) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -201,9 +201,9 @@ class System
      * @return string $return
      * @author Mauri Kujala <contact@edtb.xyz>
      */
-    static function crosslinks($system, $show_screens = true, $show_system = false, $show_logs = true, $show_map = true)
+    public static function crosslinks($system, $show_screens = true, $show_system = false, $show_logs = true, $show_map = true): string
     {
-        $return = "";
+        $return = '';
         // check if system has screenshots
         if ($show_screens === true && System::has_screenshots($system)) {
             $return .= '<a href="/Gallery?spgmGal=' . urlencode(strip_invalid_dos_chars($system)) . '" title="View image gallery" class="gallery_link">';
@@ -242,7 +242,7 @@ class System
      * @return int
      * @author Mauri Kujala <contact@edtb.xyz>
      */
-    static function num_visits($system)
+    public static function num_visits($system): int
     {
         global $mysqli;
 

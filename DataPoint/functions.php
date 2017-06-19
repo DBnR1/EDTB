@@ -49,12 +49,12 @@ use \EDTB\source\System;
  */
 function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
 {
-    $this_row = "";
+    $this_row = '';
 
     // Regular Expression filter for links
     $reg_exUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
 
-    $value = $value == "" ? "n/a" : $value;
+    $value = $value === '' ? 'n/a' : $value;
 
     /**
      * show distances
@@ -62,13 +62,13 @@ function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
     if ($dist !== false) {
         // figure out what coords to calculate from
         $usable_coords = usable_coords();
-        $usex = $usable_coords["x"];
-        $usey = $usable_coords["y"];
-        $usez = $usable_coords["z"];
-        $exact = $usable_coords["current"] === true ? "" : " *";
+        $usex = $usable_coords['x'];
+        $usey = $usable_coords['y'];
+        $usez = $usable_coords['z'];
+        $exact = $usable_coords['current'] === true ? '' : ' *';
 
         if (valid_coordinates($d_x, $d_y, $d_z)) {
-            $distance = number_format(sqrt(pow(($d_x-($usex)), 2)+pow(($d_y-($usey)), 2)+pow(($d_z-($usez)), 2)), 2);
+            $distance = number_format(sqrt((($d_x - $usex) ** 2) + (($d_y - $usey) ** 2) + (($d_z - $usez) ** 2)), 2);
             $this_row .= '<td class="datapoint_td" style="white-space:nowrap">' . $distance . $exact . '</td>';
         } else {
             $this_row .= '<td class="datapoint_td">n/a</td>';
@@ -79,7 +79,7 @@ function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
     /**
      * make a link for systems with an id
      */
-    if ($key == "system_id" && $value != "0") {
+    if ($key === 'system_id' && $value != '0') {
         $this_row .= '<td class="datapoint_td">';
         $this_row .= '<a href="/System?system_id=' . $value . '">' . $value . '</a>';
         $this_row .= '</td>';
@@ -87,7 +87,7 @@ function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
     /**
      * make a link for systems with system name
      */
-    elseif (strpos($key, "system_name") !== false && $value != "0" || $key == "name" && $table == "edtb_systems") {
+    elseif (strpos($key, 'system_name') !== false && $value != '0' || $key === 'name' && $table === 'edtb_systems') {
         /**
          * provide crosslinks to screenshot gallery, log page, etc
          */
@@ -100,7 +100,7 @@ function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
     /**
      * number format some values
      */
-    elseif (strpos($key, "price") !== false || strpos($key, "ls") !== false || strpos($key, "population") !== false || strpos($key, "distance") !== false) {
+    elseif (strpos($key, 'price') !== false || strpos($key, 'ls') !== false || strpos($key, 'population') !== false || strpos($key, 'distance') !== false) {
         if (is_numeric($value) && $value != null) {
             $this_row .= '<td class="datapoint_td">' . number_format($value) . '</td>';
         } else {
@@ -112,7 +112,7 @@ function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
      */
     elseif (preg_match($reg_exUrl, $value, $url)) {
         if (mb_strlen($value) >= 80) {
-            $urli = substr($value, 0, 80) . "...";
+            $urli = substr($value, 0, 80) . '...';
         } else {
             $urli = $value;
         }
@@ -125,14 +125,14 @@ function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
      */
     elseif ($enum !== false) {
         switch ($value) {
-            case "0":
+            case '0':
                 $real_value = '<span class="enum_no">&#10799;</span>';
                 break;
-            case "1":
+            case '1':
                 $real_value = '<span class="enum_yes">&#10003;</span>';
                 break;
             default:
-                $real_value = "n/a";
+                $real_value = 'n/a';
         }
 
         $this_row .= '<td class="datapoint_td" style="text-align:center">' .  $real_value . '</td>';
@@ -143,7 +143,7 @@ function set_data($key, $value, $d_x, $d_y, $d_z, &$dist, $table, $enum)
     /**
      *  parse log entries
      */
-    if ($key == "log_entry") {
+    if ($key === 'log_entry') {
         if (mb_strlen($value) >= 100) {
             $this_row = '<td class="datapoint_td">' . substr(strip_tags($value), 0, 100) . '...</td>';
         } else {

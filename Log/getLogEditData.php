@@ -31,11 +31,11 @@
  */
 
 /** @require functions */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/functions.php';
 /** @require MySQL */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/MySQL.php';
 
-$log_id = 0 + $_GET["logid"];
+$log_id = 0 + $_GET['logid'];
 
 $query = "  SELECT user_log.id, user_log.system_id, user_log.system_name AS log_system_name,
             user_log.station_id, user_log.log_entry, user_log.stardate, user_log.title,
@@ -53,15 +53,15 @@ $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__
 $obj = $result->fetch_object();
 
 $data = [];
-$data["edit_id"] = $obj->id;
-$data["system_1"] = $obj->system_name == "" ? $obj->log_system_name : $obj->system_name;
-$data["statname"] = $obj->station_name;
-$data["html"] = $obj->log_entry;
-$data["log_type"] = $obj->type;
-$data["title"] = $obj->title;
-$data["pinned"] = $obj->pinned;
-$data["weight"] = $obj->weight;
-$data["audiofiles"] = $obj->audio;
+$data['edit_id'] = $obj->id;
+$data['system_1'] = $obj->system_name === '' ? $obj->log_system_name : $obj->system_name;
+$data['statname'] = $obj->station_name;
+$data['html'] = $obj->log_entry;
+$data['log_type'] = $obj->type;
+$data['title'] = $obj->title;
+$data['pinned'] = $obj->pinned;
+$data['weight'] = $obj->weight;
+$data['audiofiles'] = $obj->audio;
 
 $result->close();
 

@@ -34,9 +34,9 @@
 */
 
 /** @require NearestSystems class */
-require_once("NearestSystems.php");
+require_once __DIR__ . '/NearestSystems.php';
 /** @require Theme class */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/style/Theme.php';
 
 /**
  * initiate page header
@@ -44,7 +44,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.php");
 $header = new Header();
 
 /** @var string page_title */
-$header->page_title = "Nearest Systems&nbsp;&nbsp;&&nbsp;&nbsp;Stations";
+$header->page_title = 'Nearest Systems&nbsp;&nbsp;&&nbsp;&nbsp;Stations';
 
 /**
  * display the header

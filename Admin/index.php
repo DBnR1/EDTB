@@ -30,15 +30,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
-if (isset($_GET["do"])) {
+if (isset($_GET['do'])) {
     /** @require configs */
-    require_once($_SERVER["DOCUMENT_ROOT"] . "/source/config.inc.php");
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/source/config.inc.php';
     /** @require functions */
-    require_once($_SERVER["DOCUMENT_ROOT"] . "/source/functions.php");
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/source/functions.php';
     /** @require MySQL */
-    require_once($_SERVER["DOCUMENT_ROOT"] . "/source/MySQL.php");
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/source/MySQL.php';
 
-    $data = json_decode($_REQUEST["input"]);
+    $data = json_decode($_REQUEST['input']);
 
     foreach ($data as $var => $value) {
         $esc_val = $mysqli->real_escape_string($value);
@@ -56,7 +56,7 @@ if (isset($_GET["do"])) {
 }
 
 /** @require Theme class */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/style/Theme.php';
 
 /**
  * initiate page header
@@ -64,14 +64,14 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.php");
 $header = new Header();
 
 /** @var string page_title */
-$header->page_title = "Settings";
+$header->page_title = 'Settings';
 
 /**
  * display the header
  */
 $header->display_header();
 
-$cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
+$cat_id = $_GET['cat_id'] ?? '2';
 
 ?>
 <div class="notify_success" id="notify" style="display:none">Settings edited</div>
@@ -87,9 +87,9 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
      */
     echo'<ul class="pagination">';
 
-    $query = "  SELECT id, name
+    $query = '  SELECT id, name
                 FROM edtb_settings_categories
-                ORDER BY weight";
+                ORDER BY weight';
 
     $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
 
@@ -102,7 +102,7 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
             $active = " class='actives'";
             $current_category = $name;
         } else {
-            $active = "";
+            $active = '';
         }
 
         if (($i % 5) == 0) {
@@ -141,12 +141,12 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
                 $name = $obj->name;
                 $type = $obj->type;
                 $variable = $obj->variable;
-                $info = !empty($obj->info) ? '<div class="settings_info">' . $obj->info . '</div>' : "";
+                $info = !empty($obj->info) ? '<div class="settings_info">' . $obj->info . '</div>' : '';
                 $value = $obj->value;
 
-                $tdclass = $i % 2 ? "dark" : "light";
+                $tdclass = $i % 2 ? 'dark' : 'light';
 
-                if ($type == "numeric") {
+                if ($type === 'numeric') {
                     ?>
                     <tr>
                         <td class="<?php echo $tdclass?>">
@@ -157,7 +157,7 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
                         </td>
                     </tr>
                     <?php
-                } elseif ($type == "textbox" || $type == "csl") {
+                } elseif ($type === 'textbox' || $type === 'csl') {
                     ?>
                     <tr>
                         <td class="<?php echo $tdclass?>">
@@ -168,7 +168,7 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
                         </td>
                     </tr>
                     <?php
-                } elseif ($type == "array") {
+                } elseif ($type === 'array') {
                     ?>
                     <tr>
                         <td class="<?php echo $tdclass?>">
@@ -179,12 +179,12 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
                         </td>
                     </tr>
                     <?php
-                } elseif ($type == "tf") {
-                    if ($value == "true") {
+                } elseif ($type === 'tf') {
+                    if ($value === 'true') {
                         $t_sel = ' selected="selected"';
-                        $f_sel = "";
-                    } elseif ($value == "false") {
-                        $t_sel = "";
+                        $f_sel = '';
+                    } elseif ($value === 'false') {
+                        $t_sel = '';
                         $f_sel = ' selected="selected"';
                     }
                     ?>
@@ -200,10 +200,10 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
                         </td>
                     </tr>
                     <?php
-                } elseif (substr($type, 0, 4) == "enum") {
-                    $values = str_replace("enum::", "", $type);
+                } elseif (substr($type, 0, 4) === 'enum') {
+                    $values = str_replace('enum::', '', $type);
 
-                    $values = explode("&&", $values);
+                    $values = explode('&&', $values);
                     ?>
                     <tr>
                         <td class="<?php echo $tdclass?>">
@@ -212,7 +212,7 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
                                 <select title="Enum" class="selectbox" name="<?php echo $variable?>" style="width:auto">
                                     <?php
                                     foreach ($values as $val) {
-                                        $parts = explode(">>", $val);
+                                        $parts = explode('>>', $val);
 
                                         $val_value = $parts[0];
                                         $val_name = $parts[1];
@@ -232,7 +232,7 @@ $cat_id = isset($_GET["cat_id"]) ? $_GET["cat_id"] : "2";
             }
             $result->close();
 
-            $lclass = $tdclass == "dark" ? "light" : "dark";
+            $lclass = $tdclass === 'dark' ? 'light' : 'dark';
             ?>
                 <tr>
                     <td class="<?php echo $lclass?>">

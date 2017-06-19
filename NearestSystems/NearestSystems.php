@@ -43,17 +43,17 @@ class NearestSystems
     public $usex, $usey, $usez;
 
     /** @var string power_params parameters to add to Power links */
-    private $power_params = "";
+    private $power_params = '';
 
     /** @var string allegiance_params parameters to add to Allegiance links */
-    private $allegiance_params = "";
+    private $allegiance_params = '';
 
     /** @var string $text the info text */
-    private $text = "Nearest";
+    private $text = 'Nearest';
     /** @var string $add_to_query */
-    private $add_to_query = "";
+    private $add_to_query = '';
     /** @var string $hidden_inputs */
-    private $hidden_inputs = "";
+    private $hidden_inputs = '';
 
     /** @var bool $stations */
     private $stations = true;
@@ -73,13 +73,13 @@ class NearestSystems
         $this->mysqli = new mysqli($server, $user, $pwd, $db);
 
         if ($this->mysqli->connect_errno) {
-            echo "Failed to connect to MySQL: " . $this->mysqli->connect_error;
+            echo 'Failed to connect to MySQL: ' . $this->mysqli->connect_error;
         }
 
         /**
          * determine what coordinates to use
          */
-        $this->system = isset($_GET["system"]) ? $_GET["system"] + 0: "";
+        $this->system = isset($_GET['system']) ? $_GET['system'] + 0: '';
 
         if (!empty($this->system)) {
             $query = "  SELECT name, id, x, y, z
@@ -100,33 +100,33 @@ class NearestSystems
             $result->close();
 
             $this->text .= ' (to <a href="/System?system_id=' . $sys_id . '">' . $sys_name . '</a>) ';
-            $this->power_params .= "&system=" . $this->system;
-            $this->allegiance_params .= "&system=" . $this->system;
+            $this->power_params .= '&system=' . $this->system;
+            $this->allegiance_params .= '&system=' . $this->system;
             $this->hidden_inputs .= '<input type="hidden" name="system" value="' . $sys_id . '" />';
-        } elseif (valid_coordinates($curSys["x"], $curSys["y"], $curSys["z"]) && empty($this->system)) {
-            $this->usex = $curSys["x"];
-            $this->usey = $curSys["y"];
-            $this->usez = $curSys["z"];
+        } elseif (valid_coordinates($curSys['x'], $curSys['y'], $curSys['z']) && empty($this->system)) {
+            $this->usex = $curSys['x'];
+            $this->usey = $curSys['y'];
+            $this->usez = $curSys['z'];
         } else {
             // get last known coordinates
             $last_coords = last_known_system();
 
-            $this->usex = $last_coords["x"];
-            $this->usey = $last_coords["y"];
-            $this->usez = $last_coords["z"];
+            $this->usex = $last_coords['x'];
+            $this->usey = $last_coords['y'];
+            $this->usez = $last_coords['z'];
 
-            $this->is_unknown = " *";
+            $this->is_unknown = ' *';
         }
 
         /**
          * If we still don't have valid coordinates, center on Sol
          */
         if (!valid_coordinates($this->usex, $this->usey, $this->usez)) {
-            $this->usex = "0";
-            $this->usey = "0";
-            $this->usez = "0";
+            $this->usex = '0';
+            $this->usey = '0';
+            $this->usez = '0';
 
-            $this->is_unknown = " *";
+            $this->is_unknown = ' *';
         }
     }
 
@@ -213,16 +213,16 @@ class NearestSystems
                 <!-- powers -->
                 <td class="transparent" style="vertical-align:top;width:20%;white-space:nowrap">
                     <?php
-                    $query = "SELECT name FROM edtb_powers ORDER BY name";
+                    $query = 'SELECT name FROM edtb_powers ORDER BY name';
                     $result = $this->mysqli->query($query) or write_log($this->mysqli->error, __FILE__, __LINE__);
 
                     while ($power_obj = $result->fetch_object()) {
                         $power_name = $power_obj->name;
 
                         if (isset($power)) {
-                            $this->power_params = str_replace("&power=", "", $this->power_params);
-                            $this->power_params = str_replace("?power=", "", $this->power_params);
-                            $this->power_params = str_replace(urlencode($power), "", $this->power_params);
+                            $this->power_params = str_replace('&power=', '', $this->power_params);
+                            $this->power_params = str_replace('?power=', '', $this->power_params);
+                            $this->power_params = str_replace(urlencode($power), '', $this->power_params);
                         }
                         echo '<a data-replace="true" data-target="#nscontent" href="/NearestSystems/?power=' . urlencode($power_name) . $this->power_params . '" title="' . $power_name . '">' . $power_name . '</a><br />';
                     }
@@ -232,10 +232,10 @@ class NearestSystems
                 </td>
                 <!-- modules -->
                 <td class="transparent" style="vertical-align:top;width:20%;white-space:nowrap">
-                    <form method="get" action="<?php echo $_SERVER["PHP_SELF"]?>" name="go">
+                    <form method="get" action="<?php echo $_SERVER['PHP_SELF']?>" name="go">
                         <?php
                         echo $this->hidden_inputs;
-                        if (isset($group_id) && $group_id != "0") {
+                        if (isset($group_id) && $group_id != '0') {
                             $modi = " AND group_id = '$group_id'";
                         }
                         ?>
@@ -244,13 +244,13 @@ class NearestSystems
                             <optgroup label="Module">
                                 <option value="0">Module</option>
                                 <?php
-                                $query = "  SELECT DISTINCT group_id, group_name, category_name
+                                $query = '  SELECT DISTINCT group_id, group_name, category_name
                                             FROM edtb_modules
-                                            ORDER BY category_name, group_name";
+                                            ORDER BY category_name, group_name';
 
                                 $result = $this->mysqli->query($query) or write_log($this->mysqli->error, __FILE__, __LINE__);
 
-                                $cur_cat = "";
+                                $cur_cat = '';
                                 while ($mod_obj = $result->fetch_object()) {
                                     $cat_name = $mod_obj->category_name;
 
@@ -258,7 +258,7 @@ class NearestSystems
                                         echo '</optgroup><optgroup label="' . $cat_name . '">';
                                     }
 
-                                    $selected = $_GET["group_id"] == $mod_obj->group_id ? " selected='selected'" : "";
+                                    $selected = $_GET['group_id'] == $mod_obj->group_id ? " selected='selected'" : '';
                                     echo '<option value="' . $mod_obj->group_id . '"' . $selected . '>' . $mod_obj->group_name . '</option>';
 
                                     $cur_cat = $cat_name;
@@ -272,13 +272,13 @@ class NearestSystems
                             <option value="0">Class</option>
                             <?php
                             $query = "  SELECT DISTINCT class
-                                        FROM edtb_modules WHERE class != ''" . $modi . "
-                                        ORDER BY class";
+                                        FROM edtb_modules WHERE class != ''" . $modi . '
+                                        ORDER BY class';
 
                             $result = $this->mysqli->query($query) or write_log($this->mysqli->error, __FILE__, __LINE__);
 
                             while ($mod_obj = $result->fetch_object()) {
-                                $selected = $_GET["class"] == $mod_obj->class ? " selected='selected'" : "";
+                                $selected = $_GET['class'] == $mod_obj->class ? " selected='selected'" : '';
                                 echo '<option value="' . $mod_obj->class . '"' . $selected . '>Class ' . $mod_obj->class . '</option>';
                             }
 
@@ -290,13 +290,13 @@ class NearestSystems
                             <?php
                             $query = "  SELECT DISTINCT rating
                                         FROM edtb_modules
-                                        WHERE rating != ''" . $modi . "
-                                        ORDER BY rating";
+                                        WHERE rating != ''" . $modi . '
+                                        ORDER BY rating';
 
                             $result = $this->mysqli->query($query) or write_log($this->mysqli->error, __FILE__, __LINE__);
 
                             while ($mod_obj = $result->fetch_object()) {
-                                $selected = $_GET["rating"] == $mod_obj->rating ? " selected='selected'" : "";
+                                $selected = $_GET['rating'] == $mod_obj->rating ? " selected='selected'" : '';
                                 echo '<option value="' . $mod_obj->rating . '"' . $selected . '>Rating ' . $mod_obj->rating . '</option>';
                             }
 
@@ -309,7 +309,7 @@ class NearestSystems
                 <!-- ships & facilities -->
                 <td class="transparent" style="vertical-align:top;width:20%;white-space:nowrap">
                     <!-- ships -->
-                    <form method="get" action="<?php echo $_SERVER["PHP_SELF"]?>" name="go" id="ships"
+                    <form method="get" action="<?php echo $_SERVER['PHP_SELF']?>" name="go" id="ships"
                           data-push="true" data-target="#nscontent" data-include-blank-url-params="true"
                           data-optimize-url-params="false">
                         <?php
@@ -319,11 +319,11 @@ class NearestSystems
                                 onchange="$('.se-pre-con').show();this.form.submit()">
                             <option value="0">Sells Ships</option>
                             <?php
-                            $query = "SELECT name FROM edtb_ships ORDER BY name";
+                            $query = 'SELECT name FROM edtb_ships ORDER BY name';
                             $result = $this->mysqli->query($query) or write_log($this->mysqli->error, __FILE__, __LINE__);
 
                             while ($ship_obj = $result->fetch_object()) {
-                                $selected = $_GET["ship_name"] == $ship_obj->name ? " selected='selected'" : "";
+                                $selected = $_GET['ship_name'] == $ship_obj->name ? " selected='selected'" : '';
                                 echo '<option value="' . $ship_obj->name . '"' . $selected . '>' . $ship_obj->name . '</option>';
                             }
 
@@ -332,7 +332,7 @@ class NearestSystems
                         </select><br/>
                     </form>
                     <!-- facilities -->
-                    <form method="get" action="<?php echo $_SERVER["PHP_SELF"]?>" name="go" id="facilities"
+                    <form method="get" action="<?php echo $_SERVER['PHP_SELF']?>" name="go" id="facilities"
                           data-push="true" data-target="#nscontent" data-include-blank-url-params="true"
                           data-optimize-url-params="false">
                         <?php
@@ -342,11 +342,11 @@ class NearestSystems
                                 onchange="$('.se-pre-con').show();this.form.submit()">
                             <option value="0">Has Facilities</option>
                             <?php
-                            $query = "SELECT name, code FROM edtb_facilities ORDER BY name";
+                            $query = 'SELECT name, code FROM edtb_facilities ORDER BY name';
                             $result = $this->mysqli->query($query) or write_log($this->mysqli->error, __FILE__, __LINE__);
 
                             while ($facility_obj = $result->fetch_object()) {
-                                $selected = $_GET["facility"] == $facility_obj->code ? " selected='selected'" : "";
+                                $selected = $_GET['facility'] == $facility_obj->code ? " selected='selected'" : '';
                                 echo '<option value="' . $facility_obj->code . '"' . $selected . '>' . $facility_obj->name . '</option>';
                             }
 
@@ -355,7 +355,7 @@ class NearestSystems
                         </select><br/>
                     </form>
                     <!-- landing pads -->
-                    <form method="get" action="<?php echo $_SERVER["PHP_SELF"]?>" name="go" id="landingpads"
+                    <form method="get" action="<?php echo $_SERVER['PHP_SELF']?>" name="go" id="landingpads"
                           data-push="true" data-target="#nscontent" data-include-blank-url-params="true"
                           data-optimize-url-params="false">
                         <?php
@@ -364,8 +364,8 @@ class NearestSystems
                         <select title="Landing pad" class="selectbox" name="pad" style="width:180px"
                                 onchange="$('.se-pre-con').show();this.form.submit()">
                             <?php
-                            $selectedL = $_GET["pad"] == "L" ? ' selected="selected"' : "";
-                            $selectedM = $_GET["pad"] == "M" ? ' selected="selected"' : "";
+                            $selectedL = $_GET['pad'] === 'L' ? ' selected="selected"' : '';
+                            $selectedM = $_GET['pad'] === 'M' ? ' selected="selected"' : '';
                             ?>
                             <option value="">Landing Pad Size</option>
                             <option value="L"<?php echo $selectedL?>>Large</option>
@@ -374,7 +374,7 @@ class NearestSystems
                         </select><br/>
                     </form>
                     <!-- station type -->
-                    <form method="get" action="<?php echo $_SERVER["PHP_SELF"]?>" name="go" id="stationtype"
+                    <form method="get" action="<?php echo $_SERVER['PHP_SELF']?>" name="go" id="stationtype"
                           data-push="true" data-target="#nscontent" data-include-blank-url-params="true"
                           data-optimize-url-params="false">
                         <?php
@@ -383,9 +383,9 @@ class NearestSystems
                         <select title="Station type" class="selectbox" name="station_type" style="width:180px"
                                 onchange="$('.se-pre-con').show();this.form.submit()">
                             <?php
-                            $selectedP = $_GET["station_type"] == "planetary" ? ' selected="selected"' : "";
-                            $selectedS = $_GET["station_type"] == "space" ? ' selected="selected"' : "";
-                            $selectedA = $_GET["station_type"] == "all" ? ' selected="selected"' : "";
+                            $selectedP = $_GET['station_type'] === 'planetary' ? ' selected="selected"' : '';
+                            $selectedS = $_GET['station_type'] === 'space' ? ' selected="selected"' : '';
+                            $selectedA = $_GET['station_type'] === 'all' ? ' selected="selected"' : '';
                             ?>
                             <option value="all">Station Type</option>
                             <option value="planetary"<?php echo $selectedP?>>Planetary</option>
@@ -408,28 +408,28 @@ class NearestSystems
      */
     private function station_info($station_name, $obj, $tdclass)
     {
-        $station_ls_from_star = $obj->ls_from_star == 0 ? "n/a" : number_format($obj->ls_from_star);
+        $station_ls_from_star = $obj->ls_from_star == 0 ? 'n/a' : number_format($obj->ls_from_star);
         $station_max_landing_pad_size = $obj->max_landing_pad_size;
-        $station_max_landing_pad_size = $station_max_landing_pad_size == "L" ? "Large" : "Medium";
+        $station_max_landing_pad_size = $station_max_landing_pad_size === 'L' ? 'Large' : 'Medium';
         $station_is_planetary = $obj->is_planetary;
         $station_type = $obj->type;
 
         $icon = get_station_icon($station_type, $station_is_planetary);
 
         $station_id = $obj->station_id;
-        $station_faction = $obj->station_faction == "" ? "" : "<strong>Faction:</strong> " . $obj->station_faction . "<br />";
-        $station_government = $obj->station_government == "" ? "" : "<strong>Government:</strong> " . $obj->station_government . "<br />";
-        $station_allegiance = $obj->station_allegiance == "" ? "" : "<strong>Allegiance:</strong> " . $obj->station_allegiance . "<br />";
+        $station_faction = $obj->station_faction === '' ? '' : '<strong>Faction:</strong> ' . $obj->station_faction . '<br />';
+        $station_government = $obj->station_government === '' ? '' : '<strong>Government:</strong> ' . $obj->station_government . '<br />';
+        $station_allegiance = $obj->station_allegiance === '' ? '' : '<strong>Allegiance:</strong> ' . $obj->station_allegiance . '<br />';
 
-        $station_state = $obj->station_state == "" ? "" : "<strong>State:</strong> " . $obj->station_state . "<br />";
-        $station_type_d = $obj->type == "" ? "" : "<strong>Type:</strong> " . $obj->type . "<br />";
-        $station_economies = $obj->station_economies == "" ? "" : "<strong>Economies:</strong> " . $obj->station_economies . "<br />";
+        $station_state = $obj->station_state === '' ? '' : '<strong>State:</strong> ' . $obj->station_state . '<br />';
+        $station_type_d = $obj->type === '' ? '' : '<strong>Type:</strong> ' . $obj->type . '<br />';
+        $station_economies = $obj->station_economies === '' ? '' : '<strong>Economies:</strong> ' . $obj->station_economies . '<br />';
 
-        $station_import_commodities = $obj->import_commodities == "" ? "" : "<br /><strong>Import commodities:</strong> " . $obj->import_commodities . "<br />";
-        $station_export_commodities = $obj->export_commodities == "" ? "" : "<strong>Export commodities:</strong> " . $obj->export_commodities . "<br />";
-        $station_prohibited_commodities = $obj->prohibited_commodities == "" ? "" : "<strong>Prohibited commodities:</strong> " . $obj->prohibited_commodities . "<br />";
+        $station_import_commodities = $obj->import_commodities === '' ? '' : '<br /><strong>Import commodities:</strong> ' . $obj->import_commodities . '<br />';
+        $station_export_commodities = $obj->export_commodities === '' ? '' : '<strong>Export commodities:</strong> ' . $obj->export_commodities . '<br />';
+        $station_prohibited_commodities = $obj->prohibited_commodities === '' ? '' : '<strong>Prohibited commodities:</strong> ' . $obj->prohibited_commodities . '<br />';
 
-        $station_selling_ships = $obj->selling_ships == "" ? "" : "<br /><strong>Selling ships:</strong> " . str_replace("'", "", $obj->selling_ships) . "<br />";
+        $station_selling_ships = $obj->selling_ships === '' ? '' : '<br /><strong>Selling ships:</strong> ' . str_replace("'", '', $obj->selling_ships) . '<br />';
 
         $station_shipyard = $obj->shipyard;
         $station_outfitting = $obj->outfitting;
@@ -439,40 +439,40 @@ class NearestSystems
         $station_repair = $obj->repair;
         $station_rearm = $obj->rearm;
 
-        $station_includes = array("shipyard"           => $station_shipyard,
-                                  "outfitting"         => $station_outfitting,
-                                  "commodities market" => $station_commodities_market,
-                                  "black market"       => $station_black_market,
-                                  "refuel"             => $station_refuel,
-                                  "repair"             => $station_repair,
-                                  "restock"            => $station_rearm);
+        $station_includes = array('shipyard' => $station_shipyard,
+                                  'outfitting' => $station_outfitting,
+                                  'commodities market' => $station_commodities_market,
+                                  'black market' => $station_black_market,
+                                  'refuel' => $station_refuel,
+                                  'repair' => $station_repair,
+                                  'restock' => $station_rearm);
 
         $i = 0;
-        $station_services = "";
+        $station_services = '';
         foreach ($station_includes as $name => $included) {
             if ($included == 1) {
                 if ($i != 0) {
-                    $station_services .= ", ";
+                    $station_services .= ', ';
                 } else {
-                    $station_services .= "<strong>Facilities:</strong> ";
+                    $station_services .= '<strong>Facilities:</strong> ';
                 }
 
                 $station_services .= $name;
                 $i++;
             }
         }
-        $station_services .= "<br />";
+        $station_services .= '<br />';
 
-        $outfitting_updated_at = $obj->outfitting_updated_at == "0" ? "" : "<br /><strong>Outfitting last updated:</strong> " . get_timeago($obj->outfitting_updated_at, true, true) . "<br />";
+        $outfitting_updated_at = $obj->outfitting_updated_at == '0' ? '' : '<br /><strong>Outfitting last updated:</strong> ' . get_timeago($obj->outfitting_updated_at, true, true) . '<br />';
 
-        $shipyard_updated_at = $obj->shipyard_updated_at == "0" ? "" : "<strong>Shipyard last updated:</strong> " . get_timeago($obj->shipyard_updated_at, true, true) . "<br />";
+        $shipyard_updated_at = $obj->shipyard_updated_at == '0' ? '' : '<strong>Shipyard last updated:</strong> ' . get_timeago($obj->shipyard_updated_at, true, true) . '<br />';
 
         $info = $station_type_d . $station_faction . $station_government . $station_allegiance . $station_state . $station_economies . $station_services;
         $info .= $station_import_commodities . $station_export_commodities . $station_prohibited_commodities . $outfitting_updated_at . $shipyard_updated_at . $station_selling_ships;
 
-        $info = str_replace("['", "", $info);
-        $info = str_replace("']", "", $info);
-        $info = str_replace("', '", ", ", $info);
+        $info = str_replace("['", '', $info);
+        $info = str_replace("']", '', $info);
+        $info = str_replace("', '", ', ', $info);
 
         /**
          * get allegiance icon
@@ -542,16 +542,16 @@ class NearestSystems
         $count = $main_result->num_rows;
 
         if ($count > 0) {
-            $last_system = "";
+            $last_system = '';
             $ii = 0;
-            $tdclass = "";
+            $tdclass = '';
             while ($obj = $main_result->fetch_object()) {
                 $system = $obj->system;
                 $system_id = $obj->system_id;
                 $sys_population = number_format($obj->population);
-                $sys_economy = empty($obj->economy) ? "n/a" : $obj->economy;
+                $sys_economy = empty($obj->economy) ? 'n/a' : $obj->economy;
                 $sys_government = $obj->government;
-                $sys_security = empty($obj->security) ? "None" : $obj->security;
+                $sys_security = empty($obj->security) ? 'None' : $obj->security;
                 $allegiance = $obj->allegiance;
 
                 $station_name = $obj->station_name;
@@ -565,7 +565,7 @@ class NearestSystems
                 $ss_coordy = $obj->coordy;
                 $ss_coordz = $obj->coordz;
 
-                $distance = sqrt(pow(($ss_coordx - ($this->usex)), 2) + pow(($ss_coordy - ($this->usey)), 2) + pow(($ss_coordz - ($this->usez)), 2));
+                $distance = sqrt((($ss_coordx - $this->usex) ** 2) + (($ss_coordy - $this->usey) ** 2) + (($ss_coordz - $this->usez) ** 2));
 
                 /**
                  * get allegiance icon for system
@@ -573,7 +573,7 @@ class NearestSystems
                 $pic = get_allegiance_icon($allegiance);
 
                 if ($system != $last_system) {
-                    $tdclass = $tdclass == "light" ? "dark" : "light";
+                    $tdclass = $tdclass === 'light' ? 'dark' : 'light';
                     ?>
                     <tr>
                     <td class="<?php echo $tdclass?>" style="text-align:center">
@@ -621,7 +621,7 @@ class NearestSystems
                 $ii++;
             } // end of while
         } else {
-            $colspan = $this->stations !== false ? "10" : "7";
+            $colspan = $this->stations !== false ? '10' : '7';
             ?>
             <tr>
                 <td class="light" colspan="<?php echo $colspan?>">None found!</td>
@@ -637,18 +637,18 @@ class NearestSystems
     {
         $main_result = $this->mysqli->query($this->main_query) or write_log($this->mysqli->error, __FILE__, __LINE__);
 
-        $this->text = $this->text == "Nearest" ? "Nearest stations" : $this->text;
+        $this->text = $this->text === 'Nearest' ? 'Nearest stations' : $this->text;
 
-        if (substr($this->text, 0, 11) == "Nearest (to" && $this->stations === true) {
-            $this->text = str_replace("Nearest ", "Nearest stations ", $this->text);
+        if (substr($this->text, 0, 11) === 'Nearest (to' && $this->stations === true) {
+            $this->text = str_replace('Nearest ', 'Nearest stations ', $this->text);
         }
 
         /**
          * replace all but the first occurance of "key" with "value"
          */
-        $replaces = array("stations" => "",
-                          "selling"  => "and",
-                          "with"     => "and"
+        $replaces = array('stations' => '',
+                          'selling' => 'and',
+                          'with' => 'and'
         );
 
         foreach ($replaces as $replace => $with) {
@@ -727,60 +727,60 @@ class NearestSystems
         /**
          * get url parameters
          */
-        $facility = isset($_GET["facility"]) ? $_GET["facility"] : "";
-        $only = isset($_GET["allegiance"]) ? $_GET["allegiance"] : "";
-        $system_allegiance = isset($_GET["system_allegiance"]) ? $_GET["system_allegiance"] : "";
-        $power = isset($_GET["power"]) ? $_GET["power"] : "";
-        $pad = isset($_GET["pad"]) ? $_GET["pad"] : "";
-        $station_type = isset($_GET["station_type"]) ? $_GET["station_type"] : "";
+        $facility = $_GET['facility'] ?? '';
+        $only = $_GET['allegiance'] ?? '';
+        $system_allegiance = $_GET['system_allegiance'] ?? '';
+        $power = $_GET['power'] ?? '';
+        $pad = $_GET['pad'] ?? '';
+        $station_type = $_GET['station_type'] ?? '';
 
         /**
          * specific power
          */
-        if ($power != "") {
+        if ($power !== '') {
             $this->stations = false;
 
             $this->add_to_query .= " AND edtb_systems.power = '$power'";
-            $this->text .= " " . $power . " systems";
+            $this->text .= ' ' . $power . ' systems';
             $this->hidden_inputs .= '<input type="hidden" name="power" value="' . $power . '" />';
-            $this->power_params .= "&power=" . urlencode($power);
-            $this->allegiance_params .= "&power=" . urlencode($power);
+            $this->power_params .= '&power=' . urlencode($power);
+            $this->allegiance_params .= '&power=' . urlencode($power);
         }
 
         /**
          * specific station allegiance
          */
-        if ($only != "") {
+        if ($only !== '') {
             $this->stations = true;
 
-            if ($only != "all") {
+            if ($only !== 'all') {
                 $this->add_to_query .= " AND edtb_stations.allegiance = '$only'";
             } else {
                 $this->add_to_query .= " AND edtb_stations.allegiance = 'None'";
             }
 
-            if ($only != "all" && $only != "Independent") {
-                $this->text .= " systems with " . $only . " controlled stations";
-            } elseif ($only == "Independent") {
-                $this->text .= " systems with Independent stations";
+            if ($only !== 'all' && $only !== 'Independent') {
+                $this->text .= ' systems with ' . $only . ' controlled stations';
+            } elseif ($only === 'Independent') {
+                $this->text .= ' systems with Independent stations';
             } else {
-                $this->text .= " systems with non-allied stations";
+                $this->text .= ' systems with non-allied stations';
             }
 
             $this->hidden_inputs .= '<input type="hidden" name="allegiance" value="' . $only . '" />';
-            $this->power_params .= "&allegiance=" . $only;
+            $this->power_params .= '&allegiance=' . $only;
         }
 
         /**
          * specific system allegiance
          */
-        if ($system_allegiance != "") {
+        if ($system_allegiance !== '') {
             $this->stations = false;
 
             $this->add_to_query .= " AND edtb_systems.allegiance = '$system_allegiance'";
-            $this->text .= " " . str_replace('None', 'Non-allied', $system_allegiance) . " systems";
+            $this->text .= ' ' . str_replace('None', 'Non-allied', $system_allegiance) . ' systems';
             $this->hidden_inputs .= '<input type="hidden" name="system_allegiance" value="' . $system_allegiance . '" />';
-            $this->power_params .= "&system_allegiance=" . $system_allegiance;
+            $this->power_params .= '&system_allegiance=' . $system_allegiance;
         }
 
         /**
@@ -789,7 +789,7 @@ class NearestSystems
         if (!empty($facility)) {
             $this->stations = true;
 
-            $this->add_to_query .= " AND edtb_stations." . $facility . " = '1'";
+            $this->add_to_query .= ' AND edtb_stations.' . $facility . " = '1'";
 
             $esc_facility = $this->mysqli->real_escape_string($facility);
             $query = "  SELECT name
@@ -805,58 +805,58 @@ class NearestSystems
             $result->close();
 
             if (preg_match('/([aeiouAEIOU])/', $f_name{0})) {
-                $article = "an";
+                $article = 'an';
             } else {
-                $article = "a";
+                $article = 'a';
             }
 
-            $this->text .= " stations with " . $article . " " . $f_name . " facility";
+            $this->text .= ' stations with ' . $article . ' ' . $f_name . ' facility';
             $this->hidden_inputs .= '<input type="hidden" name="facility" value="' . $facility . '" />';
-            $this->power_params .= "&facility=" . $facility;
-            $this->allegiance_params .= "&facility=" . $facility;
+            $this->power_params .= '&facility=' . $facility;
+            $this->allegiance_params .= '&facility=' . $facility;
         }
 
         /**
          * landing pad size
          */
-        if ($pad != "") {
+        if ($pad !== '') {
             $this->stations = true;
 
             $this->add_to_query .= " AND edtb_stations.max_landing_pad_size = '$pad'";
-            $pad_text = $pad == "L" ? "Large" : "Medium";
-            $this->text .= "  stations with " . $pad_text . " sized landing pads";
+            $pad_text = $pad === 'L' ? 'Large' : 'Medium';
+            $this->text .= '  stations with ' . $pad_text . ' sized landing pads';
             $this->hidden_inputs .= '<input type="hidden" name="pad" value="' . $pad . '" />';
-            $this->power_params .= "&pad=" . $pad;
-            $this->allegiance_params .= "&pad=" . $pad;
+            $this->power_params .= '&pad=' . $pad;
+            $this->allegiance_params .= '&pad=' . $pad;
         }
 
         /**
          * station type
          */
-        if ($station_type != "") {
+        if ($station_type !== '') {
             $this->stations = true;
 
             switch ($station_type) {
-                case "planetary":
+                case 'planetary':
                     $this->add_to_query .= " AND edtb_stations.is_planetary = '1'";
-                    $this->text .= " (planetary only)";
+                    $this->text .= ' (planetary only)';
                     break;
-                case "space":
+                case 'space':
                     $this->add_to_query .= " AND edtb_stations.is_planetary = '0'";
-                    $this->text .= " (space ports only)";
+                    $this->text .= ' (space ports only)';
                     break;
-                case "all":
-                    $this->add_to_query .= "";
-                    $this->text .= "";
+                case 'all':
+                    $this->add_to_query .= '';
+                    $this->text .= '';
                     break;
                 default:
-                    $this->add_to_query .= "";
-                    $this->text .= "";
+                    $this->add_to_query .= '';
+                    $this->text .= '';
             }
 
             $this->hidden_inputs .= '<input type="hidden" name="station_type" value="' . $station_type . '" />';
-            $this->power_params .= "&station_type=" . $station_type;
-            $this->allegiance_params .= "&station_type=" . $station_type;
+            $this->power_params .= '&station_type=' . $station_type;
+            $this->allegiance_params .= '&station_type=' . $station_type;
         }
     }
 
@@ -868,8 +868,8 @@ class NearestSystems
         /**
          * get url parameters
          */
-        $ship_name = isset($_GET["ship_name"]) ? $_GET["ship_name"] : "";
-        $group_id = isset($_GET["group_id"]) ? $_GET["group_id"] : "";
+        $ship_name = $_GET['ship_name'] ?? '';
+        $group_id = $_GET['group_id'] ?? '';
         /**
          * nearest stations....
          */
@@ -896,10 +896,10 @@ class NearestSystems
                                     edtb_systems.economy
                                     FROM edtb_stations
                                     LEFT JOIN edtb_systems ON edtb_stations.system_id = edtb_systems.id
-                                    WHERE edtb_systems.x != ''" . $this->add_to_query . "
-                                    ORDER BY sqrt(pow((coordx-(" . $this->usex . ")), 2)+pow((coordy-(" . $this->usey . ")), 2)+pow((coordz-(" . $this->usez . ")), 2)),
+                                    WHERE edtb_systems.x != ''" . $this->add_to_query . '
+                                    ORDER BY sqrt(pow((coordx-(' . $this->usex . ')), 2)+pow((coordy-(' . $this->usey . ')), 2)+pow((coordz-(' . $this->usez . ')), 2)),
                                     -edtb_stations.ls_from_star DESC
-                                    LIMIT 10";
+                                    LIMIT 10';
         }
         /**
          * ...or nearest systems
@@ -915,26 +915,26 @@ class NearestSystems
                                     edtb_systems.security,
                                     edtb_systems.economy
                                     FROM edtb_systems
-                                    WHERE edtb_systems.x != ''" . $this->add_to_query . "
-                                    ORDER BY sqrt(pow((coordx-(" . $this->usex . ")), 2)+pow((coordy-(" . $this->usey . ")), 2)+pow((coordz-(" . $this->usez . ")), 2))
-                                    LIMIT 10";
+                                    WHERE edtb_systems.x != ''" . $this->add_to_query . '
+                                    ORDER BY sqrt(pow((coordx-(' . $this->usex . ')), 2)+pow((coordy-(' . $this->usey . ')), 2)+pow((coordz-(' . $this->usez . ')), 2))
+                                    LIMIT 10';
         }
 
         /**
          * if we're searching modules
          */
         if (!empty($group_id)) {
-            $class = isset($_GET["class"]) ? $_GET["class"] : "";
-            $rating = isset($_GET["rating"]) ? $_GET["rating"] : "";
+            $class = $_GET['class'] ?? '';
+            $rating = $_GET['rating'] ?? '';
 
-            $class_add = "";
-            if ($class != "" && $class != "0") {
-                $class_add = " AND class = '" . $_GET["class"] . "'";
+            $class_add = '';
+            if ($class !== '' && $class != '0') {
+                $class_add = " AND class = '" . $_GET['class'] . "'";
             }
 
-            $rating_add = "";
-            if ($rating != "" && $rating != "0") {
-                $rating_add = " AND rating = '" . $_GET["rating"] . "'";
+            $rating_add = '';
+            if ($rating !== '' && $rating != '0') {
+                $rating_add = " AND rating = '" . $_GET['rating'] . "'";
             }
 
             $query = "  SELECT group_name
@@ -946,20 +946,20 @@ class NearestSystems
             $g_obj = $result->fetch_object();
 
             $group_name = $g_obj->group_name;
-            $group_name = substr($group_name, -1) == "s" ? $group_name : "" . $group_name . "s";
+            $group_name = substr($group_name, -1) === 's' ? $group_name : '' . $group_name . 's';
 
             $result->close();
 
             if (!empty($rating)) {
-                $ratings = " " . $_GET["rating"] . " rated ";
+                $ratings = ' ' . $_GET['rating'] . ' rated ';
                 $this->hidden_inputs .= '<input type="hidden" name="rating" value="' . $rating . '" />';
-                $this->power_params .= "&rating=" . $rating;
+                $this->power_params .= '&rating=' . $rating;
             }
 
             if (!empty($class)) {
-                $classes = " class " . $_GET["class"] . " ";
+                $classes = ' class ' . $_GET['class'] . ' ';
                 $this->hidden_inputs .= '<input type="hidden" name="class" value="' . $class . '" />';
-                $this->power_params .= "&class=" . $class;
+                $this->power_params .= '&class=' . $class;
             }
 
             if (!empty($class) && !empty($rating)) {
@@ -974,20 +974,20 @@ class NearestSystems
                 $p_obj = $result->fetch_object();
 
                 $modules_price = number_format($p_obj->price);
-                $price = " (normal price " . $modules_price . " CR) ";
+                $price = ' (normal price ' . $modules_price . ' CR) ';
 
                 $result->close();
             }
 
-            $this->text .= " stations selling " . $ratings . $classes . $group_name . $price;
+            $this->text .= ' stations selling ' . $ratings . $classes . $group_name . $price;
             $this->hidden_inputs .= '<input type="hidden" name="group_id" value="' . $group_id . '" />';
-            $this->power_params .= "&group_id=" . $group_id;
-            $this->allegiance_params .= "&group_id=" . $group_id;
+            $this->power_params .= '&group_id=' . $group_id;
+            $this->allegiance_params .= '&group_id=' . $group_id;
 
             $query = "  SELECT id
                         FROM edtb_modules
-                        WHERE group_id = '$group_id'" . $class_add . $rating_add . "
-                        LIMIT 1";
+                        WHERE group_id = '$group_id'" . $class_add . $rating_add . '
+                        LIMIT 1';
 
             $result = $this->mysqli->query($query) or write_log($this->mysqli->error, __FILE__, __LINE__);
 
@@ -1020,9 +1020,9 @@ class NearestSystems
                                         FROM edtb_stations
                                         LEFT JOIN edtb_systems ON edtb_stations.system_id = edtb_systems.id
                                         WHERE edtb_systems.x != ''
-                                        AND edtb_stations.selling_modules LIKE '-%" . $modules_id . "%-'" . $this->add_to_query . "
-                                        ORDER BY sqrt(pow((coordx-(" . $this->usex . ")), 2)+pow((coordy-(" . $this->usey . ")), 2)+pow((coordz-(" . $this->usez . ")), 2))
-                                        LIMIT 10";
+                                        AND edtb_stations.selling_modules LIKE '-%" . $modules_id . "%-'" . $this->add_to_query . '
+                                        ORDER BY sqrt(pow((coordx-(' . $this->usex . ')), 2)+pow((coordy-(' . $this->usey . ')), 2)+pow((coordz-(' . $this->usez . ')), 2))
+                                        LIMIT 10';
 
                 $this->stations = true;
                 $result->close();
@@ -1056,9 +1056,9 @@ class NearestSystems
                                     FROM edtb_stations
                                     LEFT JOIN edtb_systems ON edtb_stations.system_id = edtb_systems.id
                                     WHERE edtb_systems.x != ''
-                                    AND edtb_stations.selling_ships LIKE '%\'" . $ship_name . "\'%'" . $this->add_to_query . "
-                                    ORDER BY sqrt(pow((coordx-(" . $this->usex . ")), 2)+pow((coordy-(" . $this->usey . ")), 2)+pow((coordz-(" . $this->usez . ")), 2))
-                                    LIMIT 10";
+                                    AND edtb_stations.selling_ships LIKE '%\'" . $ship_name . "\'%'" . $this->add_to_query . '
+                                    ORDER BY sqrt(pow((coordx-(' . $this->usex . ')), 2)+pow((coordy-(' . $this->usey . ')), 2)+pow((coordz-(' . $this->usez . ')), 2))
+                                    LIMIT 10';
 
             $esc_ship_name = $this->mysqli->real_escape_string($ship_name);
             $query = "  SELECT price
@@ -1072,16 +1072,16 @@ class NearestSystems
             $ship_price = number_format($price_obj->price);
 
             if (isset($price_obj->price)) {
-                $s_price = " (normal price " . $ship_price . " CR)";
+                $s_price = ' (normal price ' . $ship_price . ' CR)';
             }
 
             $result->close();
 
             $this->stations = true;
-            $this->text .= " stations selling the " . $ship_name . $s_price;
+            $this->text .= ' stations selling the ' . $ship_name . $s_price;
             $this->hidden_inputs .= '<input type="hidden" name="ship_name" value="' . $ship_name . '" />';
-            $this->power_params .= "&ship_name=" . $ship_name;
-            $this->allegiance_params .= "&ship_name=" . $ship_name;
+            $this->power_params .= '&ship_name=' . $ship_name;
+            $this->allegiance_params .= '&ship_name=' . $ship_name;
         }
     }
 

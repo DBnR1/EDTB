@@ -47,7 +47,7 @@ class Trilateration
      * @return array $coords coordinates
      * @author Snuble and Harbinger (https://forums.frontier.co.uk/showthread.php?t=43362&page=7&p=869662&highlight=trilateration3d#post869662)
      */
-    public function trilateration3d($p1, $p2, $p3, $p4)
+    public function trilateration3d($p1, $p2, $p3, $p4): array
     {
         $ex = $this->vector_unit($this->vector_diff($p2, $p1));
         $i = $this->vector_dot_product($ex, $this->vector_diff($p3, $p1));
@@ -135,7 +135,7 @@ class Trilateration
      * @return array
      * @author Snuble and Harbinger (https://forums.frontier.co.uk/showthread.php?t=43362&page=7&p=869662&highlight=trilateration3d#post869662)
      */
-    private function vector_unit($v)
+    private function vector_unit($v): array
     {
         $l = $this->vector_norm($v);
 
@@ -152,10 +152,9 @@ class Trilateration
      * @return float
      * @author Snuble and Harbinger (https://forums.frontier.co.uk/showthread.php?t=43362&page=7&p=869662&highlight=trilateration3d#post869662)
      */
-    private function vector_norm($v)
+    private function vector_norm($v): float
     {
-        $l = sqrt(($v[0]*$v[0])+($v[1]*$v[1])+($v[2]*$v[2]));
-        return $l;
+        return sqrt(($v[0]*$v[0])+($v[1]*$v[1])+($v[2]*$v[2]));
     }
 
     /**
@@ -166,7 +165,7 @@ class Trilateration
      * @return array
      * @author Snuble and Harbinger (https://forums.frontier.co.uk/showthread.php?t=43362&page=7&p=869662&highlight=trilateration3d#post869662)
      */
-    private function vector_div($v, $l)
+    private function vector_div($v, $l): array
     {
         return array($v[0]/$l, $v[1] / $l, $v[2] / $l);
     }
@@ -179,10 +178,9 @@ class Trilateration
      * @return float
      * @author Snuble and Harbinger (https://forums.frontier.co.uk/showthread.php?t=43362&page=7&p=869662&highlight=trilateration3d#post869662)
      */
-    private function vector_diff($p1, $p2)
+    private function vector_diff($p1, $p2): float
     {
-        $ret = array($p1[0] - $p2[0], $p1[1] - $p2[1], $p1[2] - $p2[2]);
-        return $ret;
+        return array($p1[0] - $p2[0], $p1[1] - $p2[1], $p1[2] - $p2[2]);
     }
 
     /**
@@ -193,10 +191,9 @@ class Trilateration
      * @return float
      * @author Snuble and Harbinger (https://forums.frontier.co.uk/showthread.php?t=43362&page=7&p=869662&highlight=trilateration3d#post869662)
      */
-    private function vector_dot_product($v1, $v2)
+    private function vector_dot_product($v1, $v2): float
     {
-        $ret = ($v1[0] * $v2[0]) + ($v1[1] * $v2[1]) + ($v1[2] * $v2[2]);
-        return $ret;
+        return ($v1[0] * $v2[0]) + ($v1[1] * $v2[1]) + ($v1[2] * $v2[2]);
     }
 
     /**
@@ -207,7 +204,7 @@ class Trilateration
      * @return array
      * @author Snuble and Harbinger (https://forums.frontier.co.uk/showthread.php?t=43362&page=7&p=869662&highlight=trilateration3d#post869662)
      */
-    private function vector_multiply($v, $i)
+    private function vector_multiply($v, $i): array
     {
         return array($v[0] * $i, $v[1] * $i, $v[2] * $i);
     }
@@ -220,7 +217,7 @@ class Trilateration
      * @return float
      * @author Snuble and Harbinger (https://forums.frontier.co.uk/showthread.php?t=43362&page=7&p=869662&highlight=trilateration3d#post869662)
      */
-    private function vector_cross($v1, $v2)
+    private function vector_cross($v1, $v2): float
     {
         $v = [];
         $v[0] = ($v1[1] * $v2[2]) - ($v1[2] * $v2[1]);
@@ -237,7 +234,7 @@ class Trilateration
      * @return float
      * @author Snuble and Harbinger (https://forums.frontier.co.uk/showthread.php?t=43362&page=7&p=869662&highlight=trilateration3d#post869662)
      */
-    private function vector_length($p1, $p2)
+    private function vector_length($p1, $p2): float
     {
         $a1 = $p1[0];
         $a2 = $p2[0];
@@ -258,7 +255,7 @@ class Trilateration
      * @return float
      * @author Snuble and Harbinger (https://forums.frontier.co.uk/showthread.php?t=43362&page=7&p=869662&highlight=trilateration3d#post869662)
      */
-    private function vector_sum($v1, $v2)
+    private function vector_sum($v1, $v2): float
     {
         $v = [];
         $v[0] = $v1[0] + $v2[0];

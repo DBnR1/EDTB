@@ -32,16 +32,16 @@
 use EDTB\Log\MakeLog;
 
 /** @var string logsystem */
-$logsystem = $_GET["system"];
+$logsystem = $_GET['system'];
 if (!$logsystem) {
-    exit("No system set");
+    exit('No system set');
 }
 
-$logsystem_id = !isset($_GET["system_id"]) ? "-1" : 0 + $_GET["system_id"];
+$logsystem_id = !isset($_GET['system_id']) ? '-1' : 0 + $_GET['system_id'];
 /*if (!$logsystem_id) exit("No system id set"); */
 
 /** @require Theme class */
-require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/style/Theme.php';
 
 /**
  * initiate page header
@@ -49,7 +49,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/style/Theme.php");
 $header = new Header();
 
 /** @var string page_title */
-$header->page_title = "ED ToolBox";
+$header->page_title = 'ED ToolBox';
 
 /**
  * display the header
@@ -57,7 +57,7 @@ $header->page_title = "ED ToolBox";
 $header->display_header();
 
 /** @require MakeLog class */
-require_once("MakeLog.php");
+require_once __DIR__ . '/MakeLog.php';
 ?>
 <div class="entries">
     <div class="entries_inner">
@@ -84,7 +84,7 @@ require_once("MakeLog.php");
 
             $log->time_difference = $system_time;
 
-            echo $log->make_log_entries($result, "log");
+            echo $log->make_log_entries($result, 'log');
         } else {
             echo '<h2>No log entries for ' . $logsystem . '</h2><br />';
             echo '<a href="javascript:void(0)" id="toggle" onclick="toggle_log(\'' . addslashes($logsystem) . '\')" title="Add log entry" style="color:inherit">';

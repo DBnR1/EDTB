@@ -31,8 +31,8 @@
  */
 
 /** @require config */
-require_once(__DIR__ . "/config.inc.php");
-require_once($settings["install_path"] . "/data/server_config.inc.php");
+require_once __DIR__ . '/config.inc.php';
+require_once $settings['install_path'] . '/data/server_config.inc.php';
 
 /**
  * Connect to MySQL database
@@ -43,6 +43,6 @@ $mysqli = new mysqli($server, $user, $pwd, $db);
  * check connection
  */
 if ($mysqli->connect_errno) {
-    echo "Failed to connect to MySQL: " . $mysqli->connect_error;
+    echo 'Failed to connect to MySQL: ' . $mysqli->connect_error;
 }
 

@@ -34,20 +34,20 @@
 date_default_timezone_set('UTC');
 
 /** @require ini config */
-require_once(__DIR__ . "/config_ini.inc.php");
+require_once __DIR__ . '/config_ini.inc.php';
 /** @require server config */
-require_once($settings["install_path"] . "/data/server_config.inc.php");
+require_once $settings['install_path'] . '/data/server_config.inc.php';
 /** @require MySQL */
-require_once(__DIR__ . "/MySQL.php");
+require_once __DIR__ . '/MySQL.php';
 /** @require functions */
-require_once(__DIR__ . "/functions_safe.php");
+require_once __DIR__ . '/functions_safe.php';
 
 /**
  * Expand the $settings global variable with stuff from the database
  */
-$settings_res = " SELECT SQL_CACHE user_settings.variable, user_settings.value, edtb_settings_info.type
+$settings_res = ' SELECT SQL_CACHE user_settings.variable, user_settings.value, edtb_settings_info.type
                   FROM user_settings
-                  LEFT JOIN edtb_settings_info ON edtb_settings_info.variable = user_settings.variable";
+                  LEFT JOIN edtb_settings_info ON edtb_settings_info.variable = user_settings.variable';
 
 $result = $mysqli->query($settings_res) or write_log($mysqli->error, __FILE__, __LINE__);
 
@@ -58,19 +58,19 @@ while ($obj = $result->fetch_object()) {
     $variable = $obj->variable;
     $value = $obj->value;
 
-    if ($obj->type == "array") {
+    if ($obj->type === 'array') {
         // split by new line
-        $values = preg_split("/\r\n|\r|\n|" . PHP_EOL . "/", $value);
+        $values = preg_split("/\r\n|\r|\n|" . PHP_EOL . '/', $value);
 
         foreach ($values as $arvalue) {
             if (!empty($arvalue)) {
                 $count = 0;
-                $parts = explode(">>", $arvalue);
+                $parts = explode('>>', $arvalue);
 
                 $var = $parts[0];
                 $val = $parts[1];
 
-                $values_s = explode(",", $val);
+                $values_s = explode(',', $val);
                 $count = count($values_s);
 
                 if ($count > 1) {
@@ -85,8 +85,8 @@ while ($obj = $result->fetch_object()) {
             }
         }
         unset($arvalue);
-    } elseif ($obj->type == "csl") {
-        $values = explode(",", $value);
+    } elseif ($obj->type === 'csl') {
+        $values = explode(',', $value);
 
         $i = 0;
         foreach ($values as $arvalue) {
@@ -101,40 +101,40 @@ while ($obj = $result->fetch_object()) {
 
 $result->close();
 
-$dropdown = $settings["dropdown"];
-array_push($dropdown, $settings["maxdistance"]);
+$dropdown = $settings['dropdown'];
+$dropdown[] = $settings['maxdistance'];
 
 /** @constant string galnet_feed feed url for galnet news page */
-define("GALNET_FEED", "http://news.galnet.fr/en/feed");
+define('GALNET_FEED', 'http://news.galnet.fr/en/feed');
 
 /** @var string new_screendir */
-$settings["new_screendir"] = empty($settings["new_screendir"]) ? $settings["install_path"] . "/EDTB/screenshots" : $settings["new_screendir"];
+$settings['new_screendir'] = empty($settings['new_screendir']) ? $settings['install_path'] . '/EDTB/screenshots' : $settings['new_screendir'];
 
 /** @var string agent user agent for FD api */
-$settings["agent"] = "Mozilla/5.0 (iPhone; CPU iPhone OS 7_1_2 like Mac OS X) AppleWebKit/537.51.2 (KHTML, like Gecko) Mobile/11D257";
+$settings['agent'] = 'Mozilla/5.0 (iPhone; CPU iPhone OS 7_1_2 like Mac OS X) AppleWebKit/537.51.2 (KHTML, like Gecko) Mobile/11D257';
 /** @var string cookie_file cookie file for FD api */
-$settings["cookie_file"] =  $_SERVER["DOCUMENT_ROOT"] . "\\cache\\cookies";
+$settings['cookie_file'] =  $_SERVER['DOCUMENT_ROOT'] . "\\cache\\cookies";
 /** @var string curl_exe path to curl executable file */
-$settings["curl_exe"] = $settings["install_path"] . "\\bin\\curl.exe";
+$settings['curl_exe'] = $settings['install_path'] . "\\bin\\curl.exe";
 
 /**
  * parse data from companion json
  */
-$profile_file = $_SERVER["DOCUMENT_ROOT"] . "/cache/profile.json";
+$profile_file = $_SERVER['DOCUMENT_ROOT'] . '/cache/profile.json';
 
 if (file_exists($profile_file)) {
     $profile_file = file_get_contents($profile_file);
 
-    if ($profile_file == "no_data") {
-        $api["commander"] = "no_data";
-        $api["ship"] = "no_data";
-        $api["stored_ships"] = "no_data";
+    if ($profile_file === 'no_data') {
+        $api['commander'] = 'no_data';
+        $api['ship'] = 'no_data';
+        $api['stored_ships'] = 'no_data';
     } else {
         $profile = json_decode($profile_file);
 
-        $api["commander"] = $profile->{"commander"};
-        $api["ship"] = $profile->{"ship"};
-        $api["stored_ships"] = $profile->{"ships"};
+        $api['commander'] = $profile->{'commander'};
+        $api['ship'] = $profile->{'ship'};
+        $api['stored_ships'] = $profile->{'ships'};
     }
 }
 
