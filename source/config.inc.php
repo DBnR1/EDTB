@@ -84,7 +84,6 @@ while ($obj = $result->fetch_object()) {
                 }
             }
         }
-        unset($arvalue);
     } elseif ($obj->type === 'csl') {
         $values = explode(',', $value);
 
@@ -93,7 +92,6 @@ while ($obj = $result->fetch_object()) {
             $settings[$variable][$i] = trim($arvalue);
             $i++;
         }
-        unset($arvalue);
     } else {
         $settings[$variable] = $value;
     }
@@ -101,8 +99,8 @@ while ($obj = $result->fetch_object()) {
 
 $result->close();
 
-$dropdown = $settings['dropdown'];
-$dropdown[] = $settings['maxdistance'];
+$dropdown = $settings["dropdown"];
+array_push($dropdown, $settings['maxdistance']);
 
 /** @constant string galnet_feed feed url for galnet news page */
 define('GALNET_FEED', 'http://news.galnet.fr/en/feed');
