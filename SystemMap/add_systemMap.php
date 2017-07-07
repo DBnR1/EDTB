@@ -39,12 +39,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/source/MySQL.php';
 /** @require curSys */
 //require_once($_SERVER["DOCUMENT_ROOT"] . "/source/curSys.php");
 
-if (isset($_GET['string']) && isset($_GET['system'])) {
+if (isset($_GET['string'], $_GET['system'])) {
     $string = $_GET['string'];
     $system = $_GET['system'];
 
-    $esc_system_name = $mysqli->real_escape_string($system);
-    $esc_string = $mysqli->real_escape_string($string);
+    $escSystemName = $mysqli->real_escape_string($system);
+    $escString = $mysqli->real_escape_string($string);
 } else {
     write_log('Error: String or system not set', __FILE__, __LINE__);
     exit;
@@ -55,13 +55,13 @@ if (isset($_GET['string']) && isset($_GET['system'])) {
  */
 $stmt = "   INSERT INTO user_system_map (system_name, string)
             VALUES
-            ('$esc_system_name',
-            '$esc_string')
-            ON DUPLICATE KEY UPDATE string = '$esc_string'";
+            ('$escSystemName',
+            '$escString')
+            ON DUPLICATE KEY UPDATE string = '$escString'";
 
 if ($string === 'delete') {
     $stmt = "DELETE FROM user_system_map
-             WHERE system_name = '$esc_system_name'
+             WHERE system_name = '$escSystemName'
              LIMIT 1";
 }
 

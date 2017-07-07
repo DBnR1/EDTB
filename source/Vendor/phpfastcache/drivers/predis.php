@@ -13,7 +13,7 @@
 class phpfastcache_predis extends BasePhpFastCache implements phpfastcache_driver
 {
 
-    public $checked_redis = false;
+    public $checkedRedis = false;
 
     public function checkdriver()
     {
@@ -67,9 +67,9 @@ class phpfastcache_predis extends BasePhpFastCache implements phpfastcache_drive
                 $c['timeout'] = $timeout;
             }
 
-            $read_write_timeout = isset($server['read_write_timeout']) ? $server['read_write_timeout'] : "";
-            if ($read_write_timeout!="") {
-                $c['read_write_timeout'] = $read_write_timeout;
+            $readWriteTimeout = isset($server['read_write_timeout']) ? $server['read_write_timeout'] : "";
+            if ($readWriteTimeout!="") {
+                $c['read_write_timeout'] = $readWriteTimeout;
             }
 
             $this->instant = new Predis\Client($c);

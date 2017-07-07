@@ -26,15 +26,15 @@ var HUD = {
     $('#hud').append(
       '<div>'+
       '    <h2>Infos</h2>'+
-      '     Distance to Sol:  <span id="distsol"></span> ly<br />'+
-	  '	    Distance to current:  <span id="distcur"></span> ly'+
+      '     Distance to Sol: <span id="distsol"></span> ly<br>'+
+	  '	    Distance to current: <span id="distcur"></span> ly'+
       '    <div id="coords" class="coords">'+
       '      <span id="cx"></span><span id="cy"></span><span id="cz"></span></div>'+
       '      <p id="infos"></p>'+
       '    </div>'+
       /*'  <div id="search">'+
       '    <h2>Search</h2>'+
-      '    <input type="text" />'+
+      '    <input type="text">'+
       '  </div>'+*/
       '  <div id="filters">'+
       '  </div>'+
@@ -49,7 +49,7 @@ var HUD = {
       '    <a href="#" data-view="3d" class="view selected">3D</a>'+
       '    <a href="#" data-view="top" class="view">2D</a>'+
 	  '    <a href="#" data-view="infos" class="'+(Ed3d.showGalaxyInfos ? 'selected' : '')+'">i</a>'+
-      '    <a href="#" data-view="options"><img src="/style/img/map_settings.png" alt="settings" style="vertical-align:middle;margin-bottom:3px;" /></a>'+
+      '    <a href="#" data-view="options"><img src="/style/img/map_settings.png" alt="settings" style="vertical-align:middle;margin-bottom:3px;"></a>'+
       '  </div>'
     );
 	this.createSubOptions();

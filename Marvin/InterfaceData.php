@@ -49,12 +49,12 @@ if (isset($_GET['nowplaying'])) {
         $password = $settings['nowplaying_vlc_password'];
         $url = $settings['nowplaying_vlc_url'];
 
-        $opts = array(
-          'http' => array(
+        $opts = [
+          'http' => [
             'method' => 'GET',
             'header' => 'Authorization: Basic ' . base64_encode("$username:$password")
-          )
-        );
+          ]
+        ];
 
         $context = stream_context_create($opts);
 
@@ -63,9 +63,9 @@ if (isset($_GET['nowplaying'])) {
             write_log('Error: ' . $error['message'], __FILE__, __LINE__);
         }
 
-        $json_data = json_decode($result, true);
+        $jsonData = json_decode($result, true);
 
-        $nowplaying = $json_data['information']['category']['meta']['now_playing'];
+        $nowplaying = $jsonData['information']['category']['meta']['now_playing'];
     }
 
     if (empty($nowplaying)) {

@@ -52,7 +52,7 @@ THREE.BloomPass = function ( strength, kernelSize, sigma, resolution ) {
 	this.materialConvolution = new THREE.ShaderMaterial( {
 
 		uniforms: this.convolutionUniforms,
-		vertexShader:  convolutionShader.vertexShader,
+		vertexShader: convolutionShader.vertexShader,
 		fragmentShader: convolutionShader.fragmentShader,
 		defines: {
 			"KERNEL_SIZE_FLOAT": kernelSize.toFixed( 1 ),

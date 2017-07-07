@@ -39,7 +39,7 @@ $pic = get_allegiance_icon($curSys['allegiance']);
 
 $data['system_title'] .= '<div class="leftpanel-add-data">';
 $data['system_title'] .= '<a href="javascript:void(0)" id="toggle" onclick="setbm(\'' . addslashes($curSys['name']) . '\', \'' . $curSys['id'] . '\');tofront(\'addBm\');$(\'#bm_text\').focus()" title="Bookmark system">';
-$data['system_title'] .= '<img src="/style/img/' . $pic . '" class="allegiance_icon" alt="' . $curSys['allegiance'] . '" />';
+$data['system_title'] .= '<img src="/style/img/' . $pic . '" class="allegiance_icon" alt="' . $curSys['allegiance'] . '">';
 $data['system_title'] .= '</a>';
 $data['system_title'] .= '</div>';
 
@@ -48,26 +48,26 @@ if (!isset($_COOKIE['style']) || $_COOKIE['style'] !== 'narrow') {
 
     $bookmarked = 0;
     if ($curSys['id'] != '-1') {
-        $b_query = "SELECT id
+        $bQuery = "SELECT id
                     FROM user_bookmarks
                     WHERE system_id = '" . $curSys['id'] . "'
                     AND system_id != ''
                     LIMIT 1";
     } else {
-        $b_query = "SELECT id
+        $bQuery = "SELECT id
                     FROM user_bookmarks
-                    WHERE system_name = '$esc_cursys_name'
+                    WHERE system_name = '$escCursysName'
                     LIMIT 1";
     }
-    $bookmarked = $mysqli->query($b_query)->num_rows;
+    $bookmarked = $mysqli->query($bQuery)->num_rows;
 
-    $p_query = "SELECT id
+    $pQuery = "SELECT id
                 FROM user_poi
-                WHERE system_name = '$esc_cursys_name'
+                WHERE system_name = '$escCursysName'
                 AND system_name != ''
                 LIMIT 1";
 
-    $poid = $mysqli->query($p_query)->num_rows;
+    $poid = $mysqli->query($pQuery)->num_rows;
 
     $class = $bookmarked > 0 ? 'bookmarked' : 'title';
     $class = $poid > 0 ? 'poid' : $class;
@@ -82,27 +82,27 @@ if (!isset($_COOKIE['style']) || $_COOKIE['style'] !== 'narrow') {
         $data['system_title'] .= 'Location unavailable';
         $data['system_title'] .= '</a>';
 
-        $data['system_title'] .= '<img class="icon20" src="/style/img/help.png" alt="Help" style="margin-left:6px" onclick="$(\'#location_help\').fadeToggle(\'fast\')" />';
+        $data['system_title'] .= '<img class="icon20" src="/style/img/help.png" alt="Help" style="margin-left: 6px" onclick="$(\'#location_help\').fadeToggle(\'fast\')">';
         $data['system_title'] .= '</span>';
-        $data['system_title'] .= '<div class="info" id="location_help" style="position:fixed;left:60px;top:40px">';
-        $data['system_title'] .= 'If you\'re having trouble getting ED ToolBox to<br />show your current location, check the<br />';
+        $data['system_title'] .= '<div class="info" id="location_help" style="position: fixed;  left: 60px; top: 40px">';
+        $data['system_title'] .= 'If you\'re having trouble getting ED ToolBox to<br>show your current location, check the<br>';
         $data['system_title'] .= '<a href="http://edtb.xyz/?q=common-issues#location_unavailable" target="_blank">Common issues</a> page at EDTB.xyz for help.';
         $data['system_title'] .= '</div>';
     }
 
     $data['system_title'] .= '</div>';
 } else {
-    $data['system_title'] .= '<div style="display:none" id="system_title">' . $curSys['name'] . '</div>';
+    $data['system_title'] .= '<div style="display: none" id="system_title">' . $curSys['name'] . '</div>';
 }
 
 /**
  * User balance from FD API
  */
 if (!isset($_COOKIE['style']) || $_COOKIE['style'] !== 'narrow') {
-    $status_balance_cache = '';
+    $statusBalanceCache = '';
     if (isset($api['commander']) && $settings['show_cmdr_status'] === 'true') {
         if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/cache/cmdr_balance_status.html')) {
-            $status_balance_cache = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/cache/cmdr_balance_status.html');
+            $statusBalanceCache = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/cache/cmdr_balance_status.html');
         }
     }
 }
@@ -114,22 +114,22 @@ $data['system_info'] = '';
 
 if (!isset($_COOKIE['style']) || $_COOKIE['style'] !== 'narrow') {
     if (!empty($curSys['allegiance'])) {
-        $population_s = $curSys['population'] == '0' ? '' : ' - Population: ' . number_format($curSys['population']);
-        $government_s = $curSys['government'] === '' ? '' : ' - ' . $curSys['government'];
+        $populationS = $curSys['population'] == '0' ? '' : ' - Population: ' . number_format($curSys['population']);
+        $governmentS = $curSys['government'] === '' ? '' : ' - ' . $curSys['government'];
 
-        $data['system_info'] .= '<div class="subtitle" id="t2">' . $curSys['allegiance'] . $government_s . $population_s . '</div>';
+        $data['system_info'] .= '<div class="subtitle" id="t2">' . $curSys['allegiance'] . $governmentS . $populationS . '</div>';
 
         $data['system_info'] .= '<div class="text" id="t3">';
         if (!empty($curSys['economy'])) {
-            $data['system_info'] .= '&boxur; Economy: ' . $curSys['economy'] . '<span style="margin-left:10px">';
+            $data['system_info'] .= '&boxur; Economy: ' . $curSys['economy'] . '<span style="margin-left: 10px">';
         }
-        $data['system_info'] .= '<span id="balance_st">' . $status_balance_cache . '</span>';
+        $data['system_info'] .= '<span id="balance_st">' . $statusBalanceCache . '</span>';
         $data['system_info'] .= '</span></div>';
     } else {
         $data['system_info'] .= '<div class="subtitle" id="t2">Welcome</div>';
         $data['system_info'] .= '<div class="text" id="t3">';
-        $data['system_info'] .= '&boxur; CMDR ' . $settings['cmdr_name'] . '<span style="margin-left:10px">';
-        $data['system_info'] .= '<span id="balance_st">' . $status_balance_cache . '</span>';
+        $data['system_info'] .= '&boxur; CMDR ' . $settings['cmdr_name'] . '<span style="margin-left: 10px">';
+        $data['system_info'] .= '<span id="balance_st">' . $statusBalanceCache . '</span>';
         $data['system_info'] .= '</span></div>';
     }
 }
@@ -139,15 +139,15 @@ if (!isset($_COOKIE['style']) || $_COOKIE['style'] !== 'narrow') {
  */
 if (empty($curSys['coordinates']) && !empty($curSys['name'])) {
     if (!isset($_COOKIE['style']) || $_COOKIE['style'] !== 'narrow') {
-        $calc_coord .= '<span style="margin-bottom:6px;height:40px">';
-        $calc_coord .= '<a href="javascript:void(0)" onclick="set_reference_systems(false);tofront(\'calculate\');get_cs(\'target_system\')" title="No coordinates found, click here to calculate">';
-        $calc_coord .= '<img src="/style/img/calculator.png" class="icon24" alt="Calculate" />';
-        $calc_coord .= '&nbsp;*&nbsp;No coordinates, click to calculate them.</a></span><br /><br />&nbsp';
+        $calcCoord .= '<span style="margin-bottom: 6px; height: 40px">';
+        $calcCoord .= '<a href="javascript:void(0)" onclick="set_reference_systems(false);tofront(\'calculate\');get_cs(\'target_system\')" title="No coordinates found, click here to calculate">';
+        $calcCoord .= '<img src="/style/img/calculator.png" class="icon24" alt="Calculate">';
+        $calcCoord .= '&nbsp;*&nbsp;No coordinates, click to calculate them.</a></span><br><br>&nbsp';
     } else {
-        $calc_coord .= '<span style="margin-bottom:6px;text-align:center">';
-        $calc_coord .= '<a href="javascript:void(0)" onclick="set_reference_systems(false);tofront(\'calculate\');get_cs(\'target_system\')" title="No coordinates found, click here to calculate">';
-        $calc_coord .= '<img src="/style/img/calculator.png" class="icon24" alt="Calculate" style="margin-left:11px;margin-top:3px" />';
-        $calc_coord .= '</a></span>';
+        $calcCoord .= '<span style="margin-bottom: 6px; text-align: center">';
+        $calcCoord .= '<a href="javascript:void(0)" onclick="set_reference_systems(false);tofront(\'calculate\');get_cs(\'target_system\')" title="No coordinates found, click here to calculate">';
+        $calcCoord .= '<img src="/style/img/calculator.png" class="icon24" alt="Calculate" style="margin-left: 11px; margin-top: 3px">';
+        $calcCoord .= '</a></span>';
     }
 }
 
@@ -170,51 +170,53 @@ if (!isset($_COOKIE['style']) || $_COOKIE['style'] !== 'narrow') {
 
     if ($count > 0) {
         $c = 0;
-        while ($station_obj = $result->fetch_object()) {
-            $station_name = $station_obj->name;
+        while ($stationObj = $result->fetch_object()) {
+            $stationName = $stationObj->name;
 
-            if ($c == 0) {
-                $first_station_name = $station_obj->name;
-                $first_station_ls_from_star = $station_obj->ls_from_star;
+            if ($c === 0) {
+                $firstStationName = $stationObj->name;
+                $firstStationLsFrom_star = $stationObj->ls_from_star;
             }
 
-            $ls_from_star = $station_obj->ls_from_star;
-            $max_landing_pad_size = $station_obj->max_landing_pad_size === '' ? '' : '<strong>Landing pad:</strong> ' . $station_obj->max_landing_pad_size . '<br />';
-            $station_id = $station_obj->id;
+            $lsFromStar = $stationObj->ls_from_star;
+            $maxLandingPadSize = $stationObj->max_landing_pad_size === '' ? '' : '<strong>Landing pad:</strong> ' . $stationObj->max_landing_pad_size . '<br>';
+            $stationId = $stationObj->id;
 
-            $faction = $station_obj->faction === '' ? '' : '<strong>Faction:</strong> ' . $station_obj->faction . '<br />';
-            $government = $station_obj->government === '' ? '' : '<strong>Government:</strong> ' . $station_obj->government . '<br />';
-            $allegiance = $station_obj->allegiance === '' ? '' : '<strong>Allegiance:</strong> ' . $station_obj->allegiance . '<br />';
+            $faction = $stationObj->faction === '' ? '' : '<strong>Faction:</strong> ' . $stationObj->faction . '<br>';
+            $government = $stationObj->government === '' ? '' : '<strong>Government:</strong> ' . $stationObj->government . '<br>';
+            $allegiance = $stationObj->allegiance === '' ? '' : '<strong>Allegiance:</strong> ' . $stationObj->allegiance . '<br>';
 
-            $state = $station_obj->state === '' ? '' : '<strong>State:</strong> ' . $station_obj->state . '<br />';
-            $s_type = $station_obj->type;
-            $type = $station_obj->type === '' ? '' : '<strong>Type:</strong> ' . $station_obj->type . '<br />';
-            $economies = $station_obj->economies === '' ? '' : '<strong>Economies:</strong> ' . $station_obj->economies . '<br />';
+            $state = $stationObj->state === '' ? '' : '<strong>State:</strong> ' . $stationObj->state . '<br>';
+            $sType = $stationObj->type;
+            $type = $stationObj->type === '' ? '' : '<strong>Type:</strong> ' . $stationObj->type . '<br>';
+            $economies = $stationObj->economies === '' ? '' : '<strong>Economies:</strong> ' . $stationObj->economies . '<br>';
 
-            $import_commodities = $station_obj->import_commodities === '' ? '' : '<br /><strong>Import commodities:</strong> ' . $station_obj->import_commodities . '<br />';
-            $export_commodities = $station_obj->export_commodities === '' ? '' : '<strong>Export commodities:</strong> ' . $station_obj->export_commodities . '<br />';
-            $prohibited_commodities = $station_obj->prohibited_commodities === '' ? '' : '<strong>Prohibited commodities:</strong> ' . $station_obj->prohibited_commodities . '<br />';
+            $importCommodities = $stationObj->import_commodities === '' ? '' : '<br><strong>Import commodities:</strong> ' . $stationObj->import_commodities . '<br>';
+            $exportCommodities = $stationObj->export_commodities === '' ? '' : '<strong>Export commodities:</strong> ' . $stationObj->export_commodities . '<br>';
+            $prohibitedCommodities = $stationObj->prohibited_commodities === '' ? '' : '<strong>Prohibited commodities:</strong> ' . $stationObj->prohibited_commodities . '<br>';
 
-            $selling_ships = $station_obj->selling_ships === '' ? '' : '<br /><strong>Selling ships:</strong> ' . str_replace("'", '', $station_obj->selling_ships) . '<br />';
+            $sellingShips = $stationObj->selling_ships === '' ? '' : '<br><strong>Selling ships:</strong> ' . str_replace("'", '', $stationObj->selling_ships) . '<br>';
 
-            $shipyard = $station_obj->shipyard;
-            $outfitting = $station_obj->outfitting;
-            $commodities_market = $station_obj->commodities_market;
-            $black_market = $station_obj->black_market;
-            $refuel = $station_obj->refuel;
-            $repair = $station_obj->repair;
-            $rearm = $station_obj->rearm;
-            $is_planetary = $station_obj->is_planetary;
+            $shipyard = $stationObj->shipyard;
+            $outfitting = $stationObj->outfitting;
+            $commoditiesMarket = $stationObj->commodities_market;
+            $blackMarket = $stationObj->black_market;
+            $refuel = $stationObj->refuel;
+            $repair = $stationObj->repair;
+            $rearm = $stationObj->rearm;
+            $isPlanetary = $stationObj->is_planetary;
 
-            $icon = get_station_icon($s_type, $is_planetary, 'margin:3px;margin-left:0px;margin-right:6px');
+            $icon = get_station_icon($sType, $isPlanetary, 'margin:3px;margin-left:0px;margin-right:6px');
 
-            $includes = array(  'shipyard' => $shipyard,
-                                'outfitting' => $outfitting,
-                                'commodities market' => $commodities_market,
-                                'black market' => $black_market,
-                                'refuel' => $refuel,
-                                'repair' => $repair,
-                                'restock' => $rearm);
+            $includes = [
+                'shipyard' => $shipyard,
+                'outfitting' => $outfitting,
+                'commodities market' => $commoditiesMarket,
+                'black market' => $blackMarket,
+                'refuel' => $refuel,
+                'repair' => $repair,
+                'restock' => $rearm
+            ];
 
             $i = 0;
             $services = '';
@@ -231,9 +233,9 @@ if (!isset($_COOKIE['style']) || $_COOKIE['style'] !== 'narrow') {
                     $i++;
                 }
             }
-            $services .= '<br />';
+            $services .= '<br>';
 
-            $info = $type . $max_landing_pad_size . $faction . $government . $allegiance . $state . $economies . $services . $import_commodities . $export_commodities . $prohibited_commodities . $selling_ships;
+            $info = $type . $maxLandingPadSize . $faction . $government . $allegiance . $state . $economies . $services . $importCommodities . $exportCommodities . $prohibitedCommodities . $sellingShips;
 
             $info = str_replace("['", '', $info);
             $info = str_replace("']", '', $info);
@@ -241,26 +243,26 @@ if (!isset($_COOKIE['style']) || $_COOKIE['style'] !== 'narrow') {
 
             //$info = $info == "" ? "Edit station information" : $info;
 
-            // $station_data .= '<div><a href="javascript:void(0)" onclick="update_values(\'/get/getStationEditData.php?station_id=' . $station_id . '\',\'' . $station_id . '\');tofront(\'addstation\')" style="color:inherit" onmouseover="$(\'#statinfo_' . $station_id . '\').toggle()" onmouseout="$(\'#statinfo_' . $station_id . '\').toggle()">' . $station_name;
-            $station_data .= '<div>' . $icon  . '<a href="javascript:void(0)" style="color:inherit" onmouseover="$(\'#statinfo_' . $station_id . '\').fadeToggle(\'fast\')" onmouseout="$(\'#statinfo_' . $station_id . '\').toggle()">' . $station_name;
+            // $stationData .= '<div><a href="javascript:void(0)" onclick="update_values(\'/get/getStationEditData.php?station_id=' . $stationId . '\',\'' . $stationId . '\');tofront(\'addstation\')" style="color: inherit" onmouseover="$(\'#statinfo_' . $stationId . '\').toggle()" onmouseout="$(\'#statinfo_' . $stationId . '\').toggle()">' . $stationName;
+            $stationData .= '<div>' . $icon  . '<a href="javascript:void(0)" style="color: inherit" onmouseover="$(\'#statinfo_' . $stationId . '\').fadeToggle(\'fast\')" onmouseout="$(\'#statinfo_' . $stationId . '\').toggle()">' . $stationName;
 
-            if (!empty($ls_from_star)) {
-                $station_data .= ' (' . number_format($ls_from_star) . ' ls)';
+            if (!empty($lsFromStar)) {
+                $stationData .= ' (' . number_format($lsFromStar) . ' ls)';
             }
 
-            $station_data .= "</a>&nbsp;<a href='javascript:void(0)' title='Add to new log as station' onclick='addstation(\"" . $station_name . "\")'><img src='/style/img/right.png' alt='Add to log' class='addstations' /></a>";
+            $stationData .= "</a>&nbsp;<a href='javascript:void(0)' title='Add to new log as station' onclick='addstation(\"" . $stationName . "\")'><img src='/style/img/right.png' alt='Add to log' class='addstations'></a>";
 
-            $station_data .= '<div class="stationinfo" id="statinfo_' . $station_id . '">' . $info . '</div></div>';
+            $stationData .= '<div class="stationinfo" id="statinfo_' . $stationId . '">' . $info . '</div></div>';
 
             $c++;
         }
     } else {
-        $station_data .= $calc_coord;
-        $station_data .= 'No station data available';
+        $stationData .= $calcCoord;
+        $stationData .= 'No station data available';
     }
     $result->close();
 } else {
-    $station_data .= $calc_coord;
+    $stationData .= $calcCoord;
 }
 
 /**
@@ -268,49 +270,49 @@ if (!isset($_COOKIE['style']) || $_COOKIE['style'] !== 'narrow') {
  */
 //$query = "  SELECT id, edsm_message
 //            FROM user_systems_own
-//            WHERE name = '$esc_cursys_name'
+//            WHERE name = '$escCursysName'
 //            LIMIT 1";
 //
-//$system_user_calculated = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+//$systemUserCalculated = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
 //
-//$is_user_calculated = $system_user_calculated->num_rows;
+//$isUserCalculated = $systemUserCalculated->num_rows;
 //
-//if ($is_user_calculated > 0 && !empty($curSys["name"])) {
-//    $c_obj = $system_user_calculated->fetch_object();
-//    $edsm_ms = $c_obj->edsm_message;
-//    $system_user_calculated->close();
+//if ($isUserCalculated > 0 && !empty($curSys["name"])) {
+//    $cObj = $systemUserCalculated->fetch_object();
+//    $edsmMs = $cObj->edsm_message;
+//    $systemUserCalculated->close();
 //
-//    $parts = explode(":::", $edsm_ms);
+//    $parts = explode(":::", $edsmMs);
 //
-//    $msg_num = $parts[0];
+//    $msgNum = $parts[0];
 //
 //    /**
 //     * ask for more distances
 //     */
-//    if ($msg_num != "102" && $msg_num != "104") {
+//    if ($msgNum != "102" && $msgNum != "104") {
 //        if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
-//            $station_data .= '<span style="float:right;margin-right:2px;margin-top:6px">';
+//            $stationData .= '<span style="float: right;  margin-right: 2px; margin-top: 6px">';
 //        } else {
-//            $station_data .= '<span style="float:right;margin-top:3px;text-align:center;white-space:nowrap">';
+//            $stationData .= '<span style="float: right;  margin-top: 3px; text-align: center;white-space: nowrap">';
 //        }
-//        $station_data .= '<a href="javascript:void(0)" onclick="set_reference_systems(false, true);tofront(\'calculate\');get_cs(\'target_system\')" title="Supply more distances">';
-//        $station_data .= '<img class="icon24" src="/style/img/calculator2.png" alt="Calculate" />';
-//        $station_data .= '</a><a href="javascript:void(0)" onclick="set_reference_systems(false);tofront(\'calculate\');get_cs(\'target_system\')" title="Review distances">';
-//        $station_data .= '<img class="icon24" src="/style/img/calculator.png" alt="Calculate" />';
-//        $station_data .= '</a></span>';
+//        $stationData .= '<a href="javascript:void(0)" onclick="set_reference_systems(false, true);tofront(\'calculate\');get_cs(\'target_system\')" title="Supply more distances">';
+//        $stationData .= '<img class="icon24" src="/style/img/calculator2.png" alt="Calculate">';
+//        $stationData .= '</a><a href="javascript:void(0)" onclick="set_reference_systems(false);tofront(\'calculate\');get_cs(\'target_system\')" title="Review distances">';
+//        $stationData .= '<img class="icon24" src="/style/img/calculator.png" alt="Calculate">';
+//        $stationData .= '</a></span>';
 //    } else {
 //        /**
 //         *  show review distances
 //         */
 //        if (!isset($_COOKIE["style"]) || $_COOKIE["style"] != "narrow") {
-//            $station_data .= '<span style="float:right;margin-right:8px;margin-top:6px">';
+//            $stationData .= '<span style="float: right;  margin-right: 8px; margin-top: 6px">';
 //        } else {
-//            $station_data .= '<span style="float:right;margin-top:3px;margin-right:13px;text-align:center">';
+//            $stationData .= '<span style="float: right;  margin-top: 3px; margin-right: 13px;text-align: center">';
 //        }
-//        $station_data .= '<a href="javascript:void(0)" onclick="set_reference_systems(false);tofront(\'calculate\');get_cs(\'target_system\')" title="Review distances">';
-//        $station_data .= '<img class="icon24" src="/style/img/calculator.png" alt="Calculate" />';
-//        $station_data .= '</a></span>';
+//        $stationData .= '<a href="javascript:void(0)" onclick="set_reference_systems(false);tofront(\'calculate\');get_cs(\'target_system\')" title="Review distances">';
+//        $stationData .= '<img class="icon24" src="/style/img/calculator.png" alt="Calculate">';
+//        $stationData .= '</a></span>';
 //    }
 //}
 
-$data['station_data'] = $station_data;
+$data['station_data'] = $stationData;

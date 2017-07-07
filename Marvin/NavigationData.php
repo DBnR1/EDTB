@@ -55,9 +55,9 @@ if (isset($_GET['name'])) {
 
     $obj = $result->fetch_object();
 
-	$system_name = $obj->system_name;
+	$systemName = $obj->system_name;
 
-    echo $system_name;
+    echo $systemName;
 
     $result->close();
 

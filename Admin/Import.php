@@ -39,91 +39,92 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/style/Theme.php';
 $header = new Header();
 
 /** @var string page_title */
-$header->page_title = 'Import Log Files';
+$header->pageTitle = 'Import Log Files';
 
 /**
  * display the header
  */
-$header->display_header();
+$header->displayHeader();
 
-/** @var int $batch_limit */
-$batch_limit = 104857600; // 100 MB
-$batches_left = $_GET['batches_left'] ?? '';
+/** @var int $batchLimit */
+$batchLimit = 104857600; // 100 MB
+$batchesLeft = $_GET['batches_left'] ?? '';
 
-$imported_logs_file = $_SERVER['DOCUMENT_ROOT'] . '/cache/imported_logs.txt';
+$importedLogsFile = $_SERVER['DOCUMENT_ROOT'] . '/cache/imported_logs.txt';
 
 echo '<div class="entries"><div class="entries_inner">';
 
 if (is_dir($settings['log_dir'])) {
     $logfiles2 = glob($settings['log_dir'] . '/netLog*');
     $logfiles = [];
-    $total_size = 0;
+    $totalSize = 0;
 
     /**
      * read already imported files to an array
      */
-    $imported_files = [];
-    if (file_exists($imported_logs_file)) {
-        $imported_files = file($imported_logs_file, FILE_IGNORE_NEW_LINES);
+    $importedFiles = [];
+    if (file_exists($importedLogsFile)) {
+        $importedFiles = file($importedLogsFile, FILE_IGNORE_NEW_LINES);
     }
 
+    $totalLogfiles = [];
     foreach ($logfiles2 as $file) {
-        if (!in_array($file, $imported_files)) {
+        if (!in_array($file, $importedFiles, true)) {
             $size = filesize($file);
-            $total_size += $size;
+            $totalSize += $size;
 
-            if ($total_size < $batch_limit) {
+            if ($totalSize < $batchLimit) {
                 $logfiles[] = $file;
             }
-            $total_logfiles[] = $file;
+            $totalLogfiles[] = $file;
         }
     }
-    $num = count($total_logfiles);
+    $num = count($totalLogfiles);
 
-    if ($num == 0) {
+    if ($num === 0) {
         $text = 'No unimported netLog files located.';
         echo notice($text, 'Import Logs');
-    } elseif ($total_size < $batch_limit && $batches_left === '') {
-        $text = 'Located ' . $num . ' netLog files totaling ' . FileSizeConvert($total_size) . '. ';
-        $text .= 'Do you want to import them?<br /><br /><a href="/Admin/Import.php?import">Import logs</a>';
+    } elseif ($totalSize < $batchLimit && $batchesLeft === '') {
+        $text = 'Located ' . $num . ' netLog files totaling ' . FileSizeConvert($totalSize) . '. ';
+        $text .= 'Do you want to import them?<br><br><a href="/Admin/Import.php?import">Import logs</a>';
         echo notice($text, 'Import Logs');
     } else {
-        $batches = ceil($total_size / $batch_limit);
+        $batches = ceil($totalSize / $batchLimit);
         $numss = $_GET['num'];
-        if ($batches_left == '1') {
-            $text = 'Located ' . $num . ' netLog files totaling ' . FileSizeConvert($total_size) . '.<br />';
-            $text .= 'Due to the size of the logs, they need to be imported in batches of ' . FileSizeConvert($batch_limit) . '.<br />';
-            $text .= 'Do you want to import them?<br /><br />';
-            $text .= '<div id="text" style="text-align:center">';
+        if ($batchesLeft === '1') {
+            $text = 'Located ' . $num . ' netLog files totaling ' . FileSizeConvert($totalSize) . '.<br>';
+            $text .= 'Due to the size of the logs, they need to be imported in batches of ' . FileSizeConvert($batchLimit) . '.<br>';
+            $text .= 'Do you want to import them?<br><br>';
+            $text .= '<div id="text" style="text-align: center">';
             $text .= '<a href="import.php?import&num=' . $numss . '" onclick="$(\'#loadin\').show();$(\'#text\').hide()">Import logs, last batch</a></div>';
-            $text .= '<div id="loadin" style="text-align:center;display:none"><img src="/style/img/loading.gif" alt="Loading..." /></div>';
+            $text .= '<div id="loadin" style="text-align: center; display: none"><img src="/style/img/loading.gif" alt="Loading..."></div>';
             echo notice($text, 'Import Logs');
-        } elseif ($batches_left === '') {
-            $text = 'Located ' . $num . ' netLog files totaling ' . FileSizeConvert($total_size) . '.<br />';
-            $text .= 'Due to the size of the logs, they need to be imported in batches of ' . FileSizeConvert($batch_limit) . '.<br />';
-            $text .= 'Do you want to import them?<br /><br /><div id="text" style="text-align:center">';
+        } elseif ($batchesLeft === '') {
+            $text = 'Located ' . $num . ' netLog files totaling ' . FileSizeConvert($totalSize) . '.<br>';
+            $text .= 'Due to the size of the logs, they need to be imported in batches of ' . FileSizeConvert($batchLimit) . '.<br>';
+            $text .= 'Do you want to import them?<br><br><div id="text" style="text-align: center">';
             $text .= '<a href="import.php?import&batches_left=' . $batches . '&num=' . $numss . '" onclick="$(\'#loadin\').show();$(\'#text\').hide()">';
             $text .= 'Import logs, patch 1 of ' . $batches . '</a></div>';
-            $text .= '<div id="loadin" style="text-align:center;display:none"><img src="/style/img/loading.gif" alt="Loading..." /></div>';
+            $text .= '<div id="loadin" style="text-align: center; display: none"><img src="/style/img/loading.gif" alt="Loading..."></div>';
             echo notice($text, 'Import Logs');
         } else {
-            $text = $num . ' netLog files totaling ' . FileSizeConvert($total_size) . ' remaining.<br />';
-            $text .= 'Do you want to import the next batch?<br /><br />';
-            $text .= '<div id="text" style="text-align:center">';
-            $text .= '<a href="import.php?import&batches_left=' . $batches_left . '&num=' . $numss . '" onclick="$(\'#loadin\').show();$(\'#text\').hide()">';
+            $text = $num . ' netLog files totaling ' . FileSizeConvert($totalSize) . ' remaining.<br>';
+            $text .= 'Do you want to import the next batch?<br><br>';
+            $text .= '<div id="text" style="text-align: center">';
+            $text .= '<a href="import.php?import&batches_left=' . $batchesLeft . '&num=' . $numss . '" onclick="$(\'#loadin\').show();$(\'#text\').hide()">';
             $text .= 'Import logs, ' . $batches . ' batches left</a></div>';
-            $text .= '<div id="loadin" style="text-align:center;display:none"><img src="/style/img/loading.gif" alt="Loading..." /></div>';
+            $text .= '<div id="loadin" style="text-align: center; display: none"><img src="/style/img/loading.gif" alt="Loading..."></div>';
             echo notice($text, 'Import Logs');
         }
     }
 
     if (isset($_GET['import'])) {
         $i = 0;
-        $current_sys = '';
-        foreach ($logfiles as $newest_file) {
-            if (!in_array($newest_file, $imported_files)) {
+        $currentSys = '';
+        foreach ($logfiles as $newestFile) {
+            if (!in_array($newestFile, $importedFiles, true)) {
                 // read first line to get date
-                $fline = fgets(fopen($newest_file, 'r'));
+                $fline = fgets(fopen($newestFile, 'rb'));
 
                 $sub = substr($fline, 0, 8);
                 $sub = explode('-', $sub);
@@ -133,16 +134,16 @@ if (is_dir($settings['log_dir'])) {
                 $day = $sub[2];
 
                 // read file to an array
-                $filr = file($newest_file);
+                $filr = file($newestFile);
                 $lines = $filr;
 
                 /**
                  * Prepare statement an bind
                  */
                 $stmt = $mysqli->prepare('INSERT INTO user_visited_systems (system_name, visit) VALUES (?, ?)');
-                $stmt->bind_param('ss', $esc_sys, $visited_on);
+                $stmt->bind_param('ss', $escSys, $visitedOn);
 
-                foreach ($lines as $line_num => $line) {
+                foreach ($lines as $lineNum => $line) {
                     $pos = strrpos($line, 'System:');
                     if ($pos !== false) {
                         /**
@@ -156,20 +157,20 @@ if (is_dir($settings['log_dir'])) {
                             $cssystemname = $matches2[1][0];
                         }
 
-                        if ($current_sys != $cssystemname) {
+                        if ($currentSys !== $cssystemname) {
                             preg_match_all("/\{(.*?)\} System:/", $line, $matches2);
-                            $visited_time = $matches2[1][0];
-                            $visited_on = $year . '-' . $month . '-' . $day . ' ' . $visited_time;
+                            $visitedTime = $matches2[1][0];
+                            $visitedOn = $year . '-' . $month . '-' . $day . ' ' . $visitedTime;
 
-                            $esc_sys = $mysqli->real_escape_string($cssystemname);
+                            $escSys = $mysqli->real_escape_string($cssystemname);
 
                             /**
                              * check if the visit is already improted
                              */
                             $query = "  SELECT id
                                         FROM user_visited_systems
-                                        WHERE system_name = '$esc_sys'
-                                        AND visit = '$visited_on'
+                                        WHERE system_name = '$escSys'
+                                        AND visit = '$visitedOn'
                                         LIMIT 1";
 
                             $result = $mysqli->query($query);
@@ -177,7 +178,7 @@ if (is_dir($settings['log_dir'])) {
                             $exists = $result->num_rows;
                             $result->close();
 
-                            if ($exists == 0) {
+                            if ($exists === 0) {
                                 $stmt->execute();
 
                                 if ($mysqli->affected_rows >= 1) {
@@ -185,7 +186,7 @@ if (is_dir($settings['log_dir'])) {
                                 }
                             }
                         }
-                        $current_sys = $cssystemname;
+                        $currentSys = $cssystemname;
                     }
                 }
 
@@ -194,40 +195,40 @@ if (is_dir($settings['log_dir'])) {
                 /**
                  *  Write filename to .txt so we won't process this file again
                  */
-                $ffd = fopen($imported_logs_file, 'a');
+                $ffd = fopen($importedLogsFile, 'ab');
 
-                fwrite($ffd, $newest_file . PHP_EOL);
+                fwrite($ffd, $newestFile . PHP_EOL);
                 fclose($ffd);
             }
         }
 
         if (!isset($_GET['batches_left'])) {
-            $num_tot = $_GET['num'] + $i ;
-            $nums = isset($_GET['num']) ? $num_tot : $i;
+            $numTot = $_GET['num'] + $i ;
+            $nums = isset($_GET['num']) ? $numTot : $i;
             if (!headers_sent()) {
                 exit(header('Location: /index.php?import_done&num=' . $nums));
             }
 
             ?>
             <script>
-                location.replace("/index.php?import_done&num=<?php echo $nums?>");
-            </script>
-        <?php
-            exit();
-        } else {
-            $nums = $_GET['num'] + $i;
-            $batches_left = $_GET['batches_left'] - 1;
-            if (!headers_sent()) {
-                exit(header('Location: /Admin/import.php?batches_left=' . $batches_left . '&num=' . $nums));
-            }
-
-            ?>
-            <script>
-                location.replace("/Admin/import.php?batches_left=<?php echo $batches_left?>&num=<?php echo $nums?>");
+                location.replace("/index.php?import_done&num=<?= $nums?>");
             </script>
         <?php
             exit();
         }
+
+        $nums = $_GET['num'] + $i;
+        $batchesLeft = $_GET['batches_left'] - 1;
+        if (!headers_sent()) {
+            exit(header('Location: /Admin/import.php?batches_left=' . $batchesLeft . '&num=' . $nums));
+        }
+
+        ?>
+        <script>
+            location.replace("/Admin/import.php?batches_left=<?= $batchesLeft?>&num=<?= $nums?>");
+        </script>
+    <?php
+        exit();
     }
 } else {
     echo 'Could not locate ' . $settings['log_dir'] . ', check your settings.';
@@ -242,4 +243,4 @@ $footer = new Footer();
 /**
  * display the footer
  */
-$footer->display_footer();
+$footer->displayFooter();

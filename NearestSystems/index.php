@@ -44,18 +44,18 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/style/Theme.php';
 $header = new Header();
 
 /** @var string page_title */
-$header->page_title = 'Nearest Systems&nbsp;&nbsp;&&nbsp;&nbsp;Stations';
+$header->pageTitle = 'Nearest Systems&nbsp;&nbsp;&&nbsp;&nbsp;Stations';
 
 /**
  * display the header
  */
-$header->display_header();
+$header->displayHeader();
 ?>
 <div class="entries">
     <div class="entries_inner">
         <?php
-        $nearest_systems = new NearestSystems();
-        echo $nearest_systems->nearest();
+        $nearestSystems = new NearestSystems();
+        echo $nearestSystems->nearest();
         ?>
     </div>
 </div>
@@ -68,4 +68,4 @@ $footer = new Footer();
 /**
  * display the footer
  */
-$footer->display_footer();
+$footer->displayFooter();

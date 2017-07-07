@@ -13,7 +13,7 @@
 class phpfastcache_redis extends BasePhpFastCache implements phpfastcache_driver
 {
 
-    public $checked_redis = false;
+    public $checkedRedis = false;
 
     public function checkdriver()
     {
@@ -69,9 +69,9 @@ class phpfastcache_redis extends BasePhpFastCache implements phpfastcache_driver
                 $c['timeout'] = $timeout;
             }
 
-            $read_write_timeout = isset($server['read_write_timeout']) ? $server['read_write_timeout'] : "";
-            if ($read_write_timeout!="") {
-                $c['read_write_timeout'] = $read_write_timeout;
+            $readWriteTimeout = isset($server['read_write_timeout']) ? $server['read_write_timeout'] : "";
+            if ($readWriteTimeout!="") {
+                $c['read_write_timeout'] = $readWriteTimeout;
             }
 
 

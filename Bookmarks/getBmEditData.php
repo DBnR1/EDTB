@@ -35,10 +35,10 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/source/functions.php';
 /** @require MySQL */
 require_once $_SERVER['DOCUMENT_ROOT'] . '/source/MySQL.php';
 
-$bm_id = 0 + $_GET['Bm_id'];
+$bmId = 0 + $_GET['Bm_id'];
 $data = [];
 
-if ($bm_id == '0') {
+if ($bmId == '0') {
     $data['bm_edit_id'] = '';
     $data['bm_system_name'] = '';
     $data['bm_system_id'] = '';
@@ -51,18 +51,18 @@ if ($bm_id == '0') {
                 edtb_systems.name AS system_name
                 FROM user_bookmarks
                 LEFT JOIN edtb_systems ON user_bookmarks.system_id = edtb_systems.id
-                WHERE user_bookmarks.id = '$bm_id'
+                WHERE user_bookmarks.id = '$bmId'
                 LIMIT 1";
 
     $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
 
-    $bm_obj = $result->fetch_object();
+    $bmObj = $result->fetch_object();
 
-    $data['bm_edit_id'] = $bm_obj->id;
-    $data['bm_system_name'] = $bm_obj->system_name === '' ? $bm_obj->bm_system_name : $bm_obj->system_name;
-    $data['bm_system_id'] = $bm_obj->system_id;
-    $data['bm_catid'] = $bm_obj->category_id;
-    $data['bm_text'] = $bm_obj->comment;
+    $data['bm_edit_id'] = $bmObj->id;
+    $data['bm_system_name'] = $bmObj->system_name === '' ? $bmObj->bm_system_name : $bmObj->system_name;
+    $data['bm_system_id'] = $bmObj->system_id;
+    $data['bm_catid'] = $bmObj->category_id;
+    $data['bm_text'] = $bmObj->comment;
 
     $result->close();
 }

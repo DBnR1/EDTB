@@ -43,8 +43,9 @@ class PoiBm
 
     /** @var float $usex , $usey, $usez x, y and z coords to use for calculations */
     public $usex, $usey, $usez;
-    /** @var int $time_difference local time difference from UTC */
-    public $time_difference = 0;
+
+    /** @var int $timeDifference local time difference from UTC */
+    public $timeDifference = 0;
 
     /**
      * PoiBm constructor.
@@ -72,10 +73,10 @@ class PoiBm
      * @param mysqli_result $res
      * @param string $type
      *
-     * @return string
+     * @return void
      * @author Mauri Kujala <contact@edtb.xyz>
      */
-    public function make_table($res, $type)
+    public function makeTable($res, $type)
     {
         global $curSys;
 
@@ -93,21 +94,21 @@ class PoiBm
             }
 
             $i = 0;
-            $to_last = [];
+            $toLast = [];
             $categs = [];
 
-            echo '<tr><td valign="top" style="position: relative;min-width: 400px;max-width: 480px;"><div style="top:0;left:0;width:100%;">';
+            echo '<tr><td valign="top" style="position: relative; min-width: 400px; max-width: 480px;"><div style="top: 0; left: 0; width: 100%;">';
 
             while ($obj = $res->fetch_object()) {
                 if (!in_array($obj->catname, $categs, true)) {
                     $categs[] = $obj->catname;
                     if (isset($obj->catname) && $obj->catname !== '') {
-                        echo '<div style="font-family: Sintony, sans-serif;color: #fffffa;font-size: 13px;padding: 6px;vertical-align: middle;background-color: #2e3436;
+                        echo '<div style="font-family: Sintony, sans-serif; color: #fffffa; font-size: 13px;padding: 6px;vertical-align: middle;background-color: #2e3436;
 					        line-height: 1.5;opacity: 0.9;cursor:pointer;" 
 							onmouseover="$(this).css(\'opacity\',\'1\')" onmouseout="$(this).css(\'opacity\',\'0.9\')" 
 							id="btn-' . str_replace(' ', '', $obj->catname) . '" class="categ-btns" >' . $obj->catname . '</div>';
                     } else {
-                        echo '<div style="font-family: Sintony, sans-serif;color: #fffffa;font-size: 13px;padding: 6px;vertical-align: middle;background-color: #2e3436;
+                        echo '<div style="font-family: Sintony, sans-serif; color: #fffffa; font-size: 13px;padding: 6px;vertical-align: middle;background-color: #2e3436;
 					        line-height: 1.5;opacity: 0.9;cursor:pointer;" 
 							onmouseover="$(this).css(\'opacity\',\'1\')" onmouseout="$(this).css(\'opacity\',\'0.9\')" 
 							id="btn-' . $type . '" class="categ-btns" >Uncategorized</div>';
@@ -115,7 +116,7 @@ class PoiBm
                 }
             }
 
-            echo '</div></td><td style="vertical-align: text-top;" id="categ-panels">' . $this->generate_columns_panels($categs, $res, $type, $i) . '</td></tr>';
+            echo '</div></td><td style="vertical-align: text-top;" id="categ-panels">' . $this->generateColumnsPanels($categs, $res, $type, $i) . '</td></tr>';
         } else {
             if ($type === 'Poi') {
                 ?>
@@ -147,7 +148,7 @@ class PoiBm
      *
      * @return string
      */
-    private function generate_columns_panels($categs, $res, $type, $i): string
+    private function generateColumnsPanels($categs, $res, $type, $i): string
     {
         $panelss = '';
 
@@ -159,7 +160,7 @@ class PoiBm
             $polishedCategs = (isset($polishedCategs) && $polishedCategs !== '') ? $polishedCategs : $type;
 
             $panelss .= '<div id="panel-' . $polishedCategs . '" style="display:none; height: auto;" 
-							            class="categ-panels"><table>' . $this->generate_columns_panels_data($res, $type, $categs[$b], $i) . '</table></div>';
+							            class="categ-panels"><table>' . $this->generateColumnsPanelsData($res, $type, $categs[$b], $i) . '</table></div>';
         }
 
         return $panelss;
@@ -173,17 +174,17 @@ class PoiBm
      *
      * @return string
      */
-    public function generate_columns_panels_data($res, $type, $catName, $i): string
+    public function generateColumnsPanelsData($res, $type, $catName, $i): string
     {
         mysqli_data_seek($res, 0);
-        $items_to_add = '<table class="panel-table">';
+        $itemsToAdd = '<table class="panel-table">';
         while ($obj = $res->fetch_object()) {
             if ($obj->catname === $catName) {
-                $items_to_add .= $this->make_item($obj, $type, $i);
+                $itemsToAdd .= $this->makeItem($obj, $type, $i);
             }
         }
 
-        return $items_to_add;
+        return $itemsToAdd;
     }
 
     /**
@@ -196,83 +197,83 @@ class PoiBm
      * @return string
      * @author Mauri Kujala <contact@edtb.xyz>
      */
-    private function make_item($obj, $type, &$i): string
+    private function makeItem($obj, $type, &$i): string
     {
-        $item_id = $obj->id;
-        $item_text = $obj->text;
-        $item_name = $obj->item_name;
-        $item_system_name = $obj->system_name;
-        $item_system_id = $obj->system_id;
-        $item_cat_name = $obj->catname;
-        $item_added_on = $obj->added_on;
+        $itemId = $obj->id;
+        $itemText = $obj->text;
+        $itemName = $obj->item_name;
+        $itemSystemName = $obj->system_name;
+        $itemSystemId = $obj->system_id;
+        $itemCatName = $obj->catname;
+        $itemAddedOn = $obj->added_on;
 
-        $to_be_returned = '';
+        $toBeReturned = '';
 
-        $item_added_ago = '';
-        if (!empty($item_added_on)) {
-            $item_added_ago = get_timeago($item_added_on, false);
+        $itemAddedAgo = '';
+        if (!empty($itemAddedOn)) {
+            $itemAddedAgo = get_timeago($itemAddedOn, false);
 
-            $item_added_on = new \DateTime(date("Y-m-d\TH:i:s\Z", $item_added_on + $this->time_difference * 60 * 60));
-            $item_added_on = date_modify($item_added_on, '+1286 years');
-            $item_added_on = $item_added_on->format('j M Y, H:i');
+            $itemAddedOn = new \DateTime(date("Y-m-d\TH:i:s\Z", $itemAddedOn + $this->timeDifference * 60 * 60));
+            $itemAddedOn = date_modify($itemAddedOn, '+1286 years');
+            $itemAddedOn = $itemAddedOn->format('j M Y, H:i');
         }
 
-        $item_coordx = $obj->item_coordx;
-        $item_coordy = $obj->item_coordy;
-        $item_coordz = $obj->item_coordz;
+        $itemCoordx = $obj->item_coordx;
+        $itemCoordy = $obj->item_coordy;
+        $itemCoordz = $obj->item_coordz;
 
         $distance = 'n/a';
-        if (valid_coordinates($item_coordx, $item_coordy, $item_coordz)) {
-            $distance = number_format(sqrt((($item_coordx - $this->usex) ** 2) + (($item_coordy - $this->usey) ** 2) + (($item_coordz - $this->usez) ** 2)), 1) . ' ly';
+        if (valid_coordinates($itemCoordx, $itemCoordy, $itemCoordz)) {
+            $distance = number_format(sqrt((($itemCoordx - $this->usex) ** 2) + (($itemCoordy - $this->usey) ** 2) + (($itemCoordz - $this->usez) ** 2)), 1) . ' ly';
         }
 
         /**
          * if visited, change border color
          */
-        $visited = System::num_visits($item_system_name);
-        $style_override = $visited ? ' style="border-left: 3px solid #3da822"' : '';
+        $visited = System::numVisits($itemSystemName);
+        $styleOverride = $visited ? ' style="border-left: 3px solid #3da822"' : '';
 
         $tdclass = $i % 2 ? 'dark' : 'light';
 
         /**
          * provide crosslinks to screenshot gallery, log page, etc
          */
-        $item_crosslinks = System::crosslinks($item_system_name);
+        $itemCrosslinks = System::crosslinks($itemSystemName);
 
-        $to_be_returned .= '<tr>';
-        $to_be_returned .= '<td class="' . $tdclass . ' poi_minmax">';
-        $to_be_returned .= '<div class="poi"' . $style_override . '>';
-        $to_be_returned .= '<a href="javascript:void(0)" onclick="update_values(\'/Bookmarks/get' . $type . 'EditData.php?' . $type . '_id=' . $item_id . '\', \'' . $item_id . '\');tofront(\'add' . $type . '\')" style="color:inherit" title="Click to edit entry">';
+        $toBeReturned .= '<tr>';
+        $toBeReturned .= '<td class="' . $tdclass . ' poi_minmax">';
+        $toBeReturned .= '<div class="poi"' . $styleOverride . '>';
+        $toBeReturned .= '<a href="javascript:void(0)" onclick="update_values(\'/Bookmarks/get' . $type . 'EditData.php?' . $type . '_id=' . $itemId . '\', \'' . $itemId . '\');tofront(\'add' . $type . '\')" style="color: inherit" title="Click to edit entry">';
 
-        $to_be_returned .= $distance . ' &ndash;';
+        $toBeReturned .= $distance . ' &ndash;';
 
-        if (!empty($item_system_id)) {
-            $to_be_returned .= '</a>&nbsp;<a title="System information" href="/System?system_id=' . $item_system_id . '" style="color:inherit">';
-        } elseif ($item_system_name !== '') {
-            $to_be_returned .= '</a>&nbsp;<a title="System information" href="/System?system_name=' . urlencode($item_system_name) . '" style="color:inherit">';
+        if (!empty($itemSystemId)) {
+            $toBeReturned .= '</a>&nbsp;<a title="System information" href="/System?system_id=' . $itemSystemId . '" style="color: inherit">';
+        } elseif ($itemSystemName !== '') {
+            $toBeReturned .= '</a>&nbsp;<a title="System information" href="/System?system_name=' . urlencode($itemSystemName) . '" style="color: inherit">';
         } else {
-            $to_be_returned .= '</a>&nbsp;<a href="#" style="color:inherit">';
+            $toBeReturned .= '</a>&nbsp;<a href="#" style="color: inherit">';
         }
 
-        if (empty($item_name)) {
-            $to_be_returned .= $item_system_name;
+        if (empty($itemName)) {
+            $toBeReturned .= $itemSystemName;
         } else {
-            $to_be_returned .= $item_name;
+            $toBeReturned .= $itemName;
         }
 
-        $to_be_returned .= '</a>' . $item_crosslinks . '<span class="right" style="margin-left:5px">' . $item_cat_name . '</span><br />';
+        $toBeReturned .= '</a>' . $itemCrosslinks . '<span class="right" style="margin-left: 5px">' . $itemCatName . '</span><br>';
 
-        if (!empty($item_added_on)) {
-            $to_be_returned .= 'Added: ' . $item_added_on . ' (' . $item_added_ago . ')<br /><br />';
+        if (!empty($itemAddedOn)) {
+            $toBeReturned .= 'Added: ' . $itemAddedOn . ' (' . $itemAddedAgo . ')<br><br>';
         }
 
-        $to_be_returned .= nl2br($item_text);
-        $to_be_returned .= '</div>';
-        $to_be_returned .= '</td>';
-        $to_be_returned .= '</tr>';
+        $toBeReturned .= nl2br($itemText);
+        $toBeReturned .= '</div>';
+        $toBeReturned .= '</td>';
+        $toBeReturned .= '</tr>';
         $i++;
 
-        return $to_be_returned;
+        return $toBeReturned;
     }
 
     /**
@@ -280,37 +281,37 @@ class PoiBm
      *
      * @param object $data
      */
-    public function add_poi($data)
+    public function addPoi($data)
     {
-        $p_system = $data->{'poi_system_name'};
-        $p_name = $data->{'poi_name'};
-        $p_x = $data->{'poi_coordx'};
-        $p_y = $data->{'poi_coordy'};
-        $p_z = $data->{'poi_coordz'};
+        $pSystem = $data->{'poi_system_name'};
+        $pName = $data->{'poi_name'};
+        $pX = $data->{'poi_coordx'};
+        $pY = $data->{'poi_coordy'};
+        $pZ = $data->{'poi_coordz'};
 
-        if (valid_coordinates($p_x, $p_y, $p_z)) {
-            $addc = ", x = '$p_x', y = '$p_y', z = '$p_z'";
-            $addb = ", '$p_x', '$p_y', '$p_z'";
+        if (valid_coordinates($pX, $pY, $pZ)) {
+            $addc = ", x = '$pX', y = '$pY', z = '$pZ'";
+            $addb = ", '$pX', '$pY', '$pZ'";
         } else {
             $addc = ', x = null, y = null, z = null';
             $addb = ', null, null, null';
         }
 
-        $p_entry = $data->{'poi_text'};
-        $p_id = $data->{'poi_edit_id'};
-        $category_id = $data->{'category_id'};
+        $pEntry = $data->{'poi_text'};
+        $pId = $data->{'poi_edit_id'};
+        $categoryId = $data->{'category_id'};
 
-        $esc_name = $this->mysqli->real_escape_string($p_name);
-        $esc_sysname = $this->mysqli->real_escape_string($p_system);
-        $esc_entry = $this->mysqli->real_escape_string($p_entry);
+        $escName = $this->mysqli->real_escape_string($pName);
+        $escSysname = $this->mysqli->real_escape_string($pSystem);
+        $escEntry = $this->mysqli->real_escape_string($pEntry);
 
-        if ($p_id !== '') {
+        if ($pId !== '') {
             $stmt = "   UPDATE user_poi SET
-                        poi_name = '$esc_name',
-                        system_name = '$esc_sysname',
-                        text = '$esc_entry',
-                        category_id = '$category_id'" . $addc . "
-                        WHERE id = '$p_id'";
+                        poi_name = '$escName',
+                        system_name = '$escSysname',
+                        text = '$escEntry',
+                        category_id = '$categoryId'" . $addc . "
+                        WHERE id = '$pId'";
         } elseif (isset($_GET['deleteid'])) {
             $stmt = "   DELETE FROM user_poi
                         WHERE id = '" . $_GET['deleteid'] . "'
@@ -318,10 +319,10 @@ class PoiBm
         } else {
             $stmt = "   INSERT INTO user_poi (poi_name, system_name, text, category_id, x, y, z, added_on)
                         VALUES
-                        ('$esc_name',
-                        '$esc_sysname',
-                        '$esc_entry',
-                        '$category_id'" . $addb . ',
+                        ('$escName',
+                        '$escSysname',
+                        '$escEntry',
+                        '$categoryId'" . $addb . ',
                         UNIX_TIMESTAMP())';
         }
 
@@ -333,23 +334,23 @@ class PoiBm
      *
      * @param object $data
      */
-    public function add_bm($data)
+    public function addBm($data)
     {
-        $bm_system_id = $data->{'bm_system_id'};
-        $bm_system_name = $data->{'bm_system_name'};
-        $bm_catid = $data->{'bm_catid'};
-        $bm_entry = $data->{'bm_text'};
-        $bm_id = $data->{'bm_edit_id'};
+        $bmSystemId = $data->{'bm_system_id'};
+        $bmSystemName = $data->{'bm_system_name'};
+        $bmCatid = $data->{'bm_catid'};
+        $bmEntry = $data->{'bm_text'};
+        $bmId = $data->{'bm_edit_id'};
 
-        $esc_entry = $this->mysqli->real_escape_string($bm_entry);
-        $esc_sysname = $this->mysqli->real_escape_string($bm_system_name);
+        $escEntry = $this->mysqli->real_escape_string($bmEntry);
+        $escSysname = $this->mysqli->real_escape_string($bmSystemName);
 
-        if ($bm_id !== '') {
+        if ($bmId !== '') {
             $query = "  UPDATE user_bookmarks SET
-                        comment = '$esc_entry',
-                        system_name = '$esc_sysname',
-                        category_id = '$bm_catid'
-                        WHERE id = '$bm_id' LIMIT 1";
+                        comment = '$escEntry',
+                        system_name = '$escSysname',
+                        category_id = '$bmCatid'
+                        WHERE id = '$bmId' LIMIT 1";
         } elseif (isset($_GET['deleteid'])) {
             $query = "  DELETE FROM user_bookmarks
                         WHERE id = '" . $_GET['deleteid'] . "'
@@ -357,10 +358,10 @@ class PoiBm
         } else {
             $query = "  INSERT INTO user_bookmarks (system_id, system_name, comment, category_id, added_on)
                         VALUES
-                        ('$bm_system_id',
-                        '$esc_sysname',
-                        '$esc_entry',
-                        '$bm_catid',
+                        ('$bmSystemId',
+                        '$escSysname',
+                        '$escEntry',
+                        '$bmCatid',
                         UNIX_TIMESTAMP())";
         }
 

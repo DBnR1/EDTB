@@ -93,8 +93,8 @@ a.hud {
 
 .check {
   display: inline-block;
-  width:       14px;
-  height:      14px;
+  width:      14px;
+  height:     14px;
   line-height: 1;
   float: right;
   text-align: center;
@@ -102,8 +102,8 @@ a.hud {
 .check:after {
   content: ' ';
   display: block;
-  width:       10px;
-  height:      10px;
+  width:      10px;
+  height:     10px;
   margin: 2px;
   background: rgba(0,0,0,0.5);
 }
@@ -207,7 +207,7 @@ a.hud {
 }
 #controls > a {
   display: inline-block;
-  width:  26px;
+  width: 26px;
   height: 26px;
   margin: 4px;
   font-size: 14px;
@@ -247,7 +247,7 @@ a.hud {
 #options a:before {
   content: '-';
   display: inline-block;
-  width:  16px;
+  width: 16px;
   height: 16px;
   font-size: 14px;
   line-height: 1.1;

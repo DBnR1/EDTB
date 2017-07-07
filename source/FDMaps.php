@@ -34,7 +34,7 @@
  * Rank mappings (from https://github.com/Marginal/EDMarketConnector/blob/master/stats.py)
  */
 
-$ranks['combat']    = array(
+$ranks['combat'] = [
     'Harmless',
     'Mostly Harmless',
     'Novice',
@@ -43,9 +43,10 @@ $ranks['combat']    = array(
     'Master',
     'Dangerous',
     'Deadly',
-    'Elite');
+    'Elite'
+];
 
-$ranks['trade']     = array(
+$ranks['trade'] = [
     'Penniless',
     'Mostly Penniless',
     'Peddler',
@@ -54,9 +55,10 @@ $ranks['trade']     = array(
     'Broker',
     'Entrepreneur',
     'Tycoon',
-    'Elite');
+    'Elite'
+];
 
-$ranks['explore']   = array(
+$ranks['explore'] = [
     'Aimless',
     'Mostly Aimless',
     'Scout',
@@ -65,9 +67,10 @@ $ranks['explore']   = array(
     'Pathfinder',
     'Ranger',
     'Pioneer',
-    'Elite');
+    'Elite'
+];
 
-$ranks['cqc']       = array(
+$ranks['cqc'] = [
     'Helpless',
     'Mostly Helpless',
     'Amateur',
@@ -76,9 +79,10 @@ $ranks['cqc']       = array(
     'Champion',
     'Hero',
     'Gladiator',
-    'Elite');
+    'Elite'
+];
 
-$ranks['federation'] = array(
+$ranks['federation'] = [
     'None',
     'Recruit',
     'Cadet',
@@ -93,9 +97,10 @@ $ranks['federation'] = array(
     'Post Captain',
     'Rear Admiral',
     'Vice Admiral',
-    'Admiral');
+    'Admiral'
+];
 
-$ranks['empire']    = array(
+$ranks['empire'] = [
     'None',
     'Outsider',
     'Serf',
@@ -110,41 +115,43 @@ $ranks['empire']    = array(
     'Marquis',
     'Duke',
     'Prince',
-    'King');
+    'King'
+];
 
 /**
  * Ship mappings (from https://github.com/Marginal/EDMarketConnector/blob/master/companion.py)
  */
 
-$ships              = array(
-                        'adder' => 'Adder',
-                        'anaconda' => 'Anaconda',
-                        'asp' => 'Asp Explorer',
-                        'asp_scout' => 'Asp Scout',
-                        'cobramkiii' => 'Cobra Mk. III',
-                        'cobramkiv' => 'Cobra Mk IV',
-                        'cutter' => 'Imperial Cutter',
-                        'diamondback' => 'Diamondback Scout',
-                        'diamondbackxl' => 'Diamondback Explorer',
-                        'eagle' => 'Eagle Mk. II',
-                        'empire_courier' => 'Imperial Courier',
-                        'empire_eagle' => 'Imperial Eagle',
-                        'empire_fighter' => 'Imperial Fighter',
-                        'empire_trader' => 'Imperial Clipper',
-                        'federation_corvette' => 'Federal Corvette',
-                        'federation_dropship' => 'Federal Dropship',
-                        'federation_dropship_mkii' => 'Federal Assault Ship',
-                        'federation_gunship' => 'Federal Gunship',
-                        'federation_fighter' => 'F63 Condor',
-                        'ferdelance' => 'Fer-de-Lance',
-                        'hauler' => 'Hauler',
-                        'independant_trader' => 'Keelback',
-                        'orca' => 'Orca',
-                        'python' => 'Python',
-                        'sidewinder' => 'Sidewinder Mk. I',
-                        'type6' => 'Type-6 Transporter',
-                        'type7' => 'Type-7 Transporter',
-                        'type9' => 'Type-9 Heavy',
-                        'viper' => 'Viper Mk III',
-                        'viper_mkiv' => 'Viper MK IV',
-                        'vulture' => 'Vulture');
+$ships = [
+    'adder' => 'Adder',
+    'anaconda' => 'Anaconda',
+    'asp' => 'Asp Explorer',
+    'asp_scout' => 'Asp Scout',
+    'cobramkiii' => 'Cobra Mk. III',
+    'cobramkiv' => 'Cobra Mk IV',
+    'cutter' => 'Imperial Cutter',
+    'diamondback' => 'Diamondback Scout',
+    'diamondbackxl' => 'Diamondback Explorer',
+    'eagle' => 'Eagle Mk. II',
+    'empire_courier' => 'Imperial Courier',
+    'empire_eagle' => 'Imperial Eagle',
+    'empire_fighter' => 'Imperial Fighter',
+    'empire_trader' => 'Imperial Clipper',
+    'federation_corvette' => 'Federal Corvette',
+    'federation_dropship' => 'Federal Dropship',
+    'federation_dropship_mkii' => 'Federal Assault Ship',
+    'federation_gunship' => 'Federal Gunship',
+    'federation_fighter' => 'F63 Condor',
+    'ferdelance' => 'Fer-de-Lance',
+    'hauler' => 'Hauler',
+    'independant_trader' => 'Keelback',
+    'orca' => 'Orca',
+    'python' => 'Python',
+    'sidewinder' => 'Sidewinder Mk. I',
+    'type6' => 'Type-6 Transporter',
+    'type7' => 'Type-7 Transporter',
+    'type9' => 'Type-9 Heavy',
+    'viper' => 'Viper Mk III',
+    'viper_mkiv' => 'Viper MK IV',
+    'vulture' => 'Vulture'
+];

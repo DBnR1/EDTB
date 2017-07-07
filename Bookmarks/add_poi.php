@@ -43,21 +43,21 @@ if (isset($_GET['do'])) {
     $data = json_decode($_REQUEST['input']);
 
     $AddPoi = new PoiBm();
-    $AddPoi->add_poi($data);
+    $AddPoi->addPoi($data);
 
     exit;
 }
 ?>
-<div class="input" id="addPoi" style="text-align:center">
+<div class="input" id="addPoi" style="text-align: center">
     <form method="post" id="poi_form" action="/Bookmarks">
         <div class="input-inner">
-            <div class="suggestions" id="suggestions_33" style="margin-top:79px;margin-left:12px"></div>
+            <div class="suggestions" id="suggestions_33" style="margin-top: 79px; margin-left: 12px"></div>
             <table>
                 <tr>
                     <td class="heading" colspan="2">Add/edit Point of Interest
                         <span class="right">
                             <a href="javascript:void(0)" onclick="tofront('addPoi')" title="Close form">
-                                <img class="icon" src="/style/img/close.png" alt="X" />
+                                <img class="icon" src="/style/img/close.png" alt="X">
                             </a>
                         </span>
                     </td>
@@ -65,20 +65,20 @@ if (isset($_GET['do'])) {
                 <tr>
                     <td class="dark" style="width:50%">
                         <input type="hidden" name="poi_edit_id" id="poi_edit_id">
-                        <input class="textbox" type="text" name="poi_system_name" placeholder="System name" id="system_33" style="width:95%" oninput="showResult(this.value, '33')" />
+                        <input class="textbox" type="text" name="poi_system_name" placeholder="System name" id="system_33" style="width:95%" oninput="showResult(this.value, '33')">
                     </td>
                     <td class="dark" style="white-space:nowrap;width:30%">
-                        <input class="textbox" type="text" name="poi_coordx" placeholder="x.x" id="coordsx_33" style="width:40px" />
-                        <input class="textbox" type="text" name="poi_coordy" placeholder="y.y" id="coordsy_33" style="width:40px" />
-                        <input class="textbox" type="text" name="poi_coordz" placeholder="z.z" id="coordsz_33" style="width:40px" />
+                        <input class="textbox" type="text" name="poi_coordx" placeholder="x.x" id="coordsx_33" style="width: 40px">
+                        <input class="textbox" type="text" name="poi_coordy" placeholder="y.y" id="coordsy_33" style="width: 40px">
+                        <input class="textbox" type="text" name="poi_coordz" placeholder="z.z" id="coordsz_33" style="width: 40px">
                     </td>
                 </tr>
                 <tr>
                     <td class="dark" style="width:70%">
-                        <input class="textbox" type="text" name="poi_name" id="poi_name" placeholder="POI name (optional)" style="width:95%" />
+                        <input class="textbox" type="text" name="poi_name" id="poi_name" placeholder="POI name (optional)" style="width:95%">
                     </td>
-                    <td class="dark" style="white-space:nowrap;width:auto">
-                        <select title="Category" class="selectbox" name="category_id" id="category_id" style="width:auto">
+                    <td class="dark" style="white-space: nowrap; width: auto">
+                        <select title="Category" class="selectbox" name="category_id" id="category_id" style="width: auto">
                             <option value="0">Category (optional)</option>
                             <?php
                             $query = 'SELECT id, name FROM user_poi_categories';

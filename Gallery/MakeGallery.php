@@ -53,14 +53,14 @@ class MakeGallery
         /**
          * check if current screenshot dir exists and is writable
          */
-        if (!MakeGallery::valid_dir($dir)) {
+        if (!MakeGallery::validDir($dir)) {
             return false;
         }
 
         /**
          * check if new screenshot dir exists and is writable
          */
-        if (!MakeGallery::valid_dir($newdir)) {
+        if (!MakeGallery::validDir($newdir)) {
             return false;
         }
 
@@ -84,10 +84,11 @@ class MakeGallery
      * Check if dir is valid
      *
      * @param $dir
+     *
      * @return bool
      * @author Mauri Kujala <contact@edtb.xyz>
      */
-    public static function valid_dir($dir): bool
+    public static function validDir($dir): bool
     {
         /**
          * check if value is set
@@ -118,21 +119,22 @@ class MakeGallery
     /**
      * Convert screenshots to jpg and move to screenhot folder
      *
-     * @param string $gallery_name name of the gallery to create (ie. the system name)
+     * @param string $galleryName name of the gallery to create (ie. the system name)
+     *
      * @author Mauri Kujala <contact@edtb.xyz>
      */
-    public function make_gallery($gallery_name)
+    public function makeGallery($galleryName)
     {
-        global $settings, $system_time, $mysqli;
+        global $settings, $systemTime, $mysqli;
 
         /**
          * get visit time for the system so we can tell if the screenshots were taken in that system
          */
-        $esc_gallery_name = $mysqli->real_escape_string($gallery_name);
+        $escGalleryName = $mysqli->real_escape_string($galleryName);
 
         $query = "  SELECT visit
                     FROM user_visited_systems
-                    WHERE system_name = '$esc_gallery_name'
+                    WHERE system_name = '$escGalleryName'
                     ORDER BY visit DESC
                     LIMIT 1";
 
@@ -140,7 +142,7 @@ class MakeGallery
 
         $obj = $result->fetch_object();
 
-        $visit_time = isset($obj->visit) ? strtotime($obj->visit) : time();
+        $visitTime = isset($obj->visit) ? strtotime($obj->visit) : time();
 
         $result->close();
 
@@ -152,41 +154,42 @@ class MakeGallery
         /**
          * strip invalid characters from the gallery name
          */
-        $gallery_name = strip_invalid_dos_chars($gallery_name);
+        $galleryName = strip_invalid_dos_chars($galleryName);
 
         /** @var string $newscreendir */
-        $newscreendir = $settings['new_screendir'] . '/' . $gallery_name;
+        $newscreendir = $settings['new_screendir'] . '/' . $galleryName;
 
         $added = 0;
         foreach ($screenshots as $file) {
-            $file_name = str_replace($settings['old_screendir'] . '/', '', $file);
-            $old_file_bmp = $file;
-            $old_file_og = $settings['old_screendir'] . '/originals/' . $file_name;
-            $filetime_o = filemtime($old_file_bmp);
-            $filetime = $filetime_o + ($system_time * 60 * 60);
+            $fileName = str_replace($settings['old_screendir'] . '/', '', $file);
+            $oldFileBmp = $file;
+            $oldFileOg = $settings['old_screendir'] . '/originals/' . $fileName;
+            $filetimeO = filemtime($oldFileBmp);
+            $filetime = $filetimeO + ($systemTime * 60 * 60);
 
             /**
              * if screenshot was taken after entering the system
              */
-            if ($filetime > $visit_time) {
+            if ($filetime > $visitTime) {
                 /**
                  * create gallery directory
                  */
-                $this->create_dir($newscreendir);
+                $this->createDir($newscreendir);
 
-                $edited = date('Y-m-d_H-i-s', $filetime_o);
-                $new_filename = $edited . '-' . $gallery_name . '.jpg';
-                $new_file_jpg = $settings['old_screendir'] . '/' . $new_filename;
-                $new_screenshot = $newscreendir . '/' . $new_filename;
+                $edited = date('Y-m-d_H-i-s', $filetimeO);
+                $newFilename = $edited . '-' . $galleryName . '.jpg';
+                $newFileJpg = $settings['old_screendir'] . '/' . $newFilename;
+                $newScreenshot = $newscreendir . '/' . $newFilename;
 
                 /**
                  * convert from bmp to jpg
                  */
-                if (file_exists($old_file_bmp)) {
+                if (file_exists($oldFileBmp)) {
                     /**
                      * execute ImageMagick convert
                      */
-                    $command = '"' . $settings['install_path'] . '/bin/ImageMagick/convert" "' . $old_file_bmp . '" "' . $new_file_jpg . '"';
+                    $command =
+                        '"' . $settings['install_path'] . '/bin/ImageMagick/convert" "' . $oldFileBmp . '" "' . $newFileJpg . '"';
                     exec($command, $out);
 
                     if (!empty($out)) {
@@ -199,24 +202,24 @@ class MakeGallery
                  * delete original...
                  */
                 if ($settings['keep_og'] === 'false') {
-                    $this->remove_file($old_file_bmp);
+                    $this->removeFile($oldFileBmp);
                     /**
                      * ... or move to "originals" directory
                      */
                 } else {
-                    $this->create_dir($settings['old_screendir'] . '/originals');
+                    $this->createDir($settings['old_screendir'] . '/originals');
 
-                    if (file_exists($old_file_og)) {
-                        $old_file_og = $settings['old_screendir'] . '/originals/' . $filetime . '_' . $file_name;
+                    if (file_exists($oldFileOg)) {
+                        $oldFileOg = $settings['old_screendir'] . '/originals/' . $filetime . '_' . $fileName;
                     }
 
-                    $this->move_file($old_file_bmp, $old_file_og);
+                    $this->moveFile($oldFileBmp, $oldFileOg);
                 }
 
                 /**
                  * move the converted file to screenshot folder
                  */
-                $this->move_file($new_file_jpg, $new_screenshot);
+                $this->moveFile($newFileJpg, $newScreenshot);
 
                 /**
                  * add no more than 15 at a time
@@ -231,40 +234,37 @@ class MakeGallery
                  * if screenshot was taken before entering the system, move it to "originals" directory
                  * so it doesn't interfere with the script in the future
                  */
-                $this->create_dir($settings['old_screendir'] . '/originals');
+                $this->createDir($settings['old_screendir'] . '/originals');
 
-                if (file_exists($old_file_og)) {
-                    $old_file_og = $settings['old_screendir'] . '/originals/' . $filetime . '_' . $file_name;
+                if (file_exists($oldFileOg)) {
+                    $oldFileOg = $settings['old_screendir'] . '/originals/' . $filetime . '_' . $fileName;
                 }
 
-                $this->move_file($old_file_bmp, $old_file_og);
+                $this->moveFile($oldFileBmp, $oldFileOg);
             }
         }
-        unset($file);
 
         /**
          * make thumbnails for the gallery
          */
         if ($added > 0) {
-            $this->make_thumbs($newscreendir);
+            $this->makeThumbs($newscreendir);
         }
     }
 
     /**
      * Create a directory
      *
-     * @param string $dir_name
-     * @return bool
+     * @param string $dirName
+     *
      * @author Mauri Kujala <contact@edtb.xyz>
      */
-    private function create_dir($dir_name)
+    private function createDir($dirName)
     {
         try {
-            if (!is_dir($dir_name)) {
-                if (!mkdir($dir_name, 0775, true)) {
-                    $error = error_get_last();
-                    throw new \Exception($error);
-                }
+            if (!mkdir($dirName, 0775, true) && !is_dir($dirName)) {
+                $error = error_get_last();
+                throw new \Exception($error);
             }
         } catch (\Exception $e) {
             write_log('Error: ' . $e->getMessage(), __FILE__, __LINE__);
@@ -275,9 +275,10 @@ class MakeGallery
      * Remove screenshot
      *
      * @param string $file path to file
+     *
      * @author Mauri Kujala <contact@edtb.xyz>
      */
-    private function remove_file($file)
+    private function removeFile($file)
     {
         if (file_exists($file)) {
             if (!unlink($file)) {
@@ -292,9 +293,10 @@ class MakeGallery
      *
      * @param string $from source file path
      * @param string $to output file path
+     *
      * @author Mauri Kujala <contact@edtb.xyz>
      */
-    private function move_file($from, $to)
+    private function moveFile($from, $to)
     {
         if (file_exists($from)) {
             if (!rename($from, $to)) {
@@ -307,22 +309,25 @@ class MakeGallery
     /**
      * Make thumbnail directory and thumbnails
      *
-     * @param string $new_screendir
+     * @param string $newScreendir
+     *
      * @author Mauri Kujala <contact@edtb.xyz>
      */
-    private function make_thumbs($new_screendir)
+    private function makeThumbs($newScreendir)
     {
         global $settings;
         /**
          * create thumbnail directory
          */
-        $thumb_dir = $new_screendir . '/thumbs';
-        $this->create_dir($thumb_dir);
+        $thumbDir = $newScreendir . '/thumbs';
+        $this->createDir($thumbDir);
 
         /**
          * run ImageMagick mogrify
          */
-        $command = '"' . $settings['install_path'] . '/bin/ImageMagick/mogrify" -resize ' . $settings['thumbnail_size'] . ' -background #333333 -gravity center -extent ' . $settings['thumbnail_size'] . ' -format jpg -quality 95 -path "' . $thumb_dir . '" "' . $new_screendir . '/"*.jpg';
+        $command = '"' . $settings['install_path'] . '/bin/ImageMagick/mogrify" -resize ' . $settings['thumbnail_size'] .
+            ' -background #333333 -gravity center -extent ' . $settings['thumbnail_size'] . ' -format jpg -quality 95 -path "' .
+            $thumbDir . '" "' . $newScreendir . '/"*.jpg';
         exec($command, $out3);
 
         if (!empty($out3)) {

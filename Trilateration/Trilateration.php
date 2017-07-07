@@ -47,7 +47,7 @@ class Trilateration
      * @return array $coords coordinates
      * @author Snuble and Harbinger (https://forums.frontier.co.uk/showthread.php?t=43362&page=7&p=869662&highlight=trilateration3d#post869662)
      */
-    public function trilateration3d($p1, $p2, $p3, $p4): array
+    public function trilateration3d($p1, $p2, $p3, $p4)
     {
         $ex = $this->vector_unit($this->vector_diff($p2, $p1));
         $i = $this->vector_dot_product($ex, $this->vector_diff($p3, $p1));
@@ -122,7 +122,7 @@ class Trilateration
             $result2[2]=floor($result2[2]);
             $result2[2]/=32;
 
-            $coords = array($result2[0], $result2[1], $result2[2]);
+            $coords = [$result2[0], $result2[1], $result2[2]];
         }
 
         return $coords;
@@ -132,16 +132,17 @@ class Trilateration
      * vector_unit function for trilateration
      *
      * @param float $v
-     * @return array
+     * @return array|int
      * @author Snuble and Harbinger (https://forums.frontier.co.uk/showthread.php?t=43362&page=7&p=869662&highlight=trilateration3d#post869662)
      */
-    private function vector_unit($v): array
+    private function vector_unit($v)
     {
         $l = $this->vector_norm($v);
 
         if ($l == 0) {
             return -1;
         }
+
         return $this->vector_div($v, $l);
     }
 
@@ -152,7 +153,7 @@ class Trilateration
      * @return float
      * @author Snuble and Harbinger (https://forums.frontier.co.uk/showthread.php?t=43362&page=7&p=869662&highlight=trilateration3d#post869662)
      */
-    private function vector_norm($v): float
+    private function vector_norm($v)
     {
         return sqrt(($v[0]*$v[0])+($v[1]*$v[1])+($v[2]*$v[2]));
     }
@@ -165,9 +166,9 @@ class Trilateration
      * @return array
      * @author Snuble and Harbinger (https://forums.frontier.co.uk/showthread.php?t=43362&page=7&p=869662&highlight=trilateration3d#post869662)
      */
-    private function vector_div($v, $l): array
+    private function vector_div($v, $l)
     {
-        return array($v[0]/$l, $v[1] / $l, $v[2] / $l);
+        return [$v[0]/$l, $v[1] / $l, $v[2] / $l];
     }
 
     /**
@@ -175,12 +176,12 @@ class Trilateration
      *
      * @param array $p1
      * @param array $p2
-     * @return float
+     * @return array
      * @author Snuble and Harbinger (https://forums.frontier.co.uk/showthread.php?t=43362&page=7&p=869662&highlight=trilateration3d#post869662)
      */
-    private function vector_diff($p1, $p2): float
+    private function vector_diff($p1, $p2)
     {
-        return array($p1[0] - $p2[0], $p1[1] - $p2[1], $p1[2] - $p2[2]);
+        return [$p1[0] - $p2[0], $p1[1] - $p2[1], $p1[2] - $p2[2]];
     }
 
     /**
@@ -191,7 +192,7 @@ class Trilateration
      * @return float
      * @author Snuble and Harbinger (https://forums.frontier.co.uk/showthread.php?t=43362&page=7&p=869662&highlight=trilateration3d#post869662)
      */
-    private function vector_dot_product($v1, $v2): float
+    private function vector_dot_product($v1, $v2)
     {
         return ($v1[0] * $v2[0]) + ($v1[1] * $v2[1]) + ($v1[2] * $v2[2]);
     }
@@ -204,9 +205,9 @@ class Trilateration
      * @return array
      * @author Snuble and Harbinger (https://forums.frontier.co.uk/showthread.php?t=43362&page=7&p=869662&highlight=trilateration3d#post869662)
      */
-    private function vector_multiply($v, $i): array
+    private function vector_multiply($v, $i)
     {
-        return array($v[0] * $i, $v[1] * $i, $v[2] * $i);
+        return [$v[0] * $i, $v[1] * $i, $v[2] * $i];
     }
 
     /**
@@ -214,10 +215,10 @@ class Trilateration
      *
      * @param array $v1
      * @param array $v2
-     * @return float
+     * @return array
      * @author Snuble and Harbinger (https://forums.frontier.co.uk/showthread.php?t=43362&page=7&p=869662&highlight=trilateration3d#post869662)
      */
-    private function vector_cross($v1, $v2): float
+    private function vector_cross($v1, $v2)
     {
         $v = [];
         $v[0] = ($v1[1] * $v2[2]) - ($v1[2] * $v2[1]);
@@ -234,7 +235,7 @@ class Trilateration
      * @return float
      * @author Snuble and Harbinger (https://forums.frontier.co.uk/showthread.php?t=43362&page=7&p=869662&highlight=trilateration3d#post869662)
      */
-    private function vector_length($p1, $p2): float
+    private function vector_length($p1, $p2)
     {
         $a1 = $p1[0];
         $a2 = $p2[0];
@@ -252,15 +253,16 @@ class Trilateration
      *
      * @param array $v1
      * @param array $v2
-     * @return float
+     * @return array
      * @author Snuble and Harbinger (https://forums.frontier.co.uk/showthread.php?t=43362&page=7&p=869662&highlight=trilateration3d#post869662)
      */
-    private function vector_sum($v1, $v2): float
+    private function vector_sum($v1, $v2)
     {
         $v = [];
         $v[0] = $v1[0] + $v2[0];
         $v[1] = $v1[1] + $v2[1];
         $v[2] = $v1[2] + $v2[2];
+
         return $v;
     }
 }

@@ -42,23 +42,23 @@ class System
     /**
      * Check if system is mapped in System map
      *
-     * @param string $system_name
+     * @param string $systemName
      * @return bool
      * @author Mauri Kujala <contact@edtb.xyz>
      */
-    public static function is_mapped($system_name)
+    public static function isMapped($systemName): bool
     {
         global $mysqli;
 
-        if (empty($system_name)) {
+        if (empty($systemName)) {
             return false;
         }
 
-        $esc_system_name = $mysqli->real_escape_string($system_name);
+        $escSystemName = $mysqli->real_escape_string($systemName);
 
         $query = "  SELECT id
                     FROM user_system_map
-                    WHERE system_name = '$esc_system_name'
+                    WHERE system_name = '$escSystemName'
                     LIMIT 1";
 
         $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
@@ -66,31 +66,27 @@ class System
 
         $result->close();
 
-        if ($num > 0) {
-            return true;
-        }
-
-        return false;
+        return $num > 0;
     }
 
     /**
      * Check if system has screenshots
      *
-     * @param string $system_name
+     * @param string $systemName
      * @return bool
      * @author Mauri Kujala <contact@edtb.xyz>
      */
-    public static function has_screenshots($system_name)
+    public static function hasScreenshots($systemName): bool
     {
         global $settings;
 
-        $system_name = strip_invalid_dos_chars($system_name);
+        $systemName = strip_invalid_dos_chars($systemName);
 
-        if (empty($system_name)) {
+        if (empty($systemName)) {
             return false;
         }
 
-        if (is_dir($settings['new_screendir'] . '/' . $system_name)) {
+        if (is_dir($settings['new_screendir'] . '/' . $systemName)) {
             return true;
         }
 
@@ -101,11 +97,11 @@ class System
      * Check if system is logged
      *
      * @param string $system
-     * @param bool $is_id
+     * @param bool $isId
      * @return bool
      * @author Mauri Kujala <contact@edtb.xyz>
      */
-    public static function is_logged($system, $is_id = false)
+    public static function isLogged($system, $isId = false): bool
     {
         global $mysqli;
 
@@ -113,9 +109,9 @@ class System
             return false;
         }
 
-        $esc_system_name = $mysqli->real_escape_string($system);
+        $escSystemName = $mysqli->real_escape_string($system);
 
-        if ($is_id !== false) {
+        if ($isId !== false) {
             $query = "  SELECT id
                         FROM user_log
                         WHERE system_id = '$system'
@@ -124,7 +120,7 @@ class System
         } else {
             $query = "  SELECT id
                         FROM user_log
-                        WHERE system_name = '$esc_system_name'
+                        WHERE system_name = '$escSystemName'
                         AND system_name != ''
                         LIMIT 1";
         }
@@ -144,25 +140,25 @@ class System
     /**
      * Check if a system exists in our database
      *
-     * @param string $system_name
-     * @param bool $only_own
+     * @param string $systemName
+     * @param bool $onlyOwn
      * @return bool
      * @author Mauri Kujala <contact@edtb.xyz>
      */
-    public static function exists($system_name, $only_own = false)
+    public static function exists($systemName, $onlyOwn = false): bool
     {
         global $mysqli;
 
-        if (empty($system_name)) {
+        if (empty($systemName)) {
             return false;
         }
 
-        $esc_system_name = $mysqli->real_escape_string($system_name);
+        $escSystemName = $mysqli->real_escape_string($systemName);
 
         $query = "  SELECT
                     id
                     FROM edtb_systems
-                    WHERE name = '$esc_system_name'
+                    WHERE name = '$escSystemName'
                     LIMIT 1";
 
         $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
@@ -170,11 +166,11 @@ class System
 
         $result->close();
 
-        if ($count == 0 || $only_own === true) {
+        if ($count == 0 || $onlyOwn === true) {
             $query = "  SELECT
                         id
                         FROM user_systems_own
-                        WHERE name = '$esc_system_name'
+                        WHERE name = '$escSystemName'
                         LIMIT 1";
 
             $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
@@ -194,41 +190,41 @@ class System
      * Return links to screenshots, system log or system map
      *
      * @param string $system
-     * @param bool $show_screens
-     * @param bool $show_system
-     * @param bool $show_logs
-     * @param bool $show_map
+     * @param bool $showScreens
+     * @param bool $showSystem
+     * @param bool $showLogs
+     * @param bool $showMap
      * @return string $return
      * @author Mauri Kujala <contact@edtb.xyz>
      */
-    public static function crosslinks($system, $show_screens = true, $show_system = false, $show_logs = true, $show_map = true): string
+    public static function crosslinks($system, $showScreens = true, $showSystem = false, $showLogs = true, $showMap = true): string
     {
         $return = '';
         // check if system has screenshots
-        if ($show_screens === true && System::has_screenshots($system)) {
+        if ($showScreens === true && System::hasScreenshots($system)) {
             $return .= '<a href="/Gallery?spgmGal=' . urlencode(strip_invalid_dos_chars($system)) . '" title="View image gallery" class="gallery_link">';
-            $return .= '<img src="/style/img/image.png" class="icon" alt="Gallery" style="margin-left:5px;margin-right:0;vertical-align:top" />';
+            $return .= '<img src="/style/img/image.png" class="icon" alt="Gallery" style="margin-left: 5px;  margin-right: 0; vertical-align: top">';
             $return .= '</a>';
         }
 
         // check if system is logged
-        if ($show_logs === true && System::is_logged($system)) {
-            $return .= '<a href="/Log?system=' . urlencode($system) . '" style="color:inherit" title="System has log entries" class="log_link">';
-            $return .= '<img src="/style/img/log.png" class="icon" style="margin-left:5px;margin-right:0" />';
+        if ($showLogs === true && System::isLogged($system)) {
+            $return .= '<a href="/Log?system=' . urlencode($system) . '" style="color: inherit" title="System has log entries" class="log_link">';
+            $return .= '<img src="/style/img/log.png" class="icon" style="margin-left: 5px; margin-right: 0">';
             $return .= '</a>';
         }
 
         // check if system is mapped
-        if ($show_map === true && System::is_mapped($system)) {
-            $return .= '<a href="/SystemMap/?system=' . urlencode($system) . '" style="color:inherit" title="System map" class="system_map_link">';
-            $return .= '<img src="/style/img/grid.png" class="icon" style="margin-left:5px;margin-right:0" />';
+        if ($showMap === true && System::isMapped($system)) {
+            $return .= '<a href="/SystemMap/?system=' . urlencode($system) . '" style="color: inherit" title="System map" class="system_map_link">';
+            $return .= '<img src="/style/img/grid.png" class="icon" style="margin-left: 5px; margin-right: 0">';
             $return .= '</a>';
         }
 
         // show link if system exists
-        if ($show_system === true && System::exists($system)) {
-            $return .= '<a href="/System?system_name=' . urlencode($system) . '" style="color:inherit" title="System info" class="system_info_link">';
-            $return .= '<img src="/style/img/info.png" class="icon" alt="Info" style="margin-left:5px;margin-right:0" />';
+        if ($showSystem === true && System::exists($system)) {
+            $return .= '<a href="/System?system_name=' . urlencode($system) . '" style="color: inherit" title="System info" class="system_info_link">';
+            $return .= '<img src="/style/img/info.png" class="icon" alt="Info" style="margin-left: 5px; margin-right: 0">';
             $return .= '</a>';
         }
 
@@ -242,22 +238,22 @@ class System
      * @return int
      * @author Mauri Kujala <contact@edtb.xyz>
      */
-    public static function num_visits($system): int
+    public static function numVisits($system): int
     {
         global $mysqli;
 
-        $esc_system_name = $mysqli->real_escape_string($system);
+        $escSystemName = $mysqli->real_escape_string($system);
 
         $query = "  SELECT id
                     FROM user_visited_systems
-                    WHERE system_name = '$esc_system_name'";
+                    WHERE system_name = '$escSystemName'";
 
         $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
 
-        $num_visits = $result->num_rows;
+        $numVisits = $result->num_rows;
 
         $result->close();
 
-        return $num_visits;
+        return $numVisits;
     }
 }

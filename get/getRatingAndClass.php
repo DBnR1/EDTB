@@ -36,7 +36,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/source/functions.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/source/MySQL.php';
 
 if (isset($_GET['group_id']) && !empty($_GET['group_id'])) {
-    $group_id = $_GET['group_id'];
+    $groupId = $_GET['group_id'];
 
     /**
      * set class
@@ -46,7 +46,7 @@ if (isset($_GET['group_id']) && !empty($_GET['group_id'])) {
     $query = "  SELECT DISTINCT class
                 FROM edtb_modules
                 WHERE class != ''
-                AND group_id = '$group_id'
+                AND group_id = '$groupId'
                 ORDER BY class";
 
     $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
@@ -64,26 +64,26 @@ if (isset($_GET['group_id']) && !empty($_GET['group_id'])) {
     /**
      * set rating
      */
-    $class_name = $_GET['class_name'];
+    $className = $_GET['class_name'];
 
-    $also_class = '';
-    if ($class_name !== '') {
-        $also_class = " AND class='$class_name'";
+    $alsoClass = '';
+    if ($className !== '') {
+        $alsoClass = " AND class='$className'";
     }
 
     $data['rating'] .= '<option value="0">Rating</option>';
 
     $query = "  SELECT DISTINCT rating
                 FROM edtb_modules
-                WHERE class != ''" . $also_class . "
-                AND group_id = '$group_id'
+                WHERE class != ''" . $alsoClass . "
+                AND group_id = '$groupId'
                 ORDER BY rating";
 
     $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
 
-    $found_rating = $result->num_rows;
+    $foundRating = $result->num_rows;
 
-    if ($found_rating > 0) {
+    if ($foundRating > 0) {
         while ($obj = $result->fetch_object()) {
             $data['rating'] .= '<option value="' . $obj->rating . '">Rating ' . $obj->rating . '</option>';
         }

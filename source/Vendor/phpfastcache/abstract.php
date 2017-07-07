@@ -235,15 +235,15 @@ abstract class BasePhpFastCache
     }
 
 
-    public function setup($config_name, $value = "")
+    public function setup($configName, $value = "")
     {
         /*
          * Config for class
          */
-        if (is_array($config_name)) {
-            $this->config = $config_name;
+        if (is_array($configName)) {
+            $this->config = $configName;
         } else {
-            $this->config[$config_name] = $value;
+            $this->config[$configName] = $value;
         }
     }
 
@@ -298,15 +298,15 @@ abstract class BasePhpFastCache
         } else {
             $string = "";
 
-            $file_handle = @fopen($file, "r");
-            if (!$file_handle) {
+            $fileHandle = @fopen($file, "r");
+            if (!$fileHandle) {
                 throw new Exception("Can't Read File", 96);
             }
-            while (!feof($file_handle)) {
-                $line = fgets($file_handle);
+            while (!feof($fileHandle)) {
+                $line = fgets($fileHandle);
                 $string .= $line;
             }
-            fclose($file_handle);
+            fclose($fileHandle);
 
             return $string;
         }
@@ -319,9 +319,9 @@ abstract class BasePhpFastCache
      */
 
 
-    public function getPath($create_path = false)
+    public function getPath($createPath = false)
     {
-        return phpFastCache::getPath($create_path, $this->config);
+        return phpFastCache::getPath($createPath, $this->config);
     }
 
 
@@ -384,7 +384,7 @@ allow from 127.0.0.1";
      */
     public function systemInfo()
     {
-        $backup_option = $this->option;
+        $backupOption = $this->option;
         if (count($this->option("system")) == 0) {
             $this->option['system']['driver'] = "files";
             $this->option['system']['drivers'] = array();
@@ -421,7 +421,7 @@ allow from 127.0.0.1";
 
         $example = new phpfastcache_example($this->config);
         $this->option("path", $example->getPath(true));
-        $this->option = $backup_option;
+        $this->option = $backupOption;
         return $this->option;
     }
 

@@ -41,7 +41,7 @@ if (isset($_GET['do'])) {
     $data = json_decode($_REQUEST['input']);
 
     $AddBm = new PoiBm();
-    $AddBm->add_bm($data);
+    $AddBm->addBm($data);
 
     exit;
 }
@@ -49,25 +49,25 @@ if (isset($_GET['do'])) {
 <div class="input" id="addBm">
     <form method="post" id="bm_form" action="/">
         <div class="input-inner">
-            <div class="suggestions" id="suggestions_3" style="margin-top:79px;margin-left:14px"></div>
+            <div class="suggestions" id="suggestions_3" style="margin-top: 79px; margin-left: 14px"></div>
             <table>
                 <tr>
                     <td class="heading" colspan="2">Add/edit bookmark
                         <span class="right">
                             <a href="javascript:void(0)" onclick="tofront('addBm')" title="Close form">
-                                <img src="/style/img/close.png" class="icon" alt="X" />
+                                <img src="/style/img/close.png" class="icon" alt="X">
                             </a>
                         </span>
                     </td>
                 </tr>
                 <tr>
-                    <td class="dark" style="text-align:left">
+                    <td class="dark" style="text-align: left">
                         <input type="hidden" name="bm_edit_id" id="bm_edit_id">
                         <input type="hidden" name="bm_system_id" id="bm_system_id">
-                        <input class="textbox" type="text" name="bm_system_name" placeholder="System name" id="bm_system_name" style="width:410px" oninput="showResult(this.value, '3', 'no', 'no', 'no', 'yes')" />
+                        <input class="textbox" type="text" name="bm_system_name" placeholder="System name" id="bm_system_name" style="width: 410px" oninput="showResult(this.value, '3', 'no', 'no', 'no', 'yes')">
                     </td>
                     <td class="dark">
-                        <select title="Category" class="selectbox" name="bm_catid" id="bm_catid" style="width:140px">
+                        <select title="Category" class="selectbox" name="bm_catid" id="bm_catid" style="width: 140px">
                             <option value="0">Category (optional)</option>
                             <?php
                             $query = 'SELECT id, name FROM user_bm_categories ORDER BY name';
@@ -98,7 +98,7 @@ if (isset($_GET['do'])) {
     </form>
 </div>
 <script>
-    $("#add_bm_click").click(function()
+    $('#add_bm_click').click(function()
     {
         update_data('bm_form', '/Bookmarks/add_bookmark.php?do', true);
         tofront('null', true);

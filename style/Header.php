@@ -43,18 +43,18 @@ use \EDTB\style\Theme;
 
 /**
  * Header
- * 
+ *
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 class Header extends Theme
 {
-    /** @var string $page_title */
-    public $page_title = '';
+    /** @var string $pageTitle */
+    public $pageTitle = '';
 
     /**
      * Display the header
      */
-    public function display_header()
+    public function displayHeader()
     {
         global $settings;
         ?>
@@ -64,12 +64,12 @@ class Header extends Theme
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
             <!-- icon, styles and custom fonts -->
             <link type="image/png" href="/style/img/icon.png" rel="icon" />
-            <link type="text/css" href="/style/style.css?ver=<?php echo $settings['edtb_version']?>" rel="stylesheet" />
+            <link type="text/css" href="/style/style.css?ver=<?= $settings['edtb_version']?>" rel="stylesheet" />
 
             <?php
             if (Theme::sidebar_style() === 'narrow') {
                 ?>
-                <link type="text/css" href="/style/style_narrow.css?ver=<?php echo $settings['edtb_version']?>" rel="stylesheet" />
+                <link type="text/css" href="/style/style_narrow.css?ver=<?= $settings['edtb_version']?>" rel="stylesheet" />
                 <?php
             }
             ?>
@@ -93,10 +93,10 @@ class Header extends Theme
 
             <!-- global variable for clock -->
             <script>
-                var gmt = "<?php echo $settings['game_time']?>";
+                var gmt = "<?= $settings['game_time']?>";
             </script>
 
-            <title>CMDR <?php echo $settings['cmdr_name']?>'s ToolBox</title>
+            <title>CMDR <?= $settings['cmdr_name']?>'s ToolBox</title>
         </head>
         <body onload="startTime()">
         <div class="se-pre-con" id="loading">
@@ -152,8 +152,8 @@ class Header extends Theme
                     /**
                      * External links
                      */
-                    foreach ($settings['ext_links'] as $name => $link_href) {
-                        echo '<a href="' .  $link_href . '" target="_blank" onclick="$(\'#ext_links\').fadeToggle(\'fast\')">';
+                    foreach ($settings['ext_links'] as $name => $linkHref) {
+                        echo '<a href="' .  $linkHref . '" target="_blank" onclick="$(\'#ext_links\').fadeToggle(\'fast\')">';
                         echo '<div class="leftpanel-ext_links_link">' . $name . '</div>';
                         echo '</a>';
                     }
@@ -175,7 +175,7 @@ class Header extends Theme
                     /**
                      * set main navigation links
                      */
-                    $this->nav_links();
+                    $this->navLinks();
                     ?>
                 </div>
             </div>
@@ -185,11 +185,11 @@ class Header extends Theme
              */
             if (Theme::sidebar_style() === 'narrow') {
                 $minm .= '<a href="javascript:void(0)" onclick="minmax(\'normal\')" title="Maximize left panel">';
-                $minm .= '<img class="minmax" src="/style/img/minmax.png" alt="Max" />';
+                $minm .= '<img class="minmax" src="/style/img/minmax.png" alt="Max">';
                 $minm .= '</a>';
             } else {
                 $minm .= '<a href="javascript:void(0)" onclick="minmax(\'narrow\')" title="Minimize left panel">';
-                $minm .= '<img class="minmax" src="/style/img/minmax.png" alt="Min" />';
+                $minm .= '<img class="minmax" src="/style/img/minmax.png" alt="Min">';
                 $minm .= '</a>';
             }
             ?>
@@ -206,9 +206,9 @@ class Header extends Theme
                     }
                     ?>
                     <div class="seslog" id="seslog">
-                        <textarea title="Session log" class="seslogtext" cols="40" rows="13" id="logtext" oninput="showsave()"><?php echo $sessionlog?></textarea>
-                        <span id="seslogsuccess"><?php echo $minm?></span>
-                        <span id="old_val" style="display:none"><?php echo $minm?></span>
+                        <textarea title="Session log" class="seslogtext" cols="40" rows="13" id="logtext" oninput="showsave()"><?= $sessionlog?></textarea>
+                        <span id="seslogsuccess"><?= $minm?></span>
+                        <span id="old_val" style="display: none"><?= $minm?></span>
                     </div>
                     <!-- currently playing from foobar2000/VLC // -->
                     <div id="nowplaying"></div>
@@ -216,8 +216,8 @@ class Header extends Theme
                 } else {
                     ?>
                     <div class="seslog" id="seslog">
-                        <span id="seslogsuccess"><?php echo $minm?></span>
-                        <span id="old_val" style="display:none"><?php echo $minm?></span>
+                        <span id="seslogsuccess"><?= $minm?></span>
+                        <span id="old_val" style="display: none"><?= $minm?></span>
                     </div>
                     <?php
                 }
@@ -228,7 +228,7 @@ class Header extends Theme
         /**
          * top panel
          */
-        $this->top_panel();
+        $this->topPanel();
 
         echo '<div class="rightpanel">';
     }
@@ -236,7 +236,7 @@ class Header extends Theme
     /**
      * Main navigation links
      */
-    private function nav_links()
+    private function navLinks()
     {
         global $settings;
         /**
@@ -244,28 +244,30 @@ class Header extends Theme
          */
         $maplink = $settings['default_map'] === 'galaxy_map' ? '/GalMap' : '/Map';
 
-        $links = array( 'ED ToolBox--log.png--true' => '/',
-                        'System Information--info.png--true' => '/System',
+        $links = [
+                'ED ToolBox--log.png--true' => '/',
+                'System Information--info.png--true' => '/System',
                         'Galaxy Map&nbsp;&nbsp;&&nbsp;&nbsp;Neighborhood Map--grid.png--true' => $maplink,
                         'Points of Interest&nbsp;&nbsp;&&nbsp;&nbsp;Bookmarks--poi.png--true' => '/Bookmarks',
                         'Nearest Systems&nbsp;&nbsp;&&nbsp;&nbsp;Stations--find.png--false' => '/NearestSystems',
                         'Data Point--dataview.png--false' => '/DataPoint',
                         'Galnet News--news.png--false' => '/GalNet',
                         'Screenshot Gallery--gallery.png--false' => '/Gallery',
-                        'System Log--log.png--true' => '/');
+                        'System Log--log.png--true' => '/'
+                        ];
 
         $i = 0;
         $count = count($links);
-        foreach ($links as $name => $link_href) {
+        foreach ($links as $name => $linkHref) {
             $names = explode('--', $name);
             $name = $names[0];
             $pic = $names[1];
             $reload = $names[2];
 
-            $class = $this->page_title == $name ? 'active' : 'link';
+            $class = $this->pageTitle === $name ? 'active' : 'link';
 
             //
-            if ($this->page_title === 'System Log' && $name === 'ED ToolBox') {
+            if ($this->pageTitle === 'System Log' && $name === 'ED ToolBox') {
                 $class = 'active';
             }
 
@@ -279,17 +281,17 @@ class Header extends Theme
             if ($name !== 'System Log') {
                 if (Theme::sidebar_style() === 'narrow') {
                     // offset the log icon to make it appear centered
-                    $styling = $pic === 'log.png' ? ' style="margin-left:6px"' : '';
+                    $styling = $pic === 'log.png' ? ' style="margin-left: 6px"' : '';
 
-                    echo '<a' . $aclass . $onclick . ' href="' .  $link_href . '">';
+                    echo '<a' . $aclass . $onclick . ' href="' .  $linkHref . '">';
                     echo '<div id="link_' . $i . '" class="' . $class . '">';
-                    echo '<img src="/style/img/' . $pic . '" alt="pic" class="icon"' . $styling . ' />';
+                    echo '<img src="/style/img/' . $pic . '" alt="pic" class="icon"' . $styling . '>';
                     echo '</div>';
                     echo '</a>';
                 } else {
-                    echo '<a' . $aclass . $onclick . ' href="' .  $link_href . '">';
+                    echo '<a' . $aclass . $onclick . ' href="' .  $linkHref . '">';
                     echo '<div id="link_' . $i . '" class="' . $class . '">';
-                    echo '<img src="/style/img/' . $pic . '" alt="pic" class="icon" />' . $name;
+                    echo '<img src="/style/img/' . $pic . '" alt="pic" class="icon">' . $name;
                     echo '</div>';
                     echo '</a>';
                 }
@@ -301,21 +303,21 @@ class Header extends Theme
     /**
      * the top panel
      */
-    private function top_panel()
+    private function topPanel()
     {
         global $settings, $api;
         ?>
         <div class="rightpanel-top">
             <!-- elite emblem and add logs -->
             <a href="javascript:void(0)" id="toggle" title="Add log entry">
-                <img src="/style/img/elite.png" alt="Add log" class="elite_emb" />
+                <img src="/style/img/elite.png" alt="Add log" class="elite_emb">
             </a>
 
             <!-- page title and search systems & stations -->
             <div class="rightpanel-pagetitle">
                 <span class="titletext">
                     <a href="javascript:void(0)" onclick="tofront('search_system');$('#system_22').focus()" title="Search for a system" id="pagetitle">
-                        CMDR <?php echo $settings['cmdr_name']?>
+                        CMDR <?= $settings['cmdr_name']?>
                     </a>
                 </span>
                 <?php
@@ -323,12 +325,12 @@ class Header extends Theme
                  * User ranks from FD API
                  */
                 if (isset($api['commander']) && $settings['show_cmdr_status'] === 'true') {
-                    $status_ranks_cache = '';
+                    $statusRanksCache = '';
                     if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/cache/cmdr_ranks_status.html')) {
-                        $status_ranks_cache = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/cache/cmdr_ranks_status.html');
+                        $statusRanksCache = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/cache/cmdr_ranks_status.html');
                     }
 
-                    echo '<div class="status_ranks" id="cmdr_click"><div id="cmdr_status">' . $status_ranks_cache . '</div></div>';
+                    echo '<div class="status_ranks" id="cmdr_click"><div id="cmdr_status">' . $statusRanksCache . '</div></div>';
                 }
 
                 /**
@@ -336,9 +338,9 @@ class Header extends Theme
                  */
                 if (!empty($settings['edsm_api_key']) && !empty($settings['edsm_cmdr_name'])) {
                     ?>
-                    <div style="display:inline-block;margin-left:5px">
+                    <div style="display:inline-block; margin-left: 5px">
                         <a id="edsm_cmnt_pic" href="javascript:void(0)" title="Add private comment to EDSM">
-                            <img src="/style/img/comment.png" class="icon24" alt="EDSM" id="edsm_click" />
+                            <img src="/style/img/comment.png" class="icon24" alt="EDSM" id="edsm_click">
                         </a>
                     </div>
                     <?php
@@ -351,13 +353,13 @@ class Header extends Theme
                 ?>
                 <div class="edsm_comment" id="edsm_comment">
                     <form method="get" action="/" data-push="true">
-                        <input type="text" id="comment2" class="textbox" name="comment" placeholder="Private EDSM comment for this system" style="width:350px" />
-                        <br />
-                        <div class="button" onclick="edsm_comment($('#comment2').val(), true)" style="margin-top:6px;margin-bottom:6px">Send comment</div>
+                        <input type="text" id="comment2" class="textbox" name="comment" placeholder="Private EDSM comment for this system" style="width: 350px">
+                        <br>
+                        <div class="button" onclick="edsm_comment($('#comment2').val(), true)" style="margin-top: 6px; margin-bottom: 6px">Send comment</div>
                     </form>
                     <?php
                     if (!empty($settings['edsm_standard_comments'])) {
-                        echo '<br />&nbsp;OR choose from standard set<form method="get" action="/">';
+                        echo '<br>&nbsp;OR choose from standard set<form method="get" action="/">';
                         echo '<select class="selectbox" id="comment1" name="comment" onchange="edsm_comment($(\'#comment1\').val(), true)">';
                         echo '<option value="">Choose comment</option>';
 
@@ -375,22 +377,22 @@ class Header extends Theme
             }
             ?>
             <!-- icons & ships status -->
-            <div class="right" style="display:inline-block;margin-right:10px;margin-top:14px;font-size:0;height:60px;width:auto;white-space:nowrap">
+            <div class="right" style="display: inline-block; margin-right: 10px;  margin-top: 14px;font-size:0;height:60px;width:auto;white-space: nowrap">
                 <?php
                 /**
                  * show ship status
                  */
                 if (isset($api['ship']) && $settings['show_ship_status'] === 'true') {
-                    $ship_cache = '';
+                    $shipCache = '';
                     if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/cache/ship_status.html')) {
-                        $ship_cache = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/cache/ship_status.html');
+                        $shipCache = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/cache/ship_status.html');
                     }
 
-                    echo '<div class="status_ship" id="ship_status">' . $ship_cache . '</div>';
+                    echo '<div class="status_ship" id="ship_status">' . $shipCache . '</div>';
                 }
                 ?>
                 <!-- notifications appear here -->
-                <div id="notifications" style="display:inline-block;margin-right:6px"></div>
+                <div id="notifications" style="display:inline-block;margin-right: 6px"></div>
 
                 <div style="display:inline-block">
                     <?php
@@ -400,30 +402,30 @@ class Header extends Theme
                     if (isset($api['commander']) || isset($api['ship'])) {
                         ?>
                         <a id="api_refresh" href="javascript:void(0)" onclick="refresh_api()" title="Refresh API data">
-                            <img class="icon24" src="/style/img/refresh_24.png" alt="Refresh" style="margin-right:10px" />
+                            <img class="icon24" src="/style/img/refresh_24.png" alt="Refresh" style="margin-right: 10px">
                         </a>
                         <?php
                     }
                     ?>
                     <a href="javascript:void(0)" title="About ED ToolBox" id="about_click">
-                        <img class="icon24" src="/style/img/about.png" style="height:26px;width:26px;margin-right:10px" alt="About" />
+                        <img class="icon24" src="/style/img/about.png" style="height: 26px; width:26px;margin-right: 10px" alt="About">
                     </a>
                     <a href="javascript:void(0)" title="Settings Panel" id="settings_click">
-                        <img class="icon24" src="/style/img/settings.png" style="height:26px;width:26px" alt="Settings" />
+                        <img class="icon24" src="/style/img/settings.png" style="height: 26px; width: 26px" alt="Settings">
                     </a>
                 </div>
             </div>
 
             <!-- notices for new releases or old data -->
             <div class="settings_panel" id="notice">
-                It has been a while since you last update system and station data.<br />As a result, any data you see here may be outdated.<br /><br />
-                Right-click the EDTB manager icon on your system tray and select<br />"Update system and station data".
+                It has been a while since you last update system and station data.<br>As a result, any data you see here may be outdated.<br><br>
+                Right-click the EDTB manager icon on your system tray and select<br>"Update system and station data".
             </div>
             <div class="settings_panel" id="notice_new"></div>
 
             <!-- settings panel -->
             <?php
-            $this->settings_panel();
+            $this->settingsPanel();
             ?>
 
             <!-- about ED ToolBox -->
@@ -439,46 +441,45 @@ class Header extends Theme
     /**
      * Settings panel links
      */
-    private function settings_panel()
+    private function settingsPanel()
     {
-        $setting_links = array
-                         (
-                            array(  'href' => '/Admin',
+        $settingLinks =
+                         [
+                            [  'href' => '/Admin',
                                     'icon' => 'settings.png',
-                                    'text' => 'Customize ED ToolBox'),
-                            array(  'href' => '/Admin/ini_editor.php',
+                                    'text' => 'Customize ED ToolBox'],
+                            [  'href' => '/Admin/ini_editor.php',
                                     'icon' => 'vareditor.png',
-                                    'text' => 'Edit ini file'),
-                            array(  'href' => '/Admin/db_manager.php',
+                                    'text' => 'Edit ini file'],
+                            [  'href' => '/Admin/db_manager.php',
                                     'icon' => 'dataview.png',
-                                    'text' => 'Database Management'),
-                            array(  'href' => '/Admin/SQL.php',
+                                    'text' => 'Database Management'],
+                            [  'href' => '/Admin/SQL.php',
                                     'icon' => 'sql.png',
-                                    'text' => 'Run MySQL queries'),
-                            array(  'href' => '/Admin/Import.php',
+                                    'text' => 'Run MySQL queries'],
+                            [  'href' => '/Admin/Import.php',
                                     'icon' => 'import.png',
-                                    'text' => 'Import Flight Logs'),
-                            array(  'href' => '/Admin/API_login.php',
+                                    'text' => 'Import Flight Logs'],
+                            [  'href' => '/Admin/API_login.php',
                                     'icon' => 'api.png',
-                                    'text' => 'Connect Companion API'),
-                            array( 'href' => '/Admin/Log.php',
+                                    'text' => 'Connect Companion API'],
+                            [ 'href' => '/Admin/Log.php',
                                    'icon' => 'log2.png',
-                                   'text' => 'View Error Log')
-                         );
+                                   'text' => 'View Error Log']
+                         ];
 
-        echo '<div class="settings_panel" id="settings" style="width:227px">';
+        echo '<div class="settings_panel" id="settings" style="width: 227px">';
 
-        foreach ($setting_links as $title)
+        foreach ($settingLinks as $title)
         {
             ?>
-            <a href="<?php echo $title['href']?>" title="<?php echo $title['text']?>">
-                <div class="link" style="width:90%;text-align:left">
-                    <img class="icon" src="/style/img/<?php echo $title['icon']?>" alt="<?php echo $title['icon']?>" /><?php echo $title['text']?>
+            <a href="<?= $title['href']?>" title="<?= $title['text']?>">
+                <div class="link" style="width:90%; text-align: left">
+                    <img class="icon" src="/style/img/<?= $title['icon']?>" alt="<?= $title['icon']?>"><?= $title['text']?>
                 </div>
             </a>
             <?php
         }
-        unset($title);
 
         echo '</div>';
     }
@@ -493,15 +494,15 @@ class Header extends Theme
         <div class="settings_panel" id="about">
             <table>
                 <tr>
-                    <td colspan="3" class="light">ED ToolBox v.<?php echo $settings['edtb_version']?></td>
+                    <td colspan="3" class="light">ED ToolBox v.<?= $settings['edtb_version']?></td>
                 </tr>
                 <tr>
-                    <td class="info_td" colspan="3" style="padding-bottom:5px;padding-top:5px">
+                    <td class="info_td" colspan="3" style="padding-bottom: 5px; padding-top: 5px">
                         ED ToolBox is a companion tool for the
                         <a href="http://www.frontier.co.uk/" target="_blank">Frontier Developments</a>
-                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext" /> game
+                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext"> game
                         <a href="http://www.elitedangerous.com" target="_blank">Elite: Dangerous</a>
-                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext" />.<br />
+                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext">.<br>
                         ED ToolBox is an unofficial tool and is in no way affiliated with Frontier Developments.
                     </td>
                 </tr>
@@ -509,84 +510,84 @@ class Header extends Theme
                     <td colspan="3" class="light">Acknowledgements</td>
                 </tr>
                 <tr>
-                    <td class="info_td" colspan="3" style="padding-bottom:10px;padding-top:5px">
+                    <td class="info_td" colspan="3" style="padding-bottom: 10px; padding-top: 5px">
                         This tool and its usage rely heavily on open source resources. Here's a list of (hopefully) all of them:
                     </td>
                 </tr>
                 <tr>
                     <td class="info_td">
                         <a href="http://eddb.io" target="_blank">EDDB.io</a>
-                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext" /> (system and station data)
+                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext"> (system and station data)
                     </td>
                     <td class="info_td">
                         <a href="http://markitup.jaysalvat.com/home/" target="_blank">markItUp!</a>
-                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext" /> (log editor)
+                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext"> (log editor)
                     </td>
                     <td class="info_td">
                         <a href="http://sourceforge.net/projects/sql-edit-table/" target="_blank">MySQL Edit Table</a>
-                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext" /> (Data Point)
+                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext"> (Data Point)
                     </td>
                 </tr>
                 <tr>
                     <td class="info_td">
                         <a href="http://www.phpfastcache.com/" target="_blank">phpFastCache</a>
-                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext" /> (page caching)
+                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext"> (page caching)
                     </td>
                     <td class="info_td">
                         <a href="https://codemirror.net/" target="_blank">CodeMirror</a>
-                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext" /> (ini-file editor)
+                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext"> (ini-file editor)
                     </td>
                     <td class="info_td">
                         <a href="http://spgm.sourceforge.net/" target="_blank">SPGM</a>
-                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext" /> (screenshot gallery)
+                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext"> (screenshot gallery)
                     </td>
                 </tr>
                 <tr>
                     <td class="info_td">
                         <a href="https://jquery.com/" target="_blank">jQuery</a>
-                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext" /> (js library)
+                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext"> (js library)
                     </td>
                     <td class="info_td">
                         <a href="http://feed43.com/" target="_blank">Feed43</a>
-                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext" /> (GalNet feed)
+                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext"> (GalNet feed)
                     </td>
                     <td class="info_td">
                         <a href="http://www.highcharts.com/" target="_blank">Highcharts</a>
-                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext" /> (neighborhood map)
+                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext"> (neighborhood map)
                     </td>
                 </tr>
                 <tr>
                     <td class="info_td">
                         <a href="https://github.com/gbiobob/ED3D-Galaxy-Map" target="_blank">ED3D Galaxy Map</a>
-                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext" /> (galaxy map)
+                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext"> (galaxy map)
                     </td>
                     <td class="info_td">
                         <a href="http://threejs.org/" target="_blank">Three.js</a>
-                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext" /> (js library)
+                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext"> (js library)
                     </td>
                     <td class="info_td">
                         <a href="http://www.imagemagick.org" target="_blank">ImageMagick®</a>
-                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext" /> (screenshot tools)
+                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext"> (screenshot tools)
                     </td>
                 </tr>
                 <tr>
                     <td class="info_td" colspan="3">
                         Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a>
-                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext" />,
+                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext">,
                         <a href="http://www.flaticon.com/authors/designmodo" title="Designmodo">Designmodo</a>
-                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext" />, and
+                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext">, and
                         <a href="http://www.flaticon.com/authors/dave-gandy" title="Dave Gandy">Dave Gandy</a>
-                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext" /> from
+                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext"> from
                         <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a>
-                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext" /> are licensed by
+                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext"> are licensed by
                         <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC BY 3.0</a>
-                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext" />
+                        <img class="ext_icon" src="/style/img/external_link.png" alt="ext">
                     </td>
                 </tr>
                 <tr>
                     <td class="info_td" colspan="3">
-                        ED ToolBox was created using assets and imagery from Elite Dangerous, with the permission of Frontier Developments plc,<br />
-                        for non-commercial purposes. It is not endorsed by nor reflects the views or opinions of Frontier Developments and no<br />
+                        ED ToolBox was created using assets and imagery from Elite Dangerous, with the permission of Frontier Developments plc,<br>
+                        for non-commercial purposes. It is not endorsed by nor reflects the views or opinions of Frontier Developments and no<br>
                         employee of Frontier Developments was involved in the making of it.
                     </td>
                 </tr>

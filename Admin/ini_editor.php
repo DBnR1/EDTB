@@ -42,42 +42,42 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/style/Theme.php';
 $header = new Header();
 
 /** @var string page_title */
-$header->page_title = 'Variable Editor';
+$header->pageTitle = 'Variable Editor';
 
 /**
  * display the header
  */
-$header->display_header();
+$header->displayHeader();
 
 if (isset($_POST['code'])) {
     $code = $_POST['code'];
-    if (file_put_contents($ini_file, $code)) {
+
+    $notify = '<div class="notify_deleted">Edit unsuccesful.</div>';
+    if (file_put_contents($iniFile, $code)) {
         $notify = '<div class="notify_success">Settings succesfully edited.</div>';
-    } else {
-        $notify = '<div class="notify_deleted">Edit unsuccesfull.</div>';
     }
 }
 
-$ini = file_get_contents($ini_file);
+$ini = file_get_contents($iniFile);
 ?>
 <!-- codemirror -->
 <link type="text/css" rel="stylesheet" href="/source/Vendor/codemirror/lib/codemirror.css">
 <script type="text/javascript" src="/source/Vendor/codemirror/lib/codemirror.js"></script>
 <script type="text/javascript" src="/source/Vendor/codemirror/mode/properties/properties.js"></script>
 
-<?php echo $notify?>
+<?= $notify?>
 <div class="entries">
-    <div class="entries_inner" style="margin-bottom:20px">
+    <div class="entries_inner" style="margin-bottom: 20px">
     <h2>
-        <img src="/style/img/settings.png" alt="Settings" class="icon24" />Edit .ini file
+        <img src="/style/img/settings.png" alt="Settings" class="icon24">Edit .ini file
     </h2>
     <hr>
         <form method="post" action="ini_editor.php">
-            <textarea title="INI" id="codes" name="code"><?php echo $ini?></textarea>
-            <input type="submit" class="button" value="Submit changes" />
+            <textarea title="INI" id="codes" name="code"><?= $ini?></textarea>
+            <input type="submit" class="button" value="Submit changes">
         </form>
         <script type="text/javascript">
-            var editor = CodeMirror.fromTextArea(document.getElementById("codes"),
+            CodeMirror.fromTextArea(document.getElementById("codes"),
             {
                 lineNumbers: true,
                 mode: "text/x-ini"
@@ -94,4 +94,4 @@ $footer = new Footer();
 /**
  * display the footer
  */
-$footer->display_footer();
+$footer->displayFooter();

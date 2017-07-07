@@ -39,42 +39,44 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/style/Theme.php';
 $header = new Header();
 
 /** @var string page_title */
-$header->page_title = 'Screenshot Gallery';
+$header->pageTitle = 'Screenshot Gallery';
 
 /**
  * display the header
  */
-$header->display_header();
+$header->displayHeader();
 ?>
-<div class="entries">
-    <div class="entries_inner">
-        <?php
-        if (isset($_GET['removed'])) {
-            if ($_GET['removed'] != '1') {
-                echo '<div class="notify_success">Screenshot succesfully deleted</div>';
-            } else {
-                echo '<div class="notify_deleted">Screenshot deletion failed.</div>';
-            }
-        }
-
-        if (is_dir($settings['old_screendir']) && $settings['old_screendir'] !== "C:\\Users" && $settings['old_screendir'] !== "C:\\Users\\") {
-            ?>
-            <table id="wrapper">
-                <tr>
-                    <td id="center">
-                        <?php
-                        require_once $_SERVER['DOCUMENT_ROOT'] . '/Gallery/Vendor/spgm/spgm.php';
-                        ?>
-                    </td>
-                </tr>
-            </table>
+    <div class="entries">
+        <div class="entries_inner">
             <?php
-        } else {
-            echo notice('Your screenshot directory is empty or gallery is disabled.<br />Set the variable "old_screendir" in the <a href="/Admin/ini_editor.php">INI-editor</a> to enable gallery.');
-        }
-        ?>
+            if (isset($_GET['removed'])) {
+                if ($_GET['removed'] != '1') {
+                    echo '<div class="notify_success">Screenshot succesfully deleted</div>';
+                } else {
+                    echo '<div class="notify_deleted">Screenshot deletion failed.</div>';
+                }
+            }
+
+            if (is_dir($settings['old_screendir']) && $settings['old_screendir'] !== "C:\\Users" &&
+                $settings['old_screendir'] !== "C:\\Users\\"
+            ) {
+                ?>
+                <table id="wrapper">
+                    <tr>
+                        <td id="center">
+                            <?php
+                            require_once $_SERVER['DOCUMENT_ROOT'] . '/Gallery/Vendor/spgm/spgm.php';
+                            ?>
+                        </td>
+                    </tr>
+                </table>
+                <?php
+            } else {
+                echo notice('Your screenshot directory is empty or gallery is disabled.<br>Set the variable "old_screendir" in the <a href="/Admin/ini_editor.php">INI-editor</a> to enable gallery.');
+            }
+            ?>
+        </div>
     </div>
-</div>
 <?php
 /**
  * initiate page footer
@@ -84,4 +86,4 @@ $footer = new Footer();
 /**
  * display the footer
  */
-$footer->display_footer();
+$footer->displayFooter();

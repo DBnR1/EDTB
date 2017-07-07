@@ -60,7 +60,7 @@ function slide()
         marginSpeed: -10
     };
 
-    var s = $("#ltitle"),
+    var s = $('#ltitle'),
             value = s.width() - 284;
 
     if (s.width() >= 288)
@@ -79,7 +79,7 @@ function slideout()
         currentMargin: 0,
         marginSpeed: -10
     },
-        s = $("#ltitle");
+        s = $('#ltitle');
 
     if (s.width() >= 288)
     {
@@ -151,30 +151,30 @@ function update_api(wait, newsys, override, force_update)
                 dataType: "json",
                 success: function(result)
                 {
-                    if (result.cmdr_status != "false" && result.cmdr_ranks_update == "true")
+                    if (result.cmdr_status !== "false" && result.cmdr_ranks_update === "true")
                     {
                         log("CMDR status changed, refreshing");
-                        $("#cmdr_status").html(result.cmdr_status);
+                        $('#cmdr_status').html(result.cmdr_status);
                     }
                     else
                     {
                         log("CMDR status not changed");
                     }
 
-                    if (result.cmdr_balance_status != "false" && result.cmdr_balance_update == "true")
+                    if (result.cmdr_balance_status !== "false" && result.cmdr_balance_update === "true")
                     {
                         log("CMDR balance changed, refreshing");
-                        $("#balance_st").html(result.cmdr_balance_status);
+                        $('#balance_st').html(result.cmdr_balance_status);
                     }
                     else
                     {
                         log("CMDR balance not changed");
                     }
 
-                    if (result.ship_status != "false" && result.ship_status_update == "true")
+                    if (result.ship_status !== "false" && result.ship_status_update === "true")
                     {
                         log("Ship status changed, refreshing");
-                        $("#ship_status").html(result.ship_status);
+                        $('#ship_status').html(result.ship_status);
                     }
                     else
                     {
@@ -205,7 +205,7 @@ function update_poi_bm()
             success: function(result)
             {
                 log("Refreshing poi & bm data");
-                $("#poi_bm").html(result);
+                $('#poi_bm').html(result);
             },
             error: function()
             {
@@ -235,7 +235,7 @@ function get_data(override) {
 
         slog_sort = getUrlVars().slog_sort,
         glog_sort = getUrlVars().glog_sort,
-        page_sys = $("#system_title").html();
+        page_sys = $('#system_title').html();
 
     if (requestno === 0)
     {
@@ -251,7 +251,7 @@ function get_data(override) {
         cache: false,
         success: function(onlysystem)
         {
-            if (onlysystem != page_sys || override === true)
+            if (onlysystem !== page_sys || override === true)
             {
                 requestno = 0;
                 $.ajax(
@@ -261,9 +261,9 @@ function get_data(override) {
                     dataType: "json",
                     success: function(result)
                     {
-                        $("#nowplaying").html(result.now_playing);
+                        $('#nowplaying').html(result.now_playing);
 
-                        if (onlysystem != page_sys)
+                        if (onlysystem !== page_sys)
                         {
                             log("Refreshing data (system changed)");
                         }
@@ -272,51 +272,51 @@ function get_data(override) {
                             log("Refreshing data (override)");
                         }
 
-                        $("#t1").html(result.system_title);
-                        $("#systeminfo").html(result.system_info);
-                        $("#scrollable").html(result.log_data);
-                        $("#stations").html(result.station_data);
+                        $('#t1').html(result.system_title);
+                        $('#systeminfo').html(result.system_info);
+                        $('#scrollable').html(result.log_data);
+                        $('#stations').html(result.station_data);
 
-                        if (result.notifications != "false")
+                        if (result.notifications !== "false")
                         {
-                            $("#notifications").html(result.notifications);
-                            if (result.notifications_data != "false")
+                            $('#notifications').html(result.notifications);
+                            if (result.notifications_data !== "false")
                             {
-                                $("#notice_new").html(result.notifications_data);
+                                $('#notice_new').html(result.notifications_data);
                             }
                         }
 
-                        if (result.update_in_progress != "false")
+                        if (result.update_in_progress !== "false")
                         {
-                            $("#notifications").html(result.update_notification);
-                            if (result.update_notification_data != "false")
+                            $('#notifications').html(result.update_notification);
+                            if (result.update_notification_data !== "false")
                             {
-                                $("#notice").html(result.update_notification_data);
+                                $('#notice').html(result.update_notification_data);
                             }
                         }
 
                         // clear reference distances if we're in a new system
-                        if (result.new_sys != "false")
+                        if (result.new_sys !== "false")
                         {
-                            $("#ref_1_dist").val("");
-                            $("#ref_2_dist").val("");
-                            $("#ref_3_dist").val("");
-                            $("#ref_4_dist").val("");
+                            $('#ref_1_dist').val('');
+                            $('#ref_2_dist').val('');
+                            $('#ref_3_dist').val('');
+                            $('#ref_4_dist').val('');
                         }
 
                         // if we're on the system info page
-                        if ($("#system_page").length)
+                        if ($('#system_page').length)
                         {
-                            $("#si_name").html(result.si_name);
-                            $("#si_stations").html(result.si_stations);
-                            $("#si_detailed").html(result.si_detailed);
+                            $('#si_name').html(result.si_name);
+                            $('#si_stations').html(result.si_stations);
+                            $('#si_detailed').html(result.si_detailed);
 
                             //log(result.si_name);
                             //log(result.si_stations);
                             //log(result.si_detailed);
                         }
 
-                        var cont = $("#container");
+                        var cont = $('#container');
                         if (cont.length)
                         {
                             log("Updating Neighborhood Map");
@@ -336,13 +336,13 @@ function get_data(override) {
                             $("head").append(script);
                         }
 
-                        if ($("#poi_bm").length)
+                        if ($('#poi_bm').length)
                         {
                             log("Updating Poi & BM");
                             update_poi_bm();
                         }
 
-                        if (result.update_map != "false")
+                        if (result.update_map !== "false")
                         {
                             log("Calling update_map()");
                             update_map();
@@ -432,9 +432,9 @@ function get_cs(formid, coordformid, onlyid) {
                     y = res[1],
                     z = res[2];
 
-                $("#coordsx_2").val(x);
-                $("#coordsy_2").val(y);
-                $("#coordsz_2").val(z);
+                $('#coordsx_2').val(x);
+                $('#coordsy_2').val(y);
+                $('#coordsz_2').val(z);
                 $("#" + coordformid).val(results);
             }
         });
@@ -474,28 +474,28 @@ function update_values(editurl, deleteid)
             jQuery.each(result, function(id, value)
             {
                 var elem = $("#" + id);
-                if (elem.attr("type") == "checkbox")
+                if (elem.attr("type") === "checkbox")
                 {
                     if (value === "1")
                     {
                         elem.prop("checked", true);
                     }
 
-                    if (id == "pinned")
+                    if (id === "pinned")
                     {
                         if (value === "1")
                         {
-                            $("#pin_click").html("&nbsp;Pinned to top");
-                            $("#weight").show();
+                            $('#pin_click').html("&nbsp;Pinned to top");
+                            $('#weight').show();
                         }
                         else
                         {
-                            $("#pin_click").html("&nbsp;Pin to top");
-                            $("#weight").hide();
+                            $('#pin_click').html("&nbsp;Pin to top");
+                            $('#weight').hide();
                         }
                     }
                 }
-                else if (elem.attr("type") == "select")
+                else if (elem.attr("type") === "select")
                 {
                     document.getElementById(id).getElementsByTagName("option")[value].selected = "selected";
                 }
@@ -507,16 +507,16 @@ function update_values(editurl, deleteid)
         }
     });
 
-    var delete_div = $("#delete"),
-        delete_poi = $("#delete_poi"),
-        delete_bm = $("#delete_bm");
+    var delete_div = $('#delete'),
+        delete_poi = $('#delete_poi'),
+        delete_bm = $('#delete_bm');
 
     if (delete_div.length)
     {
         delete_div.html("");
         if (deleteid !== false)
         {
-            delete_div.html('<a href="javascript:void(0)" onclick="confirmation(' + deleteid + ', \'log\')" title="Delete item"><div class="delete_button" style="right:-271px;"><img src="/style/img/delete.png" class="icon" alt="Delete" style="margin-right:0" /></div></a>');
+            delete_div.html('<a href="javascript:void(0)" onclick="confirmation(' + deleteid + ', \'log\')" title="Delete item"><div class="delete_button" style="right:-271px;"><img src="/style/img/delete.png" class="icon" alt="Delete" style="margin-right: 0"></div></a>');
         }
     }
 
@@ -525,7 +525,7 @@ function update_values(editurl, deleteid)
         delete_poi.html("");
         if (deleteid !== false)
         {
-            delete_poi.html('<a href="javascript:void(0)" data-replace="true" data-target=".entries" onclick="confirmation(' + deleteid + ', \'poi\')" title="Delete item"><div class="delete_button"><img src="/style/img/delete.png" class="icon" alt="Delete" style="margin-right:0" /></div></a>');
+            delete_poi.html('<a href="javascript:void(0)" data-replace="true" data-target=".entries" onclick="confirmation(' + deleteid + ', \'poi\')" title="Delete item"><div class="delete_button"><img src="/style/img/delete.png" class="icon" alt="Delete" style="margin-right: 0"></div></a>');
         }
     }
 
@@ -534,7 +534,7 @@ function update_values(editurl, deleteid)
         delete_bm.html("");
         if (deleteid !== false)
         {
-            delete_bm.html('<a href="javascript:void(0)" data-replace="true" data-target=".entries" onclick="confirmation(' + deleteid + ', \'bm\')" title="Delete item"><div class="delete_button"><img src="/style/img/delete.png" class="icon" alt="Delete" style="margin-right:0" /></div></a>');
+            delete_bm.html('<a href="javascript:void(0)" data-replace="true" data-target=".entries" onclick="confirmation(' + deleteid + ', \'bm\')" title="Delete item"><div class="delete_button"><img src="/style/img/delete.png" class="icon" alt="Delete" style="margin-right: 0"></div></a>');
         }
     }
 }
@@ -559,7 +559,7 @@ function update_data(formid, file, update_map)
     {
         if (allTags[tg].name)
         {
-            if (allTags[tg].type == "checkbox")
+            if (allTags[tg].type === "checkbox")
             {
                 if (allTags[tg].checked)
                 {
@@ -592,10 +592,10 @@ function update_data(formid, file, update_map)
         }
         else
         {
-            $("#seslogsuccess").html('<img src="/style/img/check.png" class="icon" style="margin-right:5px" alt="Done">');
+            $('#seslogsuccess').html('<img src="/style/img/check.png" class="icon" style="margin-right: 5px" alt="Done">');
             setTimeout(function()
             {
-                $("#seslogsuccess").html($("#old_val").html());
+                $('#seslogsuccess').html($('#old_val').html());
             }, 3000);
         }
     });
@@ -619,7 +619,7 @@ function update_data(formid, file, update_map)
         get_data(true);
     }, 1200);
 
-    if ($("#poi_bm").length)
+    if ($('#poi_bm').length)
     {
         log("Updating Poi & BM");
         update_poi_bm();
@@ -649,7 +649,7 @@ function startTime()
     var today = new Date(), h, m, s, d, year, mo,
         monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-    if (gmt == "false")
+    if (gmt === "false")
     {
             h = addZero(today.getHours());
             m = today.getMinutes();
@@ -671,9 +671,9 @@ function startTime()
     m = addZero(m);
     s = addZero(s);
 
-    var hrs = $("#hrs"),
-        hrsns = $("#hrsns"),
-        date = $("#date");
+    var hrs = $('#hrs'),
+        hrsns = $('#hrsns'),
+        date = $('#date');
 
     if (hrs.length)
     {
@@ -709,14 +709,14 @@ function tofront(divid, toback)
 
     if (toback === false)
     {
-        if (document.getElementById(divid).style.display == "block")
+        if (document.getElementById(divid).style.display === "block")
         {
             document.getElementById(divid).style.display = "none";
-            $(".entries").fadeIn("fast");
+            $('.entries').fadeIn("fast");
         }
         else
         {
-            $("#" + divid).fadeIn("fast");
+            $('#' + divid).fadeIn('fast');
             document.getElementById(divid).style.zindex = setindex;
             document.getElementsByClassName("entries")[0].style.display = "none";
         }
@@ -724,12 +724,12 @@ function tofront(divid, toback)
     else
     {
         get_data(true);
-        $(".entries").fadeIn("fast");
+        $('.entries').fadeIn("fast");
     }
 
     for (index = 0; index < divs.length; index += 1)
     {
-        if (document.getElementById(divs[index]) && divs[index] != divid)
+        if (document.getElementById(divs[index]) && divs[index] !== divid)
         {
             document.getElementById(divs[index]).style.zindex = 0;
             document.getElementById(divs[index]).style.display = "none";
@@ -749,19 +749,19 @@ function confirmation(delid, what)
     if (confirm("Sure you want to delete a thing?") === true)
     {
         var script = "";
-        if (what == "log")
+        if (what === "log")
         {
             script = "/Log/add_log.php?do&deleteid=" + delid;
         }
-        else if (what == "poi")
+        else if (what === "poi")
         {
             script = "/Bookmarks/add_poi.php?do&deleteid=" + delid;
         }
-        else if (what == "bm")
+        else if (what === "bm")
         {
             script = "/Bookmarks/add_bookmark.php?do&deleteid=" + delid;
         }
-        else if (what == "screenshot")
+        else if (what === "screenshot")
         {
             script = "/Gallery/deleteScreenshot.php?img=" + delid;
         }
@@ -774,7 +774,7 @@ function confirmation(delid, what)
                 cache: false,
                 success: function(result)
                 {
-                    if (what == "screenshot")
+                    if (what === "screenshot")
                     {
                         window.location = result;
                     }
@@ -785,7 +785,7 @@ function confirmation(delid, what)
         }
     }
 
-    if (what != "screenshot")
+    if (what !== "screenshot")
     {
         get_data(true);
         tofront("null", true);
@@ -800,10 +800,10 @@ function confirmation(delid, what)
  */
 function toggle_log(logsystem)
 {
-    $("#log_form")[0].reset();
-    $("#pin_click").html("&nbsp;Pin to top");
-    $("#weight").hide();
-    $("#edit_id").val("");
+    $('#log_form')[0].reset();
+    $('#pin_click').html("&nbsp;Pin to top");
+    $('#weight').hide();
+    $('#edit_id').val('');
 
     if (logsystem === "")
     {
@@ -812,7 +812,7 @@ function toggle_log(logsystem)
     }
     else
     {
-        $("#system_1").val(logsystem);
+        $('#system_1').val(logsystem);
     }
 
     tofront("addlog");
@@ -839,10 +839,10 @@ var last_system = "";
  */
 function get_mi(system)
 {
-    var report = $("#report"),
+    var report = $('#report'),
         last_system = "";
 
-    if (last_system == system)
+    if (last_system === system)
     {
         report.hide();
         last_system = "";
@@ -899,7 +899,7 @@ function showResult(str, divid, link, station, idlink, sysid, dp)
 
     xmlhttp.onreadystatechange = function()
     {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200)
+        if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
         {
             $("#suggestions_" + divid).html(xmlhttp.responseText);
         }
@@ -912,22 +912,22 @@ function showResult(str, divid, link, station, idlink, sysid, dp)
         addtolink2 = "",
         addtolink3 = "";
 
-    if (system_allegiance != "undefined")
+    if (system_allegiance !== "undefined")
     {
         addtolink = "&system_allegiance=" + system_allegiance;
     }
 
-    if (allegiance != "undefined")
+    if (allegiance !== "undefined")
     {
         addtolink2 = "&allegiance=" + allegiance;
     }
 
-    if (power != "undefined")
+    if (power !== "undefined")
     {
         addtolink3 = "&power=" + power;
     }
 
-    if (station == "yes")
+    if (station === "yes")
     {
         xmlhttp.open("GET", "/get/getStationNames.php?q=" + str + "&divid=" + divid + "&link=" + link + "&idlink=" + idlink + "&sysid=" + sysid + "&dp=" + dp + addtolink + addtolink2 + addtolink3, true);
     }
@@ -969,12 +969,12 @@ function setResult(result, coordinates, divid)
  */
 function setbm(name, sysid)
 {
-    $("#bm_system_name").val(name);
-    $("#bm_system_id").val(sysid);
-    $("#bm_edit_id").val("");
-    $("#bm_text").val("");
-    $("#bm_catid").val("0");
-    $("#suggestions_3").hide();
+    $('#bm_system_name').val(name);
+    $('#bm_system_id').val(sysid);
+    $('#bm_edit_id').val('');
+    $('#bm_text').val('');
+    $('#bm_catid').val("0");
+    $('#suggestions_3').hide();
 }
 
 /**
@@ -986,8 +986,8 @@ function setbm(name, sysid)
  */
 function setl(name, stationid)
 {
-    $("#statname").val(name);
-    $("#suggestions_41").hide();
+    $('#statname').val(name);
+    $('#suggestions_41').hide();
 }
 
 /**
@@ -1005,12 +1005,12 @@ function setdp(name, coordinates, systemid)
         y = res[1],
         z = res[2];
 
-    $("#system_name").val(name);
-    $("#system_id").val(systemid);
-    $("#x").val(x);
-    $("#y").val(y);
-    $("#z").val(z);
-    $("#suggestions_37").hide();
+    $('#system_name').val(name);
+    $('#system_id').val(systemid);
+    $('#x').val(x);
+    $('#y').val(y);
+    $('#z').val(z);
+    $('#suggestions_37').hide();
 }
 
 /*
@@ -1018,19 +1018,19 @@ function toinput(system, coordinates, price, tonnage, to, id)
 {
     if (to == "from_system")
     {
-        $("#from_system").val(system);
-        $("#from_coords").val(coordinates);
-        $("#price1").val(price);
-        $("#tonnage").val(tonnage);
-        $("#from_id").val(id);
+        $('#from_system').val(system);
+        $('#from_coords').val(coordinates);
+        $('#price1').val(price);
+        $('#tonnage').val(tonnage);
+        $('#from_id').val(id);
     }
     else if (to == "to_system")
     {
-        $("#to_system").val(system);
-        $("#to_coords").val(coordinates);
-        $("#price2").val(price);
-        $("#tonnage").val(tonnage);
-        $("#to_id").val(id);
+        $('#to_system').val(system);
+        $('#to_coords').val(coordinates);
+        $('#price2').val(price);
+        $('#tonnage').val(tonnage);
+        $('#to_id').val(id);
     }
 }
 function hailait(name, to)
@@ -1189,12 +1189,12 @@ function calcDist(coord_fromx, coord_fromy, coord_fromz, coord_tox, coord_toy, c
             success: function(result)
             {
                 if (result != "false") {
-                    $("#return").val(result);
+                    $('#return').val(result);
                 }
             }
         });
     }*/
-    var dist_display = $("#dist_display");
+    var dist_display = $('#dist_display');
 
     if (x1 && x2 && y1 && y2 && z1 && z2)
     {
@@ -1223,7 +1223,7 @@ function calcDist(coord_fromx, coord_fromy, coord_fromz, coord_tox, coord_toy, c
  */
 function addstation(station, station_id)
 {
-    $("#statname").val(station);
+    $('#statname').val(station);
 }
 
 /**
@@ -1234,8 +1234,8 @@ function addstation(station, station_id)
  */
 function savelog(log)
 {
-    var seslogsuccess = $("#seslogsuccess"),
-        data = $("#logtext").val();
+    var seslogsuccess = $('#seslogsuccess'),
+        data = $('#logtext').val();
 
     $.ajax(
     {
@@ -1252,7 +1252,7 @@ function savelog(log)
         {
             if (seslogsuccess.html('<img src="/style/img/check.png" class="icon" alt="Done">'))
             {
-                seslogsuccess.html($("#old_val").html());
+                seslogsuccess.html($('#old_val').html());
             }
 
         }, 3500);
@@ -1266,7 +1266,7 @@ function savelog(log)
  */
 function showsave()
 {
-    $("#seslogsuccess").html('<a href="javascript:void(0)" onclick="savelog()" title="Save session log"><img src="/style/img/save.png" class="icon" alt="Save"></a>');
+    $('#seslogsuccess').html('<a href="javascript:void(0)" onclick="savelog()" title="Save session log"><img src="/style/img/save.png" class="icon" alt="Save"></a>');
 }
 
 /**
@@ -1278,7 +1278,7 @@ function showsave()
  */
 function imgurUpload(file, fileurl)
 {
-    $("#uploaded").html('Uploading image...<br /><img src="/style/img/loading.gif" alt="Uploading..." />');
+    $('#uploaded').html('Uploading image...<br><img src="/style/img/loading.gif" alt="Uploading...">');
     $.ajax(
     {
         url: "https://api.imgur.com/3/image",
@@ -1297,7 +1297,7 @@ function imgurUpload(file, fileurl)
         {
             var url = result.data.link;
 
-            $("#uploaded").html('Image succesfully uploaded!<br /><a target="_blank" href="' + url + '">Link to your image on imgur.com<img class="ext_icon" src="/style/img/external_link.png" alt="ext" /></a>');
+            $('#uploaded').html('Image succesfully uploaded!<br><a target="_blank" href="' + url + '">Link to your image on imgur.com<img class="ext_icon" src="/style/img/external_link.png" alt="ext"></a>');
 
             // write to file so we can retrieve url later
             $.ajax(
@@ -1350,7 +1350,7 @@ function get_wikipedia(search, id)
     if (!wpsearch.is(":visible"))
     {
         wpsearch.fadeIn();
-        wpsearch.html('<strong>Querying Wikipedia</strong><br /><img src="/style/img/loading.gif" alt="Loading..." />');
+        wpsearch.html('<strong>Querying Wikipedia</strong><br><img src="/style/img/loading.gif" alt="Loading...">');
 
         $.ajax(
         {
@@ -1386,10 +1386,10 @@ function getCR(group_id, class_name)
         dataType: "json",
         success: function(result)
         {
-            $("#rating").html(result.rating);
+            $('#rating').html(result.rating);
             if (class_name === "")
             {
-                $("#class").html(result.classv);
+                $('#class').html(result.classv);
             }
         }
     });
@@ -1439,9 +1439,9 @@ function refresh_api()
         }
     });
 
-    var api_refresh = $("#api_refresh");
+    var api_refresh = $('#api_refresh');
 
-    api_refresh.html('<img class="icon24" src="/style/img/check_24.png" alt="Refresh done" style="margin-right:10px" />');
+    api_refresh.html('<img class="icon24" src="/style/img/check_24.png" alt="Refresh done" style="margin-right: 10px">');
 
     // wait a couple of seconds before updating data
     setTimeout(function()
@@ -1451,7 +1451,7 @@ function refresh_api()
 
     setTimeout(function()
     {
-        api_refresh.html('<img class="icon24" src="/style/img/refresh_24.png" alt="Refresh" style="margin-right:10px" />');
+        api_refresh.html('<img class="icon24" src="/style/img/refresh_24.png" alt="Refresh" style="margin-right: 10px">');
     }, 30000);
 }
 
@@ -1474,8 +1474,8 @@ function ignore_version(version)
         }
     });
 
-    $("#notice_new").fadeToggle("fast");
-    $("#notifications").fadeToggle("fast");
+    $('#notice_new').fadeToggle("fast");
+    $('#notifications').fadeToggle("fast");
 }
 
 /**
@@ -1506,13 +1506,13 @@ function edsm_comment(comment, send)
                 });
             }
         });
-        $("#edsm_comment").fadeToggle("fast");
-        $("#edsm_cmnt_pic").html('<img src="/style/img/check_24.png" alt="Comment sent" class="icon24" />');
+        $('#edsm_comment').fadeToggle("fast");
+        $('#edsm_cmnt_pic').html('<img src="/style/img/check_24.png" alt="Comment sent" class="icon24">');
     }
     else
     {
         // check for existing comments
-        if ($("#edsm_comment").is(":hidden"))
+        if ($('#edsm_comment').is(":hidden"))
         {
             $.ajax(
             {
@@ -1528,7 +1528,7 @@ function edsm_comment(comment, send)
                         {
                             if (res !== "")
                             {
-                                $("#comment2").val(res);
+                                $('#comment2').val(res);
                             }
                         }
                     });
@@ -1570,7 +1570,7 @@ function set_reference_systems(standard, force)
         cache: false,
         success: function(result)
         {
-            $("#calculate").html(result);
+            $('#calculate').html(result);
         }
     });
 }
@@ -1592,7 +1592,7 @@ function to_view(div_id, e)
 
     setTimeout(function()
     {
-        $("#" + div_id).fadeToggle("fast");
+        $('#' + div_id).fadeToggle('fast');
     }, 700);
 }
 
@@ -1606,7 +1606,7 @@ function to_view(div_id, e)
 function enlarge(img, og_width)
 {
     var width = "";
-    if ($(img).width() == og_width)
+    if ($(img).width() === og_width)
     {
         if ($(img)[0].naturalWidth > $(img).parent().width())
         {
@@ -1647,7 +1647,7 @@ function minmax(style)
  */
 function __log(e, data)
 {
-    $("#audio_log").html(e);
+    $('#audio_log').html(e);
 }
 
 var audio_context;
@@ -1698,7 +1698,7 @@ function stopRecording(button)
     recorder && recorder.stop();
     //button.disabled = true;
     //button.previousElementSibling.disabled = false;
-    __log('Stopped recording<br />Wait while the audio file is created');
+    __log('Stopped recording<br>Wait while the audio file is created');
 
     // create WAV download link using audio data blob
     createDownloadLink();
@@ -1760,13 +1760,13 @@ function start_audio()
     var go = true;
     navigator.getUserMedia({audio: true}, startUserMedia, function(e)
     {
-        __log('<strong>No live audio input</strong><br /><br />If you <em>do have</em> a microphone connected, your browser might not<br />be allowing the microphone to be connected from "insecure" sources.<br /><br />In order to record audio logs from this source,<br />use https and port 3002 to access ED ToolBox.');
+        __log('<strong>No live audio input</strong><br><br>If you <em>do have</em> a microphone connected, your browser might not<br>be allowing the microphone to be connected from "insecure" sources.<br><br>In order to record audio logs from this source,<br>use https and port 3002 to access ED ToolBox.');
         go = false;
     });
 
     if (go === false)
     {
-        $("#record_click").hide();
-        $("#stop_click").hide();
+        $('#record_click').hide();
+        $('#stop_click').hide();
     }
 }

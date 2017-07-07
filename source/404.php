@@ -39,14 +39,14 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/style/Theme.php';
 $header = new Header();
 
 /** @var string page_title */
-$header->page_title = 'Page not found!';
+$header->pageTitle = 'Page not found!';
 
 /**
  * display the header
  */
-$header->display_header();
+$header->displayHeader();
 ?>
-<div class="entries" style="position:fixed;bottom:0;background: url(/style/img/404.jpg) no-repeat center bottom;">
+<div class="entries" style="position: fixed; bottom: 0; background: url(/style/img/404.jpg) no-repeat center bottom;">
     <div class="entries_inner">&nbsp;</div>
 </div>
 <?php
@@ -58,4 +58,4 @@ $footer = new Footer();
 /**
  * display the footer
  */
-$footer->display_footer();
+$footer->displayFooter();

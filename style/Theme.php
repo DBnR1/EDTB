@@ -47,7 +47,7 @@ class Theme
      *
      * @return string
      */
-    public static function sidebar_style()
+    public static function sidebar_style(): string
     {
         if (isset($_COOKIE['style']) && $_COOKIE['style'] === 'narrow') {
             return 'narrow';

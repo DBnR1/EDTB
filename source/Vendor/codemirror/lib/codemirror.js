@@ -8699,20 +8699,20 @@
   // that this (partially) implements.
 
   // One-char codes used for character types:
-  // L (L):   Left-to-Right
-  // R (R):   Right-to-Left
-  // r (AL):  Right-to-Left Arabic
-  // 1 (EN):  European Number
-  // + (ES):  European Number Separator
-  // % (ET):  European Number Terminator
-  // n (AN):  Arabic Number
-  // , (CS):  Common Number Separator
+  // L (L):  Left-to-Right
+  // R (R):  Right-to-Left
+  // r (AL): Right-to-Left Arabic
+  // 1 (EN): European Number
+  // + (ES): European Number Separator
+  // % (ET): European Number Terminator
+  // n (AN): Arabic Number
+  // , (CS): Common Number Separator
   // m (NSM): Non-Spacing Mark
-  // b (BN):  Boundary Neutral
-  // s (B):   Paragraph Separator
-  // t (S):   Segment Separator
-  // w (WS):  Whitespace
-  // N (ON):  Other Neutrals
+  // b (BN): Boundary Neutral
+  // s (B):  Paragraph Separator
+  // t (S):  Segment Separator
+  // w (WS): Whitespace
+  // N (ON): Other Neutrals
 
   // Returns null if characters are ordered as they appear
   // (left-to-right), or an array of sections ({from, to, level}

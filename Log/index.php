@@ -37,8 +37,8 @@ if (!$logsystem) {
     exit('No system set');
 }
 
-$logsystem_id = !isset($_GET['system_id']) ? '-1' : 0 + $_GET['system_id'];
-/*if (!$logsystem_id) exit("No system id set"); */
+$logsystemId = !isset($_GET['system_id']) ? '-1' : 0 + $_GET['system_id'];
+/*if (!$logsystemId) exit("No system id set"); */
 
 /** @require Theme class */
 require_once $_SERVER['DOCUMENT_ROOT'] . '/style/Theme.php';
@@ -49,12 +49,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/style/Theme.php';
 $header = new Header();
 
 /** @var string page_title */
-$header->page_title = 'ED ToolBox';
+$header->pageTitle = 'ED ToolBox';
 
 /**
  * display the header
  */
-$header->display_header();
+$header->displayHeader();
 
 /** @require MakeLog class */
 require_once __DIR__ . '/MakeLog.php';
@@ -65,14 +65,14 @@ require_once __DIR__ . '/MakeLog.php';
         /**
          * get system-specific log
          */
-        $esc_logsys_name = $mysqli->real_escape_string($logsystem);
+        $escLogsysName = $mysqli->real_escape_string($logsystem);
         $query = "  SELECT user_log.id, user_log.station_id, user_log.system_name, user_log.log_entry, user_log.stardate,
                     user_log.pinned, user_log.type, user_log.title, user_log.audio,
                     edtb_stations.name AS station_name
                     FROM user_log
                     LEFT JOIN edtb_stations ON edtb_stations.id = user_log.station_id
-                    WHERE user_log.system_id = '$logsystem_id'
-                    OR user_log.system_name = '$esc_logsys_name'
+                    WHERE user_log.system_id = '$logsystemId'
+                    OR user_log.system_name = '$escLogsysName'
                     ORDER BY -user_log.pinned, user_log.weight, user_log.stardate DESC";
 
         $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
@@ -82,12 +82,12 @@ require_once __DIR__ . '/MakeLog.php';
         if ($num > 0) {
             $log = new MakeLog();
 
-            $log->time_difference = $system_time;
+            $log->time_difference = $systemTime;
 
-            echo $log->make_log_entries($result, 'log');
+            echo $log->makeLogEntries($result, 'log');
         } else {
-            echo '<h2>No log entries for ' . $logsystem . '</h2><br />';
-            echo '<a href="javascript:void(0)" id="toggle" onclick="toggle_log(\'' . addslashes($logsystem) . '\')" title="Add log entry" style="color:inherit">';
+            echo '<h2>No log entries for ' . $logsystem . '</h2><br>';
+            echo '<a href="javascript:void(0)" id="toggle" onclick="toggle_log(\'' . addslashes($logsystem) . '\')" title="Add log entry" style="color: inherit">';
             echo 'Click here to add one</a>';
         }
 
@@ -104,5 +104,5 @@ $footer = new Footer();
 /**
  * display the footer
  */
-$footer->display_footer();
+$footer->displayFooter();
 

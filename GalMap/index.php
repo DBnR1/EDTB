@@ -41,12 +41,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/style/Theme.php';
 $header = new Header();
 
 /** @var string page_title */
-$header->page_title = 'Galaxy Map&nbsp;&nbsp;&&nbsp;&nbsp;Neighborhood Map';
+$header->pageTitle = 'Galaxy Map&nbsp;&nbsp;&&nbsp;&nbsp;Neighborhood Map';
 
 /**
  * display the header
  */
-$header->display_header();
+$header->displayHeader();
 
 /**
  * determine coordinates for the map distance calculations
@@ -57,13 +57,13 @@ if (valid_coordinates($curSys['x'], $curSys['y'], $curSys['z'])) {
     $ucoordz = -$curSys['z'];
 } else {
     // get last known coordinates
-    $last_coords = last_known_system();
+    $lastCoords = last_known_system();
 
-    $ucoordx = $last_coords['x'];
-    $ucoordy = $last_coords['y'];
-    $ucoordz = -$last_coords['z'];
+    $ucoordx = $lastCoords['x'];
+    $ucoordy = $lastCoords['y'];
+    $ucoordz = -$lastCoords['z'];
 
-    $is_unknown = ' *';
+    $isUnknown = ' *';
 }
 
 if (!valid_coordinates($ucoordx, $ucoordy, $ucoordz)) {
@@ -71,23 +71,23 @@ if (!valid_coordinates($ucoordx, $ucoordy, $ucoordz)) {
     $ucoordy = '0';
     $ucoordz = '0';
 
-    $is_unknown = ' *';
+    $isUnknown = ' *';
 }
 ?>
     <!-- Three.js -->
     <script src="/source/Vendor/three.min.js"></script>
     <!-- ED3D-Galaxy-Map -->
-    <link href="Vendor/ED3D-Galaxy-Map/css/styles.css?ver=<?php echo $settings['edtb_version']?>" rel="stylesheet" type="text/css" />
+    <link href="Vendor/ED3D-Galaxy-Map/css/styles.css?ver=<?= $settings['edtb_version']?>" rel="stylesheet" type="text/css" />
     <script src="Vendor/ED3D-Galaxy-Map/js/ed3dmap.js"></script>
 
-    <div style="display:none" id="curx"><?php echo $ucoordx?></div>
-    <div style="display:none" id="cury"><?php echo $ucoordy?></div>
-    <div style="display:none" id="curz"><?php echo $ucoordz?></div>
-    <div style="display:none" id="rcurx"><?php echo round($ucoordx)?></div>
-    <div style="display:none" id="rcury"><?php echo round($ucoordy)?></div>
-    <div style="display:none" id="rcurz"><?php echo round($ucoordz)?></div>
+    <div style="display: none" id="curx"><?= $ucoordx?></div>
+    <div style="display: none" id="cury"><?= $ucoordy?></div>
+    <div style="display: none" id="curz"><?= $ucoordz?></div>
+    <div style="display: none" id="rcurx"><?= round($ucoordx)?></div>
+    <div style="display: none" id="rcury"><?= round($ucoordy)?></div>
+    <div style="display: none" id="rcurz"><?= round($ucoordz)?></div>
 
-    <div class="entries" style="position:absolute;bottom:0;top:0;height:auto">
+    <div class="entries" style="position: absolute;  bottom: 0; top: 0;height: auto">
         <table class="edmap_table">
             <tbody>
             <tr>
@@ -110,7 +110,7 @@ if (!valid_coordinates($ucoordx, $ucoordy, $ucoordz)) {
                 withHudPanel: true,
                 startAnim: false,
                 effectScaleSystem: [15,50],
-                playerPos: [<?php echo $ucoordx?>,<?php echo $ucoordy?>,<?php echo $ucoordz?>]
+                playerPos: [<?= $ucoordx?>,<?= $ucoordy?>,<?= $ucoordz?>]
             });
         </script>
     </div>
@@ -123,4 +123,4 @@ $footer = new Footer();
 /**
  * display the footer
  */
-$footer->display_footer();
+$footer->displayFooter();

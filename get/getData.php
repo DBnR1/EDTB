@@ -68,13 +68,13 @@ if ($action === 'makegallery') {
      */
     if (MakeGallery::go()) {
         $gallery = new MakeGallery();
-        $gallery->make_gallery($curSys['name']);
+        $gallery->makeGallery($curSys['name']);
     }
     exit;
 }
 
-/** @var string $esc_cursys_name */
-$esc_cursys_name = $mysqli->real_escape_string($curSys['name']);
+/** @var string $escCursysName */
+$escCursysName = $mysqli->real_escape_string($curSys['name']);
 
 $data = [];
 
@@ -83,7 +83,9 @@ $data = [];
  */
 $data['now_playing'] = '';
 
-if ((isset($settings['nowplaying_file']) && !empty($settings['nowplaying_file'])) || (isset($settings['nowplaying_vlc_password']) && !empty($settings['nowplaying_vlc_password']))) {
+if ((isset($settings['nowplaying_file']) && !empty($settings['nowplaying_file'])) ||
+    (isset($settings['nowplaying_vlc_password']) && !empty($settings['nowplaying_vlc_password']))
+) {
     $nowplaying = '';
 
     /**
@@ -93,8 +95,8 @@ if ((isset($settings['nowplaying_file']) && !empty($settings['nowplaying_file'])
         if (file_exists($settings['nowplaying_file'])) {
             /** If Filename is playback.json will read JSON data for Google Play Music Desktop Player */
             if (basename($settings['nowplaying_file']) === 'playback.json') {
-                $json_data = json_decode(file_get_contents($settings['nowplaying_file']), true);
-                $nowplaying .= $json_data['song']['title'] . ' By: ' . $json_data['song']['artist'];
+                $jsonData = json_decode(file_get_contents($settings['nowplaying_file']), true);
+                $nowplaying .= $jsonData['song']['title'] . ' By: ' . $jsonData['song']['artist'];
             } else {
                 /** Otherwise just output the contents of the file */
                 $nowplaying .= file_get_contents($settings['nowplaying_file']);
@@ -112,21 +114,26 @@ if ((isset($settings['nowplaying_file']) && !empty($settings['nowplaying_file'])
         $password = $settings['nowplaying_vlc_password'];
         $url = $settings['nowplaying_vlc_url'];
 
-        $opts = ['http' => ['method' => 'GET', 'header' => 'Authorization: Basic ' . base64_encode("$username:$password")]];
+        $opts = [
+            'http' => [
+                'method' => 'GET',
+                'header' => 'Authorization: Basic ' . base64_encode("$username:$password")
+            ]
+        ];
 
         $context = stream_context_create($opts);
         $result = file_get_contents($url, false, $context);
 
-        $json_data = json_decode($result, true);
+        $jsonData = json_decode($result, true);
 
-        $nowplaying .= $json_data['information']['category']['meta']['now_playing'];
+        $nowplaying .= $jsonData['information']['category']['meta']['now_playing'];
     }
 
     if (empty($nowplaying)) {
         $nowplaying = 'Not playing';
     }
 
-    $data['now_playing'] = '<img src="/style/img/music.png" class="icon" alt="Now playing" />';
+    $data['now_playing'] = '<img src="/style/img/music.png" class="icon" alt="Now playing">';
     $data['now_playing'] .= $nowplaying;
 }
 
@@ -140,32 +147,34 @@ if ($newSystem !== false || $request == 0) {
     /**
      * update system and station data in the background if last update was more than 6 hours ago
      */
-    $last_update = edtb_common('last_data_update', 'unixtime');
-    $time_frame = time() - 6 * 60 * 60;
+    $lastUpdate = edtb_common('last_data_update', 'unixtime');
+    $timeFrame = time() - 6 * 60 * 60;
+
+    $autoUpdateEnabled = $settings['data_auto_update'] ?? true;
 
     // run update script
-    if ($last_update < $time_frame) {
+    if ($autoUpdateEnabled !== 'false' && $lastUpdate < $timeFrame) {
         // fetch last update start time
-        $last_data_update_start = edtb_common('last_data_update_start', 'unixtime');
-        $start_time_frame = time() - 160;
+        $lastDataUpdateStart = edtb_common('last_data_update_start', 'unixtime');
+        $startTimeFrame = time() - 160;
 
-        if ($last_data_update_start < $start_time_frame) {
-            $batch_file = $settings['install_path'] . '/bin/UpdateData/updatedata_bg.bat';
-            $vbs_file = $settings['install_path'] . '/bin/UpdateData/runbat.vbs';
+        if ($lastDataUpdateStart < $startTimeFrame) {
+            $batchFile = $settings['install_path'] . '/bin/UpdateData/updatedata_bg.bat';
+            $vbsFile = $settings['install_path'] . '/bin/UpdateData/runbat.vbs';
 
-            if (file_exists($batch_file) && file_exists($vbs_file)) {
+            if (file_exists($batchFile) && file_exists($vbsFile)) {
                 edtb_common('last_data_update_start', 'unixtime', true, time());
 
-                pclose(popen('"' . $vbs_file . '"' . ' ' . '"' . $batch_file . '"', 'r'));
+                pclose(popen('"' . $vbsFile . '"' . ' ' . '"' . $batchFile . '"', 'r'));
 
                 $data['update_in_progress'] = 'true';
                 $data['update_notification'] .= '<a href="javascript:void(0)" title="Data update in progress" onclick="$(\'#notice\').fadeToggle(\'fast\')">';
-                $data['update_notification'] .= '<img src="/style/img/notice.png" class="icon26" alt="Update" />';
+                $data['update_notification'] .= '<img src="/style/img/notice.png" class="icon26" alt="Update">';
                 $data['update_notification'] .= '</a>';
-                $data['update_notification_data'] = 'System and station data is being updated in the background.<br /><br />';
+                $data['update_notification_data'] = 'System and station data is being updated in the background.<br><br>';
                 $data['update_notification_data'] .= 'You can continue using ED ToolBox normally.';
             } else {
-                write_log('Error: ' . $batch_file . " doesn't exist");
+                write_log('Error: ' . $batchFile . " doesn't exist");
             }
         }
     }
@@ -175,10 +184,12 @@ if ($newSystem !== false || $request == 0) {
      * or if last update was more than an hour ago
      */
     $data['update_map'] = 'false';
-    $last_map_update = edtb_common('last_map_update', 'unixtime');
-    $map_update_time_frame = time() - 1 * 60 * 60;
+    $lastMapUpdate = edtb_common('last_map_update', 'unixtime');
+    $mapUpdateTimeFrame = time() - 1 * 60 * 60;
 
-    if ($newSystem !== false || !file_exists($_SERVER['DOCUMENT_ROOT'] . '/GalMap/map_points.json') || $last_map_update < $map_update_time_frame) {
+    if ($newSystem !== false || !file_exists($_SERVER['DOCUMENT_ROOT'] . '/GalMap/map_points.json') ||
+        $lastMapUpdate < $mapUpdateTimeFrame
+    ) {
         $data['update_map'] = 'true';
     }
 

@@ -46,19 +46,19 @@ if (is_dir($settings['log_dir']) && is_readable($settings['log_dir'])) {
         $error = error_get_last();
         write_log('Error: ' . $error['message'], __FILE__, __LINE__);
     }
-    $newest_file = $files[0];
+    $newestFile = $files[0];
 
     /**
      * read file to an array
      */
-    if (!$line = file($settings['log_dir'] . '/' . $newest_file)) {
+    if (!$line = file($settings['log_dir'] . '/' . $newestFile)) {
         $error = error_get_last();
         write_log('Error: ' . $error['message'], __FILE__, __LINE__);
     } else {
         // reverse array
         $lines = array_reverse($line);
 
-        foreach ($lines as $line_num => $line) {
+        foreach ($lines as $lineNum => $line) {
             $pos = strpos($line, 'System:');
             /**
              * skip lines that contain "ProvingGround" because they are CQC systems
@@ -77,18 +77,18 @@ if (is_dir($settings['log_dir']) && is_readable($settings['log_dir'])) {
                  * Regular expression filter to find the visited time
                  */
                 preg_match_all("/\{(.*?)\} System:/", $line, $matches2);
-                $visited_time = $matches2[1][0];
+                $visitedTime = $matches2[1][0];
 
                 /**
                  * Regular expression filter to find the system's coordinates
                  */
                 preg_match_all("/\StarPos:\((.*?)\)/", $line, $matches3);
                 $curSys['coordinates'] = $matches3[1][0];
-                $coord_parts = explode(',', $curSys['coordinates']);
+                $coordParts = explode(',', $curSys['coordinates']);
 
-                $curSys['x'] = $coord_parts[0];
-                $curSys['y'] = $coord_parts[1];
-                $curSys['z'] = $coord_parts[2];
+                $curSys['x'] = $coordParts[0];
+                $curSys['y'] = $coordParts[1];
+                $curSys['z'] = $coordParts[2];
 
                 $curSys['name'] = $curSys['name'] ?? '';
                 $curSys['esc_name'] = $mysqli->real_escape_string($curSys['name']);
@@ -111,7 +111,7 @@ if (is_dir($settings['log_dir']) && is_readable($settings['log_dir'])) {
                 $curSys['simbad_ref'] = '';
                 $curSys['users_own'] = false;
 
-                $sys_name = $mysqli->real_escape_string($curSys['name']);
+                $sysName = $mysqli->real_escape_string($curSys['name']);
 
                 /**
                  * fetch data from edtb_systems
@@ -119,7 +119,7 @@ if (is_dir($settings['log_dir']) && is_readable($settings['log_dir'])) {
                 $query = "  SELECT id, x, y, z, ruling_faction, population, government, allegiance, state,
                             security, economy, power, power_state, needs_permit, updated_at, simbad_ref
                             FROM edtb_systems
-                            WHERE name = '$sys_name'
+                            WHERE name = '$sysName'
                             LIMIT 1";
 
                 $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
@@ -149,7 +149,7 @@ if (is_dir($settings['log_dir']) && is_readable($settings['log_dir'])) {
                 } else {
                     $query = "  SELECT x, y, z
                                 FROM user_systems_own
-                                WHERE name = '$sys_name'
+                                WHERE name = '$sysName'
                                 LIMIT 1";
 
                     $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
@@ -194,9 +194,9 @@ if (is_dir($settings['log_dir']) && is_readable($settings['log_dir'])) {
                 /**
                  * fetch previous system
                  */
-                $prev_system = edtb_common('last_system', 'value');
+                $prevSystem = edtb_common('last_system', 'value');
 
-                if ($prev_system != $cssystemname && !empty($cssystemname)) {
+                if ($prevSystem != $cssystemname && !empty($cssystemname)) {
                     /**
                      * add system to user_visited_systems
                      */
@@ -208,13 +208,13 @@ if (is_dir($settings['log_dir']) && is_readable($settings['log_dir'])) {
                     $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
                     $obj = $result->fetch_object();
 
-                    $visited_on = date('Y-m-d') . ' ' . $visited_time;
+                    $visitedOn = date('Y-m-d') . ' ' . $visitedTime;
 
                     if ($obj->system_name != $curSys['name'] && !empty($curSys['name'])) {
                         $query = "  INSERT INTO user_visited_systems (system_name, visit)
                                     VALUES
-                                    ('$sys_name',
-                                    '$visited_on')";
+                                    ('$sysName',
+                                    '$visitedOn')";
 
                         $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
 
@@ -244,9 +244,9 @@ if (is_dir($settings['log_dir']) && is_readable($settings['log_dir'])) {
                         ) {
                             // figure out the visited time in UTC
                             $dateUTC = new DateTime('now', new DateTimeZone('UTC'));
-                            $visited_time_split = explode(':', $visited_time);
+                            $visitedTimeSplit = explode(':', $visitedTime);
                             $dateLocal = new DateTime();
-                            $dateUTC->setTime($dateUTC->format('G'), $visited_time_split[1], $visited_time_split[2]);
+                            $dateUTC->setTime($dateUTC->format('G'), $visitedTimeSplit[1], $visitedTimeSplit[2]);
                             $visitedTimeUTC = $dateUTC->format('Y-m-d H:i:s');
 
                             $exportData = [

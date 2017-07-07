@@ -44,7 +44,7 @@ require_once __DIR__ . '/Trilateration.php';
 if (isset($_GET['do'])) {
     $data = json_decode($_REQUEST['input']);
 
-    $target_system = $data->{'target_system'};
+    $targetSystem = $data->{'target_system'};
 
     $reference_1_system = $data->{'reference_1'};
     $reference_2_system = $data->{'reference_2'};
@@ -65,13 +65,13 @@ if (isset($_GET['do'])) {
         /**
          * submit to EDSM
          */
-        $json_string = '{
+        $jsonString = '{
         "data": {
             "fromSoftware": "ED ToolBox",
             "fromSoftwareVersion": "' . $settings['edtb_version'] . '",
             "commander": "' . $settings['edsm_cmdr_name'] . '",
             "p0": {
-                "name": "' . $target_system . '"
+                "name": "' . $targetSystem . '"
             },
             "refs": [{
                 "name": "' . $reference_1_system . '",
@@ -93,24 +93,24 @@ if (isset($_GET['do'])) {
             'http' => [
                 'method' => 'POST',
                 'header' => "Content-type: json\r\n" . "Referer: http://www.edsm.net/api-v1/submit-distances\r\n",
-                'content' => $json_string
+                'content' => $jsonString
             ]
         ];
 
         $context = stream_context_create($opts);
 
         $result = file_get_contents('http://www.edsm.net/api-v1/submit-distances', false, $context);
-        $result_j = json_decode($result);
-        $edsm_msg = $result_j->{'basesystem'}->{'msg'};
+        $resultJ = json_decode($result);
+        $edsmMsg = $resultJ->{'basesystem'}->{'msg'};
 
-        write_log('EDSM message: ' . $edsm_msg, __FILE__, __LINE__);
+        write_log('EDSM message: ' . $edsmMsg, __FILE__, __LINE__);
 
-        $edsm_msg = $result_j->{'basesystem'}->{'msgnum'} . ':::' . $edsm_msg;
+        $edsmMsg = $resultJ->{'basesystem'}->{'msgnum'} . ':::' . $edsmMsg;
 
         /**
          * calculate coordinates
          */
-        $reference_distances = $reference_1_system . ':::' . $reference_1_distance . '---' . $reference_2_system . ':::' . $reference_2_distance . '---' . $reference_3_system . ':::' . $reference_3_distance . '---' . $reference_4_system . ':::' . $reference_4_distance;
+        $referenceDistances = $reference_1_system . ':::' . $reference_1_distance . '---' . $reference_2_system . ':::' . $reference_2_distance . '---' . $reference_3_system . ':::' . $reference_3_distance . '---' . $reference_4_system . ':::' . $reference_4_distance;
 
         $reference_1 = explode(',', $reference_1_coordinates);
         $reference_2 = explode(',', $reference_2_coordinates);
@@ -122,37 +122,37 @@ if (isset($_GET['do'])) {
         $system3 = [$reference_3[0], $reference_3[1], $reference_3[2], $reference_3_distance];
         $system4 = [$reference_4[0], $reference_4[1], $reference_4[2], $reference_4_distance];
 
-        $coords_calc = new Trilateration();
-        $newcoords = $coords_calc->trilateration3d($system1, $system2, $system3, $system4);
-        $newcoords_x = $newcoords[0];
-        $newcoords_y = $newcoords[1];
-        $newcoords_z = $newcoords[2];
+        $coordsCalc = new Trilateration();
+        $newcoords = $coordsCalc->trilateration3d($system1, $system2, $system3, $system4);
+        $newcoordsX = $newcoords[0];
+        $newcoordsY = $newcoords[1];
+        $newcoordsZ = $newcoords[2];
 
-        $esc_target_system = $mysqli->real_escape_string($target_system);
-        $esc_reference_distances = $mysqli->real_escape_string($reference_distances);
-        $esc_edsm_msg = $mysqli->real_escape_string($edsm_msg);
+        $escTargetSystem = $mysqli->real_escape_string($targetSystem);
+        $escReferenceDistances = $mysqli->real_escape_string($referenceDistances);
+        $escEdsmMsg = $mysqli->real_escape_string($edsmMsg);
 
-        $system_exists = System::exists($target_system, true);
+        $systemExists = System::exists($targetSystem, true);
 
-        if (!$system_exists) {
+        if (!$systemExists) {
             $stmt = "   INSERT INTO user_systems_own
                         (name, x, y, z, reference_distances, edsm_message)
                         VALUES
-                        ('$esc_target_system',
-                        '$newcoords_x',
-                        '$newcoords_y',
-                        '$newcoords_z',
-                        '$esc_reference_distances',
-                        '$esc_edsm_msg')";
+                        ('$escTargetSystem',
+                        '$newcoordsX',
+                        '$newcoordsY',
+                        '$newcoordsZ',
+                        '$escReferenceDistances',
+                        '$escEdsmMsg')";
         } else {
             $stmt = "   UPDATE user_systems_own
-                        SET name = '$esc_target_system',
-                            x = '$newcoords_x',
-                            y = '$newcoords_y',
-                            z = '$newcoords_z',
-                            reference_distances = '$esc_reference_distances',
-                            edsm_message = '$esc_edsm_msg'
-                        WHERE name = '$esc_target_system'
+                        SET name = '$escTargetSystem',
+                            x = '$newcoordsX',
+                            y = '$newcoordsY',
+                            z = '$newcoordsZ',
+                            reference_distances = '$escReferenceDistances',
+                            edsm_message = '$escEdsmMsg'
+                        WHERE name = '$escTargetSystem'
                         LIMIT 1";
         }
 
@@ -172,5 +172,5 @@ if (isset($_GET['do'])) {
         console.log(e);
     });
 </script>
-<div class="input" id="calculate" style="text-align:center">
+<div class="input" id="calculate" style="text-align: center">
 </div>

@@ -40,7 +40,7 @@ function adminer_object()
 
     // autoloader
     foreach (glob('adminer_plugins/*.php') as $filename) {
-        include_once "./$filename";
+        include_once __DIR__ . '/' . $filename;
     }
 
     $plugins = [

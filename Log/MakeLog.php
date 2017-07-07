@@ -41,8 +41,8 @@ use EDTB\source\System;
  */
 class MakeLog
 {
-    /** @var int $time_difference local time difference from UTC */
-    public $time_difference = 0;
+    /** @var int $timeDifference local time difference from UTC */
+    public $timeDifference = 0;
 
     /**
      * MakeLog constructor.
@@ -67,105 +67,106 @@ class MakeLog
     /**
      * Make log entries
      *
-     * @param \mysqli_result $log_res
+     * @param \mysqli_result $logRes
      * @param string $type
      * @return string $logdata
      * @author Mauri Kujala <contact@edtb.xyz>
      */
-    public function make_log_entries($log_res, $type): string
+    public function makeLogEntries($logRes, $type): string
     {
-        $this_system = '';
-        $this_id = '';
+        $thisSystem = '';
+        $thisId = '';
         $i = 0;
-        while ($obj = $log_res->fetch_object()) {
-            if ($this_id != $obj->id) {
-                $system_name = $obj->system_name === '' ? $obj->log_system_name : $obj->system_name;
-                $log_station_name = $obj->station_name;
-                $log_text = $obj->log_entry;
+        while ($obj = $logRes->fetch_object()) {
+            if ($thisId != $obj->id) {
+                $systemName = $obj->system_name === '' ? $obj->log_system_name : $obj->system_name;
+                $logStationName = $obj->station_name;
+                $logText = $obj->log_entry;
                 $date = date_create($obj->stardate);
-                $log_added = date_modify($date, '+1286 years');
+                $logAdded = date_modify($date, '+1286 years');
                 $distance = $obj->distance !== '' ? number_format($obj->distance, 1) : '';
+                $logData = '';
 
-                if ($this_system != $system_name && $type !== 'general') {
+                if ($thisSystem !== $systemName && $type !== 'general') {
                     $add = $distance != 0 ? ' (distance ' . $distance . ' ly)' : '';
 
                     $sortable = '';
-                    if ($i == 0 && $type !== 'log') {
-                        $sssort = $this->get_sort('slog');
+                    if ($i === 0 && $type !== 'log') {
+                        $sssort = $this->getSort('slog');
 
                         $sortable = '<span class="right">';
                         $sortable .= '<a href="/?slog_sort=' . $sssort . '" title="Sort by date asc/desc">';
-                        $sortable .= '<img class="icon" src="/style/img/sort.png" alt="Sort" style="margin-right:0" />';
+                        $sortable .= '<img class="icon" src="/style/img/sort.png" alt="Sort" style="margin-right: 0">';
                         $sortable .= '</a></span>';
                     }
 
                     /**
                      * provide crosslinks to screenshot gallery, log page, etc
                      */
-                    $l_crosslinks = System::crosslinks($system_name, true, false, false);
+                    $lCrosslinks = System::crosslinks($systemName, true, false, false);
 
-                    $logdata .= '<header><h2><img class="icon" src="/style/img/system_log.png" alt="log" />';
-                    $logdata .= 'System log for <a href="/System?system_name=' . urlencode($system_name) . '">';
-                    $logdata .= $system_name;
-                    $logdata .= '</a>' . $l_crosslinks . $add . $sortable . '</h2></header>';
-                    $logdata .= '<hr>';
+                    $logData .= '<header><h2><img class="icon" src="/style/img/system_log.png" alt="log">';
+                    $logData .= 'System log for <a href="/System?system_name=' . urlencode($systemName) . '">';
+                    $logData .= $systemName;
+                    $logData .= '</a>' . $lCrosslinks . $add . $sortable . '</h2></header>';
+                    $logData .= '<hr>';
                 } elseif ($type === 'general' && $i == 0) {
-                    $gssort = $this->get_sort('glog');
+                    $gssort = $this->getSort('glog');
 
                     $sortable = '<span class="right">';
                     $sortable .= '<a href="/?glog_sort=' . $gssort . '" title="Sort by date asc/desc">';
-                    $sortable .= '<img class="icon" src="/style/img/sort.png" alt="Sort" style="margin-right:0" />';
+                    $sortable .= '<img class="icon" src="/style/img/sort.png" alt="Sort" style="margin-right: 0">';
                     $sortable .= '</a></span>';
 
-                    $logdata .= '<header><h2><img class="icon" src="/style/img/log.png" alt="log" />Commander\'s Log' . $sortable . '</h2></header>';
-                    $logdata .= '<hr>';
+                    $logData .= '<header><h2><img class="icon" src="/style/img/log.png" alt="log">Commander\'s Log' . $sortable . '</h2></header>';
+                    $logData .= '<hr>';
                 }
 
                 /**
                  * get title icons
                  */
-                $title_icons = $this->title_icons($obj);
+                $titleIcons = $this->titleIcons($obj);
 
-                $log_title = !empty($obj->title) ? '&nbsp;&ndash;&nbsp;' . $obj->title : '';
+                $logTitle = !empty($obj->title) ? '&nbsp;&ndash;&nbsp;' . $obj->title : '';
 
-                $logdata .= '<h3>' . $title_icons;
-                $logdata .= '<a href="javascript:void(0)" onclick="toggle_log_edit(\'' . $obj->id . '\')" style="color:inherit" title="Edit entry">';
-                $logdata .= date_format($log_added, 'j M Y, H:i');
+                $logData .= '<h3>' . $titleIcons;
+                $logData .= '<a href="javascript:void(0)" onclick="toggle_log_edit(\'' . $obj->id . '\')" style="color: inherit" title="Edit entry">';
+                $logData .= date_format($logAdded, 'j M Y, H:i');
 
-                if (!empty($log_station_name)) {
-                    $logdata .= '&nbsp;[Station: ' . htmlspecialchars($log_station_name) . ']';
+                if (!empty($logStationName)) {
+                    $logData .= '&nbsp;[Station: ' . htmlspecialchars($logStationName) . ']';
                 }
 
-                $logdata .= $log_title;
-                $logdata .= '</a></h3>';
-                $logdata .= '<pre class="entriespre" style="margin-bottom:20px">';
+                $logData .= $logTitle;
+                $logData .= '</a></h3>';
+                $logData .= '<pre class="entriespre" style="margin-bottom: 20px">';
 
                 if (!empty($obj->audio)) {
-                    $logdata .= $this->get_audio($obj);
+                    $logData .= $this->getAudio($obj);
                 }
 
-                $logdata .= $log_text;
-                $logdata .= '</pre>';
+                $logData .= $logText;
+                $logData .= '</pre>';
             }
 
-            $this_system = $system_name;
-            $this_id = $obj->id;
+            $thisSystem = $systemName;
+            $thisId = $obj->id;
             $i++;
         }
 
-        return $logdata;
+        return $logData;
     }
 
     /**
      * Get sort ascending/descending
      *
-     * @param string $to_sort
+     * @param string $toSort
      * @return string
      * @internal param string $sort
      */
-    private function get_sort($to_sort): string
+    private function getSort($toSort): string
     {
-        $gsort = $_GET[$to_sort . '_sort'];
+        $gsort = $_GET[$toSort . '_sort'];
 
         if (isset($gsort) && $gsort !== 'undefined') {
             if ($gsort === 'asc') {
@@ -187,16 +188,16 @@ class MakeLog
      * @param object $obj
      * @return string
      */
-    private function title_icons($obj): string
+    private function titleIcons($obj): string
     {
         // check if log is pinned
-        $pinned = $obj->pinned == '1' ? '<img class="icon" src="/style/img/pinned.png" alt="Pinned" />' : '';
+        $pinned = $obj->pinned == '1' ? '<img class="icon" src="/style/img/pinned.png" alt="Pinned">' : '';
 
         // check if log is personal
-        $personal .= $obj->type === 'personal' ? '<img class="icon" src="/style/img/user.png" alt="Personal" />' : '';
+        $personal = $obj->type === 'personal' ? '<img class="icon" src="/style/img/user.png" alt="Personal">' : '';
 
         // check if log has audio
-        $audio .= $obj->audio !== '' ? '<a href="javascript:void(0)" onclick="$(\'#' . $obj->id . '\').fadeToggle(\'fast\')" title="Listen to audio logs"><img class="icon" src="/style/img/audio.png" alt="Audio" /></a>' : '';
+        $audio = $obj->audio !== '' ? '<a href="javascript:void(0)" onclick="$(\'#' . $obj->id . '\').fadeToggle(\'fast\')" title="Listen to audio logs"><img class="icon" src="/style/img/audio.png" alt="Audio"></a>' : '';
 
         return $pinned . $personal . $audio;
     }
@@ -207,36 +208,36 @@ class MakeLog
      * @param object $obj
      * @return string
      */
-    private function get_audio($obj): string
+    private function getAudio($obj): string
     {
-        $logdata .= '<div class="audio" id="' . $obj->id . '" style="display:none">';
+        $logdata = '<div class="audio" id="' . $obj->id . '" style="display: none">';
 
-        $audio_files = explode(', ', $obj->audio);
+        $audioFiles = explode(', ', $obj->audio);
 
-        foreach ($audio_files as $audio_file) {
-            $file = $_SERVER['DOCUMENT_ROOT'] . '/audio_logs/' . $audio_file;
-            $file_src = '/audio_logs/' . $audio_file;
+        foreach ($audioFiles as $audioFile) {
+            $file = $_SERVER['DOCUMENT_ROOT'] . '/audio_logs/' . $audioFile;
+            $fileSrc = '/audio_logs/' . $audioFile;
 
             if (file_exists($file)) {
-                $timestamp = filemtime($file) + ($this->time_difference * 60 * 60);
-                $record_date = date('Y-m-d H:i:s', $timestamp);
-                $date = date_create($record_date);
+                $timestamp = filemtime($file) + ($this->timeDifference * 60 * 60);
+                $recordDate = date('Y-m-d H:i:s', $timestamp);
+                $date = date_create($recordDate);
                 $record = date_modify($date, '+1286 years');
-                $record_added = date_format($record, 'j M Y, H:i');
-                $added_ago = get_timeago($timestamp);
+                $recordAdded = date_format($record, 'j M Y, H:i');
+                $addedAgo = get_timeago($timestamp);
 
-                $logdata .= '<div style="margin-bottom:4px;margin-top:6px;margin-left:3px">';
-                $logdata .= 'Added: ' . $record_added . ' (' . $added_ago . ')';
+                $logdata .= '<div style="margin-bottom: 4px;  margin-top: 6px; margin-left: 3px">';
+                $logdata .= 'Added: ' . $recordAdded . ' (' . $addedAgo . ')';
                 $logdata .= '</div>';
                 $logdata .= '<div>';
                 $logdata .= '<audio controls>';
-                $logdata .= '<source src="' . $file_src . '" type="audio/mp3">';
+                $logdata .= '<source src="' . $fileSrc . '" type="audio/mp3">';
                 $logdata .= 'Your browser does not support the audio element.';
                 $logdata .= '</audio>';
                 $logdata .= '</div>';
             }
         }
-        unset($audio_file);
+
         $logdata .= '</div>';
 
         return $logdata;
@@ -247,68 +248,68 @@ class MakeLog
      *
      * @param object $data
      */
-    public function add_log($data)
+    public function addLog($data)
     {
-        $l_system_name = $data->{'system_name'};
-        $l_station_name = $data->{'station_name'};
-        $l_entry = $data->{'log_entry'};
-        $l_id = $data->{'edit_id'};
-        $l_type = $data->{'log_type'};
-        $l_pinned = $data->{'pinned'} == '1' ? '1' : '0';
-        $l_weight = $data->{'weight'};
-        $l_title = $data->{'title'};
-        $l_audiofiles = $data->{'audiofiles'};
+        $lSystemName = $data->{'system_name'};
+        $lStationName = $data->{'station_name'};
+        $lEntry = $data->{'log_entry'};
+        $lId = $data->{'edit_id'};
+        $lType = $data->{'log_type'};
+        $lPinned = $data->{'pinned'} == '1' ? '1' : '0';
+        $lWeight = $data->{'weight'};
+        $lTitle = $data->{'title'};
+        $lAudiofiles = $data->{'audiofiles'};
 
-        $esc_system_name = $this->mysqli->real_escape_string($l_system_name);
-        $esc_station_name = $this->mysqli->real_escape_string($l_station_name);
-        $esc_entry = $this->mysqli->real_escape_string($l_entry);
-        $esc_title = $this->mysqli->real_escape_string($l_title);
-        $esc_audiofiles = $this->mysqli->real_escape_string($l_audiofiles);
+        $escSystemName = $this->mysqli->real_escape_string($lSystemName);
+        $escStationName = $this->mysqli->real_escape_string($lStationName);
+        $escEntry = $this->mysqli->real_escape_string($lEntry);
+        $escTitle = $this->mysqli->real_escape_string($lTitle);
+        $escAudiofiles = $this->mysqli->real_escape_string($lAudiofiles);
 
         /**
          * get system id
          */
-        $l_system = $this->get_id('system', $esc_system_name);
+        $lSystem = $this->getId('system', $escSystemName);
 
         /**
          * get station id
          */
-        $l_station = $this->get_id('station', '', $esc_station_name, $l_system);
+        $lStation = $this->getId('station', '', $escStationName, $lSystem);
 
-        if ($l_system_name === '') {
-            $l_system = '0';
+        if ($lSystemName === '') {
+            $lSystem = '0';
         }
 
-        if ($l_id !== '') {
+        if ($lId !== '') {
             $query = "  UPDATE user_log SET
-                        system_id = '$l_system',
-                        system_name = '$esc_system_name',
-                        station_id = '$l_station',
-                        log_entry = '$esc_entry',
-                        title = '$esc_title',
-                        type = '$l_type',
-                        weight = '$l_weight',
-                        pinned = '$l_pinned',
-                        audio = '$esc_audiofiles'
-                        WHERE id = '$l_id'
+                        system_id = '$lSystem',
+                        system_name = '$escSystemName',
+                        station_id = '$lStation',
+                        log_entry = '$escEntry',
+                        title = '$escTitle',
+                        type = '$lType',
+                        weight = '$lWeight',
+                        pinned = '$lPinned',
+                        audio = '$escAudiofiles'
+                        WHERE id = '$lId'
                         LIMIT 1";
 
             $this->mysqli->query($query) or write_log($this->mysqli->error, __FILE__, __LINE__);
 
         } elseif (isset($_GET['deleteid'])) {
-            $this->delete_log();
+            $this->deleteLog();
         } else {
             $query = "  INSERT INTO user_log (system_id, system_name, station_id, log_entry, title, weight, pinned, type, audio)
                         VALUES
-                        ('$l_system',
-                        '$esc_system_name',
-                        '$l_station',
-                        '$esc_entry',
-                        '$esc_title',
-                        '$l_weight',
-                        '$l_pinned',
-                        '$l_type',
-                        '$esc_audiofiles')";
+                        ('$lSystem',
+                        '$escSystemName',
+                        '$lStation',
+                        '$escEntry',
+                        '$escTitle',
+                        '$lWeight',
+                        '$lPinned',
+                        '$lType',
+                        '$escAudiofiles')";
 
             $this->mysqli->query($query) or write_log($this->mysqli->error, __FILE__, __LINE__);
         }
@@ -318,17 +319,17 @@ class MakeLog
      * Get system or station id
      *
      * @param string $what
-     * @param string $esc_system_name
-     * @param string $esc_station_name
-     * @param string $l_system
+     * @param string $escSystemName
+     * @param string $escStationName
+     * @param string $lSystem
      * @return mixed
      */
-    public function get_id($what, $esc_system_name = '', $esc_station_name = '', $l_system = '')
+    public function getId($what, $escSystemName = '', $escStationName = '', $lSystem = '')
     {
         if ($what === 'system') {
             $query = "  SELECT id AS system_id
                         FROM edtb_systems
-                        WHERE name = '$esc_system_name'
+                        WHERE name = '$escSystemName'
                         LIMIT 1";
 
             $result = $this->mysqli->query($query) or write_log($this->mysqli->error, __FILE__, __LINE__);
@@ -340,8 +341,8 @@ class MakeLog
         } elseif ($what === 'station') {
             $query = "  SELECT id AS station_id
                         FROM edtb_stations
-                        WHERE name = '$esc_station_name'
-                        AND system_id = '$l_system'
+                        WHERE name = '$escStationName'
+                        AND system_id = '$lSystem'
                         LIMIT 1";
 
             $result = $this->mysqli->query($query) or write_log($this->mysqli->error, __FILE__, __LINE__);
@@ -358,7 +359,7 @@ class MakeLog
     /**
      * Delete log entry
      */
-    private function delete_log()
+    private function deleteLog()
     {
         $query = "  SELECT audio
                     FROM user_log
@@ -372,10 +373,10 @@ class MakeLog
 
         $result->close();
 
-        $audio_files = explode(', ', $audio);
+        $audioFiles = explode(', ', $audio);
 
-        foreach ($audio_files as $audio_file) {
-            $file = $_SERVER['DOCUMENT_ROOT'] . '/audio_logs/' . $audio_file;
+        foreach ($audioFiles as $audioFile) {
+            $file = $_SERVER['DOCUMENT_ROOT'] . '/audio_logs/' . $audioFile;
 
             if (file_exists($file) && is_file($file)) {
                 if (!unlink($file)) {
@@ -384,7 +385,6 @@ class MakeLog
                 }
             }
         }
-        unset($audio_file);
 
         $query = "  DELETE FROM user_log
                     WHERE id = '" . $_GET['deleteid'] . "'

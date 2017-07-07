@@ -45,11 +45,11 @@ require_once __DIR__ . '/functions_safe.php';
 /**
  * Expand the $settings global variable with stuff from the database
  */
-$settings_res = ' SELECT SQL_CACHE user_settings.variable, user_settings.value, edtb_settings_info.type
+$settingsRes = ' SELECT SQL_CACHE user_settings.variable, user_settings.value, edtb_settings_info.type
                   FROM user_settings
                   LEFT JOIN edtb_settings_info ON edtb_settings_info.variable = user_settings.variable';
 
-$result = $mysqli->query($settings_res) or write_log($mysqli->error, __FILE__, __LINE__);
+$result = $mysqli->query($settingsRes) or write_log($mysqli->error, __FILE__, __LINE__);
 
 /**
  * fetch object array
@@ -70,13 +70,13 @@ while ($obj = $result->fetch_object()) {
                 $var = $parts[0];
                 $val = $parts[1];
 
-                $values_s = explode(',', $val);
-                $count = count($values_s);
+                $valuesS = explode(',', $val);
+                $count = count($valuesS);
 
                 if ($count > 1) {
                     $i = 0;
-                    foreach ($values_s as $val_f) {
-                        $settings[$variable][$var][$i] = $val_f;
+                    foreach ($valuesS as $valF) {
+                        $settings[$variable][$var][$i] = $valF;
                         $i++;
                     }
                 } else {
@@ -99,7 +99,7 @@ while ($obj = $result->fetch_object()) {
 
 $result->close();
 
-$dropdown = $settings["dropdown"];
+$dropdown = $settings['dropdown'];
 array_push($dropdown, $settings['maxdistance']);
 
 /** @constant string galnet_feed feed url for galnet news page */
@@ -118,17 +118,17 @@ $settings['curl_exe'] = $settings['install_path'] . "\\bin\\curl.exe";
 /**
  * parse data from companion json
  */
-$profile_file = $_SERVER['DOCUMENT_ROOT'] . '/cache/profile.json';
+$profileFile = $_SERVER['DOCUMENT_ROOT'] . '/cache/profile.json';
 
-if (file_exists($profile_file)) {
-    $profile_file = file_get_contents($profile_file);
+if (file_exists($profileFile)) {
+    $profileFile = file_get_contents($profileFile);
 
-    if ($profile_file === 'no_data') {
+    if ($profileFile === 'no_data') {
         $api['commander'] = 'no_data';
         $api['ship'] = 'no_data';
         $api['stored_ships'] = 'no_data';
     } else {
-        $profile = json_decode($profile_file);
+        $profile = json_decode($profileFile);
 
         $api['commander'] = $profile->{'commander'};
         $api['ship'] = $profile->{'ship'};

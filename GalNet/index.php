@@ -42,12 +42,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/style/Theme.php';
 $header = new Header();
 
 /** @var string page_title */
-$header->page_title = 'Galnet News';
+$header->pageTitle = 'Galnet News';
 
 /**
  * display the header
  */
-$header->display_header();
+$header->displayHeader();
 
 /**
  * get cached content
@@ -59,7 +59,7 @@ if ($html === null) {
     ?>
     <div class="entries">
         <div class="entries_inner">
-            <h2><img class="icon24" src="/style/img/galnet.png" alt="GalNet" style="margin-right:6px"/>Latest Galnet News</h2>
+            <h2><img class="icon24" src="/style/img/galnet.png" alt="GalNet" style="margin-right: 6px"/>Latest Galnet News</h2>
             <hr>
             <?php
             $rss = new DOMDocument();
@@ -101,16 +101,16 @@ if ($html === null) {
                     ?>
                     <h3>
                         <a href="javascript:void(0)" onclick="$('#<?= $i ?>').fadeToggle()">
-                            <img class="icon" src="/style/img/plus.png" alt="expand" style="padding-bottom:3px"/><?= $title ?>
+                            <img class="icon" src="/style/img/plus.png" alt="expand" style="padding-bottom: 3px"/><?= $title ?>
                         </a>
                     </h3>
-                    <div id="<?= $i ?>" style="display:none;padding-left:22px;max-width:800px">
+                    <div id="<?= $i ?>" style="display: none; padding-left:22px;max-width: 800px">
                         <?= $text ?>
                         <br><br>
-                        <span style="margin-bottom:15px">
+                        <span style="margin-bottom: 15px">
                             <a href="<?= $link ?>" target="_blank">
                                 Read on news.galnet.fr
-                            </a><img class="ext_icon" src="/style/img/external_link.png" style="margin-bottom:3px" alt="ext"/>
+                            </a><img class="ext_icon" src="/style/img/external_link.png" style="margin-bottom: 3px" alt="ext"/>
                         </span>
                     </div>
                     <?php
@@ -133,7 +133,7 @@ if ($html === null) {
     /**
      * display the footer
      */
-    $footer->display_footer();
+    $footer->displayFooter();
 
     exit;
 }
@@ -147,4 +147,4 @@ $footer = new Footer();
 /**
  * display the footer
  */
-$footer->display_footer();
+$footer->displayFooter();

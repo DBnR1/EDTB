@@ -45,7 +45,7 @@ if (isset($_GET['do'])) {
     $data = json_decode($_REQUEST['input']);
 
     $addLog = new MakeLog();
-    $addLog->add_log($data);
+    $addLog->addLog($data);
 
     exit;
 }
@@ -53,15 +53,15 @@ if (isset($_GET['do'])) {
 <div class="input" id="addlog">
     <form method="post" id="log_form" action="/">
         <div class="input-inner">
-            <div class="suggestions" id="suggestions_1" style="margin-left:8px;margin-top:130px"></div>
-            <div class="suggestions" id="suggestions_41" style="margin-left:402px;margin-top:130px"></div>
+            <div class="suggestions" id="suggestions_1" style="margin-left: 8px; margin-top: 130px"></div>
+            <div class="suggestions" id="suggestions_41" style="margin-left: 402px; margin-top: 130px"></div>
             <table>
                 <thead>
                     <tr>
                         <td class="heading" colspan="2">Add/Edit Log Entry
                             <span class="right">
                                 <a href="javascript:void(0)" id="close_form" title="Close form">
-                                    <img src="/style/img/close.png" class="icon" alt="X" />
+                                    <img src="/style/img/close.png" class="icon" alt="X">
                                 </a>
                             </span>
                         </td>
@@ -69,39 +69,39 @@ if (isset($_GET['do'])) {
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="dark" style="text-align:left;white-space:nowrap">
-                            <input type="hidden" name="edit_id" id="edit_id" />
+                        <td class="dark" style="text-align: left; white-space: nowrap">
+                            <input type="hidden" name="edit_id" id="edit_id">
                             <select title="Type" class="selectbox" name="log_type" id="log_type">
                                 <option value="system">Type: System log</option>
                                 <option value="general">Type: General log</option>
                                 <option value="personal">Type: System log (Personal)</option>
                             </select>
                             <fieldset>
-                                <input type="checkbox" id="pinned" name="pinned" value="1" disabled="disabled" />
+                                <input type="checkbox" id="pinned" name="pinned" value="1" disabled="disabled">
                                 <label for="pinned" id="label"></label>
-                                <span id="pin_click" style="vertical-align:middle">
+                                <span id="pin_click" style="vertical-align: middle">
                                     &nbsp;Pin to top
                                 </span>&nbsp;&nbsp;
-                                <select title="Weight" class="selectbox" id="weight" name="weight" style="display:none">
+                                <select title="Weight" class="selectbox" id="weight" name="weight" style="display: none">
                                     <?php
                                     for ($i = -30; $i < 31; $i++) {
-                                        $selected = $i == 0 ? ' selected="selected"' : '';
-                                        echo '<option value="' . $i . '"' . $selected . '>Weight ' . $i . '</option>';
+                                        $selected = $i === 0 ? 'selected="selected"' : '';
+                                        echo '<option value="' . $i . '" ' . $selected . '>Weight ' . $i . '</option>';
                                     }
                                     ?>
                                 </select>
                             </fieldset>
                         </td>
                         <td class="dark" style="text-align:right;width:50%">
-                            <input class="textbox" type="text" name="title" id="title" placeholder="Log title (optional)" style="width:96%;margin-left:0" />
+                            <input class="textbox" type="text" name="title" id="title" placeholder="Log title (optional)" style="width:96%;margin-left: 0">
                         </td>
                     </tr>
                     <tr>
                         <td class="dark" style="text-align:left;width:50%">
-                            <input class="textbox" type="text" name="system_name" placeholder="System name" id="system_1" style="width:96%;margin-left:0" oninput="showResult(this.value, '1')" />
+                            <input class="textbox" type="text" name="system_name" placeholder="System name" id="system_1" style="width:96%;margin-left: 0" oninput="showResult(this.value, '1')">
                         </td>
                         <td class="dark" style="text-align:right;width:50%">
-                            <input class="textbox" type="text" name="station_name" placeholder="Station name (optional)" id="statname" style="width:96%" oninput="showResult(this.value, '41', 'no', 'yes', 'no', $('#system_1').val())" />
+                            <input class="textbox" type="text" name="station_name" placeholder="Station name (optional)" id="statname" style="width:96%" oninput="showResult(this.value, '41', 'no', 'yes', 'no', $('#system_1').val())">
                         </td>
                     </tr>
                     <tr>
@@ -110,21 +110,21 @@ if (isset($_GET['do'])) {
                         </td>
                     </tr>
                     <tr>
-                        <td class="dark" colspan="2" style="vertical-align:middle">
-                            <span id="audio_log" class="left" style="text-align:left;margin-left:6px"></span>
+                        <td class="dark" colspan="2" style="vertical-align: middle">
+                            <span id="audio_log" class="left" style="text-align: left; margin-left: 6px"></span>
                             <span class="right">
                                 <a href="javascript:void(0)" title="Enable audio log" id="enable_audio">
                                     Enable audio
                                 </a>
-                                <a href="javascript:void(0)" title="Start recording audio" id="record_click" style="display:none">
-                                    <img class="icon24" src="/style/img/record.png" alt="Rec" id="record" style="margin-top:10px;margin-bottom:10px" />
+                                <a href="javascript:void(0)" title="Start recording audio" id="record_click" style="display: none">
+                                    <img class="icon24" src="/style/img/record.png" alt="Rec" id="record" style="margin-top: 10px; margin-bottom: 10px">
                                 </a>
-                                <a href="javascript:void(0)" title="Stop recording audio" id="stop_click" style="display:none">
-                                    <img class="icon24" src="/style/img/stop.png" alt="Stop" id="stop" style="margin-top:10px;margin-bottom:10px" />
+                                <a href="javascript:void(0)" title="Stop recording audio" id="stop_click" style="display: none">
+                                    <img class="icon24" src="/style/img/stop.png" alt="Stop" id="stop" style="margin-top: 10px; margin-bottom: 10px">
                                 </a>
                             </span>
                             <ul id="recordingslist"></ul>
-                            <input id="audiofiles" type="hidden" name="audiofiles" value="" />
+                            <input id="audiofiles" type="hidden" name="audiofiles" value="">
                         </td>
                     </tr>
                     <tr>
@@ -141,12 +141,12 @@ if (isset($_GET['do'])) {
     </form>
 </div>
 <script>
-    var enable_audio = $("#enable_audio"),
-        record_click = $("#record_click"),
-        stop_click = $("#stop_click"),
-        pin_click = $("#pin_click"),
-        pinned = $("#pinned"),
-        weight = $("#weight");
+    var enable_audio = $('#enable_audio'),
+        record_click = $('#record_click'),
+        stop_click = $('#stop_click'),
+        pin_click = $('#pin_click'),
+        pinned = $('#pinned'),
+        weight = $('#weight');
 
     enable_audio.click(function()
     {
@@ -160,7 +160,7 @@ if (isset($_GET['do'])) {
         startRecording(this);
         record_click.hide();
         stop_click.show();
-        //$("#stop").attr("src", "/style/img/stop.png");
+        //$('#stop').attr("src", "/style/img/stop.png");
     });
 
     stop_click.click(function()
@@ -185,52 +185,52 @@ if (isset($_GET['do'])) {
         weight.val("0");
     });
 
-    $("#close_form").click(function()
+    $('#close_form').click(function()
     {
         tofront("addlog");
         $(".addstations").toggle();
-        $("#log_form")[0].reset();
+        $('#log_form')[0].reset();
     });
 
-    $("#submit_log").click(function()
+    $('#submit_log').click(function()
     {
         update_data("log_form", "/Log/add_log.php?do", true);
         tofront("null", true);
-        $("#log_form")[0].reset();
-        $("#recordingslist").html("");
+        $('#log_form')[0].reset();
+        $('#recordingslist').html("");
         return false
     });
 </script>
 <script>
-    var log_type = $("#log_type");
+    var log_type = $('#log_type');
 
     log_type.change(function()
     {
         log_type.find("option:selected").each(function()
         {
             var value = $(this).val(),
-                system_1 = $("#system_1"),
-                statname = $("#statname");
+                system_1 = $('#system_1'),
+                statname = $('#statname');
 
-            if (value == "general")
+            if (value === "general")
             {
-                system_1.val("");
+                system_1.val('');
                 system_1.hide();
-                statname.val("");
+                statname.val('');
                 statname.hide();
             }
-            else if (value == "system")
+            else if (value === "system")
             {
                 statname.show();
                 system_1.show();
-                get_cs("system_1");
+                get_cs('system_1');
                 system_1.attr("placeholder", "System name");
             }
-            else if (value == "personal")
+            else if (value === "personal")
             {
                 statname.show();
                 system_1.show();
-                get_cs("system_1");
+                get_cs('system_1');
             }
         });
     }).change();

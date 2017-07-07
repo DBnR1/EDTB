@@ -40,44 +40,48 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
     /**
      * first try the dismbiguation
      */
-    $url = 'https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&redirects=&exsectionformat=plain&titles=' . strtolower($search) . '_(disambiguation)';
+    $url = 'https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&redirects=&exsectionformat=plain&titles=' .
+        strtolower($search) . '_(disambiguation)';
 
     if ($result = file_get_contents($url)) {
-        $json_data = json_decode($result);
-        $titles = $json_data->{'query'}->{'pages'};
+        $jsonData = json_decode($result);
+        $titles = $jsonData->{'query'}->{'pages'};
 
         $count = 0;
         foreach ($titles as $title) {
-            $title_extract = $title->{'extract'};
+            $titleExtract = $title->{'extract'};
 
-            preg_match_all("/\<p>.*?\<\/p>/", $title_extract, $matches);
+            preg_match_all("/\<p>.*?\<\/p>/", $titleExtract, $matches);
 
             foreach ($matches as $match) {
-                foreach ($match as $title_m) {
-                    $title_m_o = $title_m;
-                    $title_m = str_replace('<p>', '', $title_m);
-                    $title_m = str_replace('</p>', '', $title_m);
+                foreach ($match as $titleM) {
+                    $titleMO = $titleM;
+                    $titleM = str_replace('<p>', '', $titleM);
+                    $titleM = str_replace('</p>', '', $titleM);
 
-                    if (strpos($title_m, ' was ') === false) {
-                        $title_link = explode(',', $title_m);
+                    if (strpos($titleM, ' was ') === false) {
+                        $titleLink = explode(',', $titleM);
                     } else {
-                        $title_link = explode(' was ', $title_m);
+                        $titleLink = explode(' was ', $titleM);
                     }
 
-                    if (strpos($title_m, ' is ') !== false) {
-                        $title_link = explode(' is ', $title_m);
+                    if (strpos($titleM, ' is ') !== false) {
+                        $titleLink = explode(' is ', $titleM);
                     }
 
-                    $title_link = explode('(', $title_link[0]);
-                    $title_first = str_replace(' ', '_', strip_tags(trim($title_link[0])));
+                    $titleLink = explode('(', $titleLink[0]);
+                    $titleFirst = str_replace(' ', '_', strip_tags(trim($titleLink[0])));
 
-                    if (strpos($title_m, 'refer') === false) {
-                        $title_rest = str_replace($title_m, '<ul><li><a href="https://en.wikipedia.org/wiki/' . $title_first . '" target="_blank">' . $title_m . '<img src="/style/img/external_link.png" class="ext_link" alt="ext" style="margin-left:3px" /></a></li></ul>', $title_m);
+                    if (strpos($titleM, 'refer') === false) {
+                        $titleRest = str_replace($titleM,
+                            '<ul><li><a href="https://en.wikipedia.org/wiki/' . $titleFirst . '" target="_blank">' . $titleM .
+                            '<img src="/style/img/external_link.png" class="ext_link" alt="ext" style="margin-left: 3px"></a></li></ul>',
+                            $titleM);
                     } else {
-                        $title_rest = str_replace($title_m, '<ul><li>' . $title_m . '</li></ul>', $title_m);
+                        $titleRest = str_replace($titleM, '<ul><li>' . $titleM . '</li></ul>', $titleM);
                     }
 
-                    echo $title_rest;
+                    echo $titleRest;
 
                     $also = ' also';
 
@@ -85,31 +89,34 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
                 }
             }
 
-            if ($count === 0 && strpos($title_rest, 'refer') === false) {
+            if ($count === 0 && strpos($titleRest, 'refer') === false) {
                 $text = '<div class="searchtitle">' . $_GET['search'] . ' may' . $also . ' refer to:</div>';
             }
 
-            if ($count === 0 && strpos($title_rest, 'include') !== false) {
+            if ($count === 0 && strpos($titleRest, 'include') !== false) {
                 $text = '';
             }
 
             echo $text;
             echo '<ul>';
 
-            preg_match_all("/\<li>.*?\\n/", $title_extract, $matches);
+            preg_match_all("/\<li>.*?\\n/", $titleExtract, $matches);
 
             foreach ($matches as $match) {
                 $i = 0;
-                foreach ($match as $title_m) {
-                    $title_m = str_replace('<li>', '', $title_m);
-                    $title_m = str_replace('</li>', '', $title_m);
-                    $title_link = explode(',', $title_m);
-                    $title_link = preg_split('/\(\d/', $title_link[0]);
-                    $title_first = str_replace(' ', '_', strip_tags(trim($title_link[0])));
+                foreach ($match as $titleM) {
+                    $titleM = str_replace('<li>', '', $titleM);
+                    $titleM = str_replace('</li>', '', $titleM);
+                    $titleLink = explode(',', $titleM);
+                    $titleLink = preg_split('/\(\d/', $titleLink[0]);
+                    $titleFirst = str_replace(' ', '_', strip_tags(trim($titleLink[0])));
 
-                    $title_rest = str_replace($title_m, '<li><a href="https://en.wikipedia.org/wiki/' . $title_first . '" target="_blank">' . $title_m . '</a><img src="/style/img/external_link.png" class="ext_link" alt="ext" style="margin-left:3px" /></li>', $title_m);
+                    $titleRest = str_replace($titleM,
+                        '<li><a href="https://en.wikipedia.org/wiki/' . $titleFirst . '" target="_blank">' . $titleM .
+                        '</a><img src="/style/img/external_link.png" class="ext_link" alt="ext" style="margin-left: 3px"></li>',
+                        $titleM);
 
-                    echo $title_rest;
+                    echo $titleRest;
 
                     if ($i === 15) {
                         break 2;
@@ -127,41 +134,42 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
     /**
      * if that yields no results, try the direct approach
      */
-    if ($i == 0) {
-        $url = 'https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exsectionformat=plain&titles=' . strtolower($search);
+    if ($i === 0) {
+        $url = 'https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exsectionformat=plain&titles=' .
+            strtolower($search);
 
         if ($result = file_get_contents($url)) {
-            $json_data = json_decode($result);
-            $titles = $json_data->{'query'}->{'pages'};
+            $jsonData = json_decode($result);
+            $titles = $jsonData->{'query'}->{'pages'};
 
             foreach ($titles as $title) {
-                $title_extract = $title->{'extract'};
+                $titleExtract = $title->{'extract'};
 
-                preg_match_all("/\<li>.*?\<\/li>/", $title_extract, $matches);
+                preg_match_all("/\<li>.*?\<\/li>/", $titleExtract, $matches);
 
                 foreach ($matches as $match) {
-                    foreach ($match as $title_m) {
-                        $title_m = str_replace('<li>', '', $title_m);
-                        $title_m = str_replace('</li>', '', $title_m);
-                        $title_link = explode(',', $title_m);
-                        $title_link = preg_split('/\(\d/', $title_link[0]);
-                        $title_first = str_replace(' ', '_', strip_tags(trim($title_link[0])));
+                    foreach ($match as $titleM) {
+                        $titleM = str_replace('<li>', '', $titleM);
+                        $titleM = str_replace('</li>', '', $titleM);
+                        $titleLink = explode(',', $titleM);
+                        $titleLink = preg_split('/\(\d/', $titleLink[0]);
+                        $titleFirst = str_replace(' ', '_', strip_tags(trim($titleLink[0])));
 
-                        $title_rest = str_replace($title_m, '<li><a href="https://en.wikipedia.org/wiki/' . $title_first . '" target="_blank">' . $title_m . '</a><img src="/style/img/external_link.png" class="ext_link" alt="ext" style="margin-left:3px" /></li>', $title_m);
+                        $titleRest = str_replace($titleM,
+                            '<li><a href="https://en.wikipedia.org/wiki/' . $titleFirst . '" target="_blank">' . $titleM .
+                            '</a><img src="/style/img/external_link.png" class="ext_link" alt="ext" style="margin-left: 3px"></li>',
+                            $titleM);
 
-                        echo $title_rest;
+                        echo $titleRest;
 
-                        if ($i == 15) {
+                        if ($i === 15) {
                             break 2;
                         }
 
                         $i++;
                     }
-                    unset($title_m);
                 }
-                unset($match);
             }
-            unset($title);
         } else {
             write_log('Error: Failed to contact Wikipedia', __FILE__, __LINE__);
         }
@@ -170,7 +178,7 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
     /**
      * if nothing's still found, give up
      */
-    if ($i == 0) {
+    if ($i === 0) {
         echo '<li>Nothing found...</li>';
     }
 

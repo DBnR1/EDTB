@@ -39,12 +39,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/style/Theme.php';
 $header = new Header();
 
 /** @var string page_title */
-$header->page_title = 'Points of Interest&nbsp;&nbsp;&&nbsp;&nbsp;Bookmarks';
+$header->pageTitle = 'Points of Interest&nbsp;&nbsp;&&nbsp;&nbsp;Bookmarks';
 
 /**
  * display the header
  */
-$header->display_header();
+$header->displayHeader();
 
 require_once __DIR__ . '/add_poi.php';
 ?>
@@ -62,4 +62,4 @@ $footer = new Footer();
 /**
  * display the footer
  */
-$footer->display_footer();
+$footer->displayFooter();

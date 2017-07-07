@@ -44,20 +44,20 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/style/Theme.php';
 $header = new Header();
 
 /** @var string page_title */
-$header->page_title = 'Data Point';
+$header->pageTitle = 'Data Point';
 
 /**
  * display the header
  */
-$header->display_header();
+$header->displayHeader();
 
 /** @require functions file */
 require_once __DIR__ . '/functions.php';
 /** @require MySQL table edit class */
 require_once __DIR__ . '/Vendor/MySQL_table_edit/mte.php';
 
-/** @var string $data_table */
-$data_table = $_GET['table'] ?? $settings['data_view_default_table'];
+/** @var string $dataTable */
+$dataTable = $_GET['table'] ?? $settings['data_view_default_table'];
 
 /**
  * initate MySQLtabledit class
@@ -65,23 +65,23 @@ $data_table = $_GET['table'] ?? $settings['data_view_default_table'];
 $tabledit = new MySQLtabledit();
 
 /** @var string table */
-$tabledit->table = $data_table;
+$tabledit->table = $dataTable;
 
 /**
  * get column comment from database to use as a name for the fields
  */
 $query = "  SELECT COLUMN_NAME, COLUMN_COMMENT
             FROM INFORMATION_SCHEMA.COLUMNS
-            WHERE table_name = '$data_table'";
+            WHERE table_name = '$dataTable'";
 
 $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
 
 $output = [];
 $showt = [];
 
-while ($column_obj = $result->fetch_object()) {
-    $output[] = $column_obj->COLUMN_NAME;
-    $showt[$column_obj->COLUMN_NAME] = $column_obj->COLUMN_COMMENT;
+while ($columnObj = $result->fetch_object()) {
+    $output[] = $columnObj->COLUMN_NAME;
+    $showt[$columnObj->COLUMN_NAME] = $columnObj->COLUMN_COMMENT;
 }
 
 $result->close();
@@ -90,7 +90,7 @@ $result->close();
 $tabledit->links_to_db = $settings['data_view_table'];
 
 /** @var array skip */
-$tabledit->skip = $settings['data_view_ignore'][$data_table];
+$tabledit->skip = $settings['data_view_ignore'][$dataTable];
 
 /** @var string primary_key the primary key of the table (must be AUTO_INCREMENT) */
 $tabledit->primary_key = 'id';
@@ -128,4 +128,4 @@ $footer = new Footer();
 /**
  * display the footer
  */
-$footer->display_footer();
+$footer->displayFooter();

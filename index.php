@@ -39,15 +39,15 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/style/Theme.php';
 $header = new Header();
 
 /** @var string page_title */
-$header->page_title = 'ED ToolBox';
+$header->pageTitle = 'ED ToolBox';
 
 /**
  * display the header
  */
-$header->display_header();
+$header->displayHeader();
 
 /**
- * if the user is coming from importing log entries, 
+ * if the user is coming from importing log entries,
  * display a notice and delete possible duplicates
  */
 if (isset($_GET['import_done'])) {
@@ -68,25 +68,25 @@ if (isset($_GET['import_done'])) {
 
             $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
 
-            $this_s = '';
+            $thisS = '';
             while ($obj = $result->fetch_object()) {
-                $sys_name = $obj->system_name;
-                $sys_id = $obj->id;
+                $sysName = $obj->system_name;
+                $sysId = $obj->id;
 
-                if ($sys_name === $this_s && $sys_id != '1') {
+                if ($sysName === $thisS && $sysId != '1') {
                     $stmt = "   DELETE FROM user_visited_systems
-                                WHERE id = '$sys_id '
+                                WHERE id = '$sysId '
                                 LIMIT 1";
 
                     $mysqli->query($stmt) or write_log($mysqli->error, __FILE__, __LINE__);
                 }
 
-                $this_s = $sys_name;
+                $thisS = $sysName;
             }
 
             $result->close();
 
-            echo notice('Succesfully added ' . number_format($_GET['num']) . ' visited systems to the database.<br /><br />You may now continue using ED ToolBox.', 'Logs imported');
+            echo notice('Succesfully added ' . number_format($_GET['num']) . ' visited systems to the database.<br><br>You may now continue using ED ToolBox.', 'Logs imported');
             ?>
         </div>
     </div>
@@ -99,7 +99,7 @@ if (isset($_GET['import_done'])) {
     /**
      * display the footer
      */
-    $footer->display_footer();
+    $footer->displayFooter();
 
     exit;
 }
@@ -117,4 +117,4 @@ $footer = new Footer();
 /**
  * display the footer
  */
-$footer->display_footer();
+$footer->displayFooter();

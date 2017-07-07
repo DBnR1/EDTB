@@ -49,7 +49,7 @@ require_once __DIR__ . '/System.php';
  * Last known system with valid coordinates
  *
  * @param bool $onlyedsm only include EDSM systems
- * @return array $last_system x, y, z, name
+ * @return array $lastSystem x, y, z, name
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function last_known_system($onlyedsm = false): array
@@ -81,30 +81,30 @@ function last_known_system($onlyedsm = false): array
     $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
 
     $results = $result->num_rows;
-    $last_system = [];
+    $lastSystem = [];
 
     if ($results > 0) {
-        $coord_obj = $result->fetch_object();
-        $last_system['name'] = $coord_obj->system_name;
-        $last_system['x'] = $coord_obj->x;
-        $last_system['y'] = $coord_obj->y;
-        $last_system['z'] = $coord_obj->z;
+        $coordObj = $result->fetch_object();
+        $lastSystem['name'] = $coordObj->system_name;
+        $lastSystem['x'] = $coordObj->x;
+        $lastSystem['y'] = $coordObj->y;
+        $lastSystem['z'] = $coordObj->z;
 
-        if ($last_system['x'] === '') {
-            $last_system['x'] = $coord_obj->own_x;
-            $last_system['y'] = $coord_obj->own_y;
-            $last_system['z'] = $coord_obj->own_z;
+        if ($lastSystem['x'] === '') {
+            $lastSystem['x'] = $coordObj->own_x;
+            $lastSystem['y'] = $coordObj->own_y;
+            $lastSystem['z'] = $coordObj->own_z;
         }
     } else {
-        $last_system['name'] = '';
-        $last_system['x'] = '';
-        $last_system['y'] = '';
-        $last_system['z'] = '';
+        $lastSystem['name'] = '';
+        $lastSystem['x'] = '';
+        $lastSystem['y'] = '';
+        $lastSystem['z'] = '';
     }
 
     $result->close();
 
-    return $last_system;
+    return $lastSystem;
 }
 
 /**
@@ -135,25 +135,68 @@ function data_is_old($time)
 /**
  * Random insult generator... yes
  *
- * @param string $who_to_insult
+ * @param string $whoToInsult
  * @return string $insult
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function random_insult($who_to_insult)
+function random_insult($whoToInsult)
 {
-    $who = explode(' ', $who_to_insult);
-    $first_name = $who[0];
-    $last_name = $who[1];
+    $who = explode(' ', $whoToInsult);
+    $firstName = $who[0];
+    $lastName = $who[1];
 
-    $whoa = array(  $first_name . ' so called ' . $last_name,
-                    $first_name . ' ' . $last_name);
+    $whoa = [
+        $firstName . ' so called ' . $lastName,
+        $firstName . ' ' . $lastName
+    ];
 
     /**
      * Insults from museangel.net, katoninetales.com, mandatory.com with some of my own thrown in for good measure
      */
-    $pool1 = array('moronic', 'putrid', 'disgusting', 'cockered', 'droning', 'fobbing', 'frothy', 'smelly', 'infectious', 'puny', 'roguish', 'assinine', 'tottering', 'shitty', 'villainous', 'pompous', 'elitist', 'dirty');
-    $pool2 = array('shit-kicking', 'Federal', 'butt-munching', 'clap-ridden', 'fart-eating', 'clay-brained', 'sheep-fucking');
-    $pool3 = array('hemorrhoid', 'assface', 'whore', 'kretin', 'cumbucket', 'fuckface', 'asshole', 'turd', 'taint', 'knob', 'tit', 'shart', 'douche');
+    $pool1 = [
+        'moronic',
+        'putrid',
+        'disgusting',
+        'cockered',
+        'droning',
+        'fobbing',
+        'frothy',
+        'smelly',
+        'infectious',
+        'puny',
+        'roguish',
+        'assinine',
+        'tottering',
+        'shitty',
+        'villainous',
+        'pompous',
+        'elitist',
+        'dirty'
+    ];
+    $pool2 = [
+        'shit-kicking',
+        'Federal',
+        'butt-munching',
+        'clap-ridden',
+        'fart-eating',
+        'clay-brained',
+        'sheep-fucking'
+    ];
+    $pool3 = [
+        'hemorrhoid',
+        'assface',
+        'whore',
+        'kretin',
+        'cumbucket',
+        'fuckface',
+        'asshole',
+        'turd',
+        'taint',
+        'knob',
+        'tit',
+        'shart',
+        'douche'
+    ];
 
     // randomize
     shuffle($pool1);
@@ -172,58 +215,58 @@ function random_insult($who_to_insult)
  * @param string $type starport type
  * @param string $planetary 0|1
  * @param string $style overrides the style
- * @return string $station_icon html img tag for the starport icon
+ * @return string $stationIcon html img tag for the starport icon
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function get_station_icon($type, $planetary = '0', $style = '')
 {
     switch ($type) {
         case 'Coriolis Starport':
-            $station_icon = '<img src="/style/img/spaceports/coriolis.png" class="icon" alt="' . $type . '" style="' . $style . '" />';
+            $stationIcon = '<img src="/style/img/spaceports/coriolis.png" class="icon" alt="' . $type . '" style="' . $style . '">';
             break;
         case 'Orbis Starport':
-            $station_icon = '<img src="/style/img/spaceports/orbis.png" class="icon" alt="' . $type . '" style="' . $style . '" />';
+            $stationIcon = '<img src="/style/img/spaceports/orbis.png" class="icon" alt="' . $type . '" style="' . $style . '">';
             break;
         case 'Ocellus Starport':
-            $station_icon = '<img src="/style/img/spaceports/ocellus.png" class="icon" alt="' . $type . '" style="' . $style . '" />';
+            $stationIcon = '<img src="/style/img/spaceports/ocellus.png" class="icon" alt="' . $type . '" style="' . $style . '">';
             break;
         case ($planetary == '0'):
-            $station_icon = '<img src="/style/img/spaceports/spaceport.png" class="icon" alt="Starport" style="' . $style . '" />';
+            $stationIcon = '<img src="/style/img/spaceports/spaceport.png" class="icon" alt="Starport" style="' . $style . '">';
             break;
         case ($planetary == '1'):
-            $station_icon = '<img src="/style/img/spaceports/planetary.png" class="icon" alt="Planetary" style="' . $style . '" />';
+            $stationIcon = '<img src="/style/img/spaceports/planetary.png" class="icon" alt="Planetary" style="' . $style . '">';
             break;
         default:
-            $station_icon = '<img src="/style/img/spaceports/unknown.png" class="icon" alt="Unknown" style="' . $style . '" />';
+            $stationIcon = '<img src="/style/img/spaceports/unknown.png" class="icon" alt="Unknown" style="' . $style . '">';
     }
 
-    return $station_icon;
+    return $stationIcon;
 }
 
 /**
  * Return the correct allegiance icon
  *
  * @param string $allegiance
- * @return string $allegiance_icon name of allegiance icon
+ * @return string $allegianceIcon name of allegiance icon
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function get_allegiance_icon($allegiance)
 {
     switch ($allegiance) {
         case 'Empire':
-            $allegiance_icon = 'empire.png';
+            $allegianceIcon = 'empire.png';
             break;
         case 'Alliance':
-            $allegiance_icon = 'alliance.png';
+            $allegianceIcon = 'alliance.png';
             break;
         case 'Federation':
-            $allegiance_icon = 'federation.png';
+            $allegianceIcon = 'federation.png';
             break;
         default:
-            $allegiance_icon = 'system.png';
+            $allegianceIcon = 'system.png';
     }
 
-    return $allegiance_icon;
+    return $allegianceIcon;
 }
 
 /**
@@ -245,11 +288,11 @@ function usable_coords()
 
         $usable['current'] = true;
     } else {
-        $last_coords = last_known_system();
+        $lastCoords = last_known_system();
 
-        $usable['x'] = $last_coords['x'];
-        $usable['y'] = $last_coords['y'];
-        $usable['z'] = $last_coords['z'];
+        $usable['x'] = $lastCoords['x'];
+        $usable['y'] = $lastCoords['y'];
+        $usable['z'] = $lastCoords['z'];
 
         $usable['current'] = false;
     }
@@ -293,8 +336,10 @@ function tts_override($text)
 {
     global $settings;
 
-    foreach ($settings['tts_override'] as $find => $replace) {
-        $text = str_ireplace($find, $replace, $text);
+    if (is_array($settings['tts_override'])) {
+        foreach ($settings['tts_override'] as $find => $replace) {
+            $text = str_ireplace($find, $replace, $text);
+        }
     }
 
     return $text;
@@ -324,20 +369,19 @@ function get_rank($type, $rank, $icon = true)
  * Return proper ship name
  *
  * @param string $name
- * @return string $ship_name
+ * @return string $shipName
  * @author Mauri Kujala <contact@edtb.xyz>
  */
 function ship_name($name)
 {
     global $ships;
 
+    $shipName = $name;
     if (array_key_exists(strtolower($name), $ships)) {
-        $ship_name = $ships[strtolower($name)];
-    } else {
-        $ship_name = $name;
+        $shipName = $ships[strtolower($name)];
     }
 
-    return $ship_name;
+    return $shipName;
 }
 
 /**
@@ -354,42 +398,42 @@ function get_distance($system)
     /**
      * fetch target coordinates
      */
-    $esc_sys = $mysqli->real_escape_string($system);
+    $escSys = $mysqli->real_escape_string($system);
 
     $query = "  (SELECT
                 edtb_systems.x AS target_x,
                 edtb_systems.y AS target_y,
                 edtb_systems.z AS target_z
                 FROM edtb_systems
-                WHERE edtb_systems.name = '$esc_sys')
+                WHERE edtb_systems.name = '$escSys')
                 UNION
                 (SELECT
                 user_systems_own.x AS target_x,
                 user_systems_own.y AS target_y,
                 user_systems_own.z AS target_z
                 FROM user_systems_own
-                WHERE user_systems_own.name = '$esc_sys')
+                WHERE user_systems_own.name = '$escSys')
                 LIMIT 1";
 
     $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
 
     $obj = $result->fetch_object();
 
-    $target_x = $obj->target_x;
-    $target_y = $obj->target_y;
-    $target_z = $obj->target_z;
+    $targetX = $obj->target_x;
+    $targetY = $obj->target_y;
+    $targetZ = $obj->target_z;
 
     $result->close();
 
     // figure out what coords to calculate from
-    $usable_coords = usable_coords();
-    $usex = $usable_coords['x'];
-    $usey = $usable_coords['y'];
-    $usez = $usable_coords['z'];
-    $exact = $usable_coords['current'] === true ? '' : ' *';
+    $usableCoords = usable_coords();
+    $usex = $usableCoords['x'];
+    $usey = $usableCoords['y'];
+    $usez = $usableCoords['z'];
+    $exact = $usableCoords['current'] === true ? '' : ' *';
 
-    if (valid_coordinates($target_x, $target_y, $target_z)) {
-        $dist = number_format(sqrt((($target_x - $usex) ** 2) + (($target_y - $usey) ** 2) + (($target_z - $usez) ** 2)), 2);
+    if (valid_coordinates($targetX, $targetY, $targetZ)) {
+        $dist = number_format(sqrt((($targetX - $usex) ** 2) + (($targetY - $usey) ** 2) + (($targetZ - $usez) ** 2)), 2);
         $distance = $dist . ' ly' . $exact;
     } else {
         $distance = '';
@@ -429,9 +473,9 @@ function edtb_common($name, $field, $update = false, $value = '')
         return $value;
     }
 
-    $esc_val = $mysqli->real_escape_string($value);
+    $escVal = $mysqli->real_escape_string($value);
     $stmt = '   UPDATE edtb_common
-                SET ' . $field . " = '$esc_val'
+                SET ' . $field . " = '$escVal'
                 WHERE name = '$name'
                 LIMIT 1";
 
@@ -443,13 +487,13 @@ function edtb_common($name, $field, $update = false, $value = '')
 /**
  * Remove invalid dos characters
  *
- * @param string $source_string directory/file name to check for invalid chars
- * @return string $ret_value
+ * @param string $sourceString directory/file name to check for invalid chars
+ * @return string $retValue
  * @author David Marshall
  */
-function strip_invalid_dos_chars($source_string)
+function strip_invalid_dos_chars($sourceString)
 {
-    $invalid_chars = array('*','\\','/',':','?','"','<','>','|'); // Invalid chars according to Windows 10
+    $invalidChars = array('*','\\','/',':','?','"','<','>','|'); // Invalid chars according to Windows 10
 
-    return str_replace($invalid_chars, '_', $source_string);
+    return str_replace($invalidChars, '_', $sourceString);
 }

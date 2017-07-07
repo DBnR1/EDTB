@@ -37,7 +37,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/source/MySQL.php';
 
 $action = $_GET['action'] ?? '';
 
-if (isset($_GET['q']) && !empty($_GET['q']) && isset($_GET['divid'])) {
+if (isset($_GET['q'], $_GET['divid'])) {
     $search = $_GET['q'];
     $divid = $_GET['divid'];
 
@@ -54,8 +54,8 @@ if (isset($_GET['q']) && !empty($_GET['q']) && isset($_GET['divid'])) {
         $addtl .= '&power=' . $_GET['power'];
     }
 
-    $esc_search = $mysqli->real_escape_string($search);
-    $esc_sysid = $mysqli->real_escape_string($_GET['sysid']);
+    $escSearch = $mysqli->real_escape_string($search);
+    $escSysid = $mysqli->real_escape_string($_GET['sysid']);
 
     $query = "  SELECT DISTINCT(edtb_systems.name) AS system_name,
                 edtb_systems.id AS system_id,
@@ -65,8 +65,8 @@ if (isset($_GET['q']) && !empty($_GET['q']) && isset($_GET['divid'])) {
                 edtb_stations.name AS station_name
                 FROM edtb_systems
                 LEFT JOIN edtb_stations ON edtb_stations.system_id = edtb_systems.id
-                WHERE edtb_stations.name LIKE('%" . $esc_search . "%')
-                ORDER BY edtb_stations.name = '$esc_search',
+                WHERE edtb_stations.name LIKE('%" . $escSearch . "%')
+                ORDER BY edtb_stations.name = '$escSearch',
                 edtb_stations.name
                 LIMIT 30";
 
@@ -80,9 +80,9 @@ if (isset($_GET['q']) && !empty($_GET['q']) && isset($_GET['divid'])) {
                     edtb_stations.id AS station_id
                     FROM edtb_systems
                     LEFT JOIN edtb_stations ON edtb_stations.system_id = edtb_systems.id
-                    WHERE edtb_stations.name LIKE('%" . $esc_search . "%')
-                    AND edtb_systems.name = '$esc_sysid'
-                    ORDER BY edtb_stations.name = '$esc_search',
+                    WHERE edtb_stations.name LIKE('%" . $escSearch . "%')
+                    AND edtb_systems.name = '$escSysid'
+                    ORDER BY edtb_stations.name = '$escSearch',
                     edtb_stations.name
                     LIMIT 30";
     }
@@ -91,7 +91,7 @@ if (isset($_GET['q']) && !empty($_GET['q']) && isset($_GET['divid'])) {
 
     $found = $result->num_rows;
 
-    if ($found == 0) {
+    if ($found === 0) {
         echo '<a href="#">Nothing found</a>';
 
         exit;
@@ -100,28 +100,28 @@ if (isset($_GET['q']) && !empty($_GET['q']) && isset($_GET['divid'])) {
     while ($suggest = $result->fetch_object()) {
         if ($_GET['link'] === 'yes') {
             ?>
-            <a href="/System?system_id=<?php echo $suggest->system_id?>">
-                <?php echo $suggest->station_name?>&nbsp;&nbsp;(<?php echo $suggest->system_name?>)
-            </a><br />
+            <a href="/System?system_id=<?= $suggest->system_id?>">
+                <?= $suggest->station_name?>&nbsp;&nbsp;(<?= $suggest->system_name?>)
+            </a><br>
             <?php
         } elseif ($_GET['idlink'] === 'yes') {
             ?>
-            <a href="/NearestSystems?system=<?php echo $suggest->system_id?><?php echo $addtl?>">
-                <?php echo $suggest->station_name?>&nbsp;&nbsp;(<?php echo $suggest->system_name?>)
-            </a><br />
+            <a href="/NearestSystems?system=<?= $suggest->system_id?><?= $addtl?>">
+                <?= $suggest->station_name?>&nbsp;&nbsp;(<?= $suggest->system_name?>)
+            </a><br>
             <?php
         } elseif ($_GET['sysid'] !== 'no') {
             ?>
-            <a href="javascript:void(0);" onclick="setl('<?php echo $suggest->station_name?>', '<?php echo $suggest->station_id?>')">
-                <?php echo $suggest->station_name?>
-            </a><br />
+            <a href="javascript:void(0);" onclick="setl('<?= $suggest->station_name?>', '<?= $suggest->station_id?>')">
+                <?= $suggest->station_name?>
+            </a><br>
             <?php
         } else {
-            $suggest_coords = $suggest->x . ',' . $suggest->y . ',' . $suggest->z;
+            $suggestCoords = $suggest->x . ',' . $suggest->y . ',' . $suggest->z;
             ?>
-            <a href="javascript:void(0);" onclick="setResult('<?php echo str_replace("'", '', $suggest->system_name)?>', '<?php echo $suggest_coords?>', '<?php echo $divid ?>')">
-                <?php echo $suggest->system_name?>
-            </a><br />
+            <a href="javascript:void(0);" onclick="setResult('<?= str_replace("'", '', $suggest->system_name)?>', '<?= $suggestCoords?>', '<?= $divid ?>')">
+                <?= $suggest->system_name?>
+            </a><br>
             <?php
         }
     }

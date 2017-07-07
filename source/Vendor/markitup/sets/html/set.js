@@ -11,7 +11,7 @@
 // ----------------------------------------------------------------------------
 html_textarea = {
 	nameSpace: 'html',
-	onShiftEnter:	{keepDefault:false, replaceWith:'<br />\n'},
+	onShiftEnter:	{keepDefault:false, replaceWith:'<br>\n'},
 	onCtrlEnter:	{keepDefault:false, openWith:'\n<p>', closeWith:'</p>\n'},
 	onTab:			{keepDefault:false, openWith:'	 '},
 	markupSet: [
@@ -23,8 +23,8 @@ html_textarea = {
 		{name:'Ol', openWith:'<ol>\n', closeWith:'</ol>\n' },
 		{name:'Li', openWith:'<li>', closeWith:'</li>' },
 		{separator:'---------------' },
-		{name:'Picture', key:'P', replaceWith:'<img class="log_img" src="[![Source:!:http://]!]" alt="picture" />' },
-		{name:'Thumbnail', key:'Y', replaceWith:'<img class="thumbnail_img" src="[![Source:!:http://]!]" alt="thumbnail" style="width:480px;height:auto" onclick="enlarge(this, \'480\')" />' },
+		{name:'Picture', key:'P', replaceWith:'<img class="log_img" src="[![Source:!:http://]!]" alt="picture">' },
+		{name:'Thumbnail', key:'Y', replaceWith:'<img class="thumbnail_img" src="[![Source:!:http://]!]" alt="thumbnail" style="width: 480px; height: auto" onclick="enlarge(this, \'480\')">' },
 		{name:'Link', key:'L', openWith:'<a href="[![Link:!:http://]!]"(!( title="[![Title]!]")!)>', closeWith:'</a>', placeHolder:'Your text to link...' },
 		{separator:'---------------' },
 		{name:'Clean', className:'clean', replaceWith:function(markitup) { return markitup.selection.replace(/<(.*?)>/g, "") } },
@@ -34,7 +34,7 @@ html_textarea = {
 
 poi_bm = {
 	nameSpace: 'poi_bm',
-	onShiftEnter:	{keepDefault:false, replaceWith:'<br />\n'},
+	onShiftEnter:	{keepDefault:false, replaceWith:'<br>\n'},
 	onCtrlEnter:	{keepDefault:false, openWith:'\n<p>', closeWith:'</p>\n'},
 	onTab:			{keepDefault:false, openWith:'	 '},
 	markupSet: [
@@ -46,8 +46,8 @@ poi_bm = {
 		{name:'Ol', openWith:'<ol>\n', closeWith:'</ol>\n' },
 		{name:'Li', openWith:'<li>', closeWith:'</li>' },
 		{separator:'---------------' },
-		{name:'Picture', key:'P', replaceWith:'<img class="log_img" src="[![Source:!:http://]!]" alt="[![Alternative text]!]" />' },
-		{name:'Thumbnail', key:'Y', replaceWith:'<img class="thumbnail_img" src="[![Source:!:http://]!]" alt="thumbnail" style="width:240px;height:auto" onclick="enlarge(this, \'240\')" />' },
+		{name:'Picture', key:'P', replaceWith:'<img class="log_img" src="[![Source:!:http://]!]" alt="[![Alternative text]!]">' },
+		{name:'Thumbnail', key:'Y', replaceWith:'<img class="thumbnail_img" src="[![Source:!:http://]!]" alt="thumbnail" style="width: 240px; height: auto" onclick="enlarge(this, \'240\')">' },
 		{name:'Link', key:'L', openWith:'<a href="[![Link:!:http://]!]"(!( title="[![Title]!]")!)>', closeWith:'</a>', placeHolder:'Your text to link...' },
 		{separator:'---------------' },
 		{name:'Clean', className:'clean', replaceWith:function(markitup) { return markitup.selection.replace(/<(.*?)>/g, "") } },

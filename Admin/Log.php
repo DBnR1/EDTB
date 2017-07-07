@@ -39,17 +39,17 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/style/Theme.php';
 $header = new Header();
 
 /** @var string page_title */
-$header->page_title = 'Error Log';
+$header->pageTitle = 'Error Log';
 
 /**
  * display the header
  */
-$header->display_header();
+$header->displayHeader();
 ?>
 <div class="entries">
     <div class="entries_inner">
         <h2>
-            <img class="icon24" src="/style/img/log2_24.png" alt="Log" />Error log
+            <img class="icon24" src="/style/img/log2_24.png" alt="Log">Error log
         </h2>
         <hr>
         <?php
@@ -75,13 +75,13 @@ $header->display_header();
                  * reverse the array and output data
                  */
                 if (!empty($lines)) {
-                    foreach (array_reverse($lines) as $line_num => $line) {
+                    foreach (array_reverse($lines) as $lineNum => $line) {
                         /**
                          * only show first 600 lines
                          */
-                        if ($line_num <= 599) {
+                        if ($lineNum <= 599) {
                             // Regular Expression filter for links
-                            $reg_exUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
+                            $regExUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
 
                             /**
                              * split data and define variables
@@ -90,8 +90,8 @@ $header->display_header();
                             $time = str_replace('[', '', $data[0]);
 
                             $parts = explode(' on line ', $data[1]);
-                            $error_line = $parts[1];
-                            $error_line = empty($error_line) ? 'n/a' : $error_line;
+                            $errorLine = $parts[1];
+                            $errorLine = empty($errorLine) ? 'n/a' : $errorLine;
 
                             $file = str_replace('[', '', $parts[0]);
                             $file = str_replace($settings['install_path'] . "\\EDTB\\", '', $file);
@@ -100,31 +100,31 @@ $header->display_header();
                             $error = array_slice($data, 2);
                             $error = implode('', $error);
 
-                            if (preg_match($reg_exUrl, $error, $url)) {
-                                $error = preg_replace($reg_exUrl, '<a href="' . $url[0] . '" target="_blank">' . $url[0] . '</a>', $error);
+                            if (preg_match($regExUrl, $error, $url)) {
+                                $error = preg_replace($regExUrl, '<a href="' . $url[0] . '" target="_blank">' . $url[0] . '</a>', $error);
                             } else {
                                 $error = strip_tags($error);
                             }
 
-                            $tdclass = $line_num % 2 ? 'dark' : 'light';
+                            $tdclass = $lineNum % 2 ? 'dark' : 'light';
                             ?>
                             <tr>
-                                <td class="<?php echo $tdclass?>" style="padding:10px;width:1%;text-align:center">
-                                    <a class="copy" href="javascript:void(0);" title="Copy to clipboard" data-clipboard-text="<?php echo $line?>">
-                                        <img class="icon" src="/style/img/clipboard.png" alt="Copy" style="margin-left:5px" />
+                                <td class="<?= $tdclass?>" style="padding: 10px; width:1%;text-align: center">
+                                    <a class="copy" href="javascript:void(0);" title="Copy to clipboard" data-clipboard-text="<?= $line?>">
+                                        <img class="icon" src="/style/img/clipboard.png" alt="Copy" style="margin-left: 5px">
                                     </a>
                                 </td>
-                                <td class="<?php echo $tdclass?>" style="width:1%;text-align:center">
-                                    <?php echo $time?>
+                                <td class="<?= $tdclass?>" style="width:1%;text-align: center">
+                                    <?= $time?>
                                 </td>
-                                <td class="<?php echo $tdclass?>">
-                                    <?php echo $file?>
+                                <td class="<?= $tdclass?>">
+                                    <?= $file?>
                                 </td>
-                                <td class="<?php echo $tdclass?>">
-                                    <?php echo $error_line?>
+                                <td class="<?= $tdclass?>">
+                                    <?= $errorLine?>
                                 </td>
-                                <td class="<?php echo $tdclass?>">
-                                    <?php echo strip_tags($error, '<a>')?>
+                                <td class="<?= $tdclass?>">
+                                    <?= strip_tags($error, '<a>')?>
                                 </td>
                             </tr>
                             <?php
@@ -156,5 +156,5 @@ $footer = new Footer();
 /**
  * display the footer
  */
-$footer->display_footer();
+$footer->displayFooter();
 

@@ -10,7 +10,7 @@ class AdminerPlugin extends Adminer
 {
     /** @access protected */
     public $plugins;
-    
+
     public function _findRootClass($class)
     { // is_subclass_of(string, string) is available since PHP 5.0.3
         do {
@@ -18,7 +18,7 @@ class AdminerPlugin extends Adminer
         } while ($class = get_parent_class($class));
         return $return;
     }
-    
+
     /** Register plugins
     * @param array object instances or null to register all classes starting by 'Adminer'
     */
@@ -35,12 +35,12 @@ class AdminerPlugin extends Adminer
         $this->plugins = $plugins;
         //! it is possible to use ReflectionObject to find out which plugins defines which methods at once
     }
-    
+
     public function _callParent($function, $args)
     {
         return call_user_func_array(array('parent', $function), $args);
     }
-    
+
     public function _applyPlugin($function, $args)
     {
         foreach ($this->plugins as $plugin) {
@@ -62,7 +62,7 @@ class AdminerPlugin extends Adminer
         }
         return $this->_callParent($function, $args);
     }
-    
+
     public function _appendPlugin($function, $args)
     {
         $return = $this->_callParent($function, $args);
@@ -73,7 +73,7 @@ class AdminerPlugin extends Adminer
         }
         return $return;
     }
-    
+
     // appendPlugin
 
     public function dumpFormat()
@@ -81,7 +81,7 @@ class AdminerPlugin extends Adminer
         $args = func_get_args();
         return $this->_appendPlugin(__FUNCTION__, $args);
     }
-    
+
     public function dumpOutput()
     {
         $args = func_get_args();
@@ -258,7 +258,7 @@ class AdminerPlugin extends Adminer
         return $this->_applyPlugin(__FUNCTION__, $args);
     }
 
-    public function selectLengthPrint($text_length)
+    public function selectLengthPrint($textLength)
     {
         $args = func_get_args();
         return $this->_applyPlugin(__FUNCTION__, $args);
@@ -354,7 +354,7 @@ class AdminerPlugin extends Adminer
         return $this->_applyPlugin(__FUNCTION__, $args);
     }
 
-    public function dumpTable($table, $style, $is_view = 0)
+    public function dumpTable($table, $style, $isView = 0)
     {
         $args = func_get_args();
         return $this->_applyPlugin(__FUNCTION__, $args);
@@ -372,7 +372,7 @@ class AdminerPlugin extends Adminer
         return $this->_applyPlugin(__FUNCTION__, $args);
     }
 
-    public function dumpHeaders($identifier, $multi_table = false)
+    public function dumpHeaders($identifier, $multiTable = false)
     {
         $args = func_get_args();
         return $this->_applyPlugin(__FUNCTION__, $args);

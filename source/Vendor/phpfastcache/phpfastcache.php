@@ -143,14 +143,14 @@ class phpFastCache
         return $driver;
     }
 
-    public static function getPath($skip_create_path = false, $config)
+    public static function getPath($skipCreatePath = false, $config)
     {
         if (!isset($config['path']) || $config['path'] == '') {
 
             // revision 618
             if (self::isPHPModule()) {
-                $tmp_dir = ini_get('upload_tmp_dir') ? ini_get('upload_tmp_dir') : sys_get_temp_dir();
-                $path = $tmp_dir;
+                $tmpDir = ini_get('upload_tmp_dir') ? ini_get('upload_tmp_dir') : sys_get_temp_dir();
+                $path = $tmpDir;
             } else {
                 $path = isset($_SERVER['DOCUMENT_ROOT']) ? rtrim($_SERVER['DOCUMENT_ROOT'], "/")."/../" : rtrim(dirname(__FILE__), "/")."/";
             }
@@ -174,31 +174,31 @@ class phpFastCache
             $securityKey.= "/";
         }
 
-        $full_path = $path."/".$securityKey;
-        $full_pathx = md5($full_path);
+        $fullPath = $path."/".$securityKey;
+        $fullPathx = md5($fullPath);
 
 
 
 
-        if ($skip_create_path  == false && !isset(self::$tmp[$full_pathx])) {
-            if (!@file_exists($full_path) || !@is_writable($full_path)) {
-                if (!@file_exists($full_path)) {
-                    @mkdir($full_path, self::__setChmodAuto($config));
+        if ($skipCreatePath  == false && !isset(self::$tmp[$fullPathx])) {
+            if (!@file_exists($fullPath) || !@is_writable($fullPath)) {
+                if (!@file_exists($fullPath)) {
+                    @mkdir($fullPath, self::__setChmodAuto($config));
                 }
-                if (!@is_writable($full_path)) {
-                    @chmod($full_path, self::__setChmodAuto($config));
+                if (!@is_writable($fullPath)) {
+                    @chmod($fullPath, self::__setChmodAuto($config));
                 }
-                if (!@file_exists($full_path) || !@is_writable($full_path)) {
-                    throw new Exception("PLEASE CREATE OR CHMOD ".$full_path." - 0777 OR ANY WRITABLE PERMISSION!", 92);
+                if (!@file_exists($fullPath) || !@is_writable($fullPath)) {
+                    throw new Exception("PLEASE CREATE OR CHMOD ".$fullPath." - 0777 OR ANY WRITABLE PERMISSION!", 92);
                 }
             }
 
 
-            self::$tmp[$full_pathx] = true;
-            self::htaccessGen($full_path, $config['htaccess']);
+            self::$tmp[$fullPathx] = true;
+            self::htaccessGen($fullPath, $config['htaccess']);
         }
 
-        return realpath($full_path);
+        return realpath($fullPath);
     }
 
 

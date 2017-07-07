@@ -39,12 +39,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/style/Theme.php';
 $header = new Header();
 
 /** @var string page_title */
-$header->page_title = 'System Information';
+$header->pageTitle = 'System Information';
 
 /**
  * display the header
  */
-$header->display_header();
+$header->displayHeader();
 ?>
 <div class="entries">
     <div class="entries_inner" id="system_page">
@@ -69,4 +69,4 @@ $footer = new Footer();
 /**
  * display the footer
  */
-$footer->display_footer();
+$footer->displayFooter();

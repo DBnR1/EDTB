@@ -33,7 +33,7 @@
 
 .top
   text-align: left
-  background-image: linear-gradient($color_sys_map_gradient_top, $color_sys_map_gradient_bottom)
+  background-image: linear-gradient($colorSysMapGradient_top, $colorSysMapGradient_bottom)
   position: absolute
   top: 1px
   right: 0
@@ -46,7 +46,7 @@
 
 #value
   padding: 5px
-  color: $color_text
+  color: $colorText
   font-size: 13px
 
 .stars_planets
@@ -55,7 +55,7 @@
   top: 46px
   right: 0
   padding: 5px
-  color: $color_text
+  color: $colorText
   background: $color_333
   z-index: 1000002
   vertical-align: top
@@ -71,13 +71,13 @@
   white-space: nowrap
   &:hover
     text-shadow: 1px 1px 4px $black
-    background: $color_333 linear-gradient($color_sys_map_gradient_bottom, $color_sys_map_gradient_top)
-    cursor: $cursor_url, auto
+    background: $color_333 linear-gradient($colorSysMapGradient_bottom, $colorSysMapGradient_top)
+    cursor: $cursorUrl, auto
 
   &:active
     text-shadow: 1px 1px 4px $black
-    background: $color_333 linear-gradient($color_sys_map_gradient_bottom, $color_sys_map_gradient_top)
-    cursor: $cursor_url, auto
+    background: $color_333 linear-gradient($colorSysMapGradient_bottom, $colorSysMapGradient_top)
+    cursor: $cursorUrl, auto
 
 .add
   padding: 5px
@@ -136,12 +136,12 @@
 
 .delete_body
   border-radius: 4px
-  font-family: $main_font, $fallback
-  color: $color_text
+  font-family: $mainFont, $fallback
+  color: $colorText
   text-align: center
   font-size: 12px
-  background-color: $color_delete_button
-  border: 1px solid $color_form_input_border
+  background-color: $colorDeleteButton
+  border: 1px solid $colorFormInputBorder
   resize: none
   font-weight: 700
   width: 200px
@@ -151,16 +151,16 @@
   right: 8px
   bottom: 8px
   outline: 0
-  cursor: $cursor_url, auto
+  cursor: $cursorUrl, auto
   text-transform: uppercase
   &:hover
-    border: 1px solid $color_ccc
+    border: 1px solid $colorCcc
 
 .sm_system
   position: absolute
   left: 40%
   top: 47px
-  background-image: linear-gradient($color_sys_map_gradient_top, $color_sys_map_gradient_bottom)
+  background-image: linear-gradient($colorSysMapGradient_top, $colorSysMapGradient_bottom)
   border: 1px solid $black
   border-top: 0
   padding: 6px

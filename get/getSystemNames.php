@@ -37,7 +37,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/source/MySQL.php';
 
 $action = $_GET['action'] ?? '';
 
-if (isset($_GET['q']) && !empty($_GET['q']) && isset($_GET['divid'])) {
+if (isset($_GET['q'], $_GET['divid'])) {
     $search = addslashes($_GET['q']);
     $divid = $_GET['divid'];
 
@@ -54,15 +54,15 @@ if (isset($_GET['q']) && !empty($_GET['q']) && isset($_GET['divid'])) {
         $addtl .= '&power=' . $_GET['power'];
     }
 
-    $esc_search = $mysqli->real_escape_string($search);
+    $escSearch = $mysqli->real_escape_string($search);
 
     $query = "  (SELECT
                     edtb_systems.id, edtb_systems.name,
                     edtb_systems.x, edtb_systems.y, edtb_systems.z
                     FROM edtb_systems
                     WHERE edtb_systems.name
-                    LIKE('%" . $esc_search . "%')
-                    ORDER BY edtb_systems.name = '$esc_search' DESC,
+                    LIKE('%" . $escSearch . "%')
+                    ORDER BY edtb_systems.name = '$escSearch' DESC,
                     edtb_systems.name)
                 UNION
                 (SELECT
@@ -70,63 +70,63 @@ if (isset($_GET['q']) && !empty($_GET['q']) && isset($_GET['divid'])) {
                     user_systems_own.x, user_systems_own.y, user_systems_own.z
                     FROM user_systems_own
                     WHERE user_systems_own.name
-                    LIKE('%" . $esc_search . "%')
-                    ORDER BY user_systems_own.name = '$esc_search' DESC,
+                    LIKE('%" . $escSearch . "%')
+                    ORDER BY user_systems_own.name = '$escSearch' DESC,
                     user_systems_own.name)
                     LIMIT 30";
 
     $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
     $found = $result->num_rows;
 
-    if ($found == 0) {
+    if ($found === 0) {
         echo '<a href="#">Nothing found</a>';
     } else {
         while ($suggest = $result->fetch_object()) {
-            $suggest_coords = $suggest->x . ',' . $suggest->y . ',' . $suggest->z;
+            $suggestCoords = $suggest->x . ',' . $suggest->y . ',' . $suggest->z;
             // find systems
             if ($_GET['link'] === 'yes') {
                 if (isset($suggest->id)) {
                     ?>
-                    <a href="/System?system_id=<?php echo $suggest->id?>">
-                        <?php echo $suggest->name?>
-                    </a><br />
+                    <a href="/System?system_id=<?= $suggest->id?>">
+                        <?= $suggest->name?>
+                    </a><br>
                     <?php
                 } else {
                     ?>
-                    <a href="/System?system_name=<?php echo urlencode($suggest->name)?>">
-                        <?php echo $suggest->name?>
-                    </a><br />
+                    <a href="/System?system_name=<?= urlencode($suggest->name)?>">
+                        <?= $suggest->name?>
+                    </a><br>
                     <?php
                 }
             }
             // nearest systems
             elseif ($_GET['idlink'] === 'yes') {
                 ?>
-                <a href="/NearestSystems?system=<?php echo $suggest->id?><?php echo $addtl?>">
-                    <?php echo $suggest->name?>
-                </a><br />
+                <a href="/NearestSystems?system=<?= $suggest->id?><?= $addtl?>">
+                    <?= $suggest->name?>
+                </a><br>
                 <?php
             }
             // bookmarks
             elseif ($_GET['sysid'] === 'yes') {
                 ?>
-                <a href="javascript:void(0);" onclick='setbm("<?php echo addslashes($suggest->name)?>", <?php echo $suggest->id?>)'>
-                    <?php echo $suggest->name?>
-                </a><br />
+                <a href="javascript:void(0);" onclick='setbm("<?= addslashes($suggest->name)?>", <?= $suggest->id?>)'>
+                    <?= $suggest->name?>
+                </a><br>
                 <?php
             }
             // data point
             elseif ($_GET['dp'] === 'yes') {
                 ?>
-                <a href="javascript:void(0);" onclick='setdp("<?php echo addslashes($suggest->name)?>", "<?php echo $suggest_coords?>", <?php echo $suggest->id?>)'>
-                    <?php echo $suggest->name?>
-                </a><br />
+                <a href="javascript:void(0);" onclick='setdp("<?= addslashes($suggest->name)?>", "<?= $suggestCoords?>", <?= $suggest->id?>)'>
+                    <?= $suggest->name?>
+                </a><br>
                 <?php
             } else {
                 ?>
-                <a href="javascript:void(0);" onclick="setResult('<?php echo addslashes($suggest->name)?>', '<?php echo $suggest_coords?>', '<?php echo $divid ?>')">
-                    <?php echo $suggest->name?>
-                </a><br />
+                <a href="javascript:void(0);" onclick="setResult('<?= addslashes($suggest->name)?>', '<?= $suggestCoords?>', '<?= $divid ?>')">
+                    <?= $suggest->name?>
+                </a><br>
                 <?php
             }
         }

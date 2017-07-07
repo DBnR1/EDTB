@@ -51,11 +51,11 @@ if (isset($_GET['maxdistance']) && is_numeric($_GET['maxdistance'])) {
 $disclaimer = '';
 if (!valid_coordinates($curSys['x'], $curSys['y'], $curSys['z'])) {
     // get last known coordinates
-    $last_coords = last_known_system();
+    $lastCoords = last_known_system();
 
-    $curSys['x'] = $last_coords['x'];
-    $curSys['y'] = $last_coords['y'];
-    $curSys['z'] = $last_coords['z'];
+    $curSys['x'] = $lastCoords['x'];
+    $curSys['y'] = $lastCoords['y'];
+    $curSys['z'] = $lastCoords['z'];
 
     $disclaimer = '<p><strong>No coordinates for current location, last known location used</strong></p>';
 }
@@ -69,7 +69,7 @@ if (!valid_coordinates($curSys['x'], $curSys['y'], $curSys['z'])) {
 }
 
 $data = '';
-$last_row = '';
+$lastRow = '';
 
 /**
  * fetch point of interest data for the map
@@ -83,41 +83,40 @@ if ($settings['nmap_show_pois'] === 'true') {
 
     while ($obj = $result->fetch_object()) {
         $name = $obj->system_name;
-        $disp_name = $obj->poi_name !== '' ? $obj->poi_name : $obj->system_name;
+        $dispName = $obj->poi_name !== '' ? $obj->poi_name : $obj->system_name;
 
-        $poi_coordx = $obj->x;
-        $poi_coordy = $obj->y;
-        $poi_coordz = $obj->z;
+        $poiCoordx = $obj->x;
+        $poiCoordy = $obj->y;
+        $poiCoordz = $obj->z;
 
-        $coord = "$poi_coordx,$poi_coordy,$poi_coordz";
+        $coord = "$poiCoordx,$poiCoordy,$poiCoordz";
 
-        $distance_from_current = '';
-        if (valid_coordinates($poi_coordx, $poi_coordy, $poi_coordz)) {
-            $distance_from_current = sqrt((($poi_coordx - $curSys['x']) ** 2) + (($poi_coordy - $curSys['y']) ** 2) + (($poi_coordz - $curSys['z']) ** 2));
+        $distanceFromCurrent = '';
+        if (valid_coordinates($poiCoordx, $poiCoordy, $poiCoordz)) {
+            $distanceFromCurrent = sqrt((($poiCoordx - $curSys['x']) ** 2) + (($poiCoordy - $curSys['y']) ** 2) + (($poiCoordz - $curSys['z']) ** 2));
         }
 
         // only show systems if distance is less than the limit set by the user
-        if ($distance_from_current !== '' && $distance_from_current <= $settings['maxdistance']) {
-            $esc_name = $mysqli->real_escape_string($name);
+        if ($distanceFromCurrent !== '' && $distanceFromCurrent <= $settings['maxdistance']) {
+            $escName = $mysqli->real_escape_string($name);
             $query = "  SELECT id, visit
                         FROM user_visited_systems
-                        WHERE system_name = '$esc_name'
+                        WHERE system_name = '$escName'
                         ORDER BY visit ASC
                         LIMIT 1";
 
             $visited = $mysqli->query($query)->num_rows;
 
+            $marker = 'marker:{symbol:"url(/style/img/goto.png)"}';
             if ($name === 'SOL') {
                 $marker = 'marker:{symbol:"circle",radius:3,fillColor:"#37bf1c"}';
             } elseif ($visited > 0) {
                 $marker = 'marker:{symbol:"url(/style/img/goto-g.png)"}';
-            } else {
-                $marker = 'marker:{symbol:"url(/style/img/goto.png)"}';
             }
 
-            $data = '{name:"' . $disp_name . '",data:[[' . $coord . ']],' . $marker . '}' . $last_row;
+            $data = '{name:"' . $dispName . '",data:[[' . $coord . ']],' . $marker . '}' . $lastRow;
 
-            $last_row = ',' . $data;
+            $lastRow = ',' . $data;
         }
     }
     $result->close();
@@ -136,51 +135,51 @@ if ($settings['nmap_show_bookmarks'] === 'true') {
 
     $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
 
-    while ($bm_obj = $result->fetch_object()) {
-        $bm_system_name = $bm_obj->system_name;
-        $bm_comment = $bm_obj->comment;
-        $bm_added_on = $bm_obj->added_on;
-        $bm_category_name = $bm_obj->category_name;
+    while ($bmObj = $result->fetch_object()) {
+        $bmSystemName = $bmObj->system_name;
+        $bmComment = $bmObj->comment;
+        $bmAddedOn = $bmObj->added_on;
+        $bmCategoryName = $bmObj->category_name;
 
         // coordinates for distance calculations
-        $bm_coordx = $bm_obj->x;
-        $bm_coordy = $bm_obj->y;
-        $bm_coordz = $bm_obj->z;
-        $coord = $bm_obj->x . ',' . $bm_obj->y . ',' . $bm_obj->z;
+        $bmCoordx = $bmObj->x;
+        $bmCoordy = $bmObj->y;
+        $bmCoordz = $bmObj->z;
+        $coord = $bmObj->x . ',' . $bmObj->y . ',' . $bmObj->z;
 
         /**
          * if coords are not set, see if user has calculated them
          */
-        if (!valid_coordinates($bm_coordx, $bm_coordy, $bm_coordz)) {
-            $esc_name = $mysqli->real_escape_string($bm_system_name);
+        if (!valid_coordinates($bmCoordx, $bmCoordy, $bmCoordz)) {
+            $escName = $mysqli->real_escape_string($bmSystemName);
             $query = "  SELECT x, y, z
                         FROM user_systems_own
-                        WHERE name = '$esc_name'
+                        WHERE name = '$escName'
                         LIMIT 1";
 
-            $coord_res = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
-            $obj = $coord_res->fetch_object();
+            $coordRes = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+            $obj = $coordRes->fetch_object();
 
-            $bm_coordx = $obj->x;
-            $bm_coordy = $obj->y;
-            $bm_coordz = $obj->z;
+            $bmCoordx = $obj->x;
+            $bmCoordy = $obj->y;
+            $bmCoordz = $obj->z;
 
-            $coord_res->close();
+            $coordRes->close();
         }
 
-        if (valid_coordinates($bm_coordx, $bm_coordy, $bm_coordz)) {
-            $distance_from_current = '';
-            if (valid_coordinates($bm_coordx, $bm_coordy, $bm_coordz)) {
-                $distance_from_current = sqrt((($bm_coordx - $curSys['x']) ** 2) + (($bm_coordy - $curSys['y']) ** 2) + (($bm_coordz - $curSys['z']) ** 2));
+        if (valid_coordinates($bmCoordx, $bmCoordy, $bmCoordz)) {
+            $distanceFromCurrent = '';
+            if (valid_coordinates($bmCoordx, $bmCoordy, $bmCoordz)) {
+                $distanceFromCurrent = sqrt((($bmCoordx - $curSys['x']) ** 2) + (($bmCoordy - $curSys['y']) ** 2) + (($bmCoordz - $curSys['z']) ** 2));
             }
 
             // only show systems if distance is less than the limit set by the user
-            if ($distance_from_current !== '' && $distance_from_current <= $settings['maxdistance']) {
+            if ($distanceFromCurrent !== '' && $distanceFromCurrent <= $settings['maxdistance']) {
                 $marker = 'marker:{symbol:"url(/style/img/bm.png)"}';
 
-                $data = '{name:"' . $bm_system_name . '",data:[[' . $coord . ']],' . $marker . '}' . $last_row;
+                $data = '{name:"' . $bmSystemName . '",data:[[' . $coord . ']],' . $marker . '}' . $lastRow;
 
-                $last_row = ',' . $data;
+                $lastRow = ',' . $data;
             }
         }
     }
@@ -200,33 +199,33 @@ if ($settings['nmap_show_rares'] === 'true') {
 
     $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
 
-    while ($rare_obj = $result->fetch_object()) {
-        $rare_item = $rare_obj->item;
-        $rare_station = $rare_obj->station;
-        $rare_system = $rare_obj->system_name;
-        $rare_dist_to_star = number_format($rare_obj->ls_to_star);
+    while ($rareObj = $result->fetch_object()) {
+        $rareItem = $rareObj->item;
+        $rareStation = $rareObj->station;
+        $rareSystem = $rareObj->system_name;
+        $rareDistToStar = number_format($rareObj->ls_to_star);
 
-        $rare_disp_name = $rare_item . ' - ' . $rare_system . ' (' . $rare_station . ' - ' . $rare_dist_to_star . ' ls)';
+        $rareDispName = $rareItem . ' - ' . $rareSystem . ' (' . $rareStation . ' - ' . $rareDistToStar . ' ls)';
 
         // coordinates for distance calculations
-        $rare_coordx = $rare_obj->x;
-        $rare_coordy = $rare_obj->y;
-        $rare_coordz = $rare_obj->z;
+        $rareCoordx = $rareObj->x;
+        $rareCoordy = $rareObj->y;
+        $rareCoordz = $rareObj->z;
 
-        $rare_coord = $rare_coordx . ',' . $rare_coordy . ',' . $rare_coordz;
+        $rareCoord = $rareCoordx . ',' . $rareCoordy . ',' . $rareCoordz;
 
-        $rare_distance_from_current = '';
-        if (valid_coordinates($rare_coordx, $rare_coordy, $rare_coordz)) {
-            $rare_distance_from_current = sqrt((($rare_coordx - $curSys['x']) ** 2) + (($rare_coordy - $curSys['y']) ** 2) + (($rare_coordz - $curSys['z']) ** 2));
+        $rareDistanceFromCurrent = '';
+        if (valid_coordinates($rareCoordx, $rareCoordy, $rareCoordz)) {
+            $rareDistanceFromCurrent = sqrt((($rareCoordx - $curSys['x']) ** 2) + (($rareCoordy - $curSys['y']) ** 2) + (($rareCoordz - $curSys['z']) ** 2));
         }
 
         // only show systems if distance is less than the limit set by the user
-        if ($rare_distance_from_current !== '' && $rare_distance_from_current <= $settings['maxdistance']) {
-            $rare_marker = 'marker:{symbol:"url(/style/img/rare.png)"}';
+        if ($rareDistanceFromCurrent !== '' && $rareDistanceFromCurrent <= $settings['maxdistance']) {
+            $rareMarker = 'marker:{symbol:"url(/style/img/rare.png)"}';
 
-            $data = '{name:"' . $rare_disp_name . '",data:[[' . $rare_coord . ']],' . $rare_marker . '}' . $last_row;
+            $data = '{name:"' . $rareDispName . '",data:[[' . $rareCoord . ']],' . $rareMarker . '}' . $lastRow;
 
-            $last_row = ',' . $data;
+            $lastRow = ',' . $data;
         }
     }
     $result->close();
@@ -248,47 +247,47 @@ if ($settings['nmap_show_visited_systems'] === 'true') {
 
     while ($obj = $result->fetch_object()) {
         $name = $obj->system_name;
-        $esc_name = $mysqli->real_escape_string($name);
+        $escName = $mysqli->real_escape_string($name);
         $sysid = $obj->sysid;
 
         // coordinates for distance calculations
-        $vs_coordx = $obj->x;
-        $vs_coordy = $obj->y;
-        $vs_coordz = $obj->z;
+        $vsCoordx = $obj->x;
+        $vsCoordy = $obj->y;
+        $vsCoordz = $obj->z;
 
         /**
          * if coords are not set, see if user has calculated them
          */
-        if (!valid_coordinates($vs_coordx, $vs_coordy, $vs_coordz)) {
+        if (!valid_coordinates($vsCoordx, $vsCoordy, $vsCoordz)) {
             $query = "  SELECT x, y, z
                         FROM user_systems_own
-                        WHERE name = '$esc_name'
+                        WHERE name = '$escName'
                         LIMIT 1";
 
-            $coord_res = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
-            $obj = $coord_res->fetch_object();
+            $coordRes = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+            $obj = $coordRes->fetch_object();
 
-            $vs_coordx = $obj->x;
-            $vs_coordy = $obj->y;
-            $vs_coordz = $obj->z;
+            $vsCoordx = $obj->x;
+            $vsCoordy = $obj->y;
+            $vsCoordz = $obj->z;
         }
 
-        $distance_from_current = '';
-        if (valid_coordinates($vs_coordx, $vs_coordy, $vs_coordz)) {
-            $coord = $vs_coordx . ',' . $vs_coordy . ',' . $vs_coordz;
+        $distanceFromCurrent = '';
+        if (valid_coordinates($vsCoordx, $vsCoordy, $vsCoordz)) {
+            $coord = $vsCoordx . ',' . $vsCoordy . ',' . $vsCoordz;
 
-            $distance_from_current = sqrt((($vs_coordx - $curSys['x']) ** 2) + (($vs_coordy - $curSys['y']) ** 2) + (($vs_coordz - $curSys['z']) ** 2));
+            $distanceFromCurrent = sqrt((($vsCoordx - $curSys['x']) ** 2) + (($vsCoordy - $curSys['y']) ** 2) + (($vsCoordz - $curSys['z']) ** 2));
 
             // only show systems if distance is less than the limit set by the user
-            if ($distance_from_current <= $settings['maxdistance']) {
+            if ($distanceFromCurrent <= $settings['maxdistance']) {
                 $query = "  SELECT id
                             FROM user_log
-                            WHERE system_name = '$esc_name'
+                            WHERE system_name = '$escName'
                             LIMIT 1";
 
-                $logged_result = $mysqli->query($query);
+                $loggedResult = $mysqli->query($query);
 
-                $logged = $logged_result->num_rows;
+                $logged = $loggedResult->num_rows;
 
                 $allegiance = $obj->allegiance;
 
@@ -314,13 +313,12 @@ if ($settings['nmap_show_visited_systems'] === 'true') {
                     $marker = 'marker:{symbol:"circle",radius:3,fillColor:"' . $color . '"}';
                 }
 
-                if (isset($name) && isset($coord)) {
-                    $data = '{name:"' . $name . '",data:[[' . $coord . ']],' .$marker. '}' . $last_row;
-                } else {
-                    $data = $last_row;
+                $data = $lastRow;
+                if (isset($name, $coord)) {
+                    $data = '{name:"' . $name . '",data:[[' . $coord . ']],' .$marker. '}' . $lastRow;
                 }
 
-                $last_row = ',' . $data;
+                $lastRow = ',' . $data;
             }
         }
     }
@@ -371,7 +369,7 @@ function tooltipFormatter() {
         <?php
     } else {
         ?>
-        value = this.series.name.toUpperCase() + " is " + Math.round(Math.sqrt(Math.pow((this.x-(<?php echo $curSys['x']?>)), 2)+Math.pow((this.y-(<?php echo $curSys['y']?>)), 2)+Math.pow((this.point.z-(<?php echo $curSys['z']?>)), 2))) + " ly away";
+        value = this.series.name.toUpperCase() + " is " + Math.round(Math.sqrt(Math.pow((this.x-(<?= $curSys['x']?>)), 2)+Math.pow((this.y-(<?= $curSys['y']?>)), 2)+Math.pow((this.point.z-(<?= $curSys['z']?>)), 2))) + " ly away";
         <?php
     }
     ?>
@@ -509,12 +507,12 @@ $(function ()
             margin: 90,
             type: 'scatter',
             stickyTracking: false,
-            <?php echo $zoomtype?>
-            panning: <?php echo $panning?>,
-            <?php echo $pankey?>
+            <?= $zoomtype?>
+            panning: <?= $panning?>,
+            <?= $pankey?>
             options3d:
             {
-                enabled: <?php echo $threed?>,
+                enabled: <?= $threed?>,
                 alpha: 20,
                 beta: 30,
                 depth: 120,
@@ -574,20 +572,20 @@ $(function ()
         },
         xAxis:
         {
-            min: <?php echo round($minx)?>,
-            max: <?php echo round($maxx)?>,
+            min: <?= round($minx)?>,
+            max: <?= round($maxx)?>,
             gridLineWidth: 1
         },
         yAxis:
         {
-            min: <?php echo round($miny)?>,
-            max: <?php echo round($maxy)?>,
+            min: <?= round($miny)?>,
+            max: <?= round($maxy)?>,
             title: null
         },
         zAxis:
         {
-            min: <?php echo round($minz)?>,
-            max: <?php echo round($maxz)?>
+            min: <?= round($minz)?>,
+            max: <?= round($maxz)?>
         },
         credits:
         {
@@ -601,7 +599,7 @@ $(function ()
         {
             enabled: false
         },
-        series: [<?php echo $data ?>]
+        series: [<?= $data ?>]
     });
 
     // Add mouse events for rotation
@@ -642,11 +640,11 @@ $(function ()
     $('#loader').hide();
 });
 
-var disclaimer = $("#disclaimer");
+var disclaimer = $('#disclaimer');
 <?php
 if ($disclaimer !== '') {
     ?>
-    disclaimer.html('<?php echo $disclaimer?>');
+    disclaimer.html('<?= $disclaimer?>');
     <?php
 } else {
     ?>

@@ -66,7 +66,7 @@ $usez = $usable['z'];
         });
 
         function showHidePanels(trigger) {
-            console.log(trigger);
+            //console.log(trigger);
             $('.categ-panels').each(function (index) {
                 $(this).css('display', 'none');
             });
@@ -104,12 +104,12 @@ $usez = $usable['z'];
         <td class="heading poi_minmax">
             <a href="javascript:void(0)" id="addp" title="Add point of interest">Points of Interest</a>
             <label style="float: right;"> Show POI's<input type="checkbox" name="showPOI" value="showPOI"
-                                                           style="display: block;float: right;margin-left:20px;" id="showPOI"
+                                                           style="display: block; float: right; margin-left: 20px;" id="showPOI"
                                                            checked="checked"></label>
         </td>
     </tr>
     <tr>
-        <td class="poi_minmax" id="poiPart" style="vertical-align:top;padding:0">
+        <td class="poi_minmax" id="poiPart" style="vertical-align: top; padding: 0">
             <?php
             /**
              * fetch poi in correct order
@@ -134,9 +134,9 @@ $usez = $usable['z'];
             $poi->usex = $usex;
             $poi->usey = $usey;
             $poi->usez = $usez;
-            $poi->time_difference = $system_time;
+            $poi->time_difference = $systemTime;
 
-            echo $poi->make_table($result, 'Poi');
+            echo $poi->makeTable($result, 'Poi');
 
             $result->close();
             ?>
@@ -146,13 +146,13 @@ $usez = $usable['z'];
         <td class="heading poi_minmax">
             Bookmarks
             <label style="float: right;"> Show Bookmarks<input type="checkbox" name="showBM" value="showBM"
-                                                               style="display: block;float: right;margin-left:20px;" id="showBM"
+                                                               style="display: block; float: right; margin-left: 20px;" id="showBM"
                                                                checked="checked"></label>
         </td>
     </tr>
 
     <tr>
-        <td class="poi_minmax" id="bmPart" style="vertical-align:top;padding:0">
+        <td class="poi_minmax" id="bmPart" style="vertical-align: top; padding: 0">
             <?php
             /**
              * fetch bookmarks
@@ -177,9 +177,9 @@ $usez = $usable['z'];
             $bm->usex = $usex;
             $bm->usey = $usey;
             $bm->usez = $usez;
-            $bm->time_difference = $system_time;
+            $bm->time_difference = $systemTime;
 
-            echo $bm->make_table($result, 'Bm');
+            echo $bm->makeTable($result, 'Bm');
 
             $result->close();
             ?>

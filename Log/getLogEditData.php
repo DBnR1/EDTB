@@ -35,7 +35,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/source/functions.php';
 /** @require MySQL */
 require_once $_SERVER['DOCUMENT_ROOT'] . '/source/MySQL.php';
 
-$log_id = 0 + $_GET['logid'];
+$logId = 0 + $_GET['logid'];
 
 $query = "  SELECT user_log.id, user_log.system_id, user_log.system_name AS log_system_name,
             user_log.station_id, user_log.log_entry, user_log.stardate, user_log.title,
@@ -45,7 +45,7 @@ $query = "  SELECT user_log.id, user_log.system_id, user_log.system_name AS log_
             FROM user_log
             LEFT JOIN edtb_systems ON user_log.system_id = edtb_systems.id
             LEFT JOIN edtb_stations ON user_log.station_id = edtb_stations.id
-            WHERE user_log.id = '$log_id'
+            WHERE user_log.id = '$logId'
             LIMIT 1";
 
 $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);

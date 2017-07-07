@@ -44,15 +44,15 @@ require_once __DIR__ . '/config_ini.inc.php';
 function notice($msg, $title = 'Notice')
 {
     $notice = '<div class="notice">';
-    $notice .= '<div class="notice_title"><img src="/style/img/notice_b.png" alt="Notice" class="icon" style="margin-bottom:3px" />' . $title . '</div>';
+    $notice .= '<div class="notice_title"><img src="/style/img/notice_b.png" alt="Notice" class="icon" style="margin-bottom: 3px">' . $title . '</div>';
     $notice .= '<div class="notice_text">' . $msg . '</div>';
     $notice .= '</div>';
 
     return $notice;
 }
 
-/** @var string $u_agent the users user_agent*/
-$u_agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+/** @var string $uAgent the users user_agent*/
+$uAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
 
 /**
  * Get user's browser and platform
@@ -62,37 +62,37 @@ $u_agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
  */
 function getBrowser()
 {
-    global $u_agent;
+    global $uAgent;
 
     $bname = 'Unknown';
     $platform = 'Unknown';
 
     // First get the platform?
-    if (preg_match('/linux/i', $u_agent)) {
+    if (preg_match('/linux/i', $uAgent)) {
         $platform = 'linux';
-    } elseif (preg_match('/macintosh|mac os x/i', $u_agent)) {
+    } elseif (preg_match('/macintosh|mac os x/i', $uAgent)) {
         $platform = 'mac';
-    } elseif (preg_match('/windows|win32/i', $u_agent)) {
+    } elseif (preg_match('/windows|win32/i', $uAgent)) {
         $platform = 'windows';
     }
 
     // Next get the name of the useragent yes seperately and for good reason
-    if (preg_match('/MSIE/i', $u_agent) && !preg_match('/Opera/i', $u_agent)) {
+    if (preg_match('/MSIE/i', $uAgent) && !preg_match('/Opera/i', $uAgent)) {
         $bname = 'Internet Explorer';
         $ub = 'MSIE';
-    } elseif (preg_match('/Firefox/i', $u_agent)) {
+    } elseif (preg_match('/Firefox/i', $uAgent)) {
         $bname = 'Mozilla Firefox';
         $ub = 'Firefox';
-    } elseif (preg_match('/Chrome/i', $u_agent)) {
+    } elseif (preg_match('/Chrome/i', $uAgent)) {
         $bname = 'Google Chrome';
         $ub = 'Chrome';
-    } elseif (preg_match('/Safari/i', $u_agent)) {
+    } elseif (preg_match('/Safari/i', $uAgent)) {
         $bname = 'Apple Safari';
         $ub = 'Safari';
-    } elseif (preg_match('/Opera/i', $u_agent)) {
+    } elseif (preg_match('/Opera/i', $uAgent)) {
         $bname = 'Opera';
         $ub = 'Opera';
-    } elseif (preg_match('/Netscape/i', $u_agent)) {
+    } elseif (preg_match('/Netscape/i', $uAgent)) {
         $bname = 'Netscape';
         $ub = 'Netscape';
     }
@@ -101,7 +101,7 @@ function getBrowser()
     $known = array('Version', $ub, 'other');
     $pattern = '#(?<browser>' . implode('|', $known) .
     ')[/ ]+(?<version>[0-9.|a-zA-Z.]*)#';
-    if (!preg_match_all($pattern, $u_agent, $matches)) {
+    if (!preg_match_all($pattern, $uAgent, $matches)) {
         // we have no matching number just continue
     }
 
@@ -110,7 +110,7 @@ function getBrowser()
     if ($i != 1) {
         //we will have two since we are not using 'other' argument yet
         //see if version is before or after the name
-        if (strripos($u_agent, 'Version') < strripos($u_agent, $ub)) {
+        if (strripos($uAgent, 'Version') < strripos($uAgent, $ub)) {
             $version= $matches['version'][0];
         } else {
             $version= $matches['version'][1];
@@ -124,28 +124,28 @@ function getBrowser()
         $version = '?';
     }
 
-    return array(
-        'userAgent' => $u_agent,
+    return [
+        'userAgent' => $uAgent,
         'name'      => $bname,
         'version'   => $version,
         'platform'  => $platform,
         'pattern'   => $pattern
-    );
+    ];
 }
 
 /**
  * Get user's OS
  *
- * @return string $os_platform
+ * @return string $osPlatform
  * @author Gaurang http://stackoverflow.com/questions/3441880/get-users-os-and-version-number/15497878#15497878
  */
 function getOS()
 {
-    global $u_agent;
+    global $uAgent;
 
-    $os_platform    = 'Unknown OS Platform';
+    $osPlatform    = 'Unknown OS Platform';
 
-    $os_array       =   array(
+    $osArray       =   [
                             '/windows nt 10/i'      =>  'Windows 10',
                             '/windows nt 6.3/i'     =>  'Windows 8.1',
                             '/windows nt 6.2/i'     =>  'Windows 8',
@@ -169,51 +169,51 @@ function getOS()
                             '/android/i'            =>  'Android',
                             '/blackberry/i'         =>  'BlackBerry',
                             '/webos/i'              =>  'Mobile'
-                        );
+    ];
 
-    foreach ($os_array as $regex => $value) {
-        if (preg_match($regex, $u_agent)) {
-            $os_platform = $value;
+    foreach ($osArray as $regex => $value) {
+        if (preg_match($regex, $uAgent)) {
+            $osPlatform = $value;
         }
     }
-    unset($value);
 
-    return $os_platform;
+    return $osPlatform;
 }
 
 /**
  * Converts bytes into human readable file size.
  *
- * @param string $bytes
+ * @param string|float $bytes
  * @return string human readable file size (2,87 ??)
  * @author Mogilev Arseny
  */
 function FileSizeConvert($bytes)
 {
     $bytes = (float)$bytes;
-    $arBytes = array(
-        0 => array(
+    $arBytes = [
+        0 => [
             'UNIT' => 'TB',
             'VALUE' => 1024 ** 4
-        ),
-        1 => array(
+        ],
+        1 => [
             'UNIT' => 'GB',
             'VALUE' => 1024 ** 3
-        ),
-        2 => array(
+        ],
+        2 => [
             'UNIT' => 'MB',
             'VALUE' => 1024 ** 2
-        ),
-        3 => array(
+        ],
+        3 => [
             'UNIT' => 'KB',
             'VALUE' => 1024
-        ),
-        4 => array(
+        ],
+        4 => [
             'UNIT' => 'B',
             'VALUE' => 0
-        ),
-    );
+        ],
+    ];
 
+    $result = null;
     foreach ($arBytes as $arItem) {
         if ($bytes >= $arItem['VALUE']) {
             $result = $bytes / $arItem['VALUE'];
@@ -236,12 +236,12 @@ function FileSizeConvert($bytes)
  */
 function get_timeago($ptime, $diff = true, $format = false)
 {
-    global $system_time;
+    global $systemTime;
 
-    $ptime_og = $ptime;
+    $ptimeOg = $ptime;
 
     if ($diff === true) {
-        $ptime -= ($system_time * 60 * 60);
+        $ptime -= ($systemTime * 60 * 60);
     }
     $etime = time() - $ptime;
 
@@ -249,13 +249,14 @@ function get_timeago($ptime, $diff = true, $format = false)
         return 'less than ' . $etime . ' second ago';
     }
 
-    $a = array( 12 * 30 * 24 * 60 * 60  =>  'year',
-                30 * 24 * 60 * 60       =>  'month',
-                24 * 60 * 60            =>  'day',
-                60 * 60                 =>  'hour',
-                60                      =>  'minute',
-                1                       =>  'second'
-    );
+    $a = [
+        12 * 30 * 24 * 60 * 60  =>  'year',
+        30 * 24 * 60 * 60       =>  'month',
+        24 * 60 * 60            =>  'day',
+        60 * 60                 =>  'hour',
+        60                      =>  'minute',
+        1                       =>  'second'
+    ];
 
     foreach ($a as $secs => $str) {
         $d = $etime / $secs;
@@ -266,7 +267,7 @@ function get_timeago($ptime, $diff = true, $format = false)
                 return $r . ' ' . $str . ($r > 1 ? 's' : '') . ' ago';
             }
 
-            if (data_is_old($ptime_og)) {
+            if (data_is_old($ptimeOg)) {
                 return '<span class="old_data">' . $r . ' ' . $str . ($r > 1 ? 's' : '') . ' ago</span>';
             }
 
@@ -288,7 +289,8 @@ function is_dir_empty($dir)
     if (!is_readable($dir)) {
         return null;
     }
-    return (count(scandir($dir)) == 2);
+
+    return (count(scandir($dir)) === 2);
 }
 
 /**
@@ -297,40 +299,41 @@ function is_dir_empty($dir)
  * @param string $msg text to write
  * @param string $file
  * @param string $line
- * @param bool $debug_override
+ * @param bool $debugOverride
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function write_log($msg, $file = '', $line = '', $debug_override = false)
+function write_log($msg, $file = '', $line = '', $debugOverride = false)
 {
-    global $settings, $system_time;
+    global $settings, $systemTime;
 
-    if (isset($settings['debug']) && $settings['debug'] === 'true' || $debug_override !== false) {
+    if ($debugOverride !== false || (isset($settings['debug']) && $settings['debug'] === 'true')) {
         // write user info file if not exists
         $lfile = $_SERVER['DOCUMENT_ROOT'] . '/edtb_log_info.txt';
         if (!file_exists($lfile)) {
             $ua = getBrowser();
-            $debug_info = 'Browser: ' . $ua['name'] . ' ' . $ua['version'] . ' (' .$ua['platform'] . ')' . PHP_EOL;
-            $debug_info .= 'Platform: ' . getOS() . PHP_EOL;
-            $debug_info .= 'Reported as: ' . $_SERVER['HTTP_USER_AGENT'] . PHP_EOL;
-            $debug_info .= 'HTTP_HOST: ' . $_SERVER['HTTP_HOST'] . PHP_EOL;
-            $debug_info .= 'SERVER_SOFTWARE: ' . $_SERVER['SERVER_SOFTWARE'] . PHP_EOL;
-            $debug_info .= 'SERVER_NAME: ' . $_SERVER['SERVER_NAME'] . PHP_EOL;
-            $debug_info .= 'SERVER_ADDR: ' . $_SERVER['SERVER_ADDR'] . PHP_EOL;
-            $debug_info .= 'SERVER_PORT: ' . $_SERVER['SERVER_PORT'] . PHP_EOL;
-            $debug_info .= 'DOCUMENT_ROOT: ' . $_SERVER['DOCUMENT_ROOT'] . PHP_EOL;
+            $debugInfo = 'Browser: ' . $ua['name'] . ' ' . $ua['version'] . ' (' .$ua['platform'] . ')' . PHP_EOL;
+            $debugInfo .= 'Platform: ' . getOS() . PHP_EOL;
+            $debugInfo .= 'Reported as: ' . $_SERVER['HTTP_USER_AGENT'] . PHP_EOL;
+            $debugInfo .= 'HTTP_HOST: ' . $_SERVER['HTTP_HOST'] . PHP_EOL;
+            $debugInfo .= 'SERVER_SOFTWARE: ' . $_SERVER['SERVER_SOFTWARE'] . PHP_EOL;
+            $debugInfo .= 'SERVER_NAME: ' . $_SERVER['SERVER_NAME'] . PHP_EOL;
+            $debugInfo .= 'SERVER_ADDR: ' . $_SERVER['SERVER_ADDR'] . PHP_EOL;
+            $debugInfo .= 'SERVER_PORT: ' . $_SERVER['SERVER_PORT'] . PHP_EOL;
+            $debugInfo .= 'DOCUMENT_ROOT: ' . $_SERVER['DOCUMENT_ROOT'] . PHP_EOL;
 
-            file_put_contents($lfile, $debug_info);
+            file_put_contents($lfile, $debugInfo);
         }
 
         $logfile = $_SERVER['DOCUMENT_ROOT'] . '/edtb_log.txt';
-        $fd = fopen($logfile, 'a');
+        $fd = fopen($logfile, 'ab');
 
+        $where = '';
         if (isset($file)) {
-            $on_line = $line === '' ? '' : ' on line ' . $line;
-            $where = '[' . $file . '' . $on_line . '] ';
+            $onLine = $line === '' ? '' : ' on line ' . $line;
+            $where = '[' . $file . '' . $onLine . '] ';
         }
 
-        $str = '[' . date('d.m.Y H:i:s', time() + $system_time * 60 * 60) . ']' . $where . $msg;
+        $str = '[' . date('d.m.Y H:i:s', time() + $systemTime * 60 * 60) . ']' . $where . $msg;
 
         fwrite($fd, $str . PHP_EOL);
         fclose($fd);

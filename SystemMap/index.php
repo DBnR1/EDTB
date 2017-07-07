@@ -39,12 +39,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/style/Theme.php';
 $header = new Header();
 
 /** @var string page_title */
-$header->page_title = 'System Map';
+$header->pageTitle = 'System Map';
 
 /**
  * display the header
  */
-$header->display_header();
+$header->displayHeader();
 
 /**
  * determine what system to display
@@ -57,11 +57,11 @@ if (isset($_GET['system'])) {
 /**
  * get string if system already mapped
  */
-$esc_system_name = $mysqli->real_escape_string($system);
+$escSystemName = $mysqli->real_escape_string($system);
 
 $query = "  SELECT string
             FROM user_system_map
-            WHERE system_name = '$esc_system_name'
+            WHERE system_name = '$escSystemName'
             LIMIT 1";
 
 $result = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
@@ -71,7 +71,7 @@ $string = $obj->string;
 
 $result->close();
 
-$link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http://map.edtb.xyz?v1=' . $string . '" target="_blank" id="maplink" title="View on map.edtb.xyz">View on map.edtb.xyz</a></span>' : '<span id="mlink"></span>';
+$linkMap = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http://map.edtb.xyz?v1=' . $string . '" target="_blank" id="maplink" title="View on map.edtb.xyz">View on map.edtb.xyz</a></span>' : '<span id="mlink"></span>';
 ?>
 <link type="text/css" href="/source/Vendor/jquery-ui-1.11.4/jquery-ui.min.css" rel="stylesheet" />
 <script src="/source/Vendor/timmywil-jquery-panzoom/panzoom.js"></script>
@@ -82,39 +82,39 @@ $link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http
 <section id="focal">
     <div class="entries explor_entries">
         <div class="top">
-            <span class="right" id="value" style="display:none">
+            <span class="right" id="value" style="display: none">
                 Approximate value:
-                <span class="text" id="minval"></span><span id="minvaln" style="display:none"></span>
+                <span class="text" id="minval"></span><span id="minvaln" style="display: none"></span>
                 <span class="text" id="dash"></span>
-                <span class="text" id="maxval"></span><span id="maxvaln" style="display:none"></span>&nbsp;
+                <span class="text" id="maxval"></span><span id="maxvaln" style="display: none"></span>&nbsp;
                 ( Very experimental )
             </span>
-            <div class="sm_system">System map for: <?php echo $system . $link_map?></div>
-            <div id="smsys" style="display:none"><?php echo $system?></div>
-            <span class="text" style="margin-right:20px">Add bodies :</span>
+            <div class="sm_system">System map for: <?= $system . $linkMap?></div>
+            <div id="smsys" style="display: none"><?= $system?></div>
+            <span class="text" style="margin-right: 20px">Add bodies :</span>
             <?php
-            $types = array('star', 'planet', 'other');
+            $types = ['star', 'planet', 'other'];
 
             foreach ($types as $type) {
                 $border = $type === 'other' ? ' style="border-right:1px solid #333"' : '';
                 ?>
-                <div class="categories" id="<?php echo $type?>_click"<?php echo $border?>>
-                    <?php echo $type?>
+                <div class="categories" id="<?= $type?>_click"<?= $border?>>
+                    <?= $type?>
                 </div>
-                <div class="stars_planets" id="<?php echo $type?>" style="display:none">
+                <div class="stars_planets" id="<?= $type?>" style="display: none">
                 <?php
-                $json_file = 'bodies.json';
-                $json_string = file_get_contents($json_file);
+                $jsonFile = 'bodies.json';
+                $jsonString = file_get_contents($jsonFile);
 
-                $json_arr = json_decode($json_string, true);
+                $jsonArr = json_decode($jsonString, true);
 
                 $i = 0;
-                $last_img = '';
+                $lastImg = '';
 
-                Utility::orderBy($json_arr, 'order_num ASC, name ASC');
+                Utility::orderBy($jsonArr, 'order_num ASC, name ASC');
 
-                $last_name = '';
-                foreach ($json_arr as $arr) {
+                $lastName = '';
+                foreach ($jsonArr as $arr) {
                     $type2 = $arr['type'];
                     if ($type2 == $type) {
                         $img = str_replace(' ', '_', $arr['name']);
@@ -126,10 +126,10 @@ $link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http
                         $name = $arr['name'];
                         $id = $arr['id'];
                         $width = $arr['width'];
-                        $min_value = $arr['min_value'];
-                        $max_value = $arr['max_value'];
+                        $minValue = $arr['min_value'];
+                        $maxValue = $arr['max_value'];
 
-                        if ($name != $last_name) {
+                        if ($name != $lastName) {
                             echo '<div class="cat_name">' . $name;
                         }
 
@@ -142,38 +142,38 @@ $link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http
 
                             ?>
                             <script>
-                                var options<?php echo $id . $imgid?> = [];
-                                options<?php echo $id . $imgid?>["id"] = "<?php echo $id?>";
-                                options<?php echo $id . $imgid?>["type"] = "<?php echo $type?>";
-                                options<?php echo $id . $imgid?>["name"] = "<?php echo $name?>";
-                                options<?php echo $id . $imgid?>["src"] = "<?php echo $src?>";
-                                options<?php echo $id . $imgid?>["imgid"] = "<?php echo $imgid?>";
-                                options<?php echo $id . $imgid?>["width"] = "<?php echo $width?>";
-                                options<?php echo $id . $imgid?>["min_value"] = "<?php echo $min_value?>";
-                                options<?php echo $id . $imgid?>["max_value"] = "<?php echo $max_value?>";
-                                options<?php echo $id . $imgid?>["bid"] = "<?php echo $bid?>";
-                                options<?php echo $id . $imgid?>["bodyid"] = "<?php echo $id?>";
-                                options<?php echo $id . $imgid?>["landable"] = 0;
-                                options<?php echo $id . $imgid?>["ringed"] = 0;
-                                options<?php echo $id . $imgid?>["scanned"] = 1;
-                                options<?php echo $id . $imgid?>["firstdisc"] = 0;
-                                options<?php echo $id . $imgid?>["do_update"] = true;
-                                options<?php echo $id . $imgid?>["pos_top"] = false;
-                                options<?php echo $id . $imgid?>["pos_left"] = false;
-                                options<?php echo $id . $imgid?>["source"] = "php";
+                                var options<?= $id . $imgid?> = [];
+                                options<?= $id . $imgid?>["id"] = "<?= $id?>";
+                                options<?= $id . $imgid?>["type"] = "<?= $type?>";
+                                options<?= $id . $imgid?>["name"] = "<?= $name?>";
+                                options<?= $id . $imgid?>["src"] = "<?= $src?>";
+                                options<?= $id . $imgid?>["imgid"] = "<?= $imgid?>";
+                                options<?= $id . $imgid?>["width"] = "<?= $width?>";
+                                options<?= $id . $imgid?>["min_value"] = "<?= $minValue?>";
+                                options<?= $id . $imgid?>["max_value"] = "<?= $maxValue?>";
+                                options<?= $id . $imgid?>["bid"] = "<?= $bid?>";
+                                options<?= $id . $imgid?>["bodyid"] = "<?= $id?>";
+                                options<?= $id . $imgid?>["landable"] = 0;
+                                options<?= $id . $imgid?>["ringed"] = 0;
+                                options<?= $id . $imgid?>["scanned"] = 1;
+                                options<?= $id . $imgid?>["firstdisc"] = 0;
+                                options<?= $id . $imgid?>["do_update"] = true;
+                                options<?= $id . $imgid?>["pos_top"] = false;
+                                options<?= $id . $imgid?>["pos_left"] = false;
+                                options<?= $id . $imgid?>["source"] = "php";
                             </script>
-                            <div class="add" onclick="add_body(options<?php echo $id . $imgid?>)">
-                                <img class="add_img_<?php echo $type?>" src="<?php echo $src?>" alt="<?php echo $name?>" />
+                            <div class="add" onclick="add_body(options<?= $id . $imgid?>)">
+                                <img class="add_img_<?= $type?>" src="<?= $src?>" alt="<?= $name?>">
                             </div>
                             <?php
                             $ii++;
                         }
 
-                        if ($img != $last_img) {
+                        if ($img != $lastImg) {
                             echo '</div>';
                         }
 
-                        $last_name = $name;
+                        $lastName = $name;
                         $i++;
                     }
                 }
@@ -182,9 +182,9 @@ $link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http
                 <?php
             }
             ?>
-            <span class="text" style="margin-left:40px;margin-right:20px">Controls :</span>
+            <span class="text" style="margin-left: 40px; margin-right: 20px">Controls :</span>
             <div class="categories" id="toggle_grid">Toggle grid</div>
-            <div class="categories" id="toggle_names" style="width:77px">Hide names</div>
+            <div class="categories" id="toggle_names" style="width: 77px">Hide names</div>
             <div class="categories" id="toggle_background">Toggle background</div>
         </div>
 
@@ -192,7 +192,7 @@ $link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http
 
         <script>
             (function() {
-                var $section = $("#focal");
+                var $section = $('#focal');
                 var $panzoom = $section.find(".panzoom").panzoom({
                     startTransform: 'scale(1.0)',
                     animate: false,
@@ -232,7 +232,7 @@ $link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http
 <script>
     Array.prototype.clean = function(deleteValue) {
         for (var i = 0; i < this.length; i++) {
-            if (this[i] == deleteValue) {
+            if (this[i] === deleteValue) {
                 this.splice(i, 1);
                 i--;
             }
@@ -249,7 +249,7 @@ $link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http
         <?php
         if (!empty($string)) {
             ?>
-            url_vars = "<?php echo $string?>";
+            url_vars = "<?= $string?>";
             <?php
         } else {
             ?>
@@ -290,12 +290,12 @@ $link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http
                     options["bodyid"] = parts[5].substr(0, 2);
 
                     options["show_name"] = 1;
-                    if (show_names == "0") {
+                    if (show_names === "0") {
                         options["show_name"] = 0;
                     }
 
                     for (ia = 0; ia < data.length; ia++) {
-                        if (data[ia].id == options["bodyid"]) {
+                        if (data[ia].id === options["bodyid"]) {
                             options["id"] = data[ia].id;
                             //var width2 = data[ia].width;
                             options["type"] = data[ia].type;
@@ -320,27 +320,27 @@ $link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http
                 }
             });
 
-            if (show_grid == "0") {
+            if (show_grid === "0") {
                 $(".panzoom").css("background-image", "none");
             }
 
-            if (show_bg == "0") {
+            if (show_bg === "0") {
                 $(".rightpanel").css("background-image", "none");
             }
 
-            if (show_names == "0") {
-                $("#toggle_names").html("Show names");
+            if (show_names === "0") {
+                $('#toggle_names').html("Show names");
             }
         }
     };
 
     $(document).ready(function() {
-        var star = $("#star");
-        var planet = $("#planet");
-        var other = $("#other");
+        var star = $('#star');
+        var planet = $('#planet');
+        var other = $('#other');
         update_price();
 
-        $("#star_click").mouseover(function() {
+        $('#star_click').mouseover(function() {
             if (star.is(":hidden")) {
                 star.fadeToggle("fast");
             }
@@ -352,7 +352,7 @@ $link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http
             }
         });
 
-        $("#planet_click").mouseover(function() {
+        $('#planet_click').mouseover(function() {
             if (planet.is(":hidden")) {
                 planet.fadeToggle("fast");
             }
@@ -364,7 +364,7 @@ $link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http
             }
         });
 
-        $("#other_click").mouseover(function() {
+        $('#other_click').mouseover(function() {
             if (other.is(":hidden")) {
                 other.fadeToggle("fast");
             }
@@ -394,9 +394,9 @@ $link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http
         /**
          * toggle grid
          */
-        $("#toggle_grid").click(function() {
+        $('#toggle_grid').click(function() {
             var panzoom = $(".panzoom");
-            if (panzoom.css("background-image") == "none") {
+            if (panzoom.css("background-image") === "none") {
                 panzoom.css("background-image", "repeating-linear-gradient(0deg, transparent, transparent 20px, #333333 20px, #333333 21px), repeating-linear-gradient(-90deg, transparent, transparent 20px, #333333 20px, #333333 21px)");
             } else {
                 panzoom.css("background-image", "none");
@@ -407,9 +407,9 @@ $link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http
         /**
          * toggle body names
          */
-        var toggle_names = $("#toggle_names");
+        var toggle_names = $('#toggle_names');
         toggle_names.click(function() {
-            if (toggle_names.html() == "Show names") {
+            if (toggle_names.html() === "Show names") {
                 toggle_names.html("Hide names");
                 $(".name").fadeIn("fast");
             } else {
@@ -422,9 +422,9 @@ $link_map = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http
         /**
          * toggle body background
          */
-        $("#toggle_background").click(function() {
+        $('#toggle_background').click(function() {
             var rightpanel = $(".rightpanel");
-            if (rightpanel.css("background-image") == "none") {
+            if (rightpanel.css("background-image") === "none") {
                 rightpanel.css("background-image", "url(/style/img/backg.jpg)");
             } else {
                 rightpanel.css("background-image", "none");
@@ -459,4 +459,4 @@ $footer = new Footer();
 /**
  * display the footer
  */
-$footer->display_footer();
+$footer->displayFooter();

@@ -43,9 +43,9 @@ if (isset($_GET['override'])) {
 }
 
 /** @var string force_update */
-$force_update = 'false';
+$forceUpdate = 'false';
 if (isset($_GET['force_update'])) {
-    $force_update = $_GET['force_update'] === 'true' ? 'true' : 'false';
+    $forceUpdate = $_GET['force_update'] === 'true' ? 'true' : 'false';
 }
 
 /** @require api update */
@@ -66,53 +66,53 @@ if (isset($api['commander']) && $settings['show_cmdr_status'] === 'true') {
     $data['cmdr_balance_status'] = '';
 
     if ($api['commander'] !== 'no_data') {
-        $cmdr_credits = number_format($api['commander']->{'credits'});
+        $cmdrCredits = number_format($api['commander']->{'credits'});
 
         /**
          * get icons for cmdr ranks
          */
-        $cmdr_rank_combat = $api['commander']->{'rank'}->{'combat'};
-        $cmdr_rank_combat_icon = '<a href="#" title="Combat rank: ' . get_rank('combat', $cmdr_rank_combat, false) . '">';
-        $cmdr_rank_combat_icon .= '<img src="' . get_rank('combat', $cmdr_rank_combat + 1) . '" alt="combat" class="status_img" style="margin-right:6px" />';
-        $cmdr_rank_combat_icon .= '</a>';
+        $cmdrRankCombat = $api['commander']->{'rank'}->{'combat'};
+        $cmdrRankCombatIcon = '<a href="#" title="Combat rank: ' . get_rank('combat', $cmdrRankCombat, false) . '">';
+        $cmdrRankCombatIcon .= '<img src="' . get_rank('combat', $cmdrRankCombat + 1) . '" alt="combat" class="status_img" style="margin-right: 6px">';
+        $cmdrRankCombatIcon .= '</a>';
 
-        $cmdr_rank_trade = $api['commander']->{'rank'}->{'trade'};
-        $cmdr_rank_trade_icon = '<a href="#" title="Trade rank: ' . get_rank('trade', $cmdr_rank_trade, false) . '">';
-        $cmdr_rank_trade_icon .= '<img src="' . get_rank('trade', $cmdr_rank_trade + 1) . '" alt="trade" class="status_img" style="margin-right:6px" />';
-        $cmdr_rank_trade_icon .= '</a>';
+        $cmdrRankTrade = $api['commander']->{'rank'}->{'trade'};
+        $cmdrRankTradeIcon = '<a href="#" title="Trade rank: ' . get_rank('trade', $cmdrRankTrade, false) . '">';
+        $cmdrRankTradeIcon .= '<img src="' . get_rank('trade', $cmdrRankTrade + 1) . '" alt="trade" class="status_img" style="margin-right: 6px">';
+        $cmdrRankTradeIcon .= '</a>';
 
-        $cmdr_rank_explore = $api['commander']->{'rank'}->{'explore'};
-        $cmdr_rank_explore_icon = '<a href="#" title="Explorer rank: ' . get_rank('explore', $cmdr_rank_explore, false) . '">';
-        $cmdr_rank_explore_icon .= '<img src="' . get_rank('explore', $cmdr_rank_explore + 1) . '" alt="explorer" class="status_img" />';
-        $cmdr_rank_explore_icon .= '</a>';
+        $cmdrRankExplore = $api['commander']->{'rank'}->{'explore'};
+        $cmdrRankExploreIcon = '<a href="#" title="Explorer rank: ' . get_rank('explore', $cmdrRankExplore, false) . '">';
+        $cmdrRankExploreIcon .= '<img src="' . get_rank('explore', $cmdrRankExplore + 1) . '" alt="explorer" class="status_img">';
+        $cmdrRankExploreIcon .= '</a>';
 
-        $cmdr_rank_cqc = '';
-        $cmdr_rank_cqc_icon = '';
+        $cmdrRankCqc = '';
+        $cmdrRankCqcIcon = '';
 
         if ($settings['show_cqc_rank'] === 'true') {
-            $cmdr_rank_cqc = $api['commander']->{'rank'}->{'cqc'};
-            $cmdr_rank_cqc_icon = '<a href="#" title="CQC rank: ' . get_rank('cqc', $cmdr_rank_cqc, false) . '">';
-            $cmdr_rank_cqc_icon .= '<img src="' . get_rank('cqc', $cmdr_rank_cqc + 1) . '" class="status_img" alt="cqc" style="margin-right:6px" />';
-            $cmdr_rank_cqc_icon .= '</a>';
+            $cmdrRankCqc = $api['commander']->{'rank'}->{'cqc'};
+            $cmdrRankCqcIcon = '<a href="#" title="CQC rank: ' . get_rank('cqc', $cmdrRankCqc, false) . '">';
+            $cmdrRankCqcIcon .= '<img src="' . get_rank('cqc', $cmdrRankCqc + 1) . '" class="status_img" alt="cqc" style="margin-right: 6px">';
+            $cmdrRankCqcIcon .= '</a>';
         }
 
         /**
          * additional info
          */
-        $cmdr_rank_fed = $api['commander']->{'rank'}->{'federation'};
-        $fed_rank = get_rank('federation', $cmdr_rank_fed, false);
+        $cmdrRankFed = $api['commander']->{'rank'}->{'federation'};
+        $fedRank = get_rank('federation', $cmdrRankFed, false);
 
-        $cmdr_rank_empire = $api['commander']->{'rank'}->{'empire'};
-        $empire_rank = get_rank('empire', $cmdr_rank_empire, false);
+        $cmdrRankEmpire = $api['commander']->{'rank'}->{'empire'};
+        $empireRank = get_rank('empire', $cmdrRankEmpire, false);
 
-        $additional = '<div id="cmdr_status_mi" style="display:none">';
-        $additional .= '<strong>Federation rank:</strong> ' . $fed_rank . '<br />';
-        $additional .= '<strong>Empire rank:</strong> ' . $empire_rank;
+        $additional = '<div id="cmdr_status_mi" style="display: none">';
+        $additional .= '<strong>Federation rank:</strong> ' . $fedRank . '<br>';
+        $additional .= '<strong>Empire rank:</strong> ' . $empireRank;
         $additional .= '</div>';
 
-        $data['cmdr_status'] = $cmdr_rank_combat_icon . $cmdr_rank_trade_icon . $cmdr_rank_explore_icon . $cmdr_rank_cqc_icon . $additional;
+        $data['cmdr_status'] = $cmdrRankCombatIcon . $cmdrRankTradeIcon . $cmdrRankExploreIcon . $cmdrRankCqcIcon . $additional;
 
-        $data['cmdr_balance_status'] = '<img src="/style/img/rare.png" class="balance_pic" alt="Cr" />' . $cmdr_credits . ' CR';
+        $data['cmdr_balance_status'] = '<img src="/style/img/rare.png" class="balance_pic" alt="Cr">' . $cmdrCredits . ' CR';
     }
 }
 
@@ -128,46 +128,46 @@ if (isset($api['ship']) && $settings['show_ship_status'] === 'true') {
         /**
          * basic ship info
          */
-        $ship_name = $api['ship']->{'name'};
-        $ship_health = number_format($api['ship']->{'health'}->{'hull'} / 10000, 1);
+        $shipName = $api['ship']->{'name'};
+        $shipHealth = number_format($api['ship']->{'health'}->{'hull'} / 10000, 1);
 
-        $ship_fuel = number_format($api['ship']->{'fuel'}->{'main'}->{'level'} / $api['ship']->{'fuel'}->{'main'}->{'capacity'} * 100, 1);
-        $ship_cargo_cap = $api['ship']->{'cargo'}->{'capacity'};
-        $ship_cargo_used = $api['ship']->{'cargo'}->{'qty'};
+        $shipFuel = number_format($api['ship']->{'fuel'}->{'main'}->{'level'} / $api['ship']->{'fuel'}->{'main'}->{'capacity'} * 100, 1);
+        $shipCargoCap = $api['ship']->{'cargo'}->{'capacity'};
+        $shipCargoUsed = $api['ship']->{'cargo'}->{'qty'};
 
         /**
          * additional ship info
          */
-        $ship_value = number_format($api['ship']->{'value'}->{'total'});
-        $ship_hull_value = number_format($api['ship']->{'value'}->{'hull'});
-        $ship_modules_value = number_format($api['ship']->{'value'}->{'modules'});
+        $shipValue = number_format($api['ship']->{'value'}->{'total'});
+        $shipHullValue = number_format($api['ship']->{'value'}->{'hull'});
+        $shipModulesValue = number_format($api['ship']->{'value'}->{'modules'});
 
-        if (isset($api['stored_ships'])) {
-            $stored_ships = '<br /><br /><strong>Stored ships</strong><br />';
-            foreach ($api['stored_ships'] as $shipId => $stored_ship) {
+        if (isset($api['stored_ships']) && is_array($api['stored_ships'])) {
+            $storedShips = '<br><br><strong>Stored ships</strong><br>';
+            foreach ($api['stored_ships'] as $shipId => $storedShip) {
                 if ($shipId != $api['commander']->{'currentShipId'}) {
-                    $ship_name = ship_name($stored_ship->{'name'});
-                    $docked_at_station = $stored_ship->{'station'}->{'name'};
-                    $docked_at_system = $stored_ship->{'starsystem'}->{'name'};
+                    $shipName = ship_name($storedShip->{'name'});
+                    $dockedAtStation = $storedShip->{'station'}->{'name'};
+                    $dockedAtSystem = $storedShip->{'starsystem'}->{'name'};
 
-                    $distance = get_distance($docked_at_system);
+                    $distance = get_distance($dockedAtSystem);
 
-                    $stored_ships .= $ship_name . ' (' . $distance . ')<br />';
-                    $stored_ships .= $docked_at_station . ' at <a href="/System?system_name=' . urlencode($docked_at_system) . '">';
-                    $stored_ships .= $docked_at_system . '</a><br /><br />';
+                    $storedShips .= $shipName . ' (' . $distance . ')<br>';
+                    $storedShips .= $dockedAtStation . ' at <a href="/System?system_name=' . urlencode($dockedAtSystem) . '">';
+                    $storedShips .= $dockedAtSystem . '</a><br><br>';
                 }
             }
         }
 
-        $additional = '<div id="ship_status_mi" style="display:none">';
-        $additional .= '<strong>Ship value:</strong> ' . $ship_value .' CR<br />';
-        $additional .= 'Hull: ' . $ship_hull_value . ' CR<br />';
-        $additional .= 'Modules: ' . $ship_modules_value . ' CR' . $stored_ships;
+        $additional = '<div id="ship_status_mi" style="display: none">';
+        $additional .= '<strong>Ship value:</strong> ' . $shipValue .' CR<br>';
+        $additional .= 'Hull: ' . $shipHullValue . ' CR<br>';
+        $additional .= 'Modules: ' . $shipModulesValue . ' CR' . $storedShips;
         $additional .= '</div>';
 
-        $data['ship_status'] = '<img src="/style/img/ship.png" class="icon" alt="Ship hull" />' . $ship_health . ' %';
-        $data['ship_status'] .= '<img src="/style/img/fuel.png" class="icon24" style="margin-left:6px;margin-bottom:4px" alt="Ship fuel" />' . $ship_fuel . ' %';
-        $data['ship_status'] .= '<img src="/style/img/cargo.png" class="icon24" style="margin-left:6px" alt="Ship cargo" />' . $ship_cargo_used . '/' . $ship_cargo_cap;
+        $data['ship_status'] = '<img src="/style/img/ship.png" class="icon" alt="Ship hull">' . $shipHealth . ' %';
+        $data['ship_status'] .= '<img src="/style/img/fuel.png" class="icon24" style="margin-left: 6px; margin-bottom: 4px" alt="Ship fuel">' . $shipFuel . ' %';
+        $data['ship_status'] .= '<img src="/style/img/cargo.png" class="icon24" style="margin-left: 6px" alt="Ship cargo">' . $shipCargoUsed . '/' . $shipCargoCap;
         $data['ship_status'] .= $additional;
     }
 }
@@ -175,41 +175,41 @@ if (isset($api['ship']) && $settings['show_ship_status'] === 'true') {
 /**
  * write to cache if changed
  */
-$cmdr_ranks_file = $_SERVER['DOCUMENT_ROOT'] . '/cache/cmdr_ranks_status.html';
+$cmdrRanksFile = $_SERVER['DOCUMENT_ROOT'] . '/cache/cmdr_ranks_status.html';
 $data['cmdr_ranks_update'] = 'false';
-$cmdr_rank_cache = file_get_contents($cmdr_ranks_file);
+$cmdrRankCache = file_get_contents($cmdrRanksFile);
 
-$cmdr_balance_file = $_SERVER['DOCUMENT_ROOT'] . '/cache/cmdr_balance_status.html';
+$cmdrBalanceFile = $_SERVER['DOCUMENT_ROOT'] . '/cache/cmdr_balance_status.html';
 $data['cmdr_balance_update'] = 'false';
-$cmdr_balance_cache = file_get_contents($cmdr_balance_file);
+$cmdrBalanceCache = file_get_contents($cmdrBalanceFile);
 
-$ship_status_file = $_SERVER['DOCUMENT_ROOT'] . '/cache/ship_status.html';
+$shipStatusFile = $_SERVER['DOCUMENT_ROOT'] . '/cache/ship_status.html';
 $data['ship_status_update'] = 'false';
-$ship_status_cache = file_get_contents($ship_status_file);
+$shipStatusCache = file_get_contents($shipStatusFile);
 
-if ($force_update === 'true') {
+if ($forceUpdate === 'true') {
     $data['cmdr_ranks_update'] = 'true';
     $data['cmdr_balance_update'] = 'true';
     $data['ship_status_update'] = 'true';
 } else {
-    if ($cmdr_rank_cache != $data['cmdr_status']) {
-        if (!file_put_contents($cmdr_ranks_file, $data['cmdr_status'])) {
+    if ($cmdrRankCache != $data['cmdr_status']) {
+        if (!file_put_contents($cmdrRanksFile, $data['cmdr_status'])) {
             $error = error_get_last();
             write_log('Error: ' . $error['message'], __FILE__, __LINE__);
         }
         $data['cmdr_ranks_update'] = 'true';
     }
 
-    if ($cmdr_balance_cache != $data['cmdr_balance_status']) {
-        if (!file_put_contents($cmdr_balance_file, $data['cmdr_balance_status'])) {
+    if ($cmdrBalanceCache != $data['cmdr_balance_status']) {
+        if (!file_put_contents($cmdrBalanceFile, $data['cmdr_balance_status'])) {
             $error = error_get_last();
             write_log('Error: ' . $error['message'], __FILE__, __LINE__);
         }
         $data['cmdr_balance_update'] = 'true';
     }
 
-    if ($ship_status_cache != $data['ship_status']) {
-        if (!file_put_contents($ship_status_file, $data['ship_status'])) {
+    if ($shipStatusCache != $data['ship_status']) {
+        if (!file_put_contents($shipStatusFile, $data['ship_status'])) {
             $error = error_get_last();
             write_log('Error: ' . $error['message'], __FILE__, __LINE__);
         }

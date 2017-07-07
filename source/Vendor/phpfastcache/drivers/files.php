@@ -67,13 +67,13 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
             }
         }
 
-        $file_path = $path."/".$filename.".txt";
-        return $file_path;
+        $filePath = $path."/".$filename.".txt";
+        return $filePath;
     }
 
     public function driver_set($keyword, $value = "", $time = 300, $option = array())
     {
-        $file_path = $this->getFilePath($keyword);
+        $filePath = $this->getFilePath($keyword);
       //  echo "<br>DEBUG SET: ".$keyword." - ".$value." - ".$time."<br>";
         $data = $this->encode($value);
 
@@ -81,8 +81,8 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
         /*
          * Skip if Existing Caching in Options
          */
-        if (isset($option['skipExisting']) && $option['skipExisting'] == true && @file_exists($file_path)) {
-            $content = $this->readfile($file_path);
+        if (isset($option['skipExisting']) && $option['skipExisting'] == true && @file_exists($filePath)) {
+            $content = $this->readfile($filePath);
             $old = $this->decode($content);
             $toWrite = false;
             if ($this->isExpired($old)) {
@@ -92,7 +92,7 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
 
         if ($toWrite == true) {
             try {
-                $f = @fopen($file_path, "w+");
+                $f = @fopen($filePath, "w+");
                 fwrite($f, $data);
                 fclose($f);
             } catch (Exception $e) {
@@ -104,15 +104,15 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
 
     public function driver_get($keyword, $option = array())
     {
-        $file_path = $this->getFilePath($keyword);
-        if (!@file_exists($file_path)) {
+        $filePath = $this->getFilePath($keyword);
+        if (!@file_exists($filePath)) {
             return null;
         }
 
-        $content = $this->readfile($file_path);
+        $content = $this->readfile($filePath);
         $object = $this->decode($content);
         if ($this->isExpired($object)) {
-            @unlink($file_path);
+            @unlink($filePath);
             $this->auto_clean_expired();
             return null;
         }
@@ -122,8 +122,8 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
 
     public function driver_delete($keyword, $option = array())
     {
-        $file_path = $this->getFilePath($keyword, true);
-        if (@unlink($file_path)) {
+        $filePath = $this->getFilePath($keyword, true);
+        if (@unlink($filePath)) {
             return true;
         } else {
             return false;
@@ -159,11 +159,11 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
 
                 while ($f = @readdir($subdir)) {
                     if ($f!="." && $f!="..") {
-                        $file_path = $path."/".$file."/".$f;
-                        $size = @filesize($file_path);
-                        $object = $this->decode($this->readfile($file_path));
+                        $filePath = $path."/".$file."/".$f;
+                        $size = @filesize($filePath);
+                        $object = $this->decode($this->readfile($filePath));
                         if ($this->isExpired($object)) {
-                            @unlink($file_path);
+                            @unlink($filePath);
                             $removed += $size;
                         }
                         $total += $size;
@@ -208,8 +208,8 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
 
                 while ($f = @readdir($subdir)) {
                     if ($f!="." && $f!="..") {
-                        $file_path = $path."/".$file."/".$f;
-                        @unlink($file_path);
+                        $filePath = $path."/".$file."/".$f;
+                        @unlink($filePath);
                     }
                 } // end read subdir
             } // end if
@@ -218,8 +218,8 @@ class phpfastcache_files extends  BasePhpFastCache implements phpfastcache_drive
 
     public function driver_isExisting($keyword)
     {
-        $file_path = $this->getFilePath($keyword, true);
-        if (!@file_exists($file_path)) {
+        $filePath = $this->getFilePath($keyword, true);
+        if (!@file_exists($filePath)) {
             return false;
         } else {
             // check expired or not

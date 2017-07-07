@@ -49,11 +49,11 @@ if (!empty($curSys['name'])) {
     }
 
     // figure out what coords to calculate from
-    $usable_coords = usable_coords();
-    $usex = $usable_coords['x'];
-    $usey = $usable_coords['y'];
-    $usez = $usable_coords['z'];
-    $exact = $usable_coords['current'] === true ? '' : ' *';
+    $usableCoords = usable_coords();
+    $usex = $usableCoords['x'];
+    $usey = $usableCoords['y'];
+    $usez = $usableCoords['z'];
+    $exact = $usableCoords['current'] === true ? '' : ' *';
 
     /**
      * if log range is set to zero, only show logs from current system
@@ -68,7 +68,7 @@ if (!empty($curSys['name'])) {
                     FROM user_log
                     LEFT JOIN edtb_systems ON user_log.system_id = edtb_systems.id
                     LEFT JOIN edtb_stations ON user_log.station_id = edtb_stations.id
-                    WHERE user_log.system_name = '$esc_cursys_name'
+                    WHERE user_log.system_name = '$escCursysName'
                     ORDER BY -user_log.pinned ASC, user_log.weight, user_log.stardate " . $ssort;
     }
     /**
@@ -116,26 +116,26 @@ if (!empty($curSys['name'])) {
                     IFNULL(edtb_systems.z, user_systems_own.z) BETWEEN ' . $usez . '-' . $settings['log_range'] . '
                     AND ' . $usez . '+' . $settings['log_range'] . "
                     OR
-                    user_log.system_name = '$esc_cursys_name'
-                    ORDER BY -user_log.pinned ASC, user_log.weight, user_log.system_name = '$esc_cursys_name' DESC,
+                    user_log.system_name = '$escCursysName'
+                    ORDER BY -user_log.pinned ASC, user_log.weight, user_log.system_name = '$escCursysName' DESC,
                     distance ASC,
                     user_log.stardate " . $ssort . '
                     LIMIT 10';
     }
     //write_log($query);
-    $log_res = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+    $logRes = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
 
-    $num = $log_res->num_rows;
+    $num = $logRes->num_rows;
 
     if ($num > 0) {
         $logs = new MakeLog();
 
-        $logs->time_difference = $system_time;
+        $logs->time_difference = $systemTime;
 
-        $logdata .= $logs->make_log_entries($log_res, 'system');
+        $logdata .= $logs->makeLogEntries($logRes, 'system');
     }
 
-    $log_res->close();
+    $logRes->close();
 }
 
 /**
@@ -157,18 +157,18 @@ $query = "  SELECT SQL_CACHE
             ORDER BY -pinned, weight, stardate " . $sort . '
             LIMIT 5';
 
-$glog_res = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
+$glogRes = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
 
-$gnum = $glog_res->num_rows;
+$gnum = $glogRes->num_rows;
 
 if ($gnum > 0) {
-    $general_logs = new MakeLog();
+    $generalLogs = new MakeLog();
 
-    $general_logs->time_difference = $system_time;
+    $generalLogs->time_difference = $systemTime;
 
-    $logdata .= $general_logs->make_log_entries($glog_res, 'general');
+    $logdata .= $generalLogs->makeLogEntries($glogRes, 'general');
 }
 
-$glog_res->close();
+$glogRes->close();
 
 $data['log_data'] = $logdata;

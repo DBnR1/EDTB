@@ -61,9 +61,9 @@ fwrite($fp, $decodedData);
 fclose($fp);
 ?>
     <script>
-    var audiofiles = $("#audiofiles");
+    var audiofiles = $('#audiofiles');
     audiofiles.html("ddd");
-    audiofiles.append(<?php echo $_POST['fname']?>);
+    audiofiles.append(<?= $_POST['fname']?>);
     audiofiles.append("ddd");
 </script>
 <?php

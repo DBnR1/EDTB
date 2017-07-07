@@ -42,12 +42,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/style/Theme.php';
 $header = new Header();
 
 /** @var string page_title */
-$header->page_title = 'SQL';
+$header->pageTitle = 'SQL';
 
 /**
  * display the header
  */
-$header->display_header();
+$header->displayHeader();
 
 
 /**
@@ -59,7 +59,7 @@ if (isset($_POST['code'])) {
     /**
      * blacklist certain commands for security purposes
      */
-    $blacklist = array(
+    $blacklist = [
         'DROP',
         'DELETE',
         'ROUTINE',
@@ -69,7 +69,7 @@ if (isset($_POST['code'])) {
         'EMPTY',
         'TRUNCATE',
         'TRIGGER'
-                );
+    ];
 
     $continue = true;
 
@@ -84,6 +84,7 @@ if (isset($_POST['code'])) {
         if (strripos($haystack, $find)) {
             $continue = false;
             $notify = '<div class="notify_deleted">Query contains a forbidden command.</div>';
+
             break;
         }
     }
@@ -97,14 +98,15 @@ if (isset($_POST['code'])) {
         foreach ($queries as $query) {
             if (!$mysqli->query($query)) {
                 $error = $mysqli->error;
-                $notify = '<div class="notify_deleted">Execution failed:<br />' . $error . '</div>';
+                $notify = '<div class="notify_deleted">Execution failed:<br>' . $error . '</div>';
             } else {
                 if ($rows = $mysqli->query($query)->num_rows) {
                     $error = $mysqli->info;
-                    $notify = '<div class="notify_success">Query succesfully executed.<br />' . $error . '<br />Rows: ' . number_format($rows) . '</div>';
+                    $notify = '<div class="notify_success">Query succesfully executed.<br>' . $error . '<br>Rows: ' .
+                        number_format($rows) . '</div>';
                 } else {
                     $error = $mysqli->info;
-                    $notify = '<div class="notify_success">Query succesfully executed.<br />' . $error . '</div>';
+                    $notify = '<div class="notify_success">Query succesfully executed.<br>' . $error . '</div>';
                 }
             }
         }
@@ -112,26 +114,27 @@ if (isset($_POST['code'])) {
 }
 ?>
 <!-- codemirror -->
-<link type="text/css" rel="stylesheet" href="/source/Vendor/codemirror/lib/codemirror.css">
-<script type="text/javascript" src="/source/Vendor/codemirror/lib/codemirror.js"></script>
-<script type="text/javascript" src="/source/Vendor/codemirror/mode/sql/sql.js"></script>
+    <link type="text/css" rel="stylesheet" href="/source/Vendor/codemirror/lib/codemirror.css">
+    <script type="text/javascript" src="/source/Vendor/codemirror/lib/codemirror.js"></script>
+    <script type="text/javascript" src="/source/Vendor/codemirror/mode/sql/sql.js"></script>
 
-<div class="entries">
-    <div class="entries_inner" style="margin-bottom:20px">
-    <h2>
-        <img src="/style/img/sql24.png" alt="Settings" class="icon24" />Execute SQL
-    </h2>
-    <hr>
-    <?php echo $notify?>
-    <div style="padding:5px;margin-bottom:10px">
-        You can use this form to perform SQL statements. Certain commands, such as<br />
-        <strong>DELETE</strong>, <strong>TRUNCATE</strong> and <strong>DROP</strong> are not available here.<br />
-         To do multiple statements, use <code>>>BREAK<<</code> to separate statements<br /><br />
+    <div class="entries">
+        <div class="entries_inner" style="margin-bottom: 20px">
+            <h2>
+                <img src="/style/img/sql24.png" alt="Settings" class="icon24">Execute SQL
+            </h2>
+            <hr>
+            <?= $notify ?>
+            <div style="padding: 5px; margin-bottom: 10px">
+                You can use this form to perform SQL statements. Certain commands, such as<br>
+                <strong>DELETE</strong>, <strong>TRUNCATE</strong> and <strong>DROP</strong> are not available here.<br>
+                To do multiple statements, use <code>>>BREAK<<</code> to separate statements<br><br>
 
-        For more complete database management, use the included db manager (<a href="/Admin/db_manager.php">Adminer</a>)<br />
-        or a database manager of your choice.
-    </div>
-        <form method="post" action="SQL.php">
+                For more complete database management, use the included db manager (<a
+                        href="/Admin/db_manager.php">Adminer</a>)<br>
+                or a database manager of your choice.
+            </div>
+            <form method="post" action="SQL.php">
             <textarea title="SQL" id="codes" name="code">
 <?php
 if (isset($_POST['code'])) {
@@ -144,17 +147,16 @@ if (isset($_POST['code'])) {
 }
 ?>
 </textarea>
-            <input type="submit" class="button" value="Submit" />
-        </form>
-        <script type="text/javascript">
-            var editor = CodeMirror.fromTextArea(document.getElementById("codes"),
-            {
-                lineNumbers: true,
-                mode: "text/x-mysql"
-            });
-        </script>
+                <input type="submit" class="button" value="Submit">
+            </form>
+            <script type="text/javascript">
+                var editor = CodeMirror.fromTextArea(document.getElementById("codes"), {
+                    lineNumbers: true,
+                    mode: "text/x-mysql"
+                });
+            </script>
+        </div>
     </div>
-</div>
 <?php
 /**
  * initiate page footer
@@ -164,4 +166,4 @@ $footer = new Footer();
 /**
  * display the footer
  */
-$footer->display_footer();
+$footer->displayFooter();

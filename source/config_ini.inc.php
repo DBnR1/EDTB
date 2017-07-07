@@ -41,8 +41,8 @@ spl_autoload_register(function ($class) {
     /** @var string $prefix project-specific namespace prefix */
     $prefix = 'EDTB\\';
 
-    /** @var string $base_dir base directory for the namespace prefix */
-    $base_dir = $_SERVER['DOCUMENT_ROOT'] . '/';
+    /** @var string $baseDir base directory for the namespace prefix */
+    $baseDir = $_SERVER['DOCUMENT_ROOT'] . '/';
 
     // does the class use the namespace prefix?
     $len = strlen($prefix);
@@ -52,12 +52,12 @@ spl_autoload_register(function ($class) {
     }
 
     // get the relative class name
-    $relative_class = substr($class, $len);
+    $relativeClass = substr($class, $len);
 
     // replace the namespace prefix with the base directory, replace namespace
     // separators with directory separators in the relative class name, append
     // with .php
-    $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
+    $file = $baseDir . str_replace('\\', '/', $relativeClass) . '.php';
 
     // if the file exists, require it
     if (file_exists($file)) {
@@ -65,16 +65,16 @@ spl_autoload_register(function ($class) {
     }
 });
 
-/** @var string $ini_dir ini file directory */
-$ini_dir = str_replace("\\EDTB\\source", '', __DIR__);
-$ini_dir = str_replace("\\", '/', $ini_dir);
+/** @var string $iniDir ini file directory */
+$iniDir = str_replace("\\EDTB\\source", '', __DIR__);
+$iniDir = str_replace("\\", '/', $iniDir);
 /** @var string ini_file ini file */
-$ini_file = $ini_dir . '/data/edtoolbox_v1.ini';
+$iniFile = $iniDir . '/data/edtoolbox_v1.ini';
 
 /** @var array $settings global user settings variable */
-$settings = parse_ini_file($ini_file);
+$settings = parse_ini_file($iniFile);
 
 /**
  * set the new screendir if it's empty
  */
-$settings['new_screendir'] = empty($settings['new_screendir']) ? $ini_dir . '/EDTB/screenshots' : $settings['new_screendir'];
+$settings['new_screendir'] = empty($settings['new_screendir']) ? $iniDir . '/EDTB/screenshots' : $settings['new_screendir'];
