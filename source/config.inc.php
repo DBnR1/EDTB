@@ -51,6 +51,8 @@ $settingsRes = ' SELECT SQL_CACHE user_settings.variable, user_settings.value, e
 
 $result = $mysqli->query($settingsRes) or write_log($mysqli->error, __FILE__, __LINE__);
 
+$settings = [];
+
 /**
  * fetch object array
  */
@@ -110,8 +112,10 @@ $settings['new_screendir'] = empty($settings['new_screendir']) ? $settings['inst
 
 /** @var string agent user agent for FD api */
 $settings['agent'] = 'Mozilla/5.0 (iPhone; CPU iPhone OS 7_1_2 like Mac OS X) AppleWebKit/537.51.2 (KHTML, like Gecko) Mobile/11D257';
+
 /** @var string cookie_file cookie file for FD api */
 $settings['cookie_file'] =  $_SERVER['DOCUMENT_ROOT'] . "\\cache\\cookies";
+
 /** @var string curl_exe path to curl executable file */
 $settings['curl_exe'] = $settings['install_path'] . "\\bin\\curl.exe";
 
