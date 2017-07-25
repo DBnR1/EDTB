@@ -67,7 +67,7 @@ class Header extends Theme
             <link type="text/css" href="/style/style.css?ver=<?= $settings['edtb_version']?>" rel="stylesheet" />
 
             <?php
-            if (Theme::sidebar_style() === 'narrow') {
+            if (Theme::sidebarStyle() === 'narrow') {
                 ?>
                 <link type="text/css" href="/style/style_narrow.css?ver=<?= $settings['edtb_version']?>" rel="stylesheet" />
                 <?php
@@ -134,7 +134,7 @@ class Header extends Theme
                 <!-- date and clock will be rendered here -->
                 <div id="datetime">
                     <?php
-                    if (Theme::sidebar_style() !== 'narrow') {
+                    if (Theme::sidebarStyle() !== 'narrow') {
                         ?>
                         <div class="leftpanel-date" id="date"></div>
                         <div class="leftpanel-clock" id="hrs"></div>
@@ -183,7 +183,7 @@ class Header extends Theme
             /**
              *  minimize or maximize left panel
              */
-            if (Theme::sidebar_style() === 'narrow') {
+            if (Theme::sidebarStyle() === 'narrow') {
                 $minm .= '<a href="javascript:void(0)" onclick="minmax(\'normal\')" title="Maximize left panel">';
                 $minm .= '<img class="minmax" src="/style/img/minmax.png" alt="Max">';
                 $minm .= '</a>';
@@ -195,7 +195,7 @@ class Header extends Theme
             ?>
             <div class="leftpanel-sessionlog">
                 <?php
-                if (Theme::sidebar_style() !== 'narrow') {
+                if (Theme::sidebarStyle() !== 'narrow') {
                     /**
                      * session log
                      */
@@ -279,7 +279,7 @@ class Header extends Theme
             }
 
             if ($name !== 'System Log') {
-                if (Theme::sidebar_style() === 'narrow') {
+                if (Theme::sidebarStyle() === 'narrow') {
                     // offset the log icon to make it appear centered
                     $styling = $pic === 'log.png' ? ' style="margin-left: 6px"' : '';
 
