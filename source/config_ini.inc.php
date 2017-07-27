@@ -37,7 +37,6 @@
  * @return void
  */
 spl_autoload_register(function ($class) {
-
     /** @var string $prefix project-specific namespace prefix */
     $prefix = 'EDTB\\';
 

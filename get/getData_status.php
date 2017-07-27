@@ -72,18 +72,18 @@ if (isset($api['commander']) && $settings['show_cmdr_status'] === 'true') {
          * get icons for cmdr ranks
          */
         $cmdrRankCombat = $api['commander']->{'rank'}->{'combat'};
-        $cmdrRankCombatIcon = '<a href="#" title="Combat rank: ' . get_rank('combat', $cmdrRankCombat, false) . '">';
-        $cmdrRankCombatIcon .= '<img src="' . get_rank('combat', $cmdrRankCombat + 1) . '" alt="combat" class="status_img" style="margin-right: 6px">';
+        $cmdrRankCombatIcon = '<a href="#" title="Combat rank: ' . getRank('combat', $cmdrRankCombat, false) . '">';
+        $cmdrRankCombatIcon .= '<img src="' . getRank('combat', $cmdrRankCombat + 1) . '" alt="combat" class="status_img" style="margin-right: 6px">';
         $cmdrRankCombatIcon .= '</a>';
 
         $cmdrRankTrade = $api['commander']->{'rank'}->{'trade'};
-        $cmdrRankTradeIcon = '<a href="#" title="Trade rank: ' . get_rank('trade', $cmdrRankTrade, false) . '">';
-        $cmdrRankTradeIcon .= '<img src="' . get_rank('trade', $cmdrRankTrade + 1) . '" alt="trade" class="status_img" style="margin-right: 6px">';
+        $cmdrRankTradeIcon = '<a href="#" title="Trade rank: ' . getRank('trade', $cmdrRankTrade, false) . '">';
+        $cmdrRankTradeIcon .= '<img src="' . getRank('trade', $cmdrRankTrade + 1) . '" alt="trade" class="status_img" style="margin-right: 6px">';
         $cmdrRankTradeIcon .= '</a>';
 
         $cmdrRankExplore = $api['commander']->{'rank'}->{'explore'};
-        $cmdrRankExploreIcon = '<a href="#" title="Explorer rank: ' . get_rank('explore', $cmdrRankExplore, false) . '">';
-        $cmdrRankExploreIcon .= '<img src="' . get_rank('explore', $cmdrRankExplore + 1) . '" alt="explorer" class="status_img">';
+        $cmdrRankExploreIcon = '<a href="#" title="Explorer rank: ' . getRank('explore', $cmdrRankExplore, false) . '">';
+        $cmdrRankExploreIcon .= '<img src="' . getRank('explore', $cmdrRankExplore + 1) . '" alt="explorer" class="status_img">';
         $cmdrRankExploreIcon .= '</a>';
 
         $cmdrRankCqc = '';
@@ -91,8 +91,8 @@ if (isset($api['commander']) && $settings['show_cmdr_status'] === 'true') {
 
         if ($settings['show_cqc_rank'] === 'true') {
             $cmdrRankCqc = $api['commander']->{'rank'}->{'cqc'};
-            $cmdrRankCqcIcon = '<a href="#" title="CQC rank: ' . get_rank('cqc', $cmdrRankCqc, false) . '">';
-            $cmdrRankCqcIcon .= '<img src="' . get_rank('cqc', $cmdrRankCqc + 1) . '" class="status_img" alt="cqc" style="margin-right: 6px">';
+            $cmdrRankCqcIcon = '<a href="#" title="CQC rank: ' . getRank('cqc', $cmdrRankCqc, false) . '">';
+            $cmdrRankCqcIcon .= '<img src="' . getRank('cqc', $cmdrRankCqc + 1) . '" class="status_img" alt="cqc" style="margin-right: 6px">';
             $cmdrRankCqcIcon .= '</a>';
         }
 
@@ -100,10 +100,10 @@ if (isset($api['commander']) && $settings['show_cmdr_status'] === 'true') {
          * additional info
          */
         $cmdrRankFed = $api['commander']->{'rank'}->{'federation'};
-        $fedRank = get_rank('federation', $cmdrRankFed, false);
+        $fedRank = getRank('federation', $cmdrRankFed, false);
 
         $cmdrRankEmpire = $api['commander']->{'rank'}->{'empire'};
-        $empireRank = get_rank('empire', $cmdrRankEmpire, false);
+        $empireRank = getRank('empire', $cmdrRankEmpire, false);
 
         $additional = '<div id="cmdr_status_mi" style="display: none">';
         $additional .= '<strong>Federation rank:</strong> ' . $fedRank . '<br>';
@@ -146,11 +146,11 @@ if (isset($api['ship']) && $settings['show_ship_status'] === 'true') {
             $storedShips = '<br><br><strong>Stored ships</strong><br>';
             foreach ($api['stored_ships'] as $shipId => $storedShip) {
                 if ($shipId != $api['commander']->{'currentShipId'}) {
-                    $shipName = ship_name($storedShip->{'name'});
+                    $shipName = shipName($storedShip->{'name'});
                     $dockedAtStation = $storedShip->{'station'}->{'name'};
                     $dockedAtSystem = $storedShip->{'starsystem'}->{'name'};
 
-                    $distance = get_distance($dockedAtSystem);
+                    $distance = getDistance($dockedAtSystem);
 
                     $storedShips .= $shipName . ' (' . $distance . ')<br>';
                     $storedShips .= $dockedAtStation . ' at <a href="/System?system_name=' . urlencode($dockedAtSystem) . '">';

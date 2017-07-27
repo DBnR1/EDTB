@@ -54,7 +54,7 @@ if (isset($_GET['sys'])) {
     if (!empty($curSys['name'])) {
         $vaSystem = str_replace('.', '', $curSys['name']);
 
-        $vaText = 'The ' . tts_override($vaSystem) . " system.\n\r";
+        $vaText = 'The ' . ttsOverride($vaSystem) . " system.\n\r";
 
         $vaAllegiance = $curSys['allegiance'] === 'None' ? 'No additional data available. ' : $curSys['allegiance'];
         $vaAllegiance = $vaAllegiance === '' ? 'No additional data available. ' : $vaAllegiance;
@@ -131,7 +131,7 @@ if (isset($_GET['sys'])) {
                         foreach ($powerRantss as $powerRanta) {
                             if (!empty($powerRanta)) {
                                 if ($powerRanta === 'random') {
-                                    $powerRantsText[] = random_insult($power);
+                                    $powerRantsText[] = randomInsult($power);
                                 } elseif ($powerRanta{0} !== ';') {
                                     $powerRantsText[] = $powerRanta;
                                 }
@@ -275,19 +275,19 @@ if (isset($_GET['sys'])) {
 
 if (isset($_GET['cs'])) {
     $ambiguity = '';
-    if (valid_coordinates($curSys['x'], $curSys['y'], $curSys['z'])) {
+    if (validCoordinates($curSys['x'], $curSys['y'], $curSys['z'])) {
         $usex = $curSys['x'];
         $usey = $curSys['y'];
         $usez = $curSys['z'];
     } else {
-        $lastCoords = last_known_system();
+        $lastCoords = lastKnownSystem();
 
         $usex = $lastCoords['x'];
         $usey = $lastCoords['y'];
         $usez = $lastCoords['z'];
         $lastSystem = $lastCoords['name'];
 
-        $add2 = 'I am unable to determine the coordinates of our current location. Our last known location is the ' . tts_override($lastSystem) . ' system. ';
+        $add2 = 'I am unable to determine the coordinates of our current location. Our last known location is the ' . ttsOverride($lastSystem) . ' system. ';
         $ambiguity = ' some ';
     }
 
@@ -323,7 +323,7 @@ if (isset($_GET['cs'])) {
 
     $csObj = $result->fetch_object();
 
-    $csSystem = tts_override($csObj->system_name);
+    $csSystem = ttsOverride($csObj->system_name);
     $csAllegiance = $csObj->allegiance;
 
     $ssCoordx = $csObj->coordx;
@@ -452,7 +452,7 @@ if (isset($_GET['sys_short'])) {
         $sysShort = $curSys['name'];
     }
 
-    echo tts_override($sysShort);
+    echo ttsOverride($sysShort);
 
     exit;
 }
@@ -468,7 +468,7 @@ if (isset($_GET['dist'])) {
 
     $to = str_replace('system', '', $to);
 
-    if (!valid_coordinates($curSys['x'], $curSys['y'], $curSys['z'])) {
+    if (!validCoordinates($curSys['x'], $curSys['y'], $curSys['z'])) {
         $distance = "How can I calculate distances if I don't even know where we are?";
     } else {
         if (System::exists($to)) {

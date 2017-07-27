@@ -80,7 +80,7 @@ class System
     {
         global $settings;
 
-        $systemName = strip_invalid_dos_chars($systemName);
+        $systemName = stripInvalidDosChars($systemName);
 
         if (empty($systemName)) {
             return false;
@@ -202,7 +202,7 @@ class System
         $return = '';
         // check if system has screenshots
         if ($showScreens === true && System::hasScreenshots($system)) {
-            $return .= '<a href="/Gallery?spgmGal=' . urlencode(strip_invalid_dos_chars($system)) . '" title="View image gallery" class="gallery_link">';
+            $return .= '<a href="/Gallery?spgmGal=' . urlencode(stripInvalidDosChars($system)) . '" title="View image gallery" class="gallery_link">';
             $return .= '<img src="/style/img/image.png" class="icon" alt="Gallery" style="margin-left: 5px;  margin-right: 0; vertical-align: top">';
             $return .= '</a>';
         }

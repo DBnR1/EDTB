@@ -48,7 +48,7 @@ $escSystem = $mysqli->real_escape_string($system);
 /**
  * check if system has screenshots
  */
-$screenshots = System::hasScreenshots($system) ? '<a href="/Gallery?spgmGal=' . urlencode(strip_invalid_dos_chars($system)) .
+$screenshots = System::hasScreenshots($system) ? '<a href="/Gallery?spgmGal=' . urlencode(stripInvalidDosChars($system)) .
     '" title="View image gallery"><img src="/style/img/image.png" alt="Gallery" class="icon" style="margin-left: 5px; vertical-align: top"></a>' :
     '';
 

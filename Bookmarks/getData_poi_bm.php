@@ -42,7 +42,7 @@ use \EDTB\Bookmarks\PoiBm;
 /**
  * get usable coordinates
  */
-$usable = usable_coords();
+$usable = usableCoords();
 $usex = $usable['x'];
 $usey = $usable['y'];
 $usez = $usable['z'];

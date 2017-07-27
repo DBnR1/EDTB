@@ -103,12 +103,12 @@ if ($_GET['system_id'] !== 'undefined' || $_GET['system_name'] !== 'undefined') 
     $siSystemPowerState = $systemObj->power_state === '' ? 'None' : $systemObj->power_state;
 
     // get distance to current system
-    if (valid_coordinates($curSys['x'], $curSys['y'], $curSys['z'])) {
+    if (validCoordinates($curSys['x'], $curSys['y'], $curSys['z'])) {
         $adds = '';
         $dist1 = sqrt((($curSys['x'] - $systemObj->si_system_coordx) ** 2) + (($curSys['y'] - $systemObj->si_system_coordy) ** 2) + (($curSys['z'] - $systemObj->si_system_coordz) ** 2));
     } else {
         // get last known coordinates
-        $lastCoords = last_known_system();
+        $lastCoords = lastKnownSystem();
 
         $lastCoordx = $lastCoords['x'];
         $lastCoordy = $lastCoords['y'];
@@ -161,7 +161,7 @@ $escSiSysName = $mysqli->real_escape_string($siSystemName);
  * get coordinates for distance calculations
  * and rares nearby
  */
-if (valid_coordinates($curSys['x'], $curSys['z'], $curSys['y'])) {
+if (validCoordinates($curSys['x'], $curSys['z'], $curSys['y'])) {
     $add3 = '';
     $udCoordx = $curSys['x'];
     $udCoordy = $curSys['y'];
@@ -199,7 +199,7 @@ if (valid_coordinates($curSys['x'], $curSys['z'], $curSys['y'])) {
     }
 } else {
     // get last known coordinates
-    $lastCoords = last_known_system();
+    $lastCoords = lastKnownSystem();
 
     $lastCoordx = $lastCoords['x'];
     $lastCoordy = $lastCoords['y'];
@@ -321,7 +321,7 @@ if (!System::isMapped($siSystemName)) {
 
 $numVisits = System::numVisits($siSystemName);
 
-if ($actualNumRes > 0 && valid_coordinates($curSys['x'], $curSys['y'], $curSys['z'])) {
+if ($actualNumRes > 0 && validCoordinates($curSys['x'], $curSys['y'], $curSys['z'])) {
     $rareText = '&nbsp;&nbsp;<span onclick="$(\'#rares\').fadeToggle(\'fast\')">';
     $rareText .= '<a href="javascript:void(0)" title="Click for more info">[ Rares within ' . $settings['rare_range'] . ' ly: ' . $actualNumRes . ' ]</a>';
     $rareText .= $cRaresData . '</span>';
@@ -513,7 +513,7 @@ if ($stationExists == 0) {
         $rearm = $stationObj->rearm;
         $isPlanetary = $stationObj->is_planetary;
 
-        $icon = get_station_icon($type, $isPlanetary);
+        $icon = getStationIcon($type, $isPlanetary);
 
         $facilities = [
             'shipyard' => $shipyard,
@@ -548,7 +548,7 @@ if ($stationExists == 0) {
         $economies = str_replace("', '", ', ', $economies);
 
         // get allegiance icon
-        $allegianceIcon = get_allegiance_icon($sAllegiance);
+        $allegianceIcon = getAllegianceIcon($sAllegiance);
 
         $data['si_stations'] .= '<div class="systeminfo_station" style="background-image: url(/style/img/' . $allegianceIcon . '); background-repeat: no-repeat; background-position: right 0 bottom -2px">';
         //$data["si_stations"] .= '<div class="heading" onclick="$(\'#info_'.$stationId.'\').toggle();$(\'#prices_'.$stationId.'\').toggle()">';

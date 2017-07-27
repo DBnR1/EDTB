@@ -49,9 +49,9 @@ if (isset($_GET['maxdistance']) && is_numeric($_GET['maxdistance'])) {
  * if current coordinates aren't valid, use last known coordinates
  */
 $disclaimer = '';
-if (!valid_coordinates($curSys['x'], $curSys['y'], $curSys['z'])) {
+if (!validCoordinates($curSys['x'], $curSys['y'], $curSys['z'])) {
     // get last known coordinates
-    $lastCoords = last_known_system();
+    $lastCoords = lastKnownSystem();
 
     $curSys['x'] = $lastCoords['x'];
     $curSys['y'] = $lastCoords['y'];
@@ -60,7 +60,7 @@ if (!valid_coordinates($curSys['x'], $curSys['y'], $curSys['z'])) {
     $disclaimer = '<p><strong>No coordinates for current location, last known location used</strong></p>';
 }
 
-if (!valid_coordinates($curSys['x'], $curSys['y'], $curSys['z'])) {
+if (!validCoordinates($curSys['x'], $curSys['y'], $curSys['z'])) {
     $curSys['x'] = '0';
     $curSys['y'] = '0';
     $curSys['z'] = '0';
@@ -92,7 +92,7 @@ if ($settings['nmap_show_pois'] === 'true') {
         $coord = "$poiCoordx,$poiCoordy,$poiCoordz";
 
         $distanceFromCurrent = '';
-        if (valid_coordinates($poiCoordx, $poiCoordy, $poiCoordz)) {
+        if (validCoordinates($poiCoordx, $poiCoordy, $poiCoordz)) {
             $distanceFromCurrent = sqrt((($poiCoordx - $curSys['x']) ** 2) + (($poiCoordy - $curSys['y']) ** 2) + (($poiCoordz - $curSys['z']) ** 2));
         }
 
@@ -150,7 +150,7 @@ if ($settings['nmap_show_bookmarks'] === 'true') {
         /**
          * if coords are not set, see if user has calculated them
          */
-        if (!valid_coordinates($bmCoordx, $bmCoordy, $bmCoordz)) {
+        if (!validCoordinates($bmCoordx, $bmCoordy, $bmCoordz)) {
             $escName = $mysqli->real_escape_string($bmSystemName);
             $query = "  SELECT x, y, z
                         FROM user_systems_own
@@ -167,9 +167,9 @@ if ($settings['nmap_show_bookmarks'] === 'true') {
             $coordRes->close();
         }
 
-        if (valid_coordinates($bmCoordx, $bmCoordy, $bmCoordz)) {
+        if (validCoordinates($bmCoordx, $bmCoordy, $bmCoordz)) {
             $distanceFromCurrent = '';
-            if (valid_coordinates($bmCoordx, $bmCoordy, $bmCoordz)) {
+            if (validCoordinates($bmCoordx, $bmCoordy, $bmCoordz)) {
                 $distanceFromCurrent = sqrt((($bmCoordx - $curSys['x']) ** 2) + (($bmCoordy - $curSys['y']) ** 2) + (($bmCoordz - $curSys['z']) ** 2));
             }
 
@@ -215,7 +215,7 @@ if ($settings['nmap_show_rares'] === 'true') {
         $rareCoord = $rareCoordx . ',' . $rareCoordy . ',' . $rareCoordz;
 
         $rareDistanceFromCurrent = '';
-        if (valid_coordinates($rareCoordx, $rareCoordy, $rareCoordz)) {
+        if (validCoordinates($rareCoordx, $rareCoordy, $rareCoordz)) {
             $rareDistanceFromCurrent = sqrt((($rareCoordx - $curSys['x']) ** 2) + (($rareCoordy - $curSys['y']) ** 2) + (($rareCoordz - $curSys['z']) ** 2));
         }
 
@@ -258,7 +258,7 @@ if ($settings['nmap_show_visited_systems'] === 'true') {
         /**
          * if coords are not set, see if user has calculated them
          */
-        if (!valid_coordinates($vsCoordx, $vsCoordy, $vsCoordz)) {
+        if (!validCoordinates($vsCoordx, $vsCoordy, $vsCoordz)) {
             $query = "  SELECT x, y, z
                         FROM user_systems_own
                         WHERE name = '$escName'
@@ -273,7 +273,7 @@ if ($settings['nmap_show_visited_systems'] === 'true') {
         }
 
         $distanceFromCurrent = '';
-        if (valid_coordinates($vsCoordx, $vsCoordy, $vsCoordz)) {
+        if (validCoordinates($vsCoordx, $vsCoordy, $vsCoordz)) {
             $coord = $vsCoordx . ',' . $vsCoordy . ',' . $vsCoordz;
 
             $distanceFromCurrent = sqrt((($vsCoordx - $curSys['x']) ** 2) + (($vsCoordy - $curSys['y']) ** 2) + (($vsCoordz - $curSys['z']) ** 2));
@@ -328,7 +328,7 @@ if ($settings['nmap_show_visited_systems'] === 'true') {
 /**
  * get the max/min values for map display
  */
-if (valid_coordinates($curSys['x'], $curSys['y'], $curSys['z'])) {
+if (validCoordinates($curSys['x'], $curSys['y'], $curSys['z'])) {
     $maxx = $curSys['x'] + $settings['maxdistance'];
     $maxy = $curSys['y'] + $settings['maxdistance'];
     $maxz = $curSys['z'] + $settings['maxdistance'];

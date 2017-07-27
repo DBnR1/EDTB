@@ -49,7 +49,7 @@ if (!empty($curSys['name'])) {
     }
 
     // figure out what coords to calculate from
-    $usableCoords = usable_coords();
+    $usableCoords = usableCoords();
     $usex = $usableCoords['x'];
     $usey = $usableCoords['y'];
     $usez = $usableCoords['z'];

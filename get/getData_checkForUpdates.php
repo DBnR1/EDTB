@@ -35,7 +35,7 @@ $data['notifications'] = '';
 $data['notifications_data'] = 'false';
 
 $currentVersion = $settings['edtb_version'];
-$lastCheck = edtb_common('last_update_check', 'unixtime');
+$lastCheck = edtbCommon('last_update_check', 'unixtime');
 $timeFrame = time() - 5 * 60 * 60;
 
 if ($lastCheck < $timeFrame) {
@@ -45,20 +45,20 @@ if ($lastCheck < $timeFrame) {
         $newestVersion = $jsonData->{'currentVersion'};
 
         // update latest_version value
-        edtb_common('latest_version', 'value', true, $newestVersion);
+        edtbCommon('latest_version', 'value', true, $newestVersion);
     } else {
         $error = error_get_last();
         write_log('Error: ' . $error['message'], __FILE__, __LINE__);
     }
     // update last_update_check time
-    edtb_common('last_update_check', 'unixtime', true, time());
+    edtbCommon('last_update_check', 'unixtime', true, time());
 }
 
-$newestVersion = edtb_common('latest_version', 'value');
+$newestVersion = edtbCommon('latest_version', 'value');
 
 if (version_compare($currentVersion, $newestVersion) < 0) {
     // get last_update_check value
-    $ignoreVersion = edtb_common('last_update_check', 'value');
+    $ignoreVersion = edtbCommon('last_update_check', 'value');
 
     if ($newestVersion != $ignoreVersion) {
         if ($jsonFile = file_get_contents('http://data.edtb.xyz/version.json')) {

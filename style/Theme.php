@@ -55,5 +55,4 @@ class Theme
 
         return 'normal';
     }
-
 }

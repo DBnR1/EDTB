@@ -40,8 +40,8 @@ class NearestSystems
     /** @var string $system the system to use as a starting point */
     public $system;
 
-    /** @var float $usex , $usey, $usez x, y and z coords to use for calculations */
-    public $usex, $usey, $usez;
+    /** @var float $useX , $usey, $usez x, y and z coords to use for calculations */
+    public $useX, $useY, $useZ;
 
     /** @var string $powerParams parameters to add to Power links */
     private $powerParams = '';
@@ -97,9 +97,9 @@ class NearestSystems
             $sysName = $sysObj->name;
             $sysId = $sysObj->id;
 
-            $this->usex = $sysObj->x;
-            $this->usey = $sysObj->y;
-            $this->usez = $sysObj->z;
+            $this->useX = $sysObj->x;
+            $this->useY = $sysObj->y;
+            $this->useZ = $sysObj->z;
 
             $result->close();
 
@@ -107,17 +107,17 @@ class NearestSystems
             $this->powerParams .= '&system=' . $this->system;
             $this->allegianceParams .= '&system=' . $this->system;
             $this->hiddenInputs .= '<input type="hidden" name="system" value="' . $sysId . '">';
-        } elseif (valid_coordinates($curSys['x'], $curSys['y'], $curSys['z']) && empty($this->system)) {
-            $this->usex = $curSys['x'];
-            $this->usey = $curSys['y'];
-            $this->usez = $curSys['z'];
+        } elseif (validCoordinates($curSys['x'], $curSys['y'], $curSys['z']) && empty($this->system)) {
+            $this->useX = $curSys['x'];
+            $this->useY = $curSys['y'];
+            $this->useZ = $curSys['z'];
         } else {
             // get last known coordinates
-            $lastCoords = last_known_system();
+            $lastCoords = lastKnownSystem();
 
-            $this->usex = $lastCoords['x'];
-            $this->usey = $lastCoords['y'];
-            $this->usez = $lastCoords['z'];
+            $this->useX = $lastCoords['x'];
+            $this->useY = $lastCoords['y'];
+            $this->useZ = $lastCoords['z'];
 
             $this->is_unknown = ' *';
         }
@@ -125,10 +125,10 @@ class NearestSystems
         /**
          * If we still don't have valid coordinates, center on Sol
          */
-        if (!valid_coordinates($this->usex, $this->usey, $this->usez)) {
-            $this->usex = '0';
-            $this->usey = '0';
-            $this->usez = '0';
+        if (!validCoordinates($this->useX, $this->useY, $this->useZ)) {
+            $this->useX = '0';
+            $this->useY = '0';
+            $this->useZ = '0';
 
             $this->is_unknown = ' *';
         }
@@ -326,8 +326,8 @@ class NearestSystems
                                     FROM edtb_stations
                                     LEFT JOIN edtb_systems ON edtb_stations.system_id = edtb_systems.id
                                     WHERE edtb_systems.x != ''" . $this->addToQuery . '
-                                    ORDER BY sqrt(pow((coordx-(' . $this->usex . ')), 2)+pow((coordy-(' . $this->usey .
-                ')), 2)+pow((coordz-(' . $this->usez . ')), 2)),
+                                    ORDER BY sqrt(pow((coordx-(' . $this->useX . ')), 2)+pow((coordy-(' . $this->useY .
+                ')), 2)+pow((coordz-(' . $this->useZ . ')), 2)),
                                     -edtb_stations.ls_from_star DESC
                                     LIMIT 10';
         } /**
@@ -344,8 +344,8 @@ class NearestSystems
                                     edtb_systems.economy
                                     FROM edtb_systems
                                     WHERE edtb_systems.x != ''" . $this->addToQuery . '
-                                    ORDER BY sqrt(pow((coordx-(' . $this->usex . ')), 2)+pow((coordy-(' . $this->usey .
-                ')), 2)+pow((coordz-(' . $this->usez . ')), 2))
+                                    ORDER BY sqrt(pow((coordx-(' . $this->useX . ')), 2)+pow((coordy-(' . $this->useY .
+                ')), 2)+pow((coordz-(' . $this->useZ . ')), 2))
                                     LIMIT 10';
         }
 
@@ -450,8 +450,8 @@ class NearestSystems
                                         LEFT JOIN edtb_systems ON edtb_stations.system_id = edtb_systems.id
                                         WHERE edtb_systems.x != ''
                                         AND edtb_stations.selling_modules LIKE '-%" . $modulesId . "%-'" . $this->addToQuery . '
-                                        ORDER BY sqrt(pow((coordx-(' . $this->usex . ')), 2)+pow((coordy-(' . $this->usey .
-                    ')), 2)+pow((coordz-(' . $this->usez . ')), 2))
+                                        ORDER BY sqrt(pow((coordx-(' . $this->useX . ')), 2)+pow((coordy-(' . $this->useY .
+                    ')), 2)+pow((coordz-(' . $this->useZ . ')), 2))
                                         LIMIT 10';
 
                 $this->stations = true;
@@ -487,8 +487,8 @@ class NearestSystems
                                     LEFT JOIN edtb_systems ON edtb_stations.system_id = edtb_systems.id
                                     WHERE edtb_systems.x != ''
                                     AND edtb_stations.selling_ships LIKE '%\'" . $shipName . "\'%'" . $this->addToQuery . '
-                                    ORDER BY sqrt(pow((coordx-(' . $this->usex . ')), 2)+pow((coordy-(' . $this->usey .
-                ')), 2)+pow((coordz-(' . $this->usez . ')), 2))
+                                    ORDER BY sqrt(pow((coordx-(' . $this->useX . ')), 2)+pow((coordy-(' . $this->useY .
+                ')), 2)+pow((coordz-(' . $this->useZ . ')), 2))
                                     LIMIT 10';
 
             $escShipName = $this->mysqli->real_escape_string($shipName);
@@ -566,14 +566,14 @@ class NearestSystems
                                    id="station_21" style="width: 180px"
                                    oninput="showResult(this.value, '12', 'no', 'yes', 'yes')"/>
                             <div class="suggestions" id="suggestions_11"
-                                 style="margin-left: 0; margin-top:-36px;min-width: 168px"></div>
+                                 style="margin-left: 0; margin-top:-36px; min-width: 168px"></div>
                             <div class="suggestions" id="suggestions_12"
                                  style="margin-left: 0; min-width: 168px"></div>
                         </div>
                     </div>
                 </td>
                 <!-- allegiances -->
-                <td class="transparent" style="vertical-align: top; width:20%;white-space: nowrap">
+                <td class="transparent" style="vertical-align: top; width:20%; white-space: nowrap">
                     <a data-replace="true" data-target="#nscontent"
                        href="/NearestSystems/?system_allegiance=Empire<?= $this->allegianceParams ?>"
                        title="Empire">
@@ -597,7 +597,7 @@ class NearestSystems
                     <br/><br/>
                 </td>
                 <!-- powers -->
-                <td class="transparent" style="vertical-align: top; width:20%;white-space: nowrap">
+                <td class="transparent" style="vertical-align: top; width:20%; white-space: nowrap">
                     <?php
                     $query = 'SELECT name FROM edtb_powers ORDER BY name';
                     $result = $this->mysqli->query($query) or write_log($this->mysqli->error, __FILE__, __LINE__);
@@ -915,12 +915,12 @@ class NearestSystems
                 $ssCoordz = $obj->coordz;
 
                 $distance =
-                    sqrt((($ssCoordx - $this->usex) ** 2) + (($ssCoordy - $this->usey) ** 2) + (($ssCoordz - $this->usez) ** 2));
+                    sqrt((($ssCoordx - $this->useX) ** 2) + (($ssCoordy - $this->useY) ** 2) + (($ssCoordz - $this->useZ) ** 2));
 
                 /**
                  * get allegiance icon for system
                  */
-                $pic = get_allegiance_icon($allegiance);
+                $pic = getAllegianceIcon($allegiance);
 
                 if ($system != $lastSystem) {
                     $tdclass = $tdclass === 'light' ? 'dark' : 'light';
@@ -995,7 +995,7 @@ class NearestSystems
         $stationIsPlanetary = $obj->is_planetary;
         $stationType = $obj->type;
 
-        $icon = get_station_icon($stationType, $stationIsPlanetary);
+        $icon = getStationIcon($stationType, $stationIsPlanetary);
 
         $stationId = $obj->station_id;
         $stationFaction = $obj->station_faction === '' ? '' : '<strong>Faction:</strong> ' . $obj->station_faction . '<br>';
@@ -1071,7 +1071,7 @@ class NearestSystems
         /**
          * get allegiance icon
          */
-        $stationAllegianceIcon = get_allegiance_icon($obj->station_allegiance);
+        $stationAllegianceIcon = getAllegianceIcon($obj->station_allegiance);
         $stationAllegianceIcon = '<img src="/style/img/' . $stationAllegianceIcon . '" alt="' . $obj->station_allegiance .
             '" style="width: 19px;  height: 19px; margin-right: 5px" />';
 
@@ -1081,7 +1081,7 @@ class NearestSystems
         $stationDispName = $stationName;
 
         if (!empty($groupId) || !empty($shipName)) {
-            if (data_is_old($obj->outfitting_updated_at) || data_is_old($obj->shipyard_updated_at)) {
+            if (dataIsOld($obj->outfitting_updated_at) || dataIsOld($obj->shipyard_updated_at)) {
                 $stationDispName = '<span class="old_data">' . $stationName . '</span>';
             }
         }

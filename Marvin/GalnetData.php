@@ -41,7 +41,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/source/MySQL.php';
  * if data is older than 30 minutes, update
  */
 
-$gaLastUpdate = edtb_common('last_galnet_update', 'unixtime') + 30 * 60; // 30 minutes
+$gaLastUpdate = edtbCommon('last_galnet_update', 'unixtime') + 30 * 60; // 30 minutes
 
 if ($gaLastUpdate < time()) {
     $rss = new DOMDocument();
@@ -115,7 +115,7 @@ if ($gaLastUpdate < time()) {
                 }
 
                 if ($newFile != $oldFile) {
-                    edtb_common('last_galnet_new', 'unixtime', true, time());
+                    edtbCommon('last_galnet_new', 'unixtime', true, time());
                 }
             }
             $in++;
@@ -125,14 +125,14 @@ if ($gaLastUpdate < time()) {
     /**
      * update last_update time
      */
-    edtb_common('last_galnet_update', 'unixtime', true, time());
+    edtbCommon('last_galnet_update', 'unixtime', true, time());
 }
 
 /**
  * fetch last check time and last new article time
  */
-$lastGalnetCheck = edtb_common('last_galnet_check', 'unixtime');
-$lastGalnetNew = edtb_common('last_galnet_new', 'unixtime');
+$lastGalnetCheck = edtbCommon('last_galnet_check', 'unixtime');
+$lastGalnetNew = edtbCommon('last_galnet_new', 'unixtime');
 
 if ($lastGalnetNew < $lastGalnetCheck) {
     echo 'No new GalNet articles have been published since you last asked ' . get_timeago($lastGalnetCheck, false) . '.';
@@ -143,4 +143,4 @@ if ($lastGalnetNew < $lastGalnetCheck) {
 /**
  *  update last check time
  */
-edtb_common('last_galnet_check', 'unixtime', true, time());
+edtbCommon('last_galnet_check', 'unixtime', true, time());

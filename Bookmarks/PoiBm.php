@@ -85,7 +85,7 @@ class PoiBm
         echo '<table>';
 
         if ($num > 0) {
-            if (!valid_coordinates($curSys['x'], $curSys['y'], $curSys['z'])) {
+            if (!validCoordinates($curSys['x'], $curSys['y'], $curSys['z'])) {
                 echo '<tr>';
                 echo '<td class="dark poi_minmax">';
                 echo '<p><strong>No coordinates for current location, last known location used.</strong></p>';
@@ -223,7 +223,7 @@ class PoiBm
         $itemCoordz = $obj->item_coordz;
 
         $distance = 'n/a';
-        if (valid_coordinates($itemCoordx, $itemCoordy, $itemCoordz)) {
+        if (validCoordinates($itemCoordx, $itemCoordy, $itemCoordz)) {
             $distance = number_format(sqrt((($itemCoordx - $this->usex) ** 2) + (($itemCoordy - $this->usey) ** 2) + (($itemCoordz - $this->usez) ** 2)), 1) . ' ly';
         }
 
@@ -289,7 +289,7 @@ class PoiBm
         $pY = $data->{'poi_coordy'};
         $pZ = $data->{'poi_coordz'};
 
-        if (valid_coordinates($pX, $pY, $pZ)) {
+        if (validCoordinates($pX, $pY, $pZ)) {
             $addc = ", x = '$pX', y = '$pY', z = '$pZ'";
             $addb = ", '$pX', '$pY', '$pZ'";
         } else {

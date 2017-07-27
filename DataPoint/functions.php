@@ -61,13 +61,13 @@ function setData($key, $value, $dX, $dY, $dZ, &$dist, $table, $enum)
      */
     if ($dist !== false) {
         // figure out what coords to calculate from
-        $usableCoords = usable_coords();
+        $usableCoords = usableCoords();
         $usex = $usableCoords['x'];
         $usey = $usableCoords['y'];
         $usez = $usableCoords['z'];
         $exact = $usableCoords['current'] === true ? '' : ' *';
 
-        if (valid_coordinates($dX, $dY, $dZ)) {
+        if (validCoordinates($dX, $dY, $dZ)) {
             $distance = number_format(sqrt((($dX - $usex) ** 2) + (($dY - $usey) ** 2) + (($dZ - $usez) ** 2)), 2);
             $thisRow .= '<td class="datapoint_td" style="white-space: nowrap">' . $distance . $exact . '</td>';
         } else {

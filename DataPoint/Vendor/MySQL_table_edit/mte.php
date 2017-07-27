@@ -481,7 +481,7 @@ class MySQLtabledit
                         }
                         $coordResult->close();
                     } elseif (isset($data->system_name) || $found == 0) {
-                        if (valid_coordinates($data->ritem_coordx, $data->ritem_coordy, $data->ritem_coordz)) {
+                        if (validCoordinates($data->ritem_coordx, $data->ritem_coordy, $data->ritem_coordz)) {
                             $dX = $data->ritem_coordx;
                             $dY = $data->ritem_coordy;
                             $dZ = $data->ritem_coordz;
@@ -786,7 +786,7 @@ class MySQLtabledit
             }
 
             // figure out what coords to calculate from
-            $usableCoords = usable_coords();
+            $usableCoords = usableCoords();
             $rusex = $usableCoords['x'];
             $rusey = $usableCoords['y'];
             $rusez = $usableCoords['z'];

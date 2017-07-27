@@ -147,7 +147,7 @@ if ($newSystem !== false || $request == 0) {
     /**
      * update system and station data in the background if last update was more than 6 hours ago
      */
-    $lastUpdate = edtb_common('last_data_update', 'unixtime');
+    $lastUpdate = edtbCommon('last_data_update', 'unixtime');
     $timeFrame = time() - 6 * 60 * 60;
 
     $autoUpdateEnabled = $settings['data_auto_update'] ?? true;
@@ -155,7 +155,7 @@ if ($newSystem !== false || $request == 0) {
     // run update script
     if ($autoUpdateEnabled !== 'false' && $lastUpdate < $timeFrame) {
         // fetch last update start time
-        $lastDataUpdateStart = edtb_common('last_data_update_start', 'unixtime');
+        $lastDataUpdateStart = edtbCommon('last_data_update_start', 'unixtime');
         $startTimeFrame = time() - 160;
 
         if ($lastDataUpdateStart < $startTimeFrame) {
@@ -163,7 +163,7 @@ if ($newSystem !== false || $request == 0) {
             $vbsFile = $settings['install_path'] . '/bin/UpdateData/runbat.vbs';
 
             if (file_exists($batchFile) && file_exists($vbsFile)) {
-                edtb_common('last_data_update_start', 'unixtime', true, time());
+                edtbCommon('last_data_update_start', 'unixtime', true, time());
 
                 pclose(popen('"' . $vbsFile . '"' . ' ' . '"' . $batchFile . '"', 'r'));
 
@@ -184,7 +184,7 @@ if ($newSystem !== false || $request == 0) {
      * or if last update was more than an hour ago
      */
     $data['update_map'] = 'false';
-    $lastMapUpdate = edtb_common('last_map_update', 'unixtime');
+    $lastMapUpdate = edtbCommon('last_map_update', 'unixtime');
     $mapUpdateTimeFrame = time() - 1 * 60 * 60;
 
     if ($newSystem !== false || !file_exists($_SERVER['DOCUMENT_ROOT'] . '/GalMap/map_points.json') ||

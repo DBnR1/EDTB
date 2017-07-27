@@ -52,7 +52,7 @@ require_once __DIR__ . '/System.php';
  * @return array $lastSystem x, y, z, name
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function last_known_system($onlyedsm = false): array
+function lastKnownSystem($onlyedsm = false): array
 {
     global $mysqli;
 
@@ -114,7 +114,7 @@ function last_known_system($onlyedsm = false): array
  * @return bool
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function data_is_old($time)
+function dataIsOld($time)
 {
     global $settings;
 
@@ -139,7 +139,7 @@ function data_is_old($time)
  * @return string $insult
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function random_insult($whoToInsult)
+function randomInsult($whoToInsult)
 {
     $who = explode(' ', $whoToInsult);
     $firstName = $who[0];
@@ -218,7 +218,7 @@ function random_insult($whoToInsult)
  * @return string $stationIcon html img tag for the starport icon
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function get_station_icon($type, $planetary = '0', $style = '')
+function getStationIcon($type, $planetary = '0', $style = '')
 {
     switch ($type) {
         case 'Coriolis Starport':
@@ -250,7 +250,7 @@ function get_station_icon($type, $planetary = '0', $style = '')
  * @return string $allegianceIcon name of allegiance icon
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function get_allegiance_icon($allegiance)
+function getAllegianceIcon($allegiance)
 {
     switch ($allegiance) {
         case 'Empire':
@@ -275,20 +275,20 @@ function get_allegiance_icon($allegiance)
  * @return array of floats x, y, z and bool current
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function usable_coords()
+function usableCoords()
 {
     global $curSys;
 
     $usable = [];
 
-    if (valid_coordinates($curSys['x'], $curSys['y'], $curSys['z'])) {
+    if (validCoordinates($curSys['x'], $curSys['y'], $curSys['z'])) {
         $usable['x'] = $curSys['x'];
         $usable['y'] = $curSys['y'];
         $usable['z'] = $curSys['z'];
 
         $usable['current'] = true;
     } else {
-        $lastCoords = last_known_system();
+        $lastCoords = lastKnownSystem();
 
         $usable['x'] = $lastCoords['x'];
         $usable['y'] = $lastCoords['y'];
@@ -297,7 +297,7 @@ function usable_coords()
         $usable['current'] = false;
     }
 
-    if (!valid_coordinates($usable['x'], $usable['y'], $usable['z'])) {
+    if (!validCoordinates($usable['x'], $usable['y'], $usable['z'])) {
         $usable['x'] = '0';
         $usable['y'] = '0';
         $usable['z'] = '0';
@@ -316,13 +316,9 @@ function usable_coords()
  * @return bool
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function valid_coordinates($x, $y, $z)
+function validCoordinates($x, $y, $z)
 {
-    if (is_numeric($x) && is_numeric($y) && is_numeric($z)) {
-        return true;
-    }
-
-    return false;
+    return is_numeric($x) && is_numeric($y) && is_numeric($z);
 }
 
 /**
@@ -332,7 +328,7 @@ function valid_coordinates($x, $y, $z)
  * @return string $text
  * @author Travis @ https://github.com/padthaitofuhot
  */
-function tts_override($text)
+function ttsOverride($text)
 {
     global $settings;
 
@@ -354,7 +350,7 @@ function tts_override($text)
  * @return string path to icon or rank name
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function get_rank($type, $rank, $icon = true)
+function getRank($type, $rank, $icon = true)
 {
     global $ranks;
 
@@ -372,7 +368,7 @@ function get_rank($type, $rank, $icon = true)
  * @return string $shipName
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function ship_name($name)
+function shipName($name)
 {
     global $ships;
 
@@ -391,7 +387,7 @@ function ship_name($name)
  * @return string $distance
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function get_distance($system)
+function getDistance($system)
 {
     global $mysqli;
 
@@ -426,13 +422,13 @@ function get_distance($system)
     $result->close();
 
     // figure out what coords to calculate from
-    $usableCoords = usable_coords();
+    $usableCoords = usableCoords();
     $usex = $usableCoords['x'];
     $usey = $usableCoords['y'];
     $usez = $usableCoords['z'];
     $exact = $usableCoords['current'] === true ? '' : ' *';
 
-    if (valid_coordinates($targetX, $targetY, $targetZ)) {
+    if (validCoordinates($targetX, $targetY, $targetZ)) {
         $dist = number_format(sqrt((($targetX - $usex) ** 2) + (($targetY - $usey) ** 2) + (($targetZ - $usez) ** 2)), 2);
         $distance = $dist . ' ly' . $exact;
     } else {
@@ -452,7 +448,7 @@ function get_distance($system)
  * @return string|null $value if $update = false
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function edtb_common($name, $field, $update = false, $value = '')
+function edtbCommon($name, $field, $update = false, $value = '')
 {
     global $mysqli;
 
@@ -491,7 +487,7 @@ function edtb_common($name, $field, $update = false, $value = '')
  * @return string $retValue
  * @author David Marshall
  */
-function strip_invalid_dos_chars($sourceString)
+function stripInvalidDosChars($sourceString)
 {
     $invalidChars = array('*','\\','/',':','?','"','<','>','|'); // Invalid chars according to Windows 10
 

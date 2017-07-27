@@ -38,7 +38,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/source/functions.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/source/MySQL.php';
 
 /** @var string $lastApiRequest */
-$lastApiRequest = edtb_common('last_api_request', 'unixtime');
+$lastApiRequest = edtbCommon('last_api_request', 'unixtime');
 
 /** @var int $timeFrame */
 $timeFrame = time() - 6 * 60;
@@ -82,7 +82,7 @@ if ($lastApiRequest < $timeFrame && file_exists($settings['cookie_file'])) {
         /**
          * update last_api_request value
          */
-        edtb_common('last_api_request', 'unixtime', true, time());
+        edtbCommon('last_api_request', 'unixtime', true, time());
     } else {
         write_log('Error: ' . $settings['curl_exe'] . ' doesn\'t exist');
     }

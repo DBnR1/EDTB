@@ -194,7 +194,7 @@ if (is_dir($settings['log_dir']) && is_readable($settings['log_dir'])) {
                 /**
                  * fetch previous system
                  */
-                $prevSystem = edtb_common('last_system', 'value');
+                $prevSystem = edtbCommon('last_system', 'value');
 
                 if ($prevSystem != $cssystemname && !empty($cssystemname)) {
                     /**
@@ -280,7 +280,7 @@ if (is_dir($settings['log_dir']) && is_readable($settings['log_dir'])) {
                     $result->close();
 
                     // update latest system
-                    edtb_common('last_system', 'value', true, $curSys['name']);
+                    edtbCommon('last_system', 'value', true, $curSys['name']);
 
                     $newSystem = true;
                 } else {

@@ -41,10 +41,8 @@ var debug_mode = false;
  * @param msg
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function log(msg)
-{
-    if (debug_mode !== false)
-    {
+function log(msg) {
+    if (debug_mode !== false) {
         console.log(msg);
     }
 }
@@ -52,19 +50,15 @@ function log(msg)
 /**
  * Slider for long system names
  */
-function slide()
-{
-    var sliderOptions =
-    {
+function slide() {
+    var sliderOptions = {
         currentMargin: 0,
         marginSpeed: -10
     };
 
-    var s = $('#ltitle'),
-            value = s.width() - 284;
+    var s = $('#ltitle'), value = s.width() - 284;
 
-    if (s.width() >= 288)
-    {
+    if (s.width() >= 288) {
         s.css("right", value + "px");
     }
 }
@@ -72,17 +66,13 @@ function slide()
 /**
  * Slider for long system names
  */
-function slideout()
-{
-    var sliderOptions =
-    {
+function slideout() {
+    var sliderOptions = {
         currentMargin: 0,
         marginSpeed: -10
-    },
-        s = $('#ltitle');
+    }, s = $('#ltitle');
 
-    if (s.width() >= 288)
-    {
+    if (s.width() >= 288) {
         s.css("right", "0px");
     }
 }
@@ -94,13 +84,10 @@ function slideout()
  * @return {Array} vars
  * @author Ashley <ashley@papermashup.com>
  */
-function getUrlVars()
-{
-    var vars = [],
-        parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value)
-        {
-            vars[key] = value;
-        });
+function getUrlVars() {
+    var vars = [], parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
+        vars[key] = value;
+    });
     return vars;
 }
 
@@ -109,19 +96,15 @@ function getUrlVars()
  *
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function update_map()
-{
-    $.ajax(
-    {
+function update_map() {
+    $.ajax({
         url: "/GalMap/getMapPoints.json.php",
         cache: false,
         dataType: "html",
-        success: function()
-        {
+        success: function() {
             log("Requested /GalMap/getMapPoints.json.php succesfully");
         },
-        error: function()
-        {
+        error: function() {
             log("Error occured when requesting /GalMap/getMapPoints.json.php");
         }
     });
@@ -136,57 +119,43 @@ function update_map()
  * @param {string} force_update
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function update_api(wait, newsys, override, force_update)
-{
+function update_api(wait, newsys, override, force_update) {
     wait = wait || 0;
     newsys = newsys || "false";
     override = override || "false";
     force_update = force_update || "false";
-    setTimeout(function()
-    {
-        $.ajax(
-            {
-                url: "/get/getData_status.php?newsys=" + newsys + "&override=" + override + "&force_update=" + force_update,
-                cache: false,
-                dataType: "json",
-                success: function(result)
-                {
-                    if (result.cmdr_status !== "false" && result.cmdr_ranks_update === "true")
-                    {
-                        log("CMDR status changed, refreshing");
-                        $('#cmdr_status').html(result.cmdr_status);
-                    }
-                    else
-                    {
-                        log("CMDR status not changed");
-                    }
-
-                    if (result.cmdr_balance_status !== "false" && result.cmdr_balance_update === "true")
-                    {
-                        log("CMDR balance changed, refreshing");
-                        $('#balance_st').html(result.cmdr_balance_status);
-                    }
-                    else
-                    {
-                        log("CMDR balance not changed");
-                    }
-
-                    if (result.ship_status !== "false" && result.ship_status_update === "true")
-                    {
-                        log("Ship status changed, refreshing");
-                        $('#ship_status').html(result.ship_status);
-                    }
-                    else
-                    {
-                        log("Ship status not changed");
-                    }
-                    //log("Success: requesting /get/getData_status.php ok");
-                },
-                error: function()
-                {
-                    log("Error: requesting /get/getData_status.php failed");
+    setTimeout(function() {
+        $.ajax({
+            url: "/get/getData_status.php?newsys=" + newsys + "&override=" + override + "&force_update=" + force_update,
+            cache: false,
+            dataType: "json",
+            success: function(result) {
+                if (result.cmdr_status !== "false" && result.cmdr_ranks_update === "true") {
+                    log("CMDR status changed, refreshing");
+                    $('#cmdr_status').html(result.cmdr_status);
+                } else {
+                    log("CMDR status not changed");
                 }
-            });
+
+                if (result.cmdr_balance_status !== "false" && result.cmdr_balance_update === "true") {
+                    log("CMDR balance changed, refreshing");
+                    $('#balance_st').html(result.cmdr_balance_status);
+                } else {
+                    log("CMDR balance not changed");
+                }
+
+                if (result.ship_status !== "false" && result.ship_status_update === "true") {
+                    log("Ship status changed, refreshing");
+                    $('#ship_status').html(result.ship_status);
+                } else {
+                    log("Ship status not changed");
+                }
+                //log("Success: requesting /get/getData_status.php ok");
+            },
+            error: function() {
+                log("Error: requesting /get/getData_status.php failed");
+            }
+        });
     }, wait);
 }
 
@@ -195,26 +164,23 @@ function update_api(wait, newsys, override, force_update)
  *
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function update_poi_bm()
-{
-    $.ajax(
-        {
-            url: "/Bookmarks/getData_poi_bm.php",
-            cache: false,
-            dataType: "html",
-            success: function(result)
-            {
-                log("Refreshing poi & bm data");
-                $('#poi_bm').html(result);
-            },
-            error: function()
-            {
-                log("Error: requesting /Bookmarks/getData_poi_bm.php failed");
-            }
-        });
+function update_poi_bm() {
+    $.ajax({
+        url: "/Bookmarks/getData_poi_bm.php",
+        cache: false,
+        dataType: "html",
+        success: function(result) {
+            log("Refreshing poi & bm data");
+            $('#poi_bm').html(result);
+        },
+        error: function() {
+            log("Error: requesting /Bookmarks/getData_poi_bm.php failed");
+        }
+    });
 }
 
 var requestno = 0;
+
 /**
  * Update current system and station data
  *
@@ -224,51 +190,37 @@ var requestno = 0;
 function get_data(override) {
     override = override || false;
 
-    if (override === true)
-    {
-       requestno = 0;
+    if (override === true) {
+        requestno = 0;
     }
 
-    var time = 4000,
-        system_id = getUrlVars().system_id,
-        system_name = getUrlVars().system_name,
+    var time = 4000, system_id = getUrlVars().system_id, system_name = getUrlVars().system_name,
 
-        slog_sort = getUrlVars().slog_sort,
-        glog_sort = getUrlVars().glog_sort,
-        page_sys = $('#system_title').html();
+        slog_sort = getUrlVars().slog_sort, glog_sort = getUrlVars().glog_sort, page_sys = $('#system_title').html();
 
-    if (requestno === 0)
-    {
+    if (requestno === 0) {
         time = 200;
     }
 
     /**
      * fetch info for left panel, system.php and maps
      */
-    $.ajax(
-    {
+    $.ajax({
         url: "/get/getData.php?action=onlysystem",
         cache: false,
-        success: function(onlysystem)
-        {
-            if (onlysystem !== page_sys || override === true)
-            {
+        success: function(onlysystem) {
+            if (onlysystem !== page_sys || override === true) {
                 requestno = 0;
-                $.ajax(
-                {
+                $.ajax({
                     url: "/get/getData.php?request=" + requestno + "&system_id=" + system_id + "&system_name=" + system_name + "&slog_sort=" + slog_sort + "&glog_sort=" + glog_sort,
                     cache: false,
                     dataType: "json",
-                    success: function(result)
-                    {
+                    success: function(result) {
                         $('#nowplaying').html(result.now_playing);
 
-                        if (onlysystem !== page_sys)
-                        {
+                        if (onlysystem !== page_sys) {
                             log("Refreshing data (system changed)");
-                        }
-                        else if (override === true)
-                        {
+                        } else if (override === true) {
                             log("Refreshing data (override)");
                         }
 
@@ -277,27 +229,22 @@ function get_data(override) {
                         $('#scrollable').html(result.log_data);
                         $('#stations').html(result.station_data);
 
-                        if (result.notifications !== "false")
-                        {
+                        if (result.notifications !== "false") {
                             $('#notifications').html(result.notifications);
-                            if (result.notifications_data !== "false")
-                            {
+                            if (result.notifications_data !== "false") {
                                 $('#notice_new').html(result.notifications_data);
                             }
                         }
 
-                        if (result.update_in_progress !== "false")
-                        {
+                        if (result.update_in_progress !== "false") {
                             $('#notifications').html(result.update_notification);
-                            if (result.update_notification_data !== "false")
-                            {
+                            if (result.update_notification_data !== "false") {
                                 $('#notice').html(result.update_notification_data);
                             }
                         }
 
                         // clear reference distances if we're in a new system
-                        if (result.new_sys !== "false")
-                        {
+                        if (result.new_sys !== "false") {
                             $('#ref_1_dist').val('');
                             $('#ref_2_dist').val('');
                             $('#ref_3_dist').val('');
@@ -305,8 +252,7 @@ function get_data(override) {
                         }
 
                         // if we're on the system info page
-                        if ($('#system_page').length)
-                        {
+                        if ($('#system_page').length) {
                             $('#si_name').html(result.si_name);
                             $('#si_stations').html(result.si_stations);
                             $('#si_detailed').html(result.si_detailed);
@@ -317,18 +263,15 @@ function get_data(override) {
                         }
 
                         var cont = $('#container');
-                        if (cont.length)
-                        {
+                        if (cont.length) {
                             log("Updating Neighborhood Map");
                             var chart = cont.highcharts();
 
-                            if (chart)
-                            {
+                            if (chart) {
                                 cont.highcharts().destroy();
                             }
 
-                            var mode = getUrlVars().mode,
-                                maxdistance = getUrlVars().maxdistance,
+                            var mode = getUrlVars().mode, maxdistance = getUrlVars().maxdistance,
                                 script = document.createElement("script");
                             script.type = "text/javascript";
                             script.src = "/Map/getMapPoints.js.php?mode=" + mode + "&maxdistance=" + maxdistance;
@@ -336,31 +279,25 @@ function get_data(override) {
                             $("head").append(script);
                         }
 
-                        if ($('#poi_bm').length)
-                        {
+                        if ($('#poi_bm').length) {
                             log("Updating Poi & BM");
                             update_poi_bm();
                         }
 
-                        if (result.update_map !== "false")
-                        {
+                        if (result.update_map !== "false") {
                             log("Calling update_map()");
                             update_map();
                         }
 
-                        if (override === true)
-                        {
+                        if (override === true) {
                             update_api(time, "false", "false", "true");
-                        }
-                        else
-                        {
+                        } else {
                             update_api(time, "false", "true");
                         }
                         requestno = 1;
                         //log("Success: requesting /get/getData.php ok");
                     },
-                    error: function()
-                    {
+                    error: function() {
                         log("Error: requesting /get/getData.php failed");
                     }
                 });
@@ -370,8 +307,7 @@ function get_data(override) {
     });
 }
 
-$(function()
-{
+$(function() {
     get_data();
 });
 
@@ -379,21 +315,17 @@ $(function()
  * Call MakeGallery class
  */
 function make_gallery() {
-    $.ajax(
-    {
+    $.ajax({
         url: "/get/getData.php?action=makegallery",
         cache: false,
-        success: function()
-        {
+        success: function() {
             log("Gallery called");
         }
     });
 }
 
-$(function()
-{
-    setTimeout(function()
-    {
+$(function() {
+    setTimeout(function() {
         make_gallery();
     }, 2000);
 });
@@ -409,28 +341,20 @@ $(function()
 function get_cs(formid, coordformid, onlyid) {
     coordformid = coordformid || false;
     onlyid = onlyid || false;
-    $.ajax(
-    {
+    $.ajax({
         url: "/get/getData.php?action=onlysystem",
         cache: false,
-        success: function(result)
-        {
+        success: function(result) {
             $("#" + formid).val(result);
         }
     });
-    if (coordformid !== false)
-    {
-        $.ajax(
-        {
+    if (coordformid !== false) {
+        $.ajax({
             url: "/get/getData.php?action=onlycoordinates",
             cache: false,
-            success: function(results)
-            {
+            success: function(results) {
                 // split coordinates for distance calculations
-                var res = results.split(","),
-                    x = res[0],
-                    y = res[1],
-                    z = res[2];
+                var res = results.split(","), x = res[0], y = res[1], z = res[2];
 
                 $('#coordsx_2').val(x);
                 $('#coordsy_2').val(y);
@@ -439,14 +363,11 @@ function get_cs(formid, coordformid, onlyid) {
             }
         });
     }
-    if (onlyid !== false)
-    {
-        $.ajax(
-        {
+    if (onlyid !== false) {
+        $.ajax({
             url: "/get/getData.php?action=onlyid",
             cache: false,
-            success: function(results)
-            {
+            success: function(results) {
                 $("#" + onlyid).val(results);
             }
         });
@@ -460,80 +381,58 @@ function get_cs(formid, coordformid, onlyid) {
  * @param {int} deleteid
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function update_values(editurl, deleteid)
-{
+function update_values(editurl, deleteid) {
     //log(editurl);
     deleteid = deleteid || false;
-    $.ajax(
-    {
+    $.ajax({
         url: editurl,
         cache: false,
         dataType: "json",
-        success: function(result)
-        {
-            jQuery.each(result, function(id, value)
-            {
+        success: function(result) {
+            jQuery.each(result, function(id, value) {
                 var elem = $("#" + id);
-                if (elem.attr("type") === "checkbox")
-                {
-                    if (value === "1")
-                    {
+                if (elem.attr("type") === "checkbox") {
+                    if (value === "1") {
                         elem.prop("checked", true);
                     }
 
-                    if (id === "pinned")
-                    {
-                        if (value === "1")
-                        {
+                    if (id === "pinned") {
+                        if (value === "1") {
                             $('#pin_click').html("&nbsp;Pinned to top");
                             $('#weight').show();
-                        }
-                        else
-                        {
+                        } else {
                             $('#pin_click').html("&nbsp;Pin to top");
                             $('#weight').hide();
                         }
                     }
-                }
-                else if (elem.attr("type") === "select")
-                {
+                } else if (elem.attr("type") === "select") {
                     document.getElementById(id).getElementsByTagName("option")[value].selected = "selected";
-                }
-                else
-                {
+                } else {
                     elem.val(value);
                 }
             });
         }
     });
 
-    var delete_div = $('#delete'),
-        delete_poi = $('#delete_poi'),
-        delete_bm = $('#delete_bm');
+    var delete_div = $('#delete'), delete_poi = $('#delete_poi'), delete_bm = $('#delete_bm');
 
-    if (delete_div.length)
-    {
+    if (delete_div.length) {
         delete_div.html("");
-        if (deleteid !== false)
-        {
+        if (deleteid !== false) {
             delete_div.html('<a href="javascript:void(0)" onclick="confirmation(' + deleteid + ', \'log\')" title="Delete item"><div class="delete_button" style="right:-271px;"><img src="/style/img/delete.png" class="icon" alt="Delete" style="margin-right: 0"></div></a>');
         }
     }
 
-    if (delete_poi.length)
-    {
+    if (delete_poi.length) {
         delete_poi.html("");
-        if (deleteid !== false)
-        {
+        if (deleteid !== false) {
             delete_poi.html('<a href="javascript:void(0)" data-replace="true" data-target=".entries" onclick="confirmation(' + deleteid + ', \'poi\')" title="Delete item"><div class="delete_button"><img src="/style/img/delete.png" class="icon" alt="Delete" style="margin-right: 0"></div></a>');
         }
     }
 
-    if (delete_bm.length)
-    {
+    if (delete_bm.length) {
         delete_bm.html("");
-        if (deleteid !== false)
-        {
+        if (deleteid !== false) {
             delete_bm.html('<a href="javascript:void(0)" data-replace="true" data-target=".entries" onclick="confirmation(' + deleteid + ', \'bm\')" title="Delete item"><div class="delete_button"><img src="/style/img/delete.png" class="icon" alt="Delete" style="margin-right: 0"></div></a>');
         }
     }
@@ -547,80 +446,56 @@ function update_values(editurl, deleteid)
  * @param {boolean} update_map
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function update_data(formid, file, update_map)
-{
+function update_data(formid, file, update_map) {
     update_map = update_map || false;
-    var allTags = document.getElementById(formid).elements,
-        data_to_send = {},
-        tg,
-        st;
+    var allTags = document.getElementById(formid).elements, data_to_send = {}, tg, st;
 
-    for (tg = 0; tg < allTags.length; tg+= 1)
-    {
-        if (allTags[tg].name)
-        {
-            if (allTags[tg].type === "checkbox")
-            {
-                if (allTags[tg].checked)
-                {
+    for (tg = 0; tg < allTags.length; tg += 1) {
+        if (allTags[tg].name) {
+            if (allTags[tg].type === "checkbox") {
+                if (allTags[tg].checked) {
                     data_to_send[allTags[tg].name] = (allTags[tg].value);
-                }
-                else
-                {
+                } else {
                     data_to_send[allTags[tg].name] = "";
                 }
-            }
-            else
-            {
+            } else {
                 data_to_send[allTags[tg].name] = (allTags[tg].value);
             }
         }
     }
     //log(data_to_send);
     st = JSON.stringify(data_to_send);
-    $.ajax(
-    {
+    $.ajax({
         type: "POST",
         url: file,
-        data: { input: st}
-    })
-    .done(function(msg)
-    {
-        if (msg)
-        {
+        data: {input: st}
+    }).done(function(msg) {
+        if (msg) {
             alert(msg);
-        }
-        else
-        {
+        } else {
             $('#seslogsuccess').html('<img src="/style/img/check.png" class="icon" style="margin-right: 5px" alt="Done">');
-            setTimeout(function()
-            {
+            setTimeout(function() {
                 $('#seslogsuccess').html($('#old_val').html());
             }, 3000);
         }
     });
 
-    if (update_map === true)
-    {
-        $.ajax(
-        {
+    if (update_map === true) {
+        $.ajax({
             url: "/GalMap/getMapPoints.json.php",
             cache: false,
             dataType: "html",
-            success: function()
-            {
+            success: function() {
                 log("success");
             }
         });
     }
 
-    setTimeout(function()
-    {
+    setTimeout(function() {
         get_data(true);
     }, 1200);
 
-    if ($('#poi_bm').length)
-    {
+    if ($('#poi_bm').length) {
         log("Updating Poi & BM");
         update_poi_bm();
     }
@@ -632,10 +507,8 @@ function update_data(formid, file, update_map)
  * @param {int} i
  * @return {string} i
  */
-function addZero(i)
-{
-    if (i < 10)
-    {
+function addZero(i) {
+    if (i < 10) {
         i = "0" + i;
     }
     return i;
@@ -644,53 +517,58 @@ function addZero(i)
 /**
  * Update the clock
  */
-function startTime()
-{
-    var today = new Date(), h, m, s, d, year, mo,
-        monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+function startTime() {
+    var today = new Date(), h, m, s, d, year, mo, monthNames = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec"
+    ];
 
-    if (gmt === "false")
-    {
-            h = addZero(today.getHours());
-            m = today.getMinutes();
-            s = today.getSeconds();
-            d = today.getDate();
-            year = today.getFullYear() + 1286;
-            mo = monthNames[today.getMonth()];
-    }
-    else
-    {
-            h = addZero(today.getUTCHours());
-            m = today.getUTCMinutes();
-            s = today.getUTCSeconds();
-            d = today.getUTCDate();
-            year = today.getUTCFullYear() + 1286;
-            mo = monthNames[today.getUTCMonth()];
+    if (gmt === "false") {
+        h = addZero(today.getHours());
+        m = today.getMinutes();
+        s = today.getSeconds();
+        d = today.getDate();
+        year = today.getFullYear() + 1286;
+        mo = monthNames[today.getMonth()];
+    } else {
+        h = addZero(today.getUTCHours());
+        m = today.getUTCMinutes();
+        s = today.getUTCSeconds();
+        d = today.getUTCDate();
+        year = today.getUTCFullYear() + 1286;
+        mo = monthNames[today.getUTCMonth()];
     }
 
     m = addZero(m);
     s = addZero(s);
 
-    var hrs = $('#hrs'),
-        hrsns = $('#hrsns'),
-        date = $('#date');
+    var hrs = $('#hrs'), hrsns = $('#hrsns'), date = $('#date');
 
-    if (hrs.length)
-    {
+    if (hrs.length) {
         hrs.html(h + ":" + m + ":" + s);
     }
 
-    if (hrsns.length)
-    {
+    if (hrsns.length) {
         hrsns.html(h + ":" + m);
     }
 
-    if (date.length)
-    {
+    if (date.length) {
         date.html(d + " " + mo + " " + year);
     }
 
-    setTimeout(function(){startTime();}, 1000);
+    setTimeout(function() {
+        startTime();
+    }, 1000);
 }
 
 /**
@@ -700,37 +578,36 @@ function startTime()
  * @param {boolean} toback
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function tofront(divid, toback)
-{
+function tofront(divid, toback) {
     toback = toback || false;
-    var setindex = zindexmax + 1,
-        divs = ["addlog", "calculate", "addPoi", "addstation", "distance", "editsystem", "report", "addBm", "search_system"],
-        index;
+    var setindex = zindexmax + 1, divs = [
+        "addlog",
+        "calculate",
+        "addPoi",
+        "addstation",
+        "distance",
+        "editsystem",
+        "report",
+        "addBm",
+        "search_system"
+    ], index;
 
-    if (toback === false)
-    {
-        if (document.getElementById(divid).style.display === "block")
-        {
+    if (toback === false) {
+        if (document.getElementById(divid).style.display === "block") {
             document.getElementById(divid).style.display = "none";
             $('.entries').fadeIn("fast");
-        }
-        else
-        {
+        } else {
             $('#' + divid).fadeIn('fast');
             document.getElementById(divid).style.zindex = setindex;
             document.getElementsByClassName("entries")[0].style.display = "none";
         }
-    }
-    else
-    {
+    } else {
         get_data(true);
         $('.entries').fadeIn("fast");
     }
 
-    for (index = 0; index < divs.length; index += 1)
-    {
-        if (document.getElementById(divs[index]) && divs[index] !== divid)
-        {
+    for (index = 0; index < divs.length; index += 1) {
+        if (document.getElementById(divs[index]) && divs[index] !== divid) {
             document.getElementById(divs[index]).style.zindex = 0;
             document.getElementById(divs[index]).style.display = "none";
         }
@@ -744,38 +621,25 @@ function tofront(divid, toback)
  * @param {string} what
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function confirmation(delid, what)
-{
-    if (confirm("Sure you want to delete a thing?") === true)
-    {
+function confirmation(delid, what) {
+    if (confirm("Sure you want to delete a thing?") === true) {
         var script = "";
-        if (what === "log")
-        {
+        if (what === "log") {
             script = "/Log/add_log.php?do&deleteid=" + delid;
-        }
-        else if (what === "poi")
-        {
+        } else if (what === "poi") {
             script = "/Bookmarks/add_poi.php?do&deleteid=" + delid;
-        }
-        else if (what === "bm")
-        {
+        } else if (what === "bm") {
             script = "/Bookmarks/add_bookmark.php?do&deleteid=" + delid;
-        }
-        else if (what === "screenshot")
-        {
+        } else if (what === "screenshot") {
             script = "/Gallery/deleteScreenshot.php?img=" + delid;
         }
 
-        if (script !== "")
-        {
-            $.ajax(
-            {
+        if (script !== "") {
+            $.ajax({
                 url: script,
                 cache: false,
-                success: function(result)
-                {
-                    if (what === "screenshot")
-                    {
+                success: function(result) {
+                    if (what === "screenshot") {
                         window.location = result;
                     }
                     update_map();
@@ -785,8 +649,7 @@ function confirmation(delid, what)
         }
     }
 
-    if (what !== "screenshot")
-    {
+    if (what !== "screenshot") {
         get_data(true);
         tofront("null", true);
     }
@@ -798,20 +661,16 @@ function confirmation(delid, what)
  * @param {string} logsystem
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function toggle_log(logsystem)
-{
+function toggle_log(logsystem) {
     $('#log_form')[0].reset();
     $('#pin_click').html("&nbsp;Pin to top");
     $('#weight').hide();
     $('#edit_id').val('');
 
-    if (logsystem === "")
-    {
+    if (logsystem === "") {
         get_cs("system_1", "false", "system_id");
         $(".addstations").toggle();
-    }
-    else
-    {
+    } else {
         $('#system_1').val(logsystem);
     }
 
@@ -824,38 +683,31 @@ function toggle_log(logsystem)
  * @param {int} log_id
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function toggle_log_edit(log_id)
-{
+function toggle_log_edit(log_id) {
     tofront("addlog");
     update_values("/Log/getLogEditData.php?logid=" + log_id, log_id);
 }
 
 var last_system = "";
+
 /**
  * Get info from clicking on a map point
  *
  * @param {string} system
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function get_mi(system)
-{
-    var report = $('#report'),
-        last_system = "";
+function get_mi(system) {
+    var report = $('#report'), last_system = "";
 
-    if (last_system === system)
-    {
+    if (last_system === system) {
         report.hide();
         last_system = "";
-    }
-    else
-    {
+    } else {
         report.show();
-        $.ajax(
-        {
+        $.ajax({
             url: "/Map/getMapData.php?system=" + system,
             cache: false,
-            success: function(result)
-            {
+            success: function(result) {
                 report.html(result);
             }
         });
@@ -875,65 +727,52 @@ function get_mi(system)
  * @param {string} dp
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function showResult(str, divid, link, station, idlink, sysid, dp)
-{
+function showResult(str, divid, link, station, idlink, sysid, dp) {
     link = link || "no";
     idlink = idlink || "no";
     station = station || "no";
     sysid = sysid || "no";
     dp = dp || "no";
 
-    if (str.length >= 1)
-    {
+    if (str.length >= 1) {
         $("#suggestions_" + divid).show();
-    }
-    else
-    {
+    } else {
         $("#suggestions_" + divid).hide();
     }
 
-    if (window.XMLHttpRequest)
-    {
+    if (window.XMLHttpRequest) {
         xmlhttp = new XMLHttpRequest();
     }
 
-    xmlhttp.onreadystatechange = function()
-    {
-        if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
-        {
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
             $("#suggestions_" + divid).html(xmlhttp.responseText);
         }
     };
 
-    var allegiance = getUrlVars().allegiance,
-        system_allegiance = getUrlVars().system_allegiance,
-        power = getUrlVars().power,
-        addtolink = "",
-        addtolink2 = "",
-        addtolink3 = "";
+    var allegiance = getUrlVars().allegiance, system_allegiance = getUrlVars().system_allegiance, power = getUrlVars().power,
+        addtolink = "", addtolink2 = "", addtolink3 = "";
 
-    if (system_allegiance !== "undefined")
-    {
+    if (system_allegiance !== "undefined") {
         addtolink = "&system_allegiance=" + system_allegiance;
     }
 
-    if (allegiance !== "undefined")
-    {
+    if (allegiance !== "undefined") {
         addtolink2 = "&allegiance=" + allegiance;
     }
 
-    if (power !== "undefined")
-    {
+    if (power !== "undefined") {
         addtolink3 = "&power=" + power;
     }
 
-    if (station === "yes")
-    {
-        xmlhttp.open("GET", "/get/getStationNames.php?q=" + str + "&divid=" + divid + "&link=" + link + "&idlink=" + idlink + "&sysid=" + sysid + "&dp=" + dp + addtolink + addtolink2 + addtolink3, true);
-    }
-    else
-    {
-        xmlhttp.open("GET", "/get/getSystemNames.php?q=" + str + "&divid=" + divid + "&link=" + link + "&idlink=" + idlink + "&sysid=" + sysid + "&dp=" + dp + addtolink + addtolink2 + addtolink3, true);
+    if (station === "yes") {
+        xmlhttp.open(
+            "GET", "/get/getStationNames.php?q=" + str + "&divid=" + divid + "&link=" + link + "&idlink=" + idlink + "&sysid=" + sysid + "&dp=" + dp + addtolink + addtolink2 + addtolink3,
+            true);
+    } else {
+        xmlhttp.open(
+            "GET", "/get/getSystemNames.php?q=" + str + "&divid=" + divid + "&link=" + link + "&idlink=" + idlink + "&sysid=" + sysid + "&dp=" + dp + addtolink + addtolink2 + addtolink3,
+            true);
     }
     xmlhttp.send();
 }
@@ -946,13 +785,9 @@ function showResult(str, divid, link, station, idlink, sysid, dp)
  * @param {string} divid
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function setResult(result, coordinates, divid)
-{
+function setResult(result, coordinates, divid) {
     $("#system_" + divid).val(result);
-    var res = coordinates.split(","),
-        x = res[0],
-        y = res[1],
-        z = res[2];
+    var res = coordinates.split(","), x = res[0], y = res[1], z = res[2];
 
     $("#coordsx_" + divid).val(x);
     $("#coordsy_" + divid).val(y);
@@ -967,8 +802,7 @@ function setResult(result, coordinates, divid)
  * @param {int} sysid
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function setbm(name, sysid)
-{
+function setbm(name, sysid) {
     $('#bm_system_name').val(name);
     $('#bm_system_id').val(sysid);
     $('#bm_edit_id').val('');
@@ -984,8 +818,7 @@ function setbm(name, sysid)
  * @param {string} stationid
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function setl(name, stationid)
-{
+function setl(name, stationid) {
     $('#statname').val(name);
     $('#suggestions_41').hide();
 }
@@ -998,12 +831,8 @@ function setl(name, stationid)
  * @param {int} systemid
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function setdp(name, coordinates, systemid)
-{
-    var res = coordinates.split(","),
-        x = res[0],
-        y = res[1],
-        z = res[2];
+function setdp(name, coordinates, systemid) {
+    var res = coordinates.split(","), x = res[0], y = res[1], z = res[2];
 
     $('#system_name').val(name);
     $('#system_id').val(systemid);
@@ -1140,6 +969,7 @@ function empty()
     }
 }
 */
+
 //
 /**
  * Function to calculate distances and profits
@@ -1159,20 +989,15 @@ function empty()
  * @param {int} from_id
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function calcDist(coord_fromx, coord_fromy, coord_fromz, coord_tox, coord_toy, coord_toz, from, to, price1, price2, tonnage, to_id, from_id)
-{
+function calcDist(coord_fromx, coord_fromy, coord_fromz, coord_tox, coord_toy, coord_toz, from, to, price1, price2, tonnage,
+                  to_id, from_id) {
     price1 = price1 || "";
     price2 = price2 || "";
     tonnage = tonnage || "160";
     to_id = to_id || "";
     from_id = from_id || "";
 
-    var x1 = coord_fromx,
-        y1 = coord_fromy,
-        z1 = coord_fromz,
-        x2 = coord_tox,
-        y2 = coord_toy,
-        z2 = coord_toz;
+    var x1 = coord_fromx, y1 = coord_fromy, z1 = coord_fromz, x2 = coord_tox, y2 = coord_toy, z2 = coord_toz;
 
     /*if (document.getElementById("distance_mp") && document.getElementById("to_system").value != "" && document.getElementById("from_system").value != "")
     {
@@ -1196,20 +1021,16 @@ function calcDist(coord_fromx, coord_fromy, coord_fromz, coord_tox, coord_toy, c
     }*/
     var dist_display = $('#dist_display');
 
-    if (x1 && x2 && y1 && y2 && z1 && z2)
-    {
-        if (to === "")
-        {
+    if (x1 && x2 && y1 && y2 && z1 && z2) {
+        if (to === "") {
             dist_display.val("Missing information, try again");
-        }
-        else
-        {
-            var distance = numeral(Math.round(Math.sqrt(Math.pow((x1-(x2)), 2) + Math.pow((y1-(y2)), 2) + Math.pow((z1-(z2)),2)))).format("0,0");
+        } else {
+            var distance = numeral(
+                Math.round(Math.sqrt(Math.pow((x1 - (x2)), 2) + Math.pow((y1 - (y2)), 2) + Math.pow((z1 - (z2)), 2)))).
+                format("0,0");
             dist_display.val("The distance from " + from + " to " + to + " is " + distance + " ly");
         }
-    }
-    else
-    {
+    } else {
         dist_display.val("Missing information, try again");
     }
 }
@@ -1221,8 +1042,7 @@ function calcDist(coord_fromx, coord_fromy, coord_fromz, coord_tox, coord_toy, c
  * @param {int} station_id
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function addstation(station, station_id)
-{
+function addstation(station, station_id) {
     $('#statname').val(station);
 }
 
@@ -1232,26 +1052,19 @@ function addstation(station, station_id)
  * @param {string} log
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function savelog(log)
-{
-    var seslogsuccess = $('#seslogsuccess'),
-        data = $('#logtext').val();
+function savelog(log) {
+    var seslogsuccess = $('#seslogsuccess'), data = $('#logtext').val();
 
-    $.ajax(
-    {
+    $.ajax({
         type: "POST",
         url: "/action/saveSessionLog.php",
-        data: { logtext: data }
-    })
-    .done(function(msg)
-    {
+        data: {logtext: data}
+    }).done(function(msg) {
         seslogsuccess.html('<img src="/style/img/check.png" class="icon" alt="Done">');
 
         // display check.png for 3,5 seconds
-        setTimeout(function()
-        {
-            if (seslogsuccess.html('<img src="/style/img/check.png" class="icon" alt="Done">'))
-            {
+        setTimeout(function() {
+            if (seslogsuccess.html('<img src="/style/img/check.png" class="icon" alt="Done">')) {
                 seslogsuccess.html($('#old_val').html());
             }
 
@@ -1264,9 +1077,9 @@ function savelog(log)
  *
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function showsave()
-{
-    $('#seslogsuccess').html('<a href="javascript:void(0)" onclick="savelog()" title="Save session log"><img src="/style/img/save.png" class="icon" alt="Save"></a>');
+function showsave() {
+    $('#seslogsuccess').html(
+        '<a href="javascript:void(0)" onclick="savelog()" title="Save session log"><img src="/style/img/save.png" class="icon" alt="Save"></a>');
 }
 
 /**
@@ -1276,37 +1089,31 @@ function showsave()
  * @param {string} fileurl
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function imgurUpload(file, fileurl)
-{
+function imgurUpload(file, fileurl) {
     $('#uploaded').html('Uploading image...<br><img src="/style/img/loading.gif" alt="Uploading...">');
-    $.ajax(
-    {
+    $.ajax({
         url: "https://api.imgur.com/3/image",
-        headers:
-        {
+        headers: {
             Authorization: "Client-ID 36fede1dee010c0",
             Accept: "application/json"
         },
         type: "POST",
-        data:
-        {
+        data: {
             image: file,
             type: "base64"
         },
-        success: function(result)
-        {
+        success: function(result) {
             var url = result.data.link;
 
-            $('#uploaded').html('Image succesfully uploaded!<br><a target="_blank" href="' + url + '">Link to your image on imgur.com<img class="ext_icon" src="/style/img/external_link.png" alt="ext"></a>');
+            $('#uploaded').
+                html('Image succesfully uploaded!<br><a target="_blank" href="' + url + '">Link to your image on imgur.com<img class="ext_icon" src="/style/img/external_link.png" alt="ext"></a>');
 
             // write to file so we can retrieve url later
-            $.ajax(
-            {
+            $.ajax({
                 url: "/action/addImgurURL.php?url=" + url + "&file=" + fileurl,
                 cache: false,
                 dataType: "html",
-                success: function(re)
-                {
+                success: function(re) {
                     log(re);
                 }
             });
@@ -1322,14 +1129,11 @@ function imgurUpload(file, fileurl)
  * @param {int} num
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function setActive(id, num)
-{
+function setActive(id, num) {
     var i;
 
-    for (i = 0; i <= num; i += 1)
-    {
-        if (document.getElementById("link_" + i))
-        {
+    for (i = 0; i <= num; i += 1) {
+        if (document.getElementById("link_" + i)) {
             document.getElementById("link_" + i).className = "link";
         }
     }
@@ -1343,32 +1147,25 @@ function setActive(id, num)
  * @param {int} id
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function get_wikipedia(search, id)
-{
+function get_wikipedia(search, id) {
     var wpsearch = $("#wpsearch_" + id);
 
-    if (!wpsearch.is(":visible"))
-    {
+    if (!wpsearch.is(":visible")) {
         wpsearch.fadeIn();
         wpsearch.html('<strong>Querying Wikipedia</strong><br><img src="/style/img/loading.gif" alt="Loading...">');
 
-        $.ajax(
-        {
+        $.ajax({
             url: "/get/getWikipediaData.php?search=" + search,
             cache: false,
             dataType: "html",
-            success: function(result)
-            {
+            success: function(result) {
                 wpsearch.html(result);
             }
         });
-    }
-    else
-    {
+    } else {
         wpsearch.hide();
     }
 }
-
 
 /**
  * Update class and rating on NearestSystems.php
@@ -1377,18 +1174,14 @@ function get_wikipedia(search, id)
  * @param {string} class_name
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function getCR(group_id, class_name)
-{
-    $.ajax(
-    {
+function getCR(group_id, class_name) {
+    $.ajax({
         url: "/get/getRatingAndClass.php?group_id=" + group_id + "&class_name=" + class_name,
         cache: false,
         dataType: "json",
-        success: function(result)
-        {
+        success: function(result) {
             $('#rating').html(result.rating);
-            if (class_name === "")
-            {
+            if (class_name === "") {
                 $('#class').html(result.classv);
             }
         }
@@ -1402,8 +1195,7 @@ function getCR(group_id, class_name)
  * @param {string} str
  * @author Sean Bright
  */
-function escapeRegExp(str)
-{
+function escapeRegExp(str) {
     return str.replace("/([.*+?^=!:${}()|\[\]\/\\])/g", "\\$1");
 }
 
@@ -1416,8 +1208,7 @@ function escapeRegExp(str)
  * @param {string} replace
  * @author Sean Bright
  */
-function replaceAll(str, find, replace)
-{
+function replaceAll(str, find, replace) {
     return str.replace(new RegExp(escapeRegExp(find), "g"), replace);
 }
 
@@ -1426,15 +1217,12 @@ function replaceAll(str, find, replace)
  *
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function refresh_api()
-{
-    $.ajax(
-    {
+function refresh_api() {
+    $.ajax({
         url: "/action/updateAPIdata.php?override",
         cache: false,
         dataType: "json",
-        success: function(result)
-        {
+        success: function(result) {
             log(result);
         }
     });
@@ -1444,13 +1232,11 @@ function refresh_api()
     api_refresh.html('<img class="icon24" src="/style/img/check_24.png" alt="Refresh done" style="margin-right: 10px">');
 
     // wait a couple of seconds before updating data
-    setTimeout(function()
-    {
+    setTimeout(function() {
         get_data(true);
     }, 2500);
 
-    setTimeout(function()
-    {
+    setTimeout(function() {
         api_refresh.html('<img class="icon24" src="/style/img/refresh_24.png" alt="Refresh" style="margin-right: 10px">');
     }, 30000);
 }
@@ -1461,15 +1247,12 @@ function refresh_api()
  * @param {string} version
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function ignore_version(version)
-{
-    $.ajax(
-    {
+function ignore_version(version) {
+    $.ajax({
         url: "/admin/setData.php?ignore_version=" + version,
         cache: false,
         dataType: "json",
-        success: function(result)
-        {
+        success: function(result) {
             log(result);
         }
     });
@@ -1485,22 +1268,17 @@ function ignore_version(version)
  * @param {boolean} send
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function edsm_comment(comment, send)
-{
-    if (send !== false)
-    {
-        $.ajax(
-        {
+function edsm_comment(comment, send) {
+    if (send !== false) {
+        $.ajax({
             url: "/get/getData.php?action=onlysystem",
             cache: false,
-            success: function(result)
-            {
+            success: function(result) {
                 $.ajax({
                     url: "/action/addEDSMComment.php?system_name=" + result + "&comment=" + comment,
                     cache: false,
                     dataType: "json",
-                    success: function(res)
-                    {
+                    success: function(res) {
                         log(res);
                     }
                 });
@@ -1508,26 +1286,19 @@ function edsm_comment(comment, send)
         });
         $('#edsm_comment').fadeToggle("fast");
         $('#edsm_cmnt_pic').html('<img src="/style/img/check_24.png" alt="Comment sent" class="icon24">');
-    }
-    else
-    {
+    } else {
         // check for existing comments
-        if ($('#edsm_comment').is(":hidden"))
-        {
-            $.ajax(
-            {
+        if ($('#edsm_comment').is(":hidden")) {
+            $.ajax({
                 url: "/get/getData.php?action=onlysystem",
                 cache: false,
-                success: function(result)
-                {
+                success: function(result) {
                     $.ajax({
                         url: "/get/getEDSMComment.php?system_name=" + result,
                         cache: false,
                         dataType: 'text',
-                        success: function(res)
-                        {
-                            if (res !== "")
-                            {
+                        success: function(res) {
+                            if (res !== "") {
                                 $('#comment2').val(res);
                             }
                         }
@@ -1543,33 +1314,25 @@ function edsm_comment(comment, send)
  *
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function set_reference_systems(standard, force)
-{
+function set_reference_systems(standard, force) {
     force = force || false;
 
-    var add = "",
-        urli = "";
+    var add = "", urli = "";
 
-    if (force === true)
-    {
+    if (force === true) {
         add = "?force";
     }
 
-    if (standard !== false)
-    {
+    if (standard !== false) {
         urli = "/Trilateration/getReferenceSystems.php?standard=true" + add;
-    }
-    else
-    {
+    } else {
         urli = "/Trilateration/getReferenceSystems.php" + add;
     }
 
-    $.ajax(
-    {
+    $.ajax({
         url: urli,
         cache: false,
-        success: function(result)
-        {
+        success: function(result) {
             $('#calculate').html(result);
         }
     });
@@ -1582,16 +1345,13 @@ function set_reference_systems(standard, force)
  * @param {Event} e
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function to_view(div_id, e)
-{
-    $("#" + div_id).css(
-    {
+function to_view(div_id, e) {
+    $("#" + div_id).css({
         left: e.pageX,
         top: e.pageY + 15
     });
 
-    setTimeout(function()
-    {
+    setTimeout(function() {
         $('#' + div_id).fadeToggle('fast');
     }, 700);
 }
@@ -1603,22 +1363,15 @@ function to_view(div_id, e)
  * @param {int} og_width
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function enlarge(img, og_width)
-{
+function enlarge(img, og_width) {
     var width = "";
-    if ($(img).width() === og_width)
-    {
-        if ($(img)[0].naturalWidth > $(img).parent().width())
-        {
+    if ($(img).width() === og_width) {
+        if ($(img)[0].naturalWidth > $(img).parent().width()) {
             width = $(img).parent().width();
-        }
-        else
-        {
+        } else {
             width = $(img)[0].naturalWidth;
         }
-    }
-    else
-    {
+    } else {
         width = og_width;
     }
     $(img).width(width);
@@ -1631,8 +1384,7 @@ function enlarge(img, og_width)
  * @param {string} style
  * @author Mauri Kujala <contact@edtb.xyz>
  */
-function minmax(style)
-{
+function minmax(style) {
     document.cookie = "style=" + style + "; expires=Thu, 18 Dec 2069 12:00:00 UTC; path=/";
     document.cookie = "style=" + style + "; expires=Thu, 18 Dec 2069 12:00:00 UTC; path=/admin";
     document.cookie = "style=" + style + "; expires=Thu, 18 Dec 2069 12:00:00 UTC; path=/SystemMap";
@@ -1645,8 +1397,7 @@ function minmax(style)
  *
  * @author nusofthq
  */
-function __log(e, data)
-{
+function __log(e, data) {
     $('#audio_log').html(e);
 }
 
@@ -1658,8 +1409,7 @@ var recorder;
  *
  * @author nusofthq
  */
-function startUserMedia(stream)
-{
+function startUserMedia(stream) {
     var input = audio_context.createMediaStreamSource(stream);
     //__log('Media stream created.' );
     //__log("input sample rate " +input.context.sampleRate);
@@ -1668,8 +1418,7 @@ function startUserMedia(stream)
     //input.connect(audio_context.destination);
     //__log('Input connected to audio context destination.');
 
-    recorder = new Recorder(input,
-    {
+    recorder = new Recorder(input, {
         numChannels: 1
     });
     //__log('Recorder initialised.');
@@ -1680,8 +1429,7 @@ function startUserMedia(stream)
  *
  * @author nusofthq
  */
-function startRecording(button)
-{
+function startRecording(button) {
     recorder && recorder.record();
     //button.disabled = true;
     //button.nextElementSibling.disabled = false;
@@ -1693,8 +1441,7 @@ function startRecording(button)
  *
  * @author nusofthq
  */
-function stopRecording(button)
-{
+function stopRecording(button) {
     recorder && recorder.stop();
     //button.disabled = true;
     //button.previousElementSibling.disabled = false;
@@ -1711,10 +1458,8 @@ function stopRecording(button)
  *
  * @author nusofthq
  */
-function createDownloadLink()
-{
-    recorder && recorder.exportWAV(function(blob)
-    {
+function createDownloadLink() {
+    recorder && recorder.exportWAV(function(blob) {
         /*var url = URL.createObjectURL(blob);
         var li = document.createElement('li');
         var au = document.createElement('audio');
@@ -1736,36 +1481,28 @@ function createDownloadLink()
  *
  * @author nusofthq
  */
-function start_audio()
-{
-    try
-    {
+function start_audio() {
+    try {
         // webkit shim
         window.AudioContext = window.AudioContext || window.webkitAudioContext;
-        navigator.getUserMedia = ( navigator.getUserMedia ||
-        navigator.webkitGetUserMedia ||
-        navigator.mozGetUserMedia ||
-        navigator.msGetUserMedia);
+        navigator.getUserMedia = ( navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
         window.URL = window.URL || window.webkitURL;
 
         audio_context = new AudioContext;
         //__log('Audio context set up.');
         //__log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not present!'));
-    }
-    catch (e)
-    {
+    } catch (e) {
         __log('No web audio support in this browser!');
     }
 
     var go = true;
-    navigator.getUserMedia({audio: true}, startUserMedia, function(e)
-    {
-        __log('<strong>No live audio input</strong><br><br>If you <em>do have</em> a microphone connected, your browser might not<br>be allowing the microphone to be connected from "insecure" sources.<br><br>In order to record audio logs from this source,<br>use https and port 3002 to access ED ToolBox.');
+    navigator.getUserMedia({audio: true}, startUserMedia, function(e) {
+        __log(
+            '<strong>No live audio input</strong><br><br>If you <em>do have</em> a microphone connected, your browser might not<br>be allowing the microphone to be connected from "insecure" sources.<br><br>In order to record audio logs from this source,<br>use https and port 3002 to access ED ToolBox.');
         go = false;
     });
 
-    if (go === false)
-    {
+    if (go === false) {
         $('#record_click').hide();
         $('#stop_click').hide();
     }

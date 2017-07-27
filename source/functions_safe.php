@@ -267,7 +267,7 @@ function get_timeago($ptime, $diff = true, $format = false)
                 return $r . ' ' . $str . ($r > 1 ? 's' : '') . ' ago';
             }
 
-            if (data_is_old($ptimeOg)) {
+            if (dataIsOld($ptimeOg)) {
                 return '<span class="old_data">' . $r . ' ' . $str . ($r > 1 ? 's' : '') . ' ago</span>';
             }
 

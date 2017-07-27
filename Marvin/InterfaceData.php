@@ -72,7 +72,7 @@ if (isset($_GET['nowplaying'])) {
         $nowplaying = 'Not playing';
     }
 
-    echo tts_override($nowplaying);
+    echo ttsOverride($nowplaying);
 
     exit();
 }

@@ -35,7 +35,7 @@
  */
 $data['system_title'] .= '';
 
-$pic = get_allegiance_icon($curSys['allegiance']);
+$pic = getAllegianceIcon($curSys['allegiance']);
 
 $data['system_title'] .= '<div class="leftpanel-add-data">';
 $data['system_title'] .= '<a href="javascript:void(0)" id="toggle" onclick="setbm(\'' . addslashes($curSys['name']) . '\', \'' . $curSys['id'] . '\');tofront(\'addBm\');$(\'#bm_text\').focus()" title="Bookmark system">';
@@ -206,7 +206,7 @@ if (!isset($_COOKIE['style']) || $_COOKIE['style'] !== 'narrow') {
             $rearm = $stationObj->rearm;
             $isPlanetary = $stationObj->is_planetary;
 
-            $icon = get_station_icon($sType, $isPlanetary, 'margin:3px;margin-left:0px;margin-right:6px');
+            $icon = getStationIcon($sType, $isPlanetary, 'margin:3px;margin-left:0px;margin-right:6px');
 
             $includes = [
                 'shipyard' => $shipyard,

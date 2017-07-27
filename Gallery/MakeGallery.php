@@ -154,7 +154,7 @@ class MakeGallery
         /**
          * strip invalid characters from the gallery name
          */
-        $galleryName = strip_invalid_dos_chars($galleryName);
+        $galleryName = stripInvalidDosChars($galleryName);
 
         /** @var string $newscreendir */
         $newscreendir = $settings['new_screendir'] . '/' . $galleryName;

@@ -202,7 +202,7 @@ class ReferenceSystems
                 /**
                  * fetch user's last known system
                  */
-                $lastKnown = last_known_system(true);
+                $lastKnown = lastKnownSystem(true);
                 /** @var string $lastKnown user's last known system */
                 $lastKnownName = $lastKnown['name'];
 

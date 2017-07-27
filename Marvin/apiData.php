@@ -47,7 +47,7 @@ if (isset($_GET['cmdr'])) {
         if ($search === 'balance') {
             $info = number_format($api['commander']->{'credits'});
         } elseif ($search === 'rank' && isset($_GET['of'])) {
-            $info = get_rank($_GET['of'], $api['commander']->{'rank'}->{$_GET['of']}, false);
+            $info = getRank($_GET['of'], $api['commander']->{'rank'}->{$_GET['of']}, false);
         }
     }
 }
@@ -61,7 +61,7 @@ if (isset($_GET['ship'])) {
     if (isset($api['ship'])) {
         switch ($search) {
             case 'name':
-                $info = ship_name($api['ship']->{'name'});
+                $info = shipName($api['ship']->{'name'});
                 break;
             case 'health':
                 $info = number_format($api['ship']->{'health'}->{'hull'} / 10000, 1);

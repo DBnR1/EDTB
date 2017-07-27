@@ -42,9 +42,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/source/curSys.php';
 header('content-type: application/json');
 
 $lastSystemName = $curSys['name'];
-if (!valid_coordinates($curSys['x'], $curSys['y'], $curSys['z'])) {
+if (!validCoordinates($curSys['x'], $curSys['y'], $curSys['z'])) {
     // get last known coordinates
-    $lastCoords = last_known_system();
+    $lastCoords = lastKnownSystem();
 
     $curSys['x'] = $lastCoords['x'];
     $curSys['y'] = $lastCoords['y'];
@@ -101,7 +101,7 @@ if ($settings['galmap_show_visited_systems'] === 'true') {
         /**
          * if coords are not set, see if user has calculated them
          */
-        if (!valid_coordinates($vsCoordx, $vsCoordy, $vsCoordz)) {
+        if (!validCoordinates($vsCoordx, $vsCoordy, $vsCoordz)) {
             $escName = $mysqli->real_escape_string($name);
 
             $query = "  SELECT x, y, z
@@ -120,7 +120,7 @@ if ($settings['galmap_show_visited_systems'] === 'true') {
         /**
          * if we now have valid coordinates, get on with it
          */
-        if (valid_coordinates($vsCoordx, $vsCoordy, $vsCoordz)) {
+        if (validCoordinates($vsCoordx, $vsCoordy, $vsCoordz)) {
             $allegiance = $row->allegiance;
             $visit = $row->visit;
             $visitOg = $row->visit;
@@ -252,7 +252,7 @@ if ($settings['galmap_show_bookmarks'] === 'true') {
         /**
          * if coords are not set, see if user has calculated them
          */
-        if (!valid_coordinates($bmCoordx, $bmCoordy, $bmCoordz)) {
+        if (!validCoordinates($bmCoordx, $bmCoordy, $bmCoordz)) {
             $escName = $mysqli->real_escape_string($bmSystemName);
             $query = "  SELECT x, y, z
                         FROM user_systems_own
@@ -269,7 +269,7 @@ if ($settings['galmap_show_bookmarks'] === 'true') {
             $coordRes->close();
         }
 
-        if (valid_coordinates($bmCoordx, $bmCoordy, $bmCoordz)) {
+        if (validCoordinates($bmCoordx, $bmCoordy, $bmCoordz)) {
             if (strtolower($bmSystemName) !== strtolower($curSys['name'])) {
                 $bmComment = $row->comment;
                 $bmAddedOn = $row->added_on;
@@ -328,7 +328,7 @@ if ($settings['galmap_show_rares'] === 'true') {
         $rareCoordy = $row->y;
         $rareCoordz = $row->z;
 
-        if (strtolower($rareSystem) != strtolower($curSys['name']) && valid_coordinates($rareCoordx, $rareCoordy, $rareCoordz)) {
+        if (strtolower($rareSystem) != strtolower($curSys['name']) && validCoordinates($rareCoordx, $rareCoordy, $rareCoordz)) {
             $rareItem = $row->item;
             $rareStation = $row->station;
             $rareDistToStar = number_format($row->ls_to_star);
@@ -373,7 +373,7 @@ while ($row = $result->fetch_object()) {
     $logCoordy = $row->y;
     $logCoordz = $row->z;
 
-    if (!valid_coordinates($logCoordx, $logCoordy, $logCoordz)) {
+    if (!validCoordinates($logCoordx, $logCoordy, $logCoordz)) {
         $escLogSysName = $mysqli->real_escape_string($logSystem);
 
         $escName = $mysqli->real_escape_string($logSystem);
@@ -392,7 +392,7 @@ while ($row = $result->fetch_object()) {
         $coordRes->close();
     }
 
-    if (valid_coordinates($logCoordx, $logCoordy, $logCoordz)) {
+    if (validCoordinates($logCoordx, $logCoordy, $logCoordz)) {
         $logDate = $row->stardate;
         $date = date_create($logDate);
         $logAdded = date_modify($date, '+1286 years');
@@ -426,7 +426,7 @@ $result->close();
 //$info = '</div>';
 $curSysData = '';
 
-if (strtolower($lastSystemName) === strtolower($curSys['name']) && valid_coordinates($curSys['x'], $curSys['y'], $curSys['z'])) {
+if (strtolower($lastSystemName) === strtolower($curSys['name']) && validCoordinates($curSys['x'], $curSys['y'], $curSys['z'])) {
     $comma = !empty($data) ? ',' : '';
     $curSysData =
         $comma . '{"name":"' . $curSys['name'] . '","cat":[5],"coords":{"x":' . $curSys['x'] . ',"y":' . $curSys['y'] . ',"z":' .
@@ -438,4 +438,4 @@ $data = $dataStart . $data . $curSysData . ']}';
 $mapJson = $_SERVER['DOCUMENT_ROOT'] . '/GalMap/map_points.json';
 file_put_contents($mapJson, $data);
 
-edtb_common('last_map_update', 'unixtime', true, time());
+edtbCommon('last_map_update', 'unixtime', true, time());

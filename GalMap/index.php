@@ -51,13 +51,13 @@ $header->displayHeader();
 /**
  * determine coordinates for the map distance calculations
  */
-if (valid_coordinates($curSys['x'], $curSys['y'], $curSys['z'])) {
+if (validCoordinates($curSys['x'], $curSys['y'], $curSys['z'])) {
     $ucoordx = $curSys['x'];
     $ucoordy = $curSys['y'];
     $ucoordz = -$curSys['z'];
 } else {
     // get last known coordinates
-    $lastCoords = last_known_system();
+    $lastCoords = lastKnownSystem();
 
     $ucoordx = $lastCoords['x'];
     $ucoordy = $lastCoords['y'];
@@ -66,7 +66,7 @@ if (valid_coordinates($curSys['x'], $curSys['y'], $curSys['z'])) {
     $isUnknown = ' *';
 }
 
-if (!valid_coordinates($ucoordx, $ucoordy, $ucoordz)) {
+if (!validCoordinates($ucoordx, $ucoordy, $ucoordz)) {
     $ucoordx = '0';
     $ucoordy = '0';
     $ucoordz = '0';
