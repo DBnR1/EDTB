@@ -80,6 +80,8 @@ class MakeLog
         while ($obj = $logRes->fetch_object()) {
             if ($thisId != $obj->id) {
                 $systemName = $obj->system_name === '' ? $obj->log_system_name : $obj->system_name;
+                $systemName = $systemName ?? 'Unknown system';
+
                 $logStationName = $obj->station_name;
                 $logText = $obj->log_entry;
                 $date = date_create($obj->stardate);
@@ -110,7 +112,7 @@ class MakeLog
                     $logData .= $systemName;
                     $logData .= '</a>' . $lCrosslinks . $add . $sortable . '</h2></header>';
                     $logData .= '<hr>';
-                } elseif ($type === 'general' && $i == 0) {
+                } elseif ($type === 'general' && $i === 0) {
                     $gssort = $this->getSort('glog');
 
                     $sortable = '<span class="right">';

@@ -51,8 +51,6 @@ $settingsRes = ' SELECT SQL_CACHE user_settings.variable, user_settings.value, e
 
 $result = $mysqli->query($settingsRes) or write_log($mysqli->error, __FILE__, __LINE__);
 
-$settings = [];
-
 /**
  * fetch object array
  */

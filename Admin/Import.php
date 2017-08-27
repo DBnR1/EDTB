@@ -96,7 +96,7 @@ if (is_dir($settings['log_dir'])) {
             $text .= 'Due to the size of the logs, they need to be imported in batches of ' . FileSizeConvert($batchLimit) . '.<br>';
             $text .= 'Do you want to import them?<br><br>';
             $text .= '<div id="text" style="text-align: center">';
-            $text .= '<a href="import.php?import&num=' . $numss . '" onclick="$(\'#loadin\').show();$(\'#text\').hide()">Import logs, last batch</a></div>';
+            $text .= '<a href="Import.php?import&num=' . $numss . '" onclick="$(\'#loadin\').show();$(\'#text\').hide()">Import logs, last batch</a></div>';
             $text .= '<div id="loadin" style="text-align: center; display: none"><img src="/style/img/loading.gif" alt="Loading..."></div>';
             echo notice($text, 'Import Logs');
         } elseif ($batchesLeft === '') {
@@ -123,19 +123,25 @@ if (is_dir($settings['log_dir'])) {
         $currentSys = '';
         foreach ($logfiles as $newestFile) {
             if (!in_array($newestFile, $importedFiles, true)) {
-                // read first line to get date
-                $fline = fgets(fopen($newestFile, 'rb'));
-
-                $sub = substr($fline, 0, 8);
-                $sub = explode('-', $sub);
-
-                $year = '20' . $sub[0];
-                $month = $sub[1];
-                $day = $sub[2];
-
                 // read file to an array
                 $filr = file($newestFile);
                 $lines = $filr;
+
+                // read first line to get date
+                $fline = fgets(fopen($newestFile, 'rb'));
+
+                if ($fline[0] === '=') {
+                    $sub = substr($filr[2], 0, 10);
+                    $sub = explode('-', $sub);
+                    $year = $sub[0];
+                } else {
+                    $sub = substr($fline, 0, 8);
+                    $sub = explode('-', $sub);
+                    $year = '20' . $sub[0];
+                }
+
+                $month = $sub[1];
+                $day = $sub[2];
 
                 /**
                  * Prepare statement an bind
@@ -158,8 +164,15 @@ if (is_dir($settings['log_dir'])) {
                         }
 
                         if ($currentSys !== $cssystemname) {
-                            preg_match_all("/\{(.*?)\} System:/", $line, $matches2);
-                            $visitedTime = $matches2[1][0];
+                            preg_match_all("/\{(\d\d)\:(\d\d)\:(\d\d)(.*?)\} System:/", $line, $matches3);
+
+                            if (is_array($matches3)) {
+                                $visitedTime = $matches3[1][0] . ':' . $matches3[2][0] . ':' . $matches3[3][0];
+                            } else {
+                                preg_match_all("/\{(.*?)\} System:/", $line, $matches2);
+                                $visitedTime = $matches2[1][0];
+                            }
+
                             $visitedOn = $year . '-' . $month . '-' . $day . ' ' . $visitedTime;
 
                             $escSys = $mysqli->real_escape_string($cssystemname);

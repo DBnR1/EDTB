@@ -50,10 +50,10 @@ if (isset($_GET['nowplaying'])) {
         $url = $settings['nowplaying_vlc_url'];
 
         $opts = [
-          'http' => [
-            'method' => 'GET',
-            'header' => 'Authorization: Basic ' . base64_encode("$username:$password")
-          ]
+            'http' => [
+                'method' => 'GET',
+                'header' => 'Authorization: Basic ' . base64_encode("$username:$password")
+            ]
         ];
 
         $context = stream_context_create($opts);

@@ -211,7 +211,7 @@ if (isset($_GET['sys'])) {
         if ($count > 0) {
             $c = 0;
             while ($arra = $result->fetch_object()) {
-                if ($c == 0) {
+                if ($c === 0) {
                     $firstStationName = $arra->name;
                     $firstStationLsFrom_star = $arra->ls_from_star;
                 } else {
@@ -223,7 +223,7 @@ if (isset($_GET['sys'])) {
 
         $result->close();
 
-        if ($count == 1) {
+        if ($count === 1) {
             if ($firstStationLsFrom_star != 0) {
                 $vaText .= " The systems' only spaceport is " . $firstStationName . ' ' . number_format(round($firstStationLsFrom_star)) . ' light seconds away.';
             } else {
