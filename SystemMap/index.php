@@ -116,9 +116,14 @@ $linkMap = !empty($string) ? '<span id="mlink">&nbsp;&ndash;&nbsp;<a href="http:
                 $lastName = '';
                 foreach ($jsonArr as $arr) {
                     $type2 = $arr['type'];
-                    if ($type2 == $type) {
-                        $img = str_replace(' ', '_', $arr['name']);
-                        $img = str_replace(',', '', $img);
+                    if ($type2 === $type) {
+                        $img = str_replace([
+                            ' ',
+                            ','
+                        ], [
+                            '_',
+                            ''
+                        ], $arr['name']);
                         $img = strtolower($img);
 
                         $imgfiles = glob($_SERVER['DOCUMENT_ROOT'] . '/SystemMap/bodies/' . $img . '_*');

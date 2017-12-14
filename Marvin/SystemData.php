@@ -73,15 +73,17 @@ if (isset($_GET['sys'])) {
              * loop trough files
              */
             foreach ($allegianceRants as $alleg) {
-                $allegiance = str_replace('Rants/Allegiance_', '', $alleg);
-                $allegiance = str_replace('.txt', '', $allegiance);
+                $allegiance = str_replace([
+                    'Rants/Allegiance_',
+                    '.txt'
+                ], '', $alleg);
 
                 $rants = [];
 
                 /**
                  * if current allegiance matches
                  */
-                if ($curSys['allegiance'] == $allegiance) {
+                if ($curSys['allegiance'] === $allegiance) {
                     $rantss = file($alleg);
                     // loop trough rants
                     foreach ($rantss as $ranta) {
@@ -119,11 +121,13 @@ if (isset($_GET['sys'])) {
                  * loop trough files
                  */
                 foreach ($powerRants as $powers) {
-                    $power = str_replace('Rants/Power_', '', $powers);
-                    $power = str_replace('.txt', '', $power);
+                    $power = str_replace([
+                        'Rants/Power_',
+                        '.txt'
+                    ], '', $powers);
 
                     // if current power matches
-                    if ($curSys['power'] == $power) {
+                    if ($curSys['power'] === $power) {
                         $powerRantss = file($powers);
 
                         $powerRantsText = [];
@@ -162,6 +166,7 @@ if (isset($_GET['sys'])) {
         /**
          * Round value for population
          */
+        $round = 0;
         if ($curSys['population'] >= 1000000000) {
             $round = -6;
         } elseif ($curSys['population'] >= 10000000 && $curSys['population'] < 1000000000) {
@@ -176,8 +181,6 @@ if (isset($_GET['sys'])) {
             $round = -2;
         } elseif ($curSys['population'] >= 100 && $curSys['population'] < 1000) {
             $round = -1;
-        } else {
-            $round = 0;
         }
 
         $vaPop = '';
@@ -188,10 +191,9 @@ if (isset($_GET['sys'])) {
 
         $article = '';
         if ($vaAllegiance !== 'No additional data available. ') {
+            $article = 'A';
             if (preg_match('/([aeiouAEIOU])/', $vaAllegiance{0})) {
                 $article = 'An';
-            } else {
-                $article = 'A';
             }
         }
 
@@ -382,10 +384,9 @@ if (isset($_GET['cs'])) {
 
     $article = '';
     if (!empty($csType)) {
+        $article = 'a';
         if (preg_match('/([aeiouAEIOU])/', $csType{0})) {
             $article = 'an';
-        } else {
-            $article = 'a';
         }
     }
 

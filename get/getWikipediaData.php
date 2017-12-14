@@ -45,6 +45,7 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
 
     if ($result = file_get_contents($url)) {
         $jsonData = json_decode($result);
+        /** @var array $titles */
         $titles = $jsonData->{'query'}->{'pages'};
 
         $count = 0;
@@ -53,11 +54,15 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
 
             preg_match_all("/\<p>.*?\<\/p>/", $titleExtract, $matches);
 
+            /** @var array $matches */
             foreach ($matches as $match) {
+                /** @var array $match */
                 foreach ($match as $titleM) {
                     $titleMO = $titleM;
-                    $titleM = str_replace('<p>', '', $titleM);
-                    $titleM = str_replace('</p>', '', $titleM);
+                    $titleM = str_replace([
+                        '<p>',
+                        '</p>'
+                    ], '', $titleM);
 
                     if (strpos($titleM, ' was ') === false) {
                         $titleLink = explode(',', $titleM);
@@ -105,8 +110,10 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
             foreach ($matches as $match) {
                 $i = 0;
                 foreach ($match as $titleM) {
-                    $titleM = str_replace('<li>', '', $titleM);
-                    $titleM = str_replace('</li>', '', $titleM);
+                    $titleM = str_replace([
+                        '<li>',
+                        '</li>'
+                    ], '', $titleM);
                     $titleLink = explode(',', $titleM);
                     $titleLink = preg_split('/\(\d/', $titleLink[0]);
                     $titleFirst = str_replace(' ', '_', strip_tags(trim($titleLink[0])));
@@ -149,8 +156,10 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
 
                 foreach ($matches as $match) {
                     foreach ($match as $titleM) {
-                        $titleM = str_replace('<li>', '', $titleM);
-                        $titleM = str_replace('</li>', '', $titleM);
+                        $titleM = str_replace([
+                            '<li>',
+                            '</li>'
+                        ], '', $titleM);
                         $titleLink = explode(',', $titleM);
                         $titleLink = preg_split('/\(\d/', $titleLink[0]);
                         $titleFirst = str_replace(' ', '_', strip_tags(trim($titleLink[0])));

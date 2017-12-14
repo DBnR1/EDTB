@@ -189,7 +189,7 @@ if ($settings['galmap_show_pois'] === 'true') {
         $cat = '';
         $name = $row->system_name;
 
-        if (strtolower($name) != strtolower($curSys['name'])) {
+        if (strtolower($name) !== strtolower($curSys['name'])) {
             $escName = $mysqli->real_escape_string($name);
             $dispName = $row->system_name;
             $poiName = $row->poi_name;
@@ -328,7 +328,7 @@ if ($settings['galmap_show_rares'] === 'true') {
         $rareCoordy = $row->y;
         $rareCoordz = $row->z;
 
-        if (strtolower($rareSystem) != strtolower($curSys['name']) && validCoordinates($rareCoordx, $rareCoordy, $rareCoordz)) {
+        if (strtolower($rareSystem) !== strtolower($curSys['name']) && validCoordinates($rareCoordx, $rareCoordy, $rareCoordz)) {
             $rareItem = $row->item;
             $rareStation = $row->station;
             $rareDistToStar = number_format($row->ls_to_star);

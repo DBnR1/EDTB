@@ -42,11 +42,9 @@ $decodedData = base64_decode($data);
 
 $audiodir = $_SERVER['DOCUMENT_ROOT'] . '/audio_logs';
 
-if (!is_dir($audiodir)) {
-    if (!mkdir($audiodir, 0775, true)) {
-        $error = error_get_last();
-        write_log('Error: ' . $error['message'], __FILE__, __LINE__);
-    }
+if (!is_dir($audiodir) && !mkdir($audiodir, 0775, true)) {
+    $error = error_get_last();
+    write_log('Error: ' . $error['message'], __FILE__, __LINE__);
 }
 
 $filename = $audiodir . '/' . $_POST['fname'];

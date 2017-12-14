@@ -65,8 +65,13 @@ spl_autoload_register(function ($class) {
 });
 
 /** @var string $iniDir ini file directory */
-$iniDir = str_replace("\\EDTB\\source", '', __DIR__);
-$iniDir = str_replace("\\", '/', $iniDir);
+$iniDir = str_replace([
+    "\\EDTB\\source",
+    "\\"
+], [
+    '',
+    '/'
+], __DIR__);
 /** @var string ini_file ini file */
 $iniFile = $iniDir . '/data/edtoolbox_v1.ini';
 

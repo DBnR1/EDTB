@@ -67,8 +67,13 @@ if ($gaLastUpdate < time()) {
         $gaTitle = $gaTitle[0];
 
         $text = $dataga['content'];
-        $text = str_replace('<br>', PHP_EOL, $text);
-        $text = str_replace(' – ', ', ', $text);
+        $text = str_replace([
+            '<br>',
+            ' – '
+        ], [
+            PHP_EOL,
+            ', '
+        ], $text);
         $text = trim(strip_tags($text));
         $text = html_entity_decode($text);
 

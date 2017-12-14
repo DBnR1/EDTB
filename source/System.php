@@ -111,17 +111,16 @@ class System
 
         $escSystemName = $mysqli->real_escape_string($system);
 
+        $query = "  SELECT id
+                    FROM user_log
+                    WHERE system_name = '$escSystemName'
+                    AND system_name != ''
+                    LIMIT 1";
         if ($isId !== false) {
             $query = "  SELECT id
                         FROM user_log
                         WHERE system_id = '$system'
                         AND system_id != ''
-                        LIMIT 1";
-        } else {
-            $query = "  SELECT id
-                        FROM user_log
-                        WHERE system_name = '$escSystemName'
-                        AND system_name != ''
                         LIMIT 1";
         }
 
@@ -130,11 +129,7 @@ class System
 
         $result->close();
 
-        if ($logged > 0) {
-            return true;
-        }
-
-        return false;
+        return $logged > 0;
     }
 
     /**
@@ -166,7 +161,7 @@ class System
 
         $result->close();
 
-        if ($count == 0 || $onlyOwn === true) {
+        if ($count === 0 || $onlyOwn === true) {
             $query = "  SELECT
                         id
                         FROM user_systems_own
@@ -179,11 +174,7 @@ class System
             $result->close();
         }
 
-        if ($count > 0) {
-            return true;
-        }
-
-        return false;
+        return $count > 0;
     }
 
     /**
@@ -201,28 +192,28 @@ class System
     {
         $return = '';
         // check if system has screenshots
-        if ($showScreens === true && System::hasScreenshots($system)) {
+        if ($showScreens === true && self::hasScreenshots($system)) {
             $return .= '<a href="/Gallery?spgmGal=' . urlencode(stripInvalidDosChars($system)) . '" title="View image gallery" class="gallery_link">';
             $return .= '<img src="/style/img/image.png" class="icon" alt="Gallery" style="margin-left: 5px;  margin-right: 0; vertical-align: top">';
             $return .= '</a>';
         }
 
         // check if system is logged
-        if ($showLogs === true && System::isLogged($system)) {
+        if ($showLogs === true && self::isLogged($system)) {
             $return .= '<a href="/Log?system=' . urlencode($system) . '" style="color: inherit" title="System has log entries" class="log_link">';
             $return .= '<img src="/style/img/log.png" class="icon" style="margin-left: 5px; margin-right: 0">';
             $return .= '</a>';
         }
 
         // check if system is mapped
-        if ($showMap === true && System::isMapped($system)) {
+        if ($showMap === true && self::isMapped($system)) {
             $return .= '<a href="/SystemMap/?system=' . urlencode($system) . '" style="color: inherit" title="System map" class="system_map_link">';
             $return .= '<img src="/style/img/grid.png" class="icon" style="margin-left: 5px; margin-right: 0">';
             $return .= '</a>';
         }
 
         // show link if system exists
-        if ($showSystem === true && System::exists($system)) {
+        if ($showSystem === true && self::exists($system)) {
             $return .= '<a href="/System?system_name=' . urlencode($system) . '" style="color: inherit" title="System info" class="system_info_link">';
             $return .= '<img src="/style/img/info.png" class="icon" alt="Info" style="margin-left: 5px; margin-right: 0">';
             $return .= '</a>';

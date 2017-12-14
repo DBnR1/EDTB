@@ -288,7 +288,7 @@ if ($raresCloseby > 0) {
             $cRaresData .= '</a>&nbsp;(';
             $cRaresData .= $rareObj->station;
             $cRaresData .= ')&nbsp;-&nbsp';
-            $cRaresData .= number_format($rareObj->ls_to_star, 0);
+            $cRaresData .= number_format($rareObj->ls_to_star);
             $cRaresData .= '&nbsp;ls&nbsp';
             $cRaresData .= '(';
             $cRaresData .= $rareObj->sc_est_mins;
@@ -378,7 +378,7 @@ if ($stationExists == 0) {
         $maxLandingPadSize = $stationObj->max_landing_pad_size;
 
         $sFaction = $stationObj->faction === '' ? '' : '<strong>Faction:</strong> ' . $stationObj->faction;
-        $sDistanceFromStar = $lsFromStar == 0 ? '' : '' . number_format($lsFromStar, 0) . ' ls - ';
+        $sDistanceFromStar = $lsFromStar == 0 ? '' : '' . number_format($lsFromStar) . ' ls - ';
         $sInformation = '<span style="float: right;  margin-right: 8px">&boxur; &nbsp;' . $sDistanceFromStar . 'Landing pad: ' . $maxLandingPadSize . '</span><br>';
         $sGovernment = $stationObj->government === '' ? 'Government unknown' : $stationObj->government;
         $sAllegiance = $stationObj->allegiance === '' ? 'Allegiance unknown' : $stationObj->allegiance;
@@ -487,7 +487,7 @@ if ($stationExists == 0) {
                     }
 
                     $modulesT .= '<td class="light">Rating ' . $mRating . '</td>';
-                    $modulesT .= '<td class="light">Price ' . number_format($mPrice, 0) . '</td>';
+                    $modulesT .= '<td class="light">Price ' . number_format($mPrice) . '</td>';
 
                     $lastModuleName = $mName;
                     $lastClass = $mClass;
@@ -540,12 +540,22 @@ if ($stationExists == 0) {
 
         $info = $sFaction . $sInformation . $importCommodities . $exportCommodities . $prohibitedCommodities;
         $info = str_replace("['", '', $info);
-        $info = str_replace("']", '', $info);
-        $info = str_replace("', '", ', ', $info);
+        $info = str_replace([
+            "']",
+            "', '"
+        ], [
+            '',
+            ', '
+        ], $info);
 
         $economies = str_replace("['", '', $economies);
-        $economies = str_replace("']", '', $economies);
-        $economies = str_replace("', '", ', ', $economies);
+        $economies = str_replace([
+            "']",
+            "', '"
+        ], [
+            '',
+            ', '
+        ], $economies);
 
         // get allegiance icon
         $allegianceIcon = getAllegianceIcon($sAllegiance);

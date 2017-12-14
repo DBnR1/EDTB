@@ -205,7 +205,7 @@ $catId = $_GET['cat_id'] ?? '2';
                                 </td>
                             </tr>
                             <?php
-                        } elseif (substr($type, 0, 4) === 'enum') {
+                        } elseif (strpos($type, 'enum') === 0) {
                             $values = str_replace('enum::', '', $type);
 
                             $values = explode('&&', $values);

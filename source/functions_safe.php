@@ -68,7 +68,7 @@ function getBrowser()
     $platform = 'Unknown';
 
     // First get the platform?
-    if (preg_match('/linux/i', $uAgent)) {
+    if (stripos($uAgent, 'linux') !== false) {
         $platform = 'linux';
     } elseif (preg_match('/macintosh|mac os x/i', $uAgent)) {
         $platform = 'mac';
@@ -77,28 +77,28 @@ function getBrowser()
     }
 
     // Next get the name of the useragent yes seperately and for good reason
-    if (preg_match('/MSIE/i', $uAgent) && !preg_match('/Opera/i', $uAgent)) {
+    if (stripos($uAgent, 'MSIE') !== false && !false !== stripos($uAgent, 'Opera')) {
         $bname = 'Internet Explorer';
         $ub = 'MSIE';
-    } elseif (preg_match('/Firefox/i', $uAgent)) {
+    } elseif (stripos($uAgent, 'Firefox') !== false) {
         $bname = 'Mozilla Firefox';
         $ub = 'Firefox';
-    } elseif (preg_match('/Chrome/i', $uAgent)) {
+    } elseif (stripos($uAgent, 'Chrome') !== false) {
         $bname = 'Google Chrome';
         $ub = 'Chrome';
-    } elseif (preg_match('/Safari/i', $uAgent)) {
+    } elseif (stripos($uAgent, 'Safari') !== false) {
         $bname = 'Apple Safari';
         $ub = 'Safari';
-    } elseif (preg_match('/Opera/i', $uAgent)) {
+    } elseif (stripos($uAgent, 'Opera') !== false) {
         $bname = 'Opera';
         $ub = 'Opera';
-    } elseif (preg_match('/Netscape/i', $uAgent)) {
+    } elseif (stripos($uAgent, 'Netscape') !== false) {
         $bname = 'Netscape';
         $ub = 'Netscape';
     }
 
     // finally get the correct version number
-    $known = array('Version', $ub, 'other');
+    $known = ['Version', $ub, 'other'];
     $pattern = '#(?<browser>' . implode('|', $known) .
     ')[/ ]+(?<version>[0-9.|a-zA-Z.]*)#';
     if (!preg_match_all($pattern, $uAgent, $matches)) {

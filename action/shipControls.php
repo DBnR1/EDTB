@@ -41,7 +41,7 @@ $shell->AppActivate('Elite - Dangerous (CLIENT)');
 
 if ($actions !== false) {
     foreach ($actions as $action) {
-        if (substr($action, 0, 10) !== 'sleep_for_') {
+        if (strpos($action, 'sleep_for_') !== 0) {
             if (is_array($action)) {
                 $repeat = $action[0];
                 $keypress = $action[1];

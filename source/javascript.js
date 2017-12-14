@@ -33,7 +33,7 @@
 var zindexmax = 100000;
 
 /** @var boolean debug_mode */
-var debug_mode = false;
+var debug_mode = true;
 
 /**
  * Send error messages to console if debug_mode = true

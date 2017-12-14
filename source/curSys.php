@@ -196,7 +196,7 @@ if (is_dir($settings['log_dir']) && is_readable($settings['log_dir'])) {
                  */
                 $prevSystem = edtbCommon('last_system', 'value');
 
-                if ($prevSystem != $cssystemname && !empty($cssystemname)) {
+                if ($prevSystem !== $cssystemname && !empty($cssystemname)) {
                     /**
                      * add system to user_visited_systems
                      */
@@ -210,7 +210,7 @@ if (is_dir($settings['log_dir']) && is_readable($settings['log_dir'])) {
 
                     $visitedOn = date('Y-m-d') . ' ' . $visitedTime;
 
-                    if ($obj->system_name != $curSys['name'] && !empty($curSys['name'])) {
+                    if ($obj->system_name !== $curSys['name'] && !empty($curSys['name'])) {
                         $query = "  INSERT INTO user_visited_systems (system_name, visit)
                                     VALUES
                                     ('$sysName',

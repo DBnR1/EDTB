@@ -642,7 +642,7 @@ class NearestSystems
                                 while ($modObj = $result->fetch_object()) {
                                     $catName = $modObj->category_name;
 
-                                    if ($curCat != $catName) {
+                                    if ($curCat !== $catName) {
                                         echo '</optgroup><optgroup label="' . $catName . '">';
                                     }
 
@@ -714,7 +714,7 @@ class NearestSystems
                             $result = $this->mysqli->query($query) or write_log($this->mysqli->error, __FILE__, __LINE__);
 
                             while ($shipObj = $result->fetch_object()) {
-                                $selected = $_GET['ship_name'] == $shipObj->name ? " selected='selected'" : '';
+                                $selected = $_GET['ship_name'] === $shipObj->name ? " selected='selected'" : '';
                                 echo '<option value="' . $shipObj->name . '"' . $selected . '>' . $shipObj->name . '</option>';
                             }
 
@@ -800,7 +800,7 @@ class NearestSystems
 
         $this->text = $this->text === 'Nearest' ? 'Nearest stations' : $this->text;
 
-        if (substr($this->text, 0, 11) === 'Nearest (to' && $this->stations === true) {
+        if (strpos($this->text, 'Nearest (to') === 0 && $this->stations === true) {
             $this->text = str_replace('Nearest ', 'Nearest stations ', $this->text);
         }
 
@@ -922,7 +922,7 @@ class NearestSystems
                  */
                 $pic = getAllegianceIcon($allegiance);
 
-                if ($system != $lastSystem) {
+                if ($system !== $lastSystem) {
                     $tdclass = $tdclass === 'light' ? 'dark' : 'light';
                     ?>
                     <tr>
@@ -1065,8 +1065,13 @@ class NearestSystems
             $shipyardUpdatedAt . $stationSellingShips;
 
         $info = str_replace("['", '', $info);
-        $info = str_replace("']", '', $info);
-        $info = str_replace("', '", ', ', $info);
+        $info = str_replace([
+            "']",
+            "', '"
+        ], [
+            '',
+            ', '
+        ], $info);
 
         /**
          * get allegiance icon
@@ -1080,11 +1085,10 @@ class NearestSystems
          */
         $stationDispName = $stationName;
 
-        if (!empty($groupId) || !empty($shipName)) {
-            if (dataIsOld($obj->outfitting_updated_at) || dataIsOld($obj->shipyard_updated_at)) {
+        if (!empty($groupId) || !empty($shipName) || dataIsOld($obj->outfitting_updated_at) ||
+            dataIsOld($obj->shipyard_updated_at)) {
                 $stationDispName = '<span class="old_data">' . $stationName . '</span>';
             }
-        }
         ?>
         <td class="<?= $tdclass ?>">
             <?= $stationAllegianceIcon . $icon ?>

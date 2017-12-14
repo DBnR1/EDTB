@@ -305,9 +305,9 @@ if ($settings['nmap_show_visited_systems'] === 'true') {
                     $color = 'rgba(255, 255, 255, 0.8)';
                 }
 
-                if ($logged > 0 && strtolower($name) != strtolower($curSys['name'])) {
+                if ($logged > 0 && strtolower($name) !== strtolower($curSys['name'])) {
                     $marker = 'marker:{symbol:"circle",radius:3,fillColor:"' . $color . '",lineWidth:"2",lineColor:"#2e92e7"}';
-                } elseif (strtolower($name) == strtolower($curSys['name'])) {
+                } elseif (strtolower($name) === strtolower($curSys['name'])) {
                     $marker = 'marker:{symbol:"circle",radius:4,fillColor:"' . $color . '",lineWidth:"2",lineColor:"#f44b09"}';
                 } else {
                     $marker = 'marker:{symbol:"circle",radius:3,fillColor:"' . $color . '"}';

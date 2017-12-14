@@ -134,6 +134,15 @@ if (isset($_GET['do'])) {
 
         $systemExists = System::exists($targetSystem, true);
 
+        $stmt = "   UPDATE user_systems_own
+                    SET name = '$escTargetSystem',
+                        x = '$newcoordsX',
+                        y = '$newcoordsY',
+                        z = '$newcoordsZ',
+                        reference_distances = '$escReferenceDistances',
+                        edsm_message = '$escEdsmMsg'
+                    WHERE name = '$escTargetSystem'
+                    LIMIT 1";
         if (!$systemExists) {
             $stmt = "   INSERT INTO user_systems_own
                         (name, x, y, z, reference_distances, edsm_message)
@@ -144,16 +153,6 @@ if (isset($_GET['do'])) {
                         '$newcoordsZ',
                         '$escReferenceDistances',
                         '$escEdsmMsg')";
-        } else {
-            $stmt = "   UPDATE user_systems_own
-                        SET name = '$escTargetSystem',
-                            x = '$newcoordsX',
-                            y = '$newcoordsY',
-                            z = '$newcoordsZ',
-                            reference_distances = '$escReferenceDistances',
-                            edsm_message = '$escEdsmMsg'
-                        WHERE name = '$escTargetSystem'
-                        LIMIT 1";
         }
 
         $mysqli->query($stmt) or write_log($mysqli->error, __FILE__, __LINE__);

@@ -53,14 +53,14 @@ class MakeGallery
         /**
          * check if current screenshot dir exists and is writable
          */
-        if (!MakeGallery::validDir($dir)) {
+        if (!self::validDir($dir)) {
             return false;
         }
 
         /**
          * check if new screenshot dir exists and is writable
          */
-        if (!MakeGallery::validDir($newdir)) {
+        if (!self::validDir($newdir)) {
             return false;
         }
 
@@ -280,11 +280,9 @@ class MakeGallery
      */
     private function removeFile($file)
     {
-        if (file_exists($file)) {
-            if (!unlink($file)) {
-                $error = error_get_last();
-                write_log('Error: ' . $error['message'], __FILE__, __LINE__);
-            }
+        if (file_exists($file) && !unlink($file)) {
+            $error = error_get_last();
+            write_log('Error: ' . $error['message'], __FILE__, __LINE__);
         }
     }
 
@@ -298,11 +296,9 @@ class MakeGallery
      */
     private function moveFile($from, $to)
     {
-        if (file_exists($from)) {
-            if (!rename($from, $to)) {
-                $error = error_get_last();
-                write_log('Error: ' . $error['message'], __FILE__, __LINE__);
-            }
+        if (file_exists($from) && !rename($from, $to)) {
+            $error = error_get_last();
+            write_log('Error: ' . $error['message'], __FILE__, __LINE__);
         }
     }
 

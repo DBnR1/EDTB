@@ -47,16 +47,15 @@ if (!isset($_COOKIE['style']) || $_COOKIE['style'] !== 'narrow') {
     $data['system_title'] .= '<div class="leftpanel-title-text"><span id="ltitle">';
 
     $bookmarked = 0;
+    $bQuery = "SELECT id
+                FROM user_bookmarks
+                WHERE system_name = '$escCursysName'
+                LIMIT 1";
     if ($curSys['id'] != '-1') {
         $bQuery = "SELECT id
                     FROM user_bookmarks
                     WHERE system_id = '" . $curSys['id'] . "'
                     AND system_id != ''
-                    LIMIT 1";
-    } else {
-        $bQuery = "SELECT id
-                    FROM user_bookmarks
-                    WHERE system_name = '$escCursysName'
                     LIMIT 1";
     }
     $bookmarked = $mysqli->query($bQuery)->num_rows;
@@ -100,11 +99,10 @@ if (!isset($_COOKIE['style']) || $_COOKIE['style'] !== 'narrow') {
  */
 if (!isset($_COOKIE['style']) || $_COOKIE['style'] !== 'narrow') {
     $statusBalanceCache = '';
-    if (isset($api['commander']) && $settings['show_cmdr_status'] === 'true') {
-        if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/cache/cmdr_balance_status.html')) {
+    if (isset($api['commander']) && $settings['show_cmdr_status'] === 'true' &&
+        file_exists($_SERVER['DOCUMENT_ROOT'] . '/cache/cmdr_balance_status.html')) {
             $statusBalanceCache = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/cache/cmdr_balance_status.html');
         }
-    }
 }
 
 /**

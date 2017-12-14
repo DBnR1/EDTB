@@ -136,7 +136,7 @@ $usez = $usable['z'];
             $poi->usez = $usez;
             $poi->time_difference = $systemTime;
 
-            echo $poi->makeTable($result, 'Poi');
+            $poi->makeTable($result, 'Poi');
 
             $result->close();
             ?>
@@ -179,7 +179,7 @@ $usez = $usable['z'];
             $bm->usez = $usez;
             $bm->time_difference = $systemTime;
 
-            echo $bm->makeTable($result, 'Bm');
+            $bm->makeTable($result, 'Bm');
 
             $result->close();
             ?>

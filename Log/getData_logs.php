@@ -139,7 +139,7 @@ if (!empty($curSys['name'])) {
 }
 
 /**
- *    General log
+ * General log
  */
 $sort = 'DESC';
 if (isset($_GET['glog_sort']) && $_GET['glog_sort'] !== 'undefined') {
@@ -153,9 +153,9 @@ if (isset($_GET['glog_sort']) && $_GET['glog_sort'] !== 'undefined') {
 
 $query = "  SELECT SQL_CACHE
             id, log_entry, stardate, pinned, title, audio
-            FROM user_log WHERE system_id = '' AND system_name = ''
-            ORDER BY -pinned, weight, stardate " . $sort . '
-            LIMIT 5';
+            FROM user_log WHERE type = 'general' 
+            ORDER BY -pinned, weight, stardate $sort 
+            LIMIT 5";
 
 $glogRes = $mysqli->query($query) or write_log($mysqli->error, __FILE__, __LINE__);
 

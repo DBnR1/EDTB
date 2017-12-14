@@ -150,7 +150,7 @@ class ReferenceSystems
                 Utility::orderBy($pool, $order);
 
                 for ($is = 0; $is <= 4; $is++) {
-                    if (!array_key_exists($pool[$is]['name'], $references) && !in_array($pool[$is]['name'], $this->used, true)) {
+                    if (!array_key_exists($pool[$is]['name'], $references) && !\in_array($pool[$is]['name'], $this->used, true)) {
                         $references[$pool[$is]['name']] = $pool[$is]['x'] . ',' . $pool[$is]['y'] . ',' . $pool[$is]['z'];
                         break;
                     }
@@ -203,7 +203,7 @@ class ReferenceSystems
                  * fetch user's last known system
                  */
                 $lastKnown = lastKnownSystem(true);
-                /** @var string $lastKnown user's last known system */
+                /** @var string $lastKnownName user's last known system */
                 $lastKnownName = $lastKnown['name'];
 
                 if (!empty($lastKnownName)) {

@@ -60,7 +60,7 @@ class Trilateration
         $r4 = $p4[3];
 
         if ($d - $r1 >= $r2 || $r2 >= $d + $r1) {
-            return array();
+            return [];
         }
 
         $j = $this->vector_dot_product($ey, $this->vector_diff($p3, $p1));
@@ -69,7 +69,7 @@ class Trilateration
         $z = $r1*$r1 - $x*$x - $y*$y;
 
         if ($z < 0) {
-            return array();
+            return [];
         }
 
         $z1 = sqrt($z);
@@ -105,7 +105,7 @@ class Trilateration
             $result1[2]=floor($result1[2]);
             $result1[2]/=32;
 
-            $coords = array($result1[0], $result1[1], $result1[2]);
+            $coords = [$result1[0], $result1[1], $result1[2]];
         } else {
             $result2[0]+=(1/64);
             $result2[0]*=32;

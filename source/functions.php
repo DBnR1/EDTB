@@ -56,6 +56,13 @@ function lastKnownSystem($onlyedsm = false): array
 {
     global $mysqli;
 
+    $query = "  SELECT user_visited_systems.system_name,
+                edtb_systems.x, edtb_systems.y, edtb_systems.z
+                FROM user_visited_systems
+                LEFT JOIN edtb_systems ON user_visited_systems.system_name = edtb_systems.name
+                WHERE edtb_systems.x != ''
+                ORDER BY user_visited_systems.visit DESC
+                LIMIT 1";
     if ($onlyedsm !== true) {
         $query = "  SELECT user_visited_systems.system_name,
                     edtb_systems.x, edtb_systems.y, edtb_systems.z,
@@ -66,14 +73,6 @@ function lastKnownSystem($onlyedsm = false): array
                     LEFT JOIN edtb_systems ON user_visited_systems.system_name = edtb_systems.name
                     LEFT JOIN user_systems_own ON user_visited_systems.system_name = user_systems_own.name
                     WHERE edtb_systems.x != '' OR user_systems_own.x != ''
-                    ORDER BY user_visited_systems.visit DESC
-                    LIMIT 1";
-    } else {
-        $query = "  SELECT user_visited_systems.system_name,
-                    edtb_systems.x, edtb_systems.y, edtb_systems.z
-                    FROM user_visited_systems
-                    LEFT JOIN edtb_systems ON user_visited_systems.system_name = edtb_systems.name
-                    WHERE edtb_systems.x != ''
                     ORDER BY user_visited_systems.visit DESC
                     LIMIT 1";
     }
@@ -489,7 +488,7 @@ function edtbCommon($name, $field, $update = false, $value = '')
  */
 function stripInvalidDosChars($sourceString)
 {
-    $invalidChars = array('*','\\','/',':','?','"','<','>','|'); // Invalid chars according to Windows 10
+    $invalidChars = ['*','\\','/',':','?','"','<','>','|']; // Invalid chars according to Windows 10
 
     return str_replace($invalidChars, '_', $sourceString);
 }
