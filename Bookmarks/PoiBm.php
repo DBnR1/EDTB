@@ -100,7 +100,7 @@ class PoiBm
             echo '<tr><td valign="top" style="position: relative; min-width: 400px; max-width: 480px;"><div style="top: 0; left: 0; width: 100%;">';
 
             while ($obj = $res->fetch_object()) {
-                if (!in_array($obj->catname, $categs, true)) {
+                if (!\in_array($obj->catname, $categs, true)) {
                     $categs[] = $obj->catname;
                     if (isset($obj->catname) && $obj->catname !== '') {
                         echo '<div style="font-family: Sintony, sans-serif; color: #fffffa; font-size: 13px;padding: 6px;vertical-align: middle;background-color: #2e3436;
@@ -152,14 +152,14 @@ class PoiBm
     {
         $panelss = '';
 
-        for ($b = 0, $bMax = count($categs); $b < $bMax; $b++) {
-            if (is_array($categs)) {
+        for ($b = 0, $bMax = \count($categs); $b < $bMax; $b++) {
+            if (\is_array($categs)) {
                 $polishedCategs = str_replace(' ', '', $categs[$b]);
             }
 
             $polishedCategs = (isset($polishedCategs) && $polishedCategs !== '') ? $polishedCategs : $type;
 
-            $panelss .= '<div id="panel-' . $polishedCategs . '" style="display:none; height: auto;" 
+            $panelss .= '<div id="panel-' . $polishedCategs . '" style="display: none; height: auto;" 
 							            class="categ-panels"><table>' . $this->generateColumnsPanelsData($res, $type, $categs[$b], $i) . '</table></div>';
         }
 
@@ -281,7 +281,7 @@ class PoiBm
      *
      * @param object $data
      */
-    public function addPoi($data)
+    public function addOrDeletePoi($data)
     {
         $pSystem = $data->{'poi_system_name'};
         $pName = $data->{'poi_name'};
@@ -305,7 +305,7 @@ class PoiBm
         $escSysname = $this->mysqli->real_escape_string($pSystem);
         $escEntry = $this->mysqli->real_escape_string($pEntry);
 
-        if ($pId !== '') {
+        if ($pId !== '' && $pId !== null) {
             $stmt = "   UPDATE user_poi SET
                         poi_name = '$escName',
                         system_name = '$escSysname',
@@ -334,7 +334,7 @@ class PoiBm
      *
      * @param object $data
      */
-    public function addBm($data)
+    public function addOrDeleteBookmark($data)
     {
         $bmSystemId = $data->{'bm_system_id'};
         $bmSystemName = $data->{'bm_system_name'};
@@ -345,7 +345,14 @@ class PoiBm
         $escEntry = $this->mysqli->real_escape_string($bmEntry);
         $escSysname = $this->mysqli->real_escape_string($bmSystemName);
 
-        if ($bmId !== '') {
+        $query = "  INSERT INTO user_bookmarks (system_id, system_name, comment, category_id, added_on)
+                    VALUES
+                    ('$bmSystemId',
+                    '$escSysname',
+                    '$escEntry',
+                    '$bmCatid',
+                    UNIX_TIMESTAMP())";
+        if ($bmId !== '' && $bmId !== null) {
             $query = "  UPDATE user_bookmarks SET
                         comment = '$escEntry',
                         system_name = '$escSysname',
@@ -355,14 +362,6 @@ class PoiBm
             $query = "  DELETE FROM user_bookmarks
                         WHERE id = '" . $_GET['deleteid'] . "'
                         LIMIT 1";
-        } else {
-            $query = "  INSERT INTO user_bookmarks (system_id, system_name, comment, category_id, added_on)
-                        VALUES
-                        ('$bmSystemId',
-                        '$escSysname',
-                        '$escEntry',
-                        '$bmCatid',
-                        UNIX_TIMESTAMP())";
         }
 
         $this->mysqli->query($query) or write_log($this->mysqli->error, __FILE__, __LINE__);

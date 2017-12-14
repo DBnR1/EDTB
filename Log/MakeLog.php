@@ -75,8 +75,10 @@ class MakeLog
     public function makeLogEntries($logRes, $type): string
     {
         $thisSystem = '';
+        $systemName = '';
         $thisId = '';
         $i = 0;
+        $logData = '';
         while ($obj = $logRes->fetch_object()) {
             if ($thisId != $obj->id) {
                 $systemName = $obj->system_name === '' ? $obj->log_system_name : $obj->system_name;
@@ -250,7 +252,7 @@ class MakeLog
      *
      * @param object $data
      */
-    public function addLog($data)
+    public function addOrDeleteLog($data)
     {
         $lSystemName = $data->{'system_name'};
         $lStationName = $data->{'station_name'};
@@ -282,7 +284,7 @@ class MakeLog
             $lSystem = '0';
         }
 
-        if ($lId !== '') {
+        if ($lId !== '' && $lId !== null) {
             $query = "  UPDATE user_log SET
                         system_id = '$lSystem',
                         system_name = '$escSystemName',
@@ -380,11 +382,9 @@ class MakeLog
         foreach ($audioFiles as $audioFile) {
             $file = $_SERVER['DOCUMENT_ROOT'] . '/audio_logs/' . $audioFile;
 
-            if (file_exists($file) && is_file($file)) {
-                if (!unlink($file)) {
-                    $error = error_get_last();
-                    write_log('Error: ' . $error['message'], __FILE__, __LINE__);
-                }
+            if (file_exists($file) && is_file($file) && !unlink($file)) {
+                $error = error_get_last();
+                write_log('Error: ' . $error['message'], __FILE__, __LINE__);
             }
         }
 

@@ -45,7 +45,7 @@ if (isset($_GET['do'])) {
     $data = json_decode($_REQUEST['input']);
 
     $addLog = new MakeLog();
-    $addLog->addLog($data);
+    $addLog->addOrDeleteLog($data);
 
     exit;
 }

@@ -40,8 +40,8 @@ if (isset($_GET['do'])) {
 
     $data = json_decode($_REQUEST['input']);
 
-    $AddBm = new PoiBm();
-    $AddBm->addBm($data);
+    $AddOrDelete = new PoiBm();
+    $AddOrDelete->addOrDeleteBookmark($data);
 
     exit;
 }

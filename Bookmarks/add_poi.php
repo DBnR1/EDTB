@@ -43,7 +43,7 @@ if (isset($_GET['do'])) {
     $data = json_decode($_REQUEST['input']);
 
     $AddPoi = new PoiBm();
-    $AddPoi->addPoi($data);
+    $AddPoi->addOrDeletePoi($data);
 
     exit;
 }
