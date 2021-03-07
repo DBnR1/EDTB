@@ -20,10 +20,24 @@ Key features
 - A notepad for taking some quick notes (mission directives, kill orders, etc.)
 - Show currently playing song from Foobar2000 or any player that can store the current song in a text file, or from VLC Media Player using the web interface.
 
+INSTALLATION
+-------------
+
+The ED ToolBox installer installs a basic web server on the user's computer (Apache, PHP and MySQL)
+
+Before installing, review the requirements below.
+
+- [Download the latest release](https://github.com/DBnR1/EDTB/releases/latest) and uncompress the file.
+- Start EDTBManager_x_x_x.exe and follow the instructions in the setup wizard.
+- After install is successfull, start ED ToolBox. This will start Apache webserver and MySQL database server. 
+- A tray icon will appear. If the tray icon turns blue, that means the MySQL service is running.
+- Right click the tray icon and choose "Open ED ToolBox". This will open the app in your web browser.
+- An install prompt will appear that will quide you trough the rest of the process.
+
 Requirements
 ------------
 
-- [Visual C++ Redistributable for Visual Studio 2015] - **32 bit version**
+- ED ToolBox requires the [Visual C++ Redistributable for Visual Studio 2015] - **32 bit version**  vc_redist.x86.exe -- Without it, you'll get a missing dll error during install.
 
 - Latest version of **Google Chrome** browser recommended for optimal experience. Latest versions of Mozilla Firefox and Microsoft Edge also work but to a limited degree.
 - VerboseLogging needs to be on. To do this, locate your AppConfig.xml file.
