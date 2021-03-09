@@ -3,6 +3,11 @@ ED ToolBox
 
 ED ToolBox is a companion web app for [Elite Dangerous] that runs on the user's computer, allowing a virtually real-time updating of location based data.
 
+![Screenshot of Elite Dangerous Toolbox](style/img/elite-dangerous-toolbox.png)
+[screenshot album](https://imgur.com/a/2daWF)
+
+The best way to enjoy ED ToolBox is to run Elite Dangerous in borderless window mode and have a second monitor for ED ToolBox so you can see information at a glance and interact with ED ToolBox easily. Run ED ToolBox  in full screen mode (press F11) for maximum coolness. You can even access ED ToolBox from a secondary device such as your smart phone or tablet as long as it's in the same local network.
+
 For instructions and downloads visit [edtb.xyz].
 
 Key features
