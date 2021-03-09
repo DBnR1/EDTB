@@ -8,8 +8,6 @@ ED ToolBox is a companion web app for [Elite Dangerous] that runs on the user's 
 
 The best way to enjoy ED ToolBox is to run Elite Dangerous in borderless window mode and have a second monitor for ED ToolBox so you can see information at a glance and interact with ED ToolBox easily. Run ED ToolBox  in full screen mode (press F11) for maximum coolness. You can even access ED ToolBox from a secondary device such as your smart phone or tablet as long as it's in the same local network.
 
-For instructions and downloads visit [edtb.xyz].
-
 Key features
 ------------
 
@@ -25,7 +23,7 @@ Key features
 - A notepad for taking some quick notes (mission directives, kill orders, etc.)
 - Show currently playing song from Foobar2000 or any player that can store the current song in a text file, or from VLC Media Player using the web interface.
 
-INSTALLATION
+Installation
 -------------
 
 The ED ToolBox installer installs a basic web server on the user's computer (Apache, PHP and MySQL)
